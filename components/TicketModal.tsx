@@ -29,7 +29,7 @@ export default function TicketModal({ pasaje, onClose }: TicketModalProps) {
         <div className="text-center space-y-2 border-b border-dashed border-slate-200 pb-4">
           <div className="inline-flex items-center gap-1.5 bg-[#F05A24] text-white px-3 py-1 rounded-full text-xs font-black uppercase shadow-xs">
             <Bus className="w-3.5 h-3.5 text-white" />
-            <span>Pullmanbus Convenios</span>
+            <span>Pullmanbus Cuponeras</span>
           </div>
 
           <h3 className="text-xl font-black text-slate-900">Boleto Electrónico de Viaje</h3>

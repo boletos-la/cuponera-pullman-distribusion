@@ -1,46 +1,50 @@
 [
   {
-    "codigo": "CUP-VNA-37YQ",
-    "compraId": "ORD-362326",
-    "cuponeraId": 6,
+    "codigo": "CUP-LIT-WP24",
+    "compraId": "ORD-838486",
+    "cuponeraId": 5,
     "rutCliente": "105208235",
     "nombreCliente": "Dorian Gonzalez",
     "emailCliente": "dgonzalez@wit.la",
-    "nombreCuponera": "CUPONERA VIÑA DEL MAR (10 CUPONES)",
+    "nombreCuponera": "CUPONERA LITORAL (10 CUPONES)",
     "tramosPermitidos": [
-      "Santiago-Viña Del Mar",
-      "Viña Del Mar-Santiago"
+      "Santiago-Algarrobo",
+      "Algarrobo-Santiago",
+      "Santiago-El Quisco",
+      "El Quisco-Santiago",
+      "Santiago-El Tabo",
+      "El Tabo-Santiago"
     ],
     "valorUnitario": 4900,
     "totalCupones": 10,
-    "cuponesUsados": 7,
-    "saldoDisponible": 3,
+    "cuponesUsados": 1,
+    "saldoDisponible": 9,
     "estado": "Activo",
-    "fechaCompra": "2026-09-09T14:32:42.326Z",
+    "fechaCompra": "2026-09-09T19:57:18.486Z",
     "fechaVencimiento": "2026-12-09T02:59:59.999Z",
-    "fechaUso": "2026-09-09T16:54:22.100Z",
-    "pasajeCodigo": "TKT-37203"
+    "fechaUso": "2026-09-09T19:57:57.500Z",
+    "pasajeCodigo": "TKT-51799"
   },
   {
-    "codigo": "CUP-PCC-PBB6",
-    "compraId": "ORD-694875",
-    "cuponeraId": 15,
+    "codigo": "CUP-PCC-ZD9H",
+    "compraId": "ORD-930207",
+    "cuponeraId": 3,
     "rutCliente": "105208235",
     "nombreCliente": "Dorian Gonzalez",
     "emailCliente": "dgonzalez@wit.la",
-    "nombreCuponera": "CUPONERA SAN ANTONIO- STO DOMINGO (10 CUPONES)",
+    "nombreCuponera": "CUPONERA V.ALEMANA (10 CUPONES)",
     "tramosPermitidos": [
-      "San Antonio-Santiago",
-      "Santiago-San Antonio",
-      "Santo Domingo-Santiago",
-      "Santiago-Santo Domingo"
+      "Santiago-Villa Alemana",
+      "Villa Alemana-Santiago",
+      "Quilpué-Santiago",
+      "Santiago-Quilpué"
     ],
-    "valorUnitario": 5000,
+    "valorUnitario": 4900,
     "totalCupones": 10,
     "cuponesUsados": 0,
     "saldoDisponible": 10,
     "estado": "Activo",
-    "fechaCompra": "2026-09-09T16:51:34.875Z",
+    "fechaCompra": "2026-09-09T19:58:50.207Z",
     "fechaVencimiento": "2026-12-09T02:59:59.999Z"
   }
 ]

@@ -41,7 +41,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
               Pullmanbus
             </span>
             <span className="hidden sm:inline text-orange-100">
-              Portal Oficial de Convenios & Beneficios • Cuponeras Digitales con Tarifa Congelada
+              Portal Oficial de Cuponeras Digitales • Venta y Autogestión con Tarifa Congelada
             </span>
           </div>
 
@@ -69,7 +69,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
       {/* Main Navbar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-18">
-          {/* Logo Oficial Pullmanbus Convenios */}
+          {/* Logo Oficial Pullmanbus Cuponeras */}
           <div
             onClick={() => setActiveTab('catalogo')}
             className="flex items-center gap-2 cursor-pointer group"
@@ -80,7 +80,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
                 <span className="font-black text-2xl tracking-tighter text-[#F05A24]">bus</span>
               </div>
               <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-none -mt-1">
-                Convenios & Beneficios
+                Cuponeras Digitales
               </span>
             </div>
           </div>

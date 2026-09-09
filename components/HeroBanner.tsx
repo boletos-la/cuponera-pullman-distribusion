@@ -47,11 +47,11 @@ export default function HeroBanner({ onGoToCatalog, onGoToDashboard }: HeroBanne
         <div className="lg:col-span-8 space-y-4">
           <div className="inline-flex items-center gap-2 bg-[#FFF7ED] px-3.5 py-1.5 rounded-full border border-[#FFEDD5] text-xs font-extrabold text-[#F05A24]">
             <Ticket className="w-4 h-4 text-[#F05A24]" />
-            <span>Portal Oficial de Convenios & Beneficios</span>
+            <span>Portal Oficial de Cuponeras Digitales</span>
           </div>
 
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-tight tracking-tight">
-            Bienvenido al <span className="text-[#F05A24]">Portal de Convenios</span>
+            Bienvenido al <span className="text-[#F05A24]">Portal de Cuponeras</span>
           </h1>
 
           <p className="text-slate-600 text-base sm:text-lg max-w-2xl font-medium leading-relaxed">
@@ -96,13 +96,13 @@ export default function HeroBanner({ onGoToCatalog, onGoToDashboard }: HeroBanne
           <div className="bg-[#FFF7ED] border border-[#FFEDD5] p-6 rounded-3xl shadow-sm relative space-y-4">
             <div className="flex justify-between items-center">
               <span className="bg-[#F05A24] text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider">
-                Convenio Afiliado
+                Cuponera Oficial
               </span>
               <span className="text-slate-500 text-xs font-bold">Validación por RUT</span>
             </div>
 
             <div className="space-y-1">
-              <span className="text-xs font-bold text-[#F05A24] uppercase tracking-wider">Convenio Destacado</span>
+              <span className="text-xs font-bold text-[#F05A24] uppercase tracking-wider">Cuponera Destacada</span>
               <h3 className="text-xl font-black text-slate-900">Santiago - Viña del Mar</h3>
               <p className="text-2xl font-black text-[#F05A24]">$4.900 <span className="text-xs text-slate-500 font-normal">/ viaje</span></p>
             </div>

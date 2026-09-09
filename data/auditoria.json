@@ -1,172 +1,46 @@
 [
   {
-    "id": "LOG-RESET-1788964315005",
-    "fechaHora": "2026-09-09T14:31:55.005Z",
+    "id": "LOG-RESET-1788983764299",
+    "fechaHora": "2026-09-09T19:56:04.299Z",
     "nombreUsuario": "Administrador / Usuario",
     "accion": "CREACION_CUPONERA",
     "detalles": "Se realizó una limpieza completa de datos de prueba: compras, cupones emitidos y pasajes restablecidos."
   },
   {
-    "id": "LOG-1788964362330",
-    "fechaHora": "2026-09-09T14:32:42.330Z",
+    "id": "LOG-1788983838488",
+    "fechaHora": "2026-09-09T19:57:18.488Z",
     "rutUsuario": "105208235",
     "nombreUsuario": "Dorian Gonzalez",
     "accion": "COMPRA_CUPONERA",
-    "detalles": "Compra aprobada: CUPONERA VIÑA DEL MAR (10 CUPONES) (10 cupones) por $49.000. Orden: ORD-362326"
+    "detalles": "Compra aprobada: CUPONERA LITORAL (10 CUPONES) (10 cupones) por $49.000. Orden: ORD-838486"
   },
   {
-    "id": "LOG-OTP-1788964382702",
-    "fechaHora": "2026-09-09T14:33:02.702Z",
+    "id": "LOG-OTP-1788983874729",
+    "fechaHora": "2026-09-09T19:57:54.729Z",
     "rutUsuario": "105208235",
     "accion": "OTP_GENERADO",
-    "detalles": "Token 2FA de 6 dígitos generado para el cupón CUP-VNA-37YQ. Expira en 300 segundos. Destinatario: titular@ejemplo.cl"
+    "detalles": "Token 2FA de 6 dígitos generado para el cupón CUP-LIT-WP24. Expira en 300 segundos. Destinatario: titular@ejemplo.cl"
   },
   {
-    "id": "LOG-OTP-OK-1788964384832",
-    "fechaHora": "2026-09-09T14:33:04.832Z",
+    "id": "LOG-OTP-OK-1788983877448",
+    "fechaHora": "2026-09-09T19:57:57.448Z",
     "rutUsuario": "105208235",
     "accion": "OTP_VALIDADO",
-    "detalles": "Autenticación 2FA completada exitosamente para cupón CUP-VNA-37YQ."
+    "detalles": "Autenticación 2FA completada exitosamente para cupón CUP-LIT-WP24."
   },
   {
-    "id": "LOG-CANJE-1788964384890",
-    "fechaHora": "2026-09-09T14:33:04.883Z",
+    "id": "LOG-CANJE-1788983877508",
+    "fechaHora": "2026-09-09T19:57:57.500Z",
     "rutUsuario": "105208235",
     "accion": "CANJE_CUPON",
-    "detalles": "Canje exitoso con 2FA del cupón CUP-VNA-37YQ por pasaje TKT-92287 (Asiento N°2, Bus KPR-982, Tramo: Santiago-Viña Del Mar)."
+    "detalles": "Canje exitoso con 2FA del cupón CUP-LIT-WP24 por pasaje TKT-51799 (Asiento N°1, Bus XZ-7734, Tramo: Santiago-Algarrobo)."
   },
   {
-    "id": "LOG-OTP-1788964511391",
-    "fechaHora": "2026-09-09T14:35:11.391Z",
-    "rutUsuario": "105208235",
-    "accion": "OTP_GENERADO",
-    "detalles": "Token 2FA de 6 dígitos generado para el cupón CUP-VNA-37YQ. Expira en 300 segundos. Destinatario: titular@ejemplo.cl"
-  },
-  {
-    "id": "LOG-OTP-OK-1788964514100",
-    "fechaHora": "2026-09-09T14:35:14.100Z",
-    "rutUsuario": "105208235",
-    "accion": "OTP_VALIDADO",
-    "detalles": "Autenticación 2FA completada exitosamente para cupón CUP-VNA-37YQ."
-  },
-  {
-    "id": "LOG-CANJE-1788964514149",
-    "fechaHora": "2026-09-09T14:35:14.143Z",
-    "rutUsuario": "105208235",
-    "accion": "CANJE_CUPON",
-    "detalles": "Canje exitoso con 2FA del cupón CUP-VNA-37YQ por pasaje TKT-31305 (Asiento N°1, Bus JY-8821, Tramo: Santiago-Viña Del Mar)."
-  },
-  {
-    "id": "LOG-OTP-1788964851634",
-    "fechaHora": "2026-09-09T14:40:51.634Z",
-    "rutUsuario": "105208235",
-    "accion": "OTP_GENERADO",
-    "detalles": "Token 2FA de 6 dígitos generado para el cupón CUP-VNA-37YQ. Expira en 300 segundos. Destinatario: titular@ejemplo.cl"
-  },
-  {
-    "id": "LOG-OTP-OK-1788964855909",
-    "fechaHora": "2026-09-09T14:40:55.909Z",
-    "rutUsuario": "105208235",
-    "accion": "OTP_VALIDADO",
-    "detalles": "Autenticación 2FA completada exitosamente para cupón CUP-VNA-37YQ."
-  },
-  {
-    "id": "LOG-CANJE-1788964855950",
-    "fechaHora": "2026-09-09T14:40:55.945Z",
-    "rutUsuario": "105208235",
-    "accion": "CANJE_CUPON",
-    "detalles": "Canje exitoso con 2FA del cupón CUP-VNA-37YQ por pasaje TKT-84378 (Asiento N°8, Bus KPR-982, Tramo: Santiago-Viña Del Mar)."
-  },
-  {
-    "id": "LOG-OTP-1788970749422",
-    "fechaHora": "2026-09-09T16:19:09.422Z",
-    "rutUsuario": "105208235",
-    "accion": "OTP_GENERADO",
-    "detalles": "Token 2FA de 6 dígitos generado para el cupón CUP-VNA-37YQ. Expira en 300 segundos. Destinatario: titular@ejemplo.cl"
-  },
-  {
-    "id": "LOG-OTP-OK-1788970753438",
-    "fechaHora": "2026-09-09T16:19:13.438Z",
-    "rutUsuario": "105208235",
-    "accion": "OTP_VALIDADO",
-    "detalles": "Autenticación 2FA completada exitosamente para cupón CUP-VNA-37YQ."
-  },
-  {
-    "id": "LOG-CANJE-1788970753608",
-    "fechaHora": "2026-09-09T16:19:13.599Z",
-    "rutUsuario": "105208235",
-    "accion": "CANJE_CUPON",
-    "detalles": "Canje exitoso con 2FA del cupón CUP-VNA-37YQ por pasaje TKT-53196 (Asiento N°3, Bus KPR-982, Tramo: Santiago-Viña Del Mar)."
-  },
-  {
-    "id": "LOG-OTP-1788970890715",
-    "fechaHora": "2026-09-09T16:21:30.715Z",
-    "rutUsuario": "105208235",
-    "accion": "OTP_GENERADO",
-    "detalles": "Token 2FA de 6 dígitos generado para el cupón CUP-VNA-37YQ. Expira en 300 segundos. Destinatario: titular@ejemplo.cl"
-  },
-  {
-    "id": "LOG-OTP-OK-1788970893501",
-    "fechaHora": "2026-09-09T16:21:33.501Z",
-    "rutUsuario": "105208235",
-    "accion": "OTP_VALIDADO",
-    "detalles": "Autenticación 2FA completada exitosamente para cupón CUP-VNA-37YQ."
-  },
-  {
-    "id": "LOG-CANJE-1788970893559",
-    "fechaHora": "2026-09-09T16:21:33.549Z",
-    "rutUsuario": "105208235",
-    "accion": "CANJE_CUPON",
-    "detalles": "Canje exitoso con 2FA del cupón CUP-VNA-37YQ por pasaje TKT-92939 (Asiento N°1, Bus KPR-982, Tramo: Santiago-Viña Del Mar)."
-  },
-  {
-    "id": "LOG-OTP-1788972353667",
-    "fechaHora": "2026-09-09T16:45:53.667Z",
-    "rutUsuario": "105208235",
-    "accion": "OTP_GENERADO",
-    "detalles": "Token 2FA de 6 dígitos generado para el cupón CUP-VNA-37YQ. Expira en 300 segundos. Destinatario: titular@ejemplo.cl"
-  },
-  {
-    "id": "LOG-OTP-OK-1788972356457",
-    "fechaHora": "2026-09-09T16:45:56.457Z",
-    "rutUsuario": "105208235",
-    "accion": "OTP_VALIDADO",
-    "detalles": "Autenticación 2FA completada exitosamente para cupón CUP-VNA-37YQ."
-  },
-  {
-    "id": "LOG-CANJE-1788972356524",
-    "fechaHora": "2026-09-09T16:45:56.509Z",
-    "rutUsuario": "105208235",
-    "accion": "CANJE_CUPON",
-    "detalles": "Canje exitoso con 2FA del cupón CUP-VNA-37YQ por pasaje TKT-38373 (Asiento N°7, Bus KPR-982, Tramo: Santiago-Viña Del Mar)."
-  },
-  {
-    "id": "LOG-1788972694888",
-    "fechaHora": "2026-09-09T16:51:34.888Z",
+    "id": "LOG-1788983930210",
+    "fechaHora": "2026-09-09T19:58:50.210Z",
     "rutUsuario": "105208235",
     "nombreUsuario": "Dorian Gonzalez",
     "accion": "COMPRA_CUPONERA",
-    "detalles": "Compra aprobada: CUPONERA SAN ANTONIO- STO DOMINGO (10 CUPONES) (10 cupones) por $50.000. Orden: ORD-694875"
-  },
-  {
-    "id": "LOG-OTP-1788972858689",
-    "fechaHora": "2026-09-09T16:54:18.689Z",
-    "rutUsuario": "105208235",
-    "accion": "OTP_GENERADO",
-    "detalles": "Token 2FA de 6 dígitos generado para el cupón CUP-VNA-37YQ. Expira en 300 segundos. Destinatario: titular@ejemplo.cl"
-  },
-  {
-    "id": "LOG-OTP-OK-1788972862061",
-    "fechaHora": "2026-09-09T16:54:22.061Z",
-    "rutUsuario": "105208235",
-    "accion": "OTP_VALIDADO",
-    "detalles": "Autenticación 2FA completada exitosamente para cupón CUP-VNA-37YQ."
-  },
-  {
-    "id": "LOG-CANJE-1788972862108",
-    "fechaHora": "2026-09-09T16:54:22.100Z",
-    "rutUsuario": "105208235",
-    "accion": "CANJE_CUPON",
-    "detalles": "Canje exitoso con 2FA del cupón CUP-VNA-37YQ por pasaje TKT-37203 (Asiento N°4, Bus KPR-982, Tramo: Santiago-Viña Del Mar)."
+    "detalles": "Compra aprobada: CUPONERA V.ALEMANA (10 CUPONES) (10 cupones) por $49.000. Orden: ORD-930207"
   }
 ]

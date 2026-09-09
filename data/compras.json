@@ -1,32 +1,32 @@
 [
   {
-    "id": "ORD-362326",
+    "id": "ORD-838486",
     "rutCliente": "105208235",
     "nombreCliente": "Dorian Gonzalez",
     "emailCliente": "dgonzalez@wit.la",
-    "telefonoCliente": "23456789",
-    "cuponeraId": 6,
-    "nombreCuponera": "CUPONERA VIÑA DEL MAR (10 CUPONES)",
+    "telefonoCliente": "34567890",
+    "cuponeraId": 5,
+    "nombreCuponera": "CUPONERA LITORAL (10 CUPONES)",
     "cantidadCupones": 10,
     "montoTotal": 49000,
     "metodoPago": "Webpay Plus - Transbank",
     "estadoPago": "Aprobado",
-    "fechaCompra": "2026-09-09T14:32:42.326Z",
+    "fechaCompra": "2026-09-09T19:57:18.486Z",
     "fechaVencimiento": "2026-12-09T02:59:59.999Z"
   },
   {
-    "id": "ORD-694875",
+    "id": "ORD-930207",
     "rutCliente": "105208235",
     "nombreCliente": "Dorian Gonzalez",
     "emailCliente": "dgonzalez@wit.la",
-    "telefonoCliente": "23456789",
-    "cuponeraId": 15,
-    "nombreCuponera": "CUPONERA SAN ANTONIO- STO DOMINGO (10 CUPONES)",
+    "telefonoCliente": "123456789",
+    "cuponeraId": 3,
+    "nombreCuponera": "CUPONERA V.ALEMANA (10 CUPONES)",
     "cantidadCupones": 10,
-    "montoTotal": 50000,
+    "montoTotal": 49000,
     "metodoPago": "Webpay Plus - Transbank",
     "estadoPago": "Aprobado",
-    "fechaCompra": "2026-09-09T16:51:34.875Z",
+    "fechaCompra": "2026-09-09T19:58:50.207Z",
     "fechaVencimiento": "2026-12-09T02:59:59.999Z"
   }
 ]
