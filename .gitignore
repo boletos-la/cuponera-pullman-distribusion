@@ -1,0 +1,71 @@
+# ==========================================
+# .gitignore para Proyecto Next.js / Node.js
+# ==========================================
+
+# 1. Dependencias
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# 2. Compilación y Salida de Next.js
+/.next/
+/out/
+/build
+/dist
+
+# 3. Variables de Entorno y Secretos
+.env
+.env*.local
+.env.development
+.env.test
+.env.production
+*.pem
+
+# 4. Logs y Depuración
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# 5. Archivos del Sistema Operativo
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# 6. Configuración de Editores e IDEs
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# 7. Caché de Herramientas y Vercel
+.vercel
+.turbo
+
+# 8. TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# 9. Datos Temporales / Pruebas Locales (Opcional: descomentar si no deseas subir compras o transacciones de prueba)
+# data/compras.json
+# data/cupones.json
+# data/pasajes.json
+# data/auditoria.json
