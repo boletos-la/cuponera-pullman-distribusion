@@ -2,8 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { Cuponera, Compra, Cupon } from '@/lib/dataStore';
+import { couponService } from '@/lib/services/couponService';
+import { paymentService } from '@/lib/services/paymentService';
 import { validateRut, formatRut, cleanRut } from '@/lib/rutValidator';
-import { ShoppingCart, Check, AlertCircle, ShieldCheck, Ticket, Sparkles, Filter, CreditCard, ArrowRight, X } from 'lucide-react';
+import { ShoppingCart, Check, AlertCircle, ShieldCheck, Ticket, Sparkles, Filter, CreditCard, ArrowRight, X, CheckCircle, XCircle } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 interface CatalogViewProps {
@@ -36,17 +38,50 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
     cupones: Cupon[];
   } | null>(null);
 
+  const [showTransbankSuccess, setShowTransbankSuccess] = useState(false);
+  const [showTransbankError, setShowTransbankError] = useState(false);
+  const [transbankErrorMessage, setTransbankErrorMessage] = useState('');
+
   useEffect(() => {
     fetchCuponeras();
+    
+    // Verificar si venimos de un pago exitoso o fallido
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('payment_success') === 'true') {
+      setShowTransbankSuccess(true);
+      // Limpiar URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    } else if (params.get('payment_error') === 'true') {
+      const reason = params.get('reason');
+      if (reason === 'cancelled') {
+        setTransbankErrorMessage('El pago fue anulado por el usuario.');
+      } else {
+        setTransbankErrorMessage('Hubo un error al procesar el pago o fue rechazado por el banco.');
+      }
+      setShowTransbankError(true);
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
   }, []);
 
   const fetchCuponeras = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/cuponeras');
-      const data = await res.json();
-      if (data.success) {
-        setCuponeras(data.data);
+      const res = await couponService.getCatalog();
+      if (res.success) {
+        // Mapeo de la respuesta del backend a la interfaz Cuponera esperada por el UI
+        const mappedData = res.data.map((c: any) => ({
+          id: c.id,
+          nombre: c.nombre,
+          descripcion: c.descripcion || '',
+          tramos: c.tramos || [],
+          valorUnitario: c.valorUnitario,
+          cantidadCupones: c.cantidadCupones,
+          precioTotal: c.precioTotal,
+          activa: c.activa,
+          categoria: c.categoria || 'Todos',
+          badge: c.badge
+        }));
+        setCuponeras(mappedData);
       }
     } catch (err) {
       console.error('Error al cargar cuponeras:', err);
@@ -103,44 +138,32 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
 
     setSubmitting(true);
     try {
-      const res = await fetch('/api/compras', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          rutCliente: rut,
-          nombreCliente: nombre,
-          emailCliente: email,
-          telefonoCliente: telefono,
-          cuponeraId: selectedCuponera?.id,
-          simularRechazo
-        })
-      });
-
-      const data = await res.json();
-
-      if (!res.ok || !data.success) {
-        setSubmitError(data.error || 'No se pudo procesar la transacción.');
-        return;
-      }
-
-      // Celebración Confetti
-      try {
-        confetti({
-          particleCount: 100,
-          spread: 70,
-          origin: { y: 0.6 }
+      if (selectedCuponera) {
+        const res = await paymentService.initPayment({ 
+          id_cuponera: selectedCuponera.id,
+          rut,
+          email,
+          nombre
         });
-      } catch (e) {}
-
-      setCompraExitosa({
-        compra: data.data.compra,
-        rutFormateado: data.data.rutFormateado,
-        cupones: data.data.cuponesGenerados
-      });
-
-      setSelectedCuponera(null);
-    } catch (err) {
-      setSubmitError('Error conectando con el servidor de pagos.');
+        if (res.success && res.data.redirect_url && res.data.token_ws) {
+          // Transbank requiere que enviemos el token_ws mediante un POST form oculto a la redirect_url
+          const form = document.createElement('form');
+          form.method = 'POST';
+          form.action = res.data.redirect_url;
+          
+          const tokenInput = document.createElement('input');
+          tokenInput.type = 'hidden';
+          tokenInput.name = 'token_ws';
+          tokenInput.value = res.data.token_ws;
+          
+          form.appendChild(tokenInput);
+          document.body.appendChild(form);
+          form.submit();
+          return;
+        }
+      }
+    } catch (err: any) {
+      setSubmitError(err.message || 'Error conectando con el servidor de pagos.');
     } finally {
       setSubmitting(false);
     }
@@ -274,14 +297,14 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                   <div>
                     <span className="text-[11px] text-slate-400 block font-medium">Valor Unitario</span>
                     <span className="text-lg font-extrabold text-slate-800">
-                      ${item.valorUnitario.toLocaleString('es-CL')} <span className="text-xs font-normal text-slate-500">/ viaje</span>
+                      ${(item.valorUnitario || 0).toLocaleString('es-CL')} <span className="text-xs font-normal text-slate-500">/ viaje</span>
                     </span>
                   </div>
 
                   <div className="text-right">
                     <span className="text-[11px] text-slate-400 block font-medium">Precio Total Paquete</span>
                     <span className="text-2xl font-black text-[#F05A24]">
-                      ${item.precioTotal.toLocaleString('es-CL')}
+                      ${(item.precioTotal || 0).toLocaleString('es-CL')}
                     </span>
                   </div>
                 </div>
@@ -536,6 +559,83 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                   <ArrowRight className="w-4 h-4" />
                 </button>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Éxito Transbank Webpay */}
+      {showTransbankSuccess && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-[60]">
+          <div className="bg-white rounded-3xl max-w-md w-full shadow-2xl overflow-hidden transform transition-all animate-in zoom-in-95 duration-200">
+            {/* Header del Modal */}
+            <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 p-6 text-center text-white relative">
+              <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3 backdrop-blur-md">
+                <CheckCircle className="w-10 h-10 text-white" />
+              </div>
+              <h3 className="text-xl font-bold">¡Pago Exitoso!</h3>
+              <p className="text-emerald-50 text-sm mt-1 opacity-90">
+                Tu cuponera ha sido activada
+              </p>
+            </div>
+
+            {/* Contenido */}
+            <div className="p-6 space-y-5 bg-slate-50">
+              <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm text-center">
+                <p className="text-slate-600 text-sm leading-relaxed">
+                  El pago a través de Transbank se completó correctamente y tus pasajes ya se encuentran disponibles en tu cuenta.
+                </p>
+                <div className="mt-4 inline-block bg-emerald-100 text-emerald-800 px-4 py-2 rounded-lg text-sm font-semibold border border-emerald-200">
+                  Estado: Aprobado
+                </div>
+              </div>
+
+              {/* Botón Acción */}
+              <button
+                onClick={() => setShowTransbankSuccess(false)}
+                className="w-full bg-[#0A4DA6] hover:bg-blue-800 text-white font-bold py-3.5 px-4 rounded-xl transition-all shadow-md flex items-center justify-center gap-2"
+              >
+                <span>Aceptar y Continuar</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Error Transbank Webpay */}
+      {showTransbankError && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-[60]">
+          <div className="bg-white rounded-3xl max-w-md w-full shadow-2xl overflow-hidden transform transition-all animate-in zoom-in-95 duration-200">
+            {/* Header del Modal */}
+            <div className="bg-gradient-to-r from-red-500 to-red-600 p-6 text-center text-white relative">
+              <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3 backdrop-blur-md">
+                <XCircle className="w-10 h-10 text-white" />
+              </div>
+              <h3 className="text-xl font-bold">Pago Fallido</h3>
+              <p className="text-red-50 text-sm mt-1 opacity-90">
+                No se pudo procesar tu compra
+              </p>
+            </div>
+
+            {/* Contenido */}
+            <div className="p-6 space-y-5 bg-slate-50">
+              <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm text-center">
+                <p className="text-slate-600 text-sm leading-relaxed">
+                  {transbankErrorMessage}
+                </p>
+                <div className="mt-4 inline-block bg-red-100 text-red-800 px-4 py-2 rounded-lg text-sm font-semibold border border-red-200">
+                  Estado: Rechazado o Anulado
+                </div>
+              </div>
+
+              {/* Botón Acción */}
+              <button
+                onClick={() => setShowTransbankError(false)}
+                className="w-full bg-[#0A4DA6] hover:bg-blue-800 text-white font-bold py-3.5 px-4 rounded-xl transition-all shadow-md flex items-center justify-center gap-2"
+              >
+                <span>Cerrar</span>
+              </button>
             </div>
           </div>
         </div>

@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Cupon } from '@/lib/dataStore';
 import { validateRut, formatRut, cleanRut } from '@/lib/rutValidator';
-import { Search, LayoutDashboard, Ticket, Clock, CheckCircle, Mail, ArrowRight, AlertCircle, Ban, ShieldCheck } from 'lucide-react';
+import { Search, LayoutDashboard, Ticket, Clock, CheckCircle, Mail, ArrowRight, AlertCircle, Ban, ShieldCheck, KeyRound } from 'lucide-react';
+import { authService } from '@/lib/services/authService';
+import { couponService } from '@/lib/services/couponService';
+import { setAuthToken } from '@/lib/apiClient';
 
 interface DashboardViewProps {
   initialRut?: string;
@@ -12,91 +14,104 @@ interface DashboardViewProps {
 
 export default function DashboardView({ initialRut = '', onCanjearCupon }: DashboardViewProps) {
   const [rutInput, setRutInput] = useState(initialRut ? formatRut(initialRut) : '');
+  const [emailInput, setEmailInput] = useState('');
+  const [otpCode, setOtpCode] = useState('');
   const [rutError, setRutError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [searched, setSearched] = useState(false);
-
+  const [step, setStep] = useState<'login' | 'otp' | 'dashboard'>('login');
+  
   const [rutFormateado, setRutFormateado] = useState('');
-  const [metricas, setMetricas] = useState({
-    disponibles: 0,
-    utilizados: 0,
-    vencidos: 0,
-    total: 0
-  });
-  const [cuponeras, setCuponeras] = useState<Cupon[]>([]);
+  const [metricas, setMetricas] = useState({ disponibles: 0, utilizados: 0, vencidos: 0, total: 0 });
+  const [cuponeras, setCuponeras] = useState<any[]>([]);
 
   // Email update state
   const [editingEmail, setEditingEmail] = useState(false);
   const [newEmail, setNewEmail] = useState('');
   const [emailSuccessMsg, setEmailSuccessMsg] = useState('');
 
-  useEffect(() => {
-    if (initialRut) {
-      handleSearchByRut(initialRut);
-    }
-  }, [initialRut]);
-
-  const handleSearchByRut = async (rutToSearch: string) => {
+  // 1. Solicitar OTP
+  const handleRequestOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
     setRutError('');
-    const cleaned = cleanRut(rutToSearch);
+    const cleaned = cleanRut(rutInput);
 
     if (!validateRut(cleaned)) {
       setRutError('RUT inválido según el algoritmo chileno Módulo 11.');
       return;
     }
+    if (!emailInput) {
+      setRutError('El correo es requerido para enviar el código.');
+      return;
+    }
 
     setLoading(true);
-    setSearched(true);
     try {
-      const res = await fetch(`/api/cupones?rut=${encodeURIComponent(cleaned)}`);
-      const data = await res.json();
-
-      if (data.success) {
-        setRutFormateado(data.rutFormateado);
-        setMetricas(data.metricas);
-        setCuponeras(data.cupones);
-        if (data.cupones.length > 0) {
-          setNewEmail(data.cupones[0].emailCliente);
-        }
-      } else {
-        setRutError(data.error || 'Error al consultar saldo de cupones.');
+      const res = await authService.sendOtp({ rut: cleaned, email: emailInput });
+      if (res.success) {
+        setRutFormateado(formatRut(cleaned));
+        setStep('otp');
       }
-    } catch (err) {
-      setRutError('Error conectando con el servidor.');
-    } fontally: {
+    } catch (err: any) {
+      setRutError(err.message || 'Error conectando con el servidor.');
+    } finally {
       setLoading(false);
     }
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  // 2. Verificar OTP y Cargar Dashboard
+  const handleVerifyOtp = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (rutInput) {
-      handleSearchByRut(rutInput);
-    }
-  };
+    setRutError('');
+    const cleaned = cleanRut(rutInput);
 
-  const handleUpdateEmail = async () => {
-    if (!newEmail || !rutFormateado) return;
+    setLoading(true);
     try {
-      const res = await fetch('/api/cupones', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ rut: rutFormateado, nuevoEmail: newEmail })
-      });
-      const data = await res.json();
-      if (data.success) {
-        setEmailSuccessMsg('Correo de notificación actualizado correctamente.');
-        setEditingEmail(false);
-        setCuponeras((prev) => prev.map((c) => ({ ...c, emailCliente: newEmail })));
-        setTimeout(() => setEmailSuccessMsg(''), 4000);
+      const res = await authService.verifyOtp({ rut: cleaned, otpCode });
+      if (res.success && res.token) {
+        setAuthToken(res.token); // Guardar JWT
+        await loadDashboard();
       }
-    } catch (err) {
-      console.error(err);
+    } catch (err: any) {
+      setRutError(err.message || 'Código OTP inválido.');
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Helper para días restantes de vigencia de 90 días
+  // 3. Cargar Dashboard usando JWT
+  const loadDashboard = async () => {
+    try {
+      const res = await couponService.getDashboard();
+      if (res.success) {
+        const data = res.data;
+        setCuponeras(data.cuponerasActivas || []);
+        
+        // Calcular métricas
+        let disponibles = 0;
+        let total = 0;
+        let vencidos = 0;
+        
+        (data.cuponerasActivas || []).forEach((c: any) => {
+          disponibles += c.usos_restantes;
+          total += c.cuponera?.maximo_usos || 10;
+        });
+        
+        setMetricas({
+          disponibles,
+          utilizados: data.historialCupones?.length || 0,
+          vencidos,
+          total
+        });
+        
+        setStep('dashboard');
+      }
+    } catch (err: any) {
+      setRutError(err.message || 'Error al cargar el dashboard.');
+    }
+  };
+
   const getDaysLeft = (fechaVencimiento: string) => {
+    if (!fechaVencimiento) return 90;
     const exp = new Date(fechaVencimiento).getTime();
     const now = new Date().getTime();
     const diffDays = Math.ceil((exp - now) / (1000 * 60 * 60 * 24));
@@ -105,70 +120,134 @@ export default function DashboardView({ initialRut = '', onCanjearCupon }: Dashb
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
-      {/* ---------------- PRIMERA INSTANCIA: TARJETA DE VALIDACIÓN POR RUT DE CUPONERAS ---------------- */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-[#FFE4D6] space-y-6">
-        <div className="flex items-center gap-4 border-b border-slate-100 pb-5">
-          <div className="w-12 h-12 rounded-2xl bg-[#FFEDD5] text-[#F05A24] flex items-center justify-center shrink-0 shadow-2xs">
-            <LayoutDashboard className="w-6 h-6 text-[#F05A24]" />
+      {step === 'login' && (
+        <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-[#FFE4D6] space-y-6">
+          <div className="flex items-center gap-4 border-b border-slate-100 pb-5">
+            <div className="w-12 h-12 rounded-2xl bg-[#FFEDD5] text-[#F05A24] flex items-center justify-center shrink-0 shadow-2xs">
+              <LayoutDashboard className="w-6 h-6 text-[#F05A24]" />
+            </div>
+            <div>
+              <span className="bg-[#FFF5F0] text-[#F05A24] text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider border border-[#FED7AA]">
+                Autenticación 2FA
+              </span>
+              <h2 className="text-2xl font-black text-[#0F172A] mt-1">
+                Ingreso al Dashboard
+              </h2>
+              <p className="text-xs text-[#64748B] font-medium mt-0.5">
+                Ingresa tu RUT y correo para recibir un código de acceso único (OTP).
+              </p>
+            </div>
           </div>
-          <div>
-            <span className="bg-[#FFF5F0] text-[#F05A24] text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider border border-[#FED7AA]">
-              Autogestión de Cuponeras
-            </span>
-            <h2 className="text-2xl font-black text-[#0F172A] mt-1">
-              Mi Dashboard de Cuponeras
-            </h2>
-            <p className="text-xs text-[#64748B] font-medium mt-0.5">
-              Ingresa tu RUT para consultar el saldo disponible y canjear tus viajes acumulados.
+
+          <form onSubmit={handleRequestOtp} className="space-y-4">
+            <div className="space-y-1.5">
+              <label className="block text-xs font-extrabold text-[#0F172A] uppercase tracking-wider">
+                RUT del Titular
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  required
+                  placeholder="Ingresa tu RUT (ej: 12.345.678-K)"
+                  value={rutInput}
+                  onChange={(e) => {
+                    setRutInput(formatRut(e.target.value));
+                    setRutError('');
+                  }}
+                  className="w-full text-sm font-semibold bg-white border border-slate-200 rounded-xl pl-10 pr-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#F05A24] text-[#0F172A]"
+                />
+                <Search className="w-5 h-5 text-slate-400 absolute left-3.5 top-4" />
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="block text-xs font-extrabold text-[#0F172A] uppercase tracking-wider">
+                Correo Electrónico
+              </label>
+              <div className="relative">
+                <input
+                  type="email"
+                  required
+                  placeholder="tu@correo.com"
+                  value={emailInput}
+                  onChange={(e) => setEmailInput(e.target.value)}
+                  className="w-full text-sm font-semibold bg-white border border-slate-200 rounded-xl pl-10 pr-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#F05A24] text-[#0F172A]"
+                />
+                <Mail className="w-5 h-5 text-slate-400 absolute left-3.5 top-4" />
+              </div>
+            </div>
+
+            {rutError && <p className="text-xs text-red-600 font-bold mt-1">{rutError}</p>}
+
+            <button
+              type="submit"
+              disabled={loading || !rutInput || !emailInput}
+              className="w-full bg-[#F05A24] hover:bg-[#D94B18] text-white font-extrabold py-3.5 px-6 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-sm cursor-pointer disabled:opacity-50"
+            >
+              {loading ? (
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <>
+                  <ShieldCheck className="w-4 h-4" />
+                  <span>Enviar Código de Acceso</span>
+                </>
+              )}
+            </button>
+          </form>
+        </div>
+      )}
+
+      {step === 'otp' && (
+        <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-[#FFE4D6] space-y-6">
+          <div className="text-center space-y-2">
+            <div className="w-16 h-16 rounded-full bg-[#FFF5F0] text-[#F05A24] flex items-center justify-center mx-auto shadow-md">
+              <KeyRound className="w-8 h-8 stroke-[2.5]" />
+            </div>
+            <h3 className="text-2xl font-black text-slate-900">Validación de Seguridad</h3>
+            <p className="text-xs text-slate-500">
+              Hemos enviado un código de 6 dígitos a <span className="font-semibold text-slate-700">{emailInput}</span>.
             </p>
           </div>
-        </div>
 
-        <form onSubmit={handleFormSubmit} className="space-y-4">
-          <div className="space-y-1.5">
-            <label className="block text-xs font-extrabold text-[#0F172A] uppercase tracking-wider">
-              RUT del Titular
-            </label>
-            <div className="relative">
+          <form onSubmit={handleVerifyOtp} className="space-y-4">
+            <div className="space-y-1.5 text-center">
+              <label className="block text-xs font-extrabold text-[#0F172A] uppercase tracking-wider">
+                Código OTP
+              </label>
               <input
                 type="text"
-                placeholder="Ingresa tu RUT (ej: 12.345.678-K)"
-                value={rutInput}
-                onChange={(e) => {
-                  setRutInput(formatRut(e.target.value));
-                  setRutError('');
-                }}
-                className={`w-full text-sm font-semibold bg-white border rounded-xl pl-10 pr-4 py-3.5 focus:outline-none focus:ring-2 ${
-                  rutError ? 'border-red-500 focus:ring-red-500' : 'border-slate-200 focus:ring-[#F05A24] text-[#0F172A]'
-                }`}
+                required
+                maxLength={6}
+                value={otpCode}
+                onChange={(e) => setOtpCode(e.target.value)}
+                className="w-48 mx-auto text-center text-2xl tracking-widest font-black bg-white border border-slate-300 rounded-xl py-3 focus:outline-none focus:ring-2 focus:ring-[#F05A24]"
               />
-              <Search className="w-5 h-5 text-slate-400 absolute left-3.5 top-4" />
             </div>
-            <p className="text-xs text-[#64748B]">
-              Ingresa tu RUT (ej: 12345678-9 o 12345678-K)
-            </p>
-            {rutError && <p className="text-xs text-red-600 font-bold mt-1">{rutError}</p>}
-          </div>
+            {rutError && <p className="text-xs text-red-600 font-bold text-center mt-1">{rutError}</p>}
+            
+            <button
+              type="submit"
+              disabled={loading || otpCode.length < 6}
+              className="w-full bg-[#0A4DA6] hover:bg-blue-800 text-white font-extrabold py-3.5 px-6 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-sm cursor-pointer disabled:opacity-50"
+            >
+              {loading ? (
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <span>Verificar y Entrar</span>
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={() => setStep('login')}
+              className="w-full text-slate-500 hover:text-slate-700 font-semibold text-xs py-2 cursor-pointer"
+            >
+              Volver
+            </button>
+          </form>
+        </div>
+      )}
 
-          <button
-            type="submit"
-            disabled={loading || !rutInput}
-            className="w-full bg-[#F05A24] hover:bg-[#D94B18] text-white font-extrabold py-3.5 px-6 rounded-xl shadow-md shadow-orange-500/20 transition-all flex items-center justify-center gap-2 text-sm cursor-pointer disabled:opacity-50 transform hover:-translate-y-0.5"
-          >
-            {loading ? (
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-            ) : (
-              <>
-                <ShieldCheck className="w-4 h-4" />
-                <span>Validar RUT y Consultar Saldo</span>
-              </>
-            )}
-          </button>
-        </form>
-      </div>
-
-      {/* ---------------- SEGUNDA INSTANCIA: MOSTRAR DETALLE SÓLO TRAS VALIDACIÓN ---------------- */}
-      {searched && (
+      {step === 'dashboard' && (
         <div className="space-y-6 animate-fade-in">
           {/* Tarjetas Consolidadas de Métricas */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -177,7 +256,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon }: Dashb
                 <Ticket className="w-6 h-6" />
               </div>
               <div>
-                <span className="text-xs text-slate-500 font-semibold block uppercase tracking-wider">Cupones Libres</span>
+                <span className="text-xs text-slate-500 font-semibold block uppercase tracking-wider">Disponibles</span>
                 <span className="text-2xl font-black text-emerald-700">{metricas.disponibles}</span>
               </div>
             </div>
@@ -187,18 +266,8 @@ export default function DashboardView({ initialRut = '', onCanjearCupon }: Dashb
                 <CheckCircle className="w-6 h-6" />
               </div>
               <div>
-                <span className="text-xs text-slate-500 font-semibold block uppercase tracking-wider">Cupones Usados</span>
+                <span className="text-xs text-slate-500 font-semibold block uppercase tracking-wider">Usados</span>
                 <span className="text-2xl font-black text-[#0A4DA6]">{metricas.utilizados}</span>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-2xl p-5 border border-amber-200 shadow-sm flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0">
-                <Clock className="w-6 h-6" />
-              </div>
-              <div>
-                <span className="text-xs text-slate-500 font-semibold block uppercase tracking-wider">Cupones Vencidos</span>
-                <span className="text-2xl font-black text-amber-700">{metricas.vencidos}</span>
               </div>
             </div>
 
@@ -213,60 +282,12 @@ export default function DashboardView({ initialRut = '', onCanjearCupon }: Dashb
             </div>
           </div>
 
-          {/* Preferencias de Correo */}
-          {cuponeras.length > 0 && (
-            <div className="bg-[#FFF7ED] rounded-2xl p-4 border border-[#FFEDD5] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 text-xs">
-              <div className="flex items-center gap-2">
-                <Mail className="w-4 h-4 text-[#F05A24]" />
-                <span className="font-medium text-slate-700">
-                  Notificaciones enviadas a: <span className="font-bold text-slate-900">{cuponeras[0].emailCliente}</span>
-                </span>
-              </div>
-
-              {!editingEmail ? (
-                <button
-                  onClick={() => setEditingEmail(true)}
-                  className="text-[#F05A24] font-bold hover:underline cursor-pointer"
-                >
-                  Cambiar Email
-                </button>
-              ) : (
-                <div className="flex items-center gap-2 w-full sm:w-auto">
-                  <input
-                    type="email"
-                    value={newEmail}
-                    onChange={(e) => setNewEmail(e.target.value)}
-                    className="bg-white border border-slate-300 rounded-lg px-2.5 py-1 focus:outline-none"
-                  />
-                  <button
-                    onClick={handleUpdateEmail}
-                    className="bg-[#F05A24] text-white font-bold px-3 py-1 rounded-lg cursor-pointer"
-                  >
-                    Guardar
-                  </button>
-                  <button
-                    onClick={() => setEditingEmail(false)}
-                    className="text-slate-500 hover:text-slate-700 cursor-pointer"
-                  >
-                    Cancelar
-                  </button>
-                </div>
-              )}
-
-              {emailSuccessMsg && <p className="text-emerald-600 font-bold">{emailSuccessMsg}</p>}
-            </div>
-          )}
-
-          {/* LISTA DE CUPONERAS ADQUIRIDAS Y SU SALDO (EJ. 8/10) */}
           <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 space-y-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-100 pb-4">
               <div>
                 <h3 className="text-xl font-black text-slate-900">
                   Cuponeras Adquiridas ({cuponeras.length})
                 </h3>
-                <p className="text-xs text-slate-500">
-                  Resumen de saldo disponible por cuponera activa.
-                </p>
               </div>
               <span className="text-xs font-mono font-bold bg-blue-50 text-[#0A4DA6] px-3 py-1 rounded-full border border-blue-200">
                 Titular: {rutFormateado}
@@ -276,124 +297,77 @@ export default function DashboardView({ initialRut = '', onCanjearCupon }: Dashb
             {cuponeras.length === 0 ? (
               <div className="p-12 text-center text-slate-500 text-xs space-y-2">
                 <AlertCircle className="w-8 h-8 text-amber-500 mx-auto" />
-                <p className="font-bold text-slate-700">No se encontraron cuponeras registradas para este RUT.</p>
-                <p>Puedes comprar tu primer paquete de viajes congelados en nuestro Catálogo Oficial.</p>
+                <p className="font-bold text-slate-700">No se encontraron cuponeras registradas.</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {cuponeras.map((c) => {
-                  const totalC = c.totalCupones || 10;
-                  const usadosC = c.cuponesUsados || 0;
-                  const saldoC = c.saldoDisponible !== undefined ? c.saldoDisponible : (totalC - usadosC);
-                  const daysLeft = getDaysLeft(c.fechaVencimiento);
+                  const totalC = c.cuponera?.maximo_usos || 10;
+                  const saldoC = c.usos_restantes;
+                  const daysLeft = getDaysLeft(c.fecha_expiracion);
                   
-                  // REGLA CLAVE: Botón de canje habilitado SOLO si quedan cupones disponible (>0) y la cuponera está activa
-                  const canCanjear = saldoC > 0 && c.estado === 'Activo' && daysLeft > 0;
+                  const canCanjear = saldoC > 0 && c.activa;
                   const porcentajeSaldo = Math.round((saldoC / totalC) * 100);
 
                   return (
                     <div
-                      key={c.codigo}
+                      key={c.id}
                       className={`p-6 rounded-2xl border transition-all flex flex-col justify-between space-y-4 ${
                         canCanjear
-                          ? 'border-emerald-200 bg-emerald-50/30 hover:border-emerald-400 shadow-sm'
-                          : saldoC === 0
-                          ? 'border-slate-200 bg-slate-50 opacity-90'
-                          : 'border-amber-200 bg-amber-50/20'
+                          ? 'border-emerald-200 bg-emerald-50/30 shadow-sm'
+                          : 'border-slate-200 bg-slate-50 opacity-90'
                       }`}
                     >
-                      {/* Encabezado Cuponera */}
                       <div className="space-y-2">
                         <div className="flex justify-between items-start">
                           <span className="font-mono font-extrabold text-sm text-[#F05A24] bg-white px-3 py-1 rounded-lg border border-[#FFEDD5] shadow-xs">
-                            Código: {c.codigo}
+                            ID: {c.id}
                           </span>
-
-                          <span
-                            className={`text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider ${
-                              canCanjear
-                                ? 'bg-emerald-600 text-white'
-                                : saldoC === 0
-                                ? 'bg-slate-600 text-white'
-                                : 'bg-amber-600 text-white'
-                            }`}
-                          >
-                            {canCanjear ? 'Activa' : saldoC === 0 ? 'Sin Saldo (Agotada)' : 'Vencida'}
+                          <span className={`text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider ${canCanjear ? 'bg-emerald-600 text-white' : 'bg-slate-600 text-white'}`}>
+                            {canCanjear ? 'Activa' : 'Sin Saldo'}
                           </span>
                         </div>
-
                         <div>
-                          <h4 className="font-extrabold text-base text-slate-900">{c.nombreCuponera}</h4>
-                          <p className="text-xs text-slate-500 mt-0.5">
-                            <span className="font-semibold text-slate-700">Tramos:</span> {c.tramosPermitidos.join(', ')}
-                          </p>
+                          <h4 className="font-extrabold text-base text-slate-900">{c.cuponera?.nombre}</h4>
                         </div>
                       </div>
 
-                      {/* SALDO DE LA CUPONERA (Ej: 8/10 quedan 8 cupones de 10) */}
                       <div className="bg-white p-4 rounded-xl border border-slate-200 space-y-2">
                         <div className="flex justify-between items-end">
                           <div>
-                            <span className="text-[11px] font-bold text-slate-500 block uppercase tracking-wider">
-                              Saldo de Cupones
-                            </span>
+                            <span className="text-[11px] font-bold text-slate-500 block uppercase tracking-wider">Saldo</span>
                             <div className="flex items-baseline gap-1.5">
-                              <span className={`text-3xl font-black ${saldoC > 0 ? 'text-emerald-600' : 'text-slate-400'}`}>
-                                {saldoC}
-                              </span>
+                              <span className="text-3xl font-black text-emerald-600">{saldoC}</span>
                               <span className="text-sm font-bold text-slate-400">/ {totalC}</span>
                             </div>
                           </div>
-
-                          <div className="text-right">
-                            <span className="text-xs font-bold text-slate-700 block">
-                              Quedan <span className="text-[#F05A24] font-extrabold">{saldoC}</span> cupones de {totalC}
-                            </span>
-                            <span className="text-[10px] text-slate-400 font-medium">({usadosC} viajes realizados)</span>
-                          </div>
                         </div>
-
-                        {/* Barra de Progreso del Saldo */}
                         <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
                           <div
-                            className={`h-full transition-all duration-500 ${
-                              saldoC > 3 ? 'bg-emerald-500' : saldoC > 0 ? 'bg-amber-500' : 'bg-slate-300'
-                            }`}
+                            className={`h-full transition-all duration-500 ${saldoC > 0 ? 'bg-emerald-500' : 'bg-slate-300'}`}
                             style={{ width: `${porcentajeSaldo}%` }}
                           />
                         </div>
                       </div>
 
-                      {/* Vigencia en Días */}
-                      <div className="flex items-center gap-1.5 text-xs text-slate-600 font-medium pt-1">
-                        <Clock className="w-4 h-4 text-[#F05A24]" />
-                        <span>Vigencia 90 días: Quedan {daysLeft} días (Vence el {new Date(c.fechaVencimiento).toLocaleDateString('es-CL')})</span>
-                      </div>
-
-                      {/* BOTÓN CANJEAR: ACTIVADO SOLO CUANDO QUEDE CUPO EN LA CUPONERA */}
                       <button
                         disabled={!canCanjear}
-                        onClick={() => onCanjearCupon(c.codigo, rutFormateado)}
-                        className={`w-full font-bold py-3 px-4 rounded-xl transition-all flex items-center justify-center gap-2 text-sm ${
+                        onClick={() => onCanjearCupon(c.id.toString(), rutFormateado)}
+                        className={`w-full font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 text-sm ${
                           canCanjear
-                            ? 'bg-[#F05A24] hover:bg-[#D94B18] text-white shadow-md cursor-pointer transform hover:-translate-y-0.5'
+                            ? 'bg-[#F05A24] hover:bg-[#D94B18] text-white shadow-md cursor-pointer'
                             : 'bg-slate-200 text-slate-400 cursor-not-allowed border border-slate-300'
                         }`}
                       >
                         {canCanjear ? (
                           <>
-                            <span>Canjear Pasaje con esta Cuponera</span>
+                            <span>Canjear Pasaje</span>
                             <ArrowRight className="w-4 h-4" />
-                          </>
-                        ) : saldoC === 0 ? (
-                          <>
-                            <Ban className="w-4 h-4 text-slate-400" />
-                            <span>Sin Saldo Disponible (0/{totalC} Cupones)</span>
                           </>
                         ) : (
                           <>
                             <Ban className="w-4 h-4 text-slate-400" />
-                            <span>Cuponera Vencida (Superó 90 días)</span>
+                            <span>Agotada</span>
                           </>
                         )}
                       </button>

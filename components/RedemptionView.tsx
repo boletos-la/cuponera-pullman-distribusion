@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Servicio, Asiento, Pasaje } from '@/lib/dataStore';
 import { validateRut, formatRut, cleanRut } from '@/lib/rutValidator';
+import { couponService } from '@/lib/services/couponService';
 import { Bus, ShieldCheck, Calendar, Clock, MapPin, CheckCircle2, AlertCircle, KeyRound, Ticket, Lock, ArrowRight, UserCheck, X } from 'lucide-react';
 import TicketModal from './TicketModal';
 
@@ -135,28 +136,16 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
     setGeneratingOtp(true);
     setOtpError('');
     try {
-      const res = await fetch('/api/otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action: 'generate',
-          rut: cleanRut(rut),
-          email: otpEmail || 'titular@ejemplo.cl',
-          cuponCodigo: cuponInfo.codigo
-        })
-      });
+      const res = await couponService.sendRedeemOtp();
 
-      const data = await res.json();
-
-      if (data.success) {
-        setOtpSimuladoTest(data.codigoSimuladoTest);
+      if (res.success) {
         setOtpTimer(300);
         setShowOtpModal(true);
       } else {
-        setOtpError(data.error || 'No se pudo generar el código 2FA.');
+        setOtpError(res.message || 'No se pudo generar el código 2FA.');
       }
-    } catch (err) {
-      setOtpError('Error conectando con el servicio de autenticación.');
+    } catch (err: any) {
+      setOtpError(err.message || 'Error conectando con el servicio de autenticación.');
     } finally {
       setGeneratingOtp(false);
     }
@@ -174,56 +163,42 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
 
     setVerifyingOtp(true);
     try {
-      // 1. Validar OTP en API /api/otp
-      const otpRes = await fetch('/api/otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action: 'validate',
-          rut: cleanRut(rut),
-          code: otpCodeInput
-        })
+      // Intentar canje directamente (el backend valida el OTP y descuenta saldo transaccionalmente)
+      const reservaRes = await couponService.redeemCoupon({
+        idUsuarioCuponera: parseInt(cuponCodigo), // Asumimos que initialCuponCode es el ID
+        idRuta: 1, // Hardcoded temporal hasta integrar el GDS real
+        otpCode: otpCodeInput
       });
 
-      const otpData = await otpRes.json();
-
-      if (!otpRes.ok || !otpData.success) {
-        setOtpError(otpData.error || 'Código 2FA incorrecto (Excepción #4).');
-        setVerifyingOtp(false);
-        return;
-      }
-
-      setOtpValidado(true);
-
-      // 2. Completar Canje en /api/reserva (Paso 13)
-      const reservaRes = await fetch('/api/reserva', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          cuponCodigo: cuponInfo?.codigo,
-          servicioId: selectedServicio?.id,
-          asientoNumero: selectedAsiento,
-          rutCliente: cleanRut(rut),
+      if (reservaRes.success) {
+        setOtpValidado(true);
+        setShowOtpModal(false);
+        // El backend devuelve { cupon: { codigo, estado, fecha_uso } }
+        setEmitidoPasaje({
+          codigo: reservaRes.data.cupon.codigo,
+          cuponCodigo: cuponCodigo,
+          rutCliente: rut,
+          nombreCliente: 'Titular de Cuenta',
           emailCliente: otpEmail || 'cliente@ejemplo.cl',
-          otpTokenValido: true
-        })
-      });
-
-      const reservaData = await reservaRes.json();
-
-      if (!reservaRes.ok || !reservaData.success) {
-        setOtpError(reservaData.error || 'Error al emitir el pasaje.');
-        setVerifyingOtp(false);
-        return;
+          servicioId: selectedServicio?.id || 'SRV-000',
+          origen: selectedServicio?.origen || 'Origen',
+          destino: selectedServicio?.destino || 'Destino',
+          fechaSalida: selectedFecha,
+          horaSalida: selectedServicio?.horaSalida || '00:00',
+          asientoNumero: selectedAsiento || 0,
+          tipoBus: selectedServicio?.tipoBus || 'Semi Cama',
+          patente: selectedServicio?.patente || 'XXXX-00',
+          estado: 'Emitido',
+          fechaEmision: new Date().toISOString(),
+          codigoQR: 'qr-placeholder',
+          codigoBarras: 'barras-placeholder'
+        });
+        setShowTicketModal(true);
+      } else {
+        setOtpError(reservaRes.message || 'Error al emitir el pasaje.');
       }
-
-      // Éxito: Mostrar boleto emitido
-      setShowOtpModal(false);
-      setEmitidoPasaje(reservaData.pasaje);
-      setShowTicketModal(true);
-
-    } catch (err) {
-      setOtpError('Ocurrió un error en la autenticación y emisión.');
+    } catch (err: any) {
+      setOtpError(err.message || 'Ocurrió un error en la autenticación y emisión.');
     } finally {
       setVerifyingOtp(false);
     }

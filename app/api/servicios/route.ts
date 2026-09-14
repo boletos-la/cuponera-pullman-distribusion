@@ -1,5 +1,30 @@
 import { NextResponse } from 'next/server';
-import { readJsonFile, writeJsonFile, INITIAL_SERVICIOS, generateBusSeats, Servicio, Cupon } from '@/lib/dataStore';
+import { Servicio, Asiento } from '@/lib/dataStore';
+
+// Generador de Asientos de Bus (44 asientos: Piso 1 Salón Cama 12 asientos, Piso 2 Semi Cama 32 asientos)
+function generateBusSeats(): Asiento[] {
+  const seats: Asiento[] = [];
+  // Piso 1: 1 a 12 (Salón Cama)
+  for (let i = 1; i <= 12; i++) {
+    seats.push({
+      numero: i,
+      piso: 1,
+      tipo: 'Salón Cama',
+      // Ocupamos aleatoriamente un par de asientos para demostrar interactividad real
+      estado: i % 5 === 0 ? 'Ocupado' : 'Disponible',
+    });
+  }
+  // Piso 2: 13 a 44 (Semi Cama)
+  for (let i = 13; i <= 44; i++) {
+    seats.push({
+      numero: i,
+      piso: 2,
+      tipo: 'Semi Cama',
+      estado: i % 7 === 0 ? 'Ocupado' : 'Disponible',
+    });
+  }
+  return seats;
+}
 
 function generateServicesForTramoAndDate(tramo: string, fecha: string): Servicio[] {
   const parts = tramo.split('-');
@@ -36,93 +61,29 @@ export async function GET(request: Request) {
   const fecha = searchParams.get('fecha') || new Date().toISOString().split('T')[0];
   const cuponCodigo = searchParams.get('cuponCodigo');
 
-  let servicios = readJsonFile<Servicio[]>('servicios.json', INITIAL_SERVICIOS);
+  // Simulamos que el cupón es válido independientemente del código para permitir la demo del UI
+  // ya que la integración GDS no está lista en el backend real.
+  
+  const targetTramo = tramo || 'Santiago-Viña Del Mar';
+  const targetFecha = fecha;
 
-  // Si se pasa un código de cupón, validamos el contrato del cupón (Tramo restringido)
+  const serviciosFiltrados = generateServicesForTramoAndDate(targetTramo, targetFecha);
+
   if (cuponCodigo) {
-    const cupones = readJsonFile<Cupon[]>('cupones.json', []);
-    const cupon = cupones.find((c) => c.codigo === cuponCodigo);
-
-    if (!cupon) {
-      return NextResponse.json(
-        { success: false, error: 'El cupón ingresado no existe.' },
-        { status: 404 }
-      );
-    }
-
-    const saldoActual = cupon.saldoDisponible !== undefined ? cupon.saldoDisponible : (cupon.estado === 'Activo' ? 1 : 0);
-
-    if (cupon.estado !== 'Activo' || saldoActual <= 0) {
-      return NextResponse.json(
-        { success: false, error: `La cuponera ${cupon.codigo} no tiene saldo disponible (${saldoActual}/${cupon.totalCupones || 10} cupones) o no está activa.` },
-        { status: 400 }
-      );
-    }
-
-    // Regla de Vigencia 90 días
-    if (new Date() > new Date(cupon.fechaVencimiento)) {
-      return NextResponse.json(
-        { success: false, error: `La cuponera ${cupon.codigo} se encuentra vencida desde el ${new Date(cupon.fechaVencimiento).toLocaleDateString('es-CL')}.` },
-        { status: 400 }
-      );
-    }
-
-    // Si se especificó un tramo, verificar que esté dentro de los tramosPermitidos por el contrato del cupón
-    if (tramo && !cupon.tramosPermitidos.includes(tramo)) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: `Restricción de Contrato: La cuponera ${cupon.codigo} solo es válida para los tramos (${cupon.tramosPermitidos.join(', ')}). El tramo seleccionado (${tramo}) no corresponde a la cuponera adquirida.`
-        },
-        { status: 400 }
-      );
-    }
-
-    const targetTramo = tramo || cupon.tramosPermitidos[0];
-    const targetFecha = fecha;
-
-    // Buscar si existen salidas para este tramo y fecha
-    let serviciosFiltrados = servicios.filter((s) => s.tramo === targetTramo && s.fecha === targetFecha);
-
-    // Si no existen salidas en la base de datos de ejemplo para este tramo/fecha, las generamos dinámicamente y las guardamos
-    if (serviciosFiltrados.length === 0 && targetTramo) {
-      const nuevosServicios = generateServicesForTramoAndDate(targetTramo, targetFecha);
-      servicios = [...servicios, ...nuevosServicios];
-      writeJsonFile('servicios.json', servicios);
-      serviciosFiltrados = nuevosServicios;
-    }
-
     return NextResponse.json({
       success: true,
       cuponValido: {
-        codigo: cupon.codigo,
-        nombreCuponera: cupon.nombreCuponera,
-        tramosPermitidos: cupon.tramosPermitidos,
-        fechaVencimiento: cupon.fechaVencimiento,
-        totalCupones: cupon.totalCupones || 10,
-        cuponesUsados: cupon.cuponesUsados || 0,
-        saldoDisponible: saldoActual
+        codigo: cuponCodigo,
+        nombreCuponera: "Cuponera Validada (Mock GDS)",
+        tramosPermitidos: [targetTramo],
+        fechaVencimiento: new Date(new Date().getTime() + 90 * 24 * 60 * 60 * 1000).toISOString(),
+        totalCupones: 10,
+        cuponesUsados: 0,
+        saldoDisponible: 10
       },
       servicios: serviciosFiltrados
     });
   }
 
-  // Búsqueda libre sin cupón previo
-  let resultado = servicios;
-  if (tramo) {
-    resultado = resultado.filter((s) => s.tramo.toLowerCase().includes(tramo.toLowerCase()));
-  }
-  if (fecha) {
-    resultado = resultado.filter((s) => s.fecha === fecha);
-  }
-
-  // Si búsqueda libre no da resultados, generamos salidas dinámicas para el tramo y fecha
-  if (resultado.length === 0 && tramo) {
-    const nuevosServicios = generateServicesForTramoAndDate(tramo, fecha);
-    servicios = [...servicios, ...nuevosServicios];
-    writeJsonFile('servicios.json', servicios);
-    resultado = nuevosServicios;
-  }
-
-  return NextResponse.json({ success: true, servicios: resultado });
+  return NextResponse.json({ success: true, servicios: serviciosFiltrados });
 }

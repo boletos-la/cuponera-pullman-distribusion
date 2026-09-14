@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { validateRut, formatRut, cleanRut } from '@/lib/rutValidator';
 import { RotateCcw, AlertTriangle, CheckCircle2, ShieldAlert, ArrowLeft } from 'lucide-react';
+import { couponService } from '@/lib/services/couponService';
 
 export default function TicketCancellationView() {
   const [pasajeCodigo, setPasajeCodigo] = useState('');
@@ -35,29 +36,23 @@ export default function TicketCancellationView() {
 
     setLoading(true);
     try {
-      const res = await fetch('/api/cupones/cancelar', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          pasajeCodigo,
-          rut: cleanedRut
-        })
-      });
+      // Necesita token JWT válido (asumiendo que está logueado, o en su defecto
+      // el servicio debería manejarlo o la API ser pública).
+      // Como el requerimiento pide JWT en las rutas cancel, el usuario debe haber entrado al dashboard.
+      const res = await couponService.cancelCoupon(pasajeCodigo);
 
-      const data = await res.json();
-
-      if (!res.ok || !data.success) {
-        setErrorMsg(data.error || 'No se pudo procesar la anulación.');
+      if (!res.success) {
+        setErrorMsg(res.message || 'No se pudo procesar la anulación.');
         return;
       }
 
       setResultadoExitosa({
-        mensaje: data.mensaje,
-        cuponCodigoReintegrado: data.cuponCodigoReintegrado
+        mensaje: res.data?.message || 'Pasaje anulado correctamente.',
+        cuponCodigoReintegrado: pasajeCodigo
       });
 
-    } catch (err) {
-      setErrorMsg('Error conectando con el servidor.');
+    } catch (err: any) {
+      setErrorMsg(err.message || 'Error conectando con el servidor.');
     } finally {
       setLoading(false);
     }
