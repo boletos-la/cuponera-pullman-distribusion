@@ -48,7 +48,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon }: Dashb
     setLoading(true);
     try {
       const formattedRut = formatRut(cleaned);
-      const res = await authService.sendOtp({ rut: formattedRut, correo: emailInput });
+      const res = await authService.sendOtp({ rut: formattedRut, email: emailInput });
       if (res.success) {
         setRutFormateado(formattedRut);
         setStep('otp');
