@@ -29,7 +29,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon }: Dashb
   const [newEmail, setNewEmail] = useState('');
   const [emailSuccessMsg, setEmailSuccessMsg] = useState('');
 
-  // 1. Solicitar OTP
+  // 1. Solicitar OTP (Bypass directo por ahora)
   const handleRequestOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     setRutError('');
@@ -39,17 +39,20 @@ export default function DashboardView({ initialRut = '', onCanjearCupon }: Dashb
       setRutError('RUT inválido según el algoritmo chileno Módulo 11.');
       return;
     }
-    if (!emailInput) {
+    // No requerimos email para el bypass
+    /* if (!emailInput) {
       setRutError('El correo es requerido para enviar el código.');
       return;
-    }
+    } */
 
     setLoading(true);
     try {
-      const res = await authService.sendOtp({ rut: cleaned, email: emailInput });
-      if (res.success) {
+      // Usamos el código de bypass directamente sin llamar a sendOtp
+      const res = await authService.verifyOtp({ rut: cleaned, otpCode: '000000' });
+      if (res.success && res.token) {
+        setAuthToken(res.token); // Guardar JWT
         setRutFormateado(formatRut(cleaned));
-        setStep('otp');
+        await loadDashboard();
       }
     } catch (err: any) {
       setRutError(err.message || 'Error conectando con el servidor.');
@@ -83,25 +86,17 @@ export default function DashboardView({ initialRut = '', onCanjearCupon }: Dashb
     try {
       const res = await couponService.getDashboard();
       if (res.success) {
-        const data = res.data;
-        setCuponeras(data.cuponerasActivas || []);
+        // El backend real retorna { success, rutFormateado, metricas, cupones }
+        setCuponeras(res.cupones || []);
         
-        // Calcular métricas
-        let disponibles = 0;
-        let total = 0;
-        let vencidos = 0;
-        
-        (data.cuponerasActivas || []).forEach((c: any) => {
-          disponibles += c.usos_restantes;
-          total += c.cuponera?.maximo_usos || 10;
-        });
-        
-        setMetricas({
-          disponibles,
-          utilizados: data.historialCupones?.length || 0,
-          vencidos,
-          total
-        });
+        if (res.metricas) {
+          setMetricas({
+            disponibles: res.metricas.disponibles || 0,
+            utilizados: res.metricas.utilizados || 0,
+            vencidos: res.metricas.vencidos || 0,
+            total: res.metricas.total || 0
+          });
+        }
         
         setStep('dashboard');
       }
@@ -181,7 +176,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon }: Dashb
 
             <button
               type="submit"
-              disabled={loading || !rutInput || !emailInput}
+              disabled={loading || !rutInput}
               className="w-full bg-[#F05A24] hover:bg-[#D94B18] text-white font-extrabold py-3.5 px-6 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-sm cursor-pointer disabled:opacity-50"
             >
               {loading ? (
@@ -189,7 +184,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon }: Dashb
               ) : (
                 <>
                   <ShieldCheck className="w-4 h-4" />
-                  <span>Enviar Código de Acceso</span>
+                  <span>Ingresar al Dashboard</span>
                 </>
               )}
             </button>
@@ -302,16 +297,16 @@ export default function DashboardView({ initialRut = '', onCanjearCupon }: Dashb
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {cuponeras.map((c) => {
-                  const totalC = c.cuponera?.maximo_usos || 10;
-                  const saldoC = c.usos_restantes;
-                  const daysLeft = getDaysLeft(c.fecha_expiracion);
+                  const totalC = c.totalCupones || 10;
+                  const saldoC = c.saldoDisponible || 0;
+                  const daysLeft = getDaysLeft(c.fechaVencimiento);
                   
-                  const canCanjear = saldoC > 0 && c.activa;
+                  const canCanjear = saldoC > 0 && c.estado === 'Activo';
                   const porcentajeSaldo = Math.round((saldoC / totalC) * 100);
 
                   return (
                     <div
-                      key={c.id}
+                      key={c.codigo}
                       className={`p-6 rounded-2xl border transition-all flex flex-col justify-between space-y-4 ${
                         canCanjear
                           ? 'border-emerald-200 bg-emerald-50/30 shadow-sm'
@@ -321,14 +316,14 @@ export default function DashboardView({ initialRut = '', onCanjearCupon }: Dashb
                       <div className="space-y-2">
                         <div className="flex justify-between items-start">
                           <span className="font-mono font-extrabold text-sm text-[#F05A24] bg-white px-3 py-1 rounded-lg border border-[#FFEDD5] shadow-xs">
-                            ID: {c.id}
+                            ID: {c.codigo.split('WP')[1] || c.codigo}
                           </span>
                           <span className={`text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider ${canCanjear ? 'bg-emerald-600 text-white' : 'bg-slate-600 text-white'}`}>
                             {canCanjear ? 'Activa' : 'Sin Saldo'}
                           </span>
                         </div>
                         <div>
-                          <h4 className="font-extrabold text-base text-slate-900">{c.cuponera?.nombre}</h4>
+                          <h4 className="font-extrabold text-base text-slate-900">{c.nombreCuponera}</h4>
                         </div>
                       </div>
 
