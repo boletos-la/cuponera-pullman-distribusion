@@ -12,12 +12,14 @@ export const getAuthToken = () => {
 export const setAuthToken = (token: string) => {
   if (typeof window !== 'undefined') {
     localStorage.setItem('jwt_token', token);
+    window.dispatchEvent(new Event('auth-change'));
   }
 };
 
 export const removeAuthToken = () => {
   if (typeof window !== 'undefined') {
     localStorage.removeItem('jwt_token');
+    window.dispatchEvent(new Event('auth-change'));
   }
 };
 

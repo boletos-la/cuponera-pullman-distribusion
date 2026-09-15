@@ -20,19 +20,27 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
   const [userProfile, setUserProfile] = React.useState<{ nombre: string; rut: string } | null>(null);
 
   React.useEffect(() => {
-    const token = getAuthToken();
-    if (token) {
-      try {
-        const payloadStr = atob(token.split('.')[1]);
-        const payload = JSON.parse(payloadStr);
-        setUserProfile({
-          nombre: payload.nombre || 'Usuario',
-          rut: payload.rut
-        });
-      } catch (e) {
-        console.error('Invalid token format');
+    const updateProfile = () => {
+      const token = getAuthToken();
+      if (token) {
+        try {
+          const payloadStr = atob(token.split('.')[1]);
+          const payload = JSON.parse(payloadStr);
+          setUserProfile({
+            nombre: payload.nombre || 'Usuario',
+            rut: payload.rut
+          });
+        } catch (e) {
+          console.error('Invalid token format');
+        }
+      } else {
+        setUserProfile(null);
       }
-    }
+    };
+
+    updateProfile();
+    window.addEventListener('auth-change', updateProfile);
+    return () => window.removeEventListener('auth-change', updateProfile);
   }, []);
 
   const handleLogout = () => {
