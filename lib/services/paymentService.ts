@@ -5,6 +5,7 @@ export interface InitPaymentPayload {
   rut: string;
   email: string;
   nombre: string;
+  frontend_url?: string;
 }
 
 export const paymentService = {
