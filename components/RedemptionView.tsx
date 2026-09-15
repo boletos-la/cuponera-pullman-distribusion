@@ -151,19 +151,47 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
         return;
       }
 
-      const params = new URLSearchParams({
-        originId: originCity.id.toString(),
-        destinationId: destCity.id.toString(),
-        date: selectedFecha,
+      const promises = [];
+      const baseDate = new Date(); // Start from today
+      for (let i = 0; i < 14; i++) {
+        const d = new Date(baseDate);
+        d.setDate(d.getDate() + i);
+        const dateStr = d.toISOString().split('T')[0];
+
+        const params = new URLSearchParams({
+          originId: originCity.id.toString(),
+          destinationId: destCity.id.toString(),
+          date: dateStr,
+        });
+
+        promises.push(
+          fetch(`/api/kupos/search?${params}`)
+            .then(res => res.json())
+            .catch(() => ({ error: true }))
+        );
+      }
+
+      const results = await Promise.all(promises);
+      let allServices: KuposService[] = [];
+      
+      results.forEach(data => {
+        if (!data.error && data.services) {
+          allServices = [...allServices, ...data.services];
+        }
       });
 
-      const res = await fetch(`/api/kupos/search?${params}`);
-      const data = await res.json();
+      // Sort services by date and time
+      allServices.sort((a, b) => {
+        const timeA = new Date(`${a.travel_date}T${a.dep_time || '00:00'}`).getTime();
+        const timeB = new Date(`${b.travel_date}T${b.dep_time || '00:00'}`).getTime();
+        return timeA - timeB;
+      });
 
-      if (data.error) {
-        setCuponError(data.error);
+      if (allServices.length === 0) {
+        setCuponError('No hay salidas disponibles para los próximos 14 días.');
       } else {
-        setServicios(data.services || []);
+        setCuponError('');
+        setServicios(allServices);
       }
     } catch (err) {
       console.error(err);
@@ -263,7 +291,7 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
           origin: origenStr,
           destination: destinoStr,
           seatNumber: selectedAsiento,
-          travelDate: selectedFecha,
+          travelDate: selectedServicio.travel_date || selectedFecha,
           fare: seatObj?.price || 0
         })
       });
@@ -280,7 +308,7 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
           servicioId: selectedServicio?.id || 'SRV',
           origen: origenStr,
           destino: destinoStr,
-          fechaSalida: selectedFecha,
+          fechaSalida: selectedServicio.travel_date || selectedFecha,
           horaSalida: selectedServicio?.dep_time || '00:00',
           asientoNumero: selectedAsiento || 0,
           tipoBus: selectedServicio?.bus_type || 'Bus',
@@ -420,16 +448,6 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
                   ))}
                 </select>
               </div>
-              <div>
-                <label className="block text-[11px] font-bold text-slate-600 mb-1">Fecha de Viaje</label>
-                <input
-                  type="date"
-                  value={selectedFecha}
-                  min={new Date().toISOString().split('T')[0]}
-                  onChange={(e) => setSelectedFecha(e.target.value)}
-                  className="text-xs bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 font-medium text-slate-800 focus:outline-none"
-                />
-              </div>
             </div>
             <button
               onClick={handleSearchServicios}
@@ -463,7 +481,10 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
                         }`}
                       >
                         <div className="flex justify-between items-start mb-2">
-                          <span className="font-extrabold text-lg text-slate-900">{srv.dep_time} - {srv.arr_time}</span>
+                          <div>
+                            <span className="font-extrabold text-lg text-slate-900 block">{srv.dep_time} - {srv.arr_time}</span>
+                            <span className="text-[10px] font-bold text-[#0A4DA6] uppercase">{new Date(srv.travel_date + 'T00:00:00').toLocaleDateString('es-CL', { weekday: 'short', day: 'numeric', month: 'short' })}</span>
+                          </div>
                           <span className="text-[10px] font-bold bg-[#FF6B00] text-white px-2 py-0.5 rounded-full">{srv.bus_type}</span>
                         </div>
                         <div className="text-xs space-y-1 text-slate-600">
