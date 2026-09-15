@@ -48,10 +48,11 @@ export default function DashboardView({ initialRut = '', onCanjearCupon }: Dashb
     setLoading(true);
     try {
       // Usamos el código de bypass directamente sin llamar a sendOtp
-      const res = await authService.verifyOtp({ rut: cleaned, otpCode: '000000' });
+      const formattedRut = formatRut(cleaned);
+      const res = await authService.verifyOtp({ rut: formattedRut, otpCode: '000000' });
       if (res.success && res.token) {
         setAuthToken(res.token); // Guardar JWT
-        setRutFormateado(formatRut(cleaned));
+        setRutFormateado(formattedRut);
         await loadDashboard();
       }
     } catch (err: any) {
@@ -69,7 +70,8 @@ export default function DashboardView({ initialRut = '', onCanjearCupon }: Dashb
 
     setLoading(true);
     try {
-      const res = await authService.verifyOtp({ rut: cleaned, otpCode });
+      const formattedRut = formatRut(cleaned);
+      const res = await authService.verifyOtp({ rut: formattedRut, otpCode });
       if (res.success && res.token) {
         setAuthToken(res.token); // Guardar JWT
         await loadDashboard();
