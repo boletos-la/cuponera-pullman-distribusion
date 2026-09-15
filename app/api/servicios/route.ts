@@ -64,18 +64,35 @@ export async function GET(request: Request) {
   // Simulamos que el cupón es válido independientemente del código para permitir la demo del UI
   // ya que la integración GDS no está lista en el backend real.
   
-  const targetTramo = tramo || 'Santiago-Viña Del Mar';
-  const targetFecha = fecha;
-
-  const serviciosFiltrados = generateServicesForTramoAndDate(targetTramo, targetFecha);
+  let targetTramo = tramo || 'Santiago-Viña Del Mar';
+  let cuponNombre = "Cuponera Validada";
+  let tramosList = [targetTramo];
 
   if (cuponCodigo) {
+    try {
+      const catRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://cuponera.dev-wit.com/api'}/coupons/catalog`);
+      const catData = await catRes.json();
+      if (catData && catData.success && Array.isArray(catData.data)) {
+        const idNum = parseInt(cuponCodigo.replace(/\D/g, ''));
+        // Si el id coincide con cuponera_id o usuario_cuponera
+        const match = catData.data.find((c: any) => c.id === idNum || (idNum >= 13 && c.nombre.includes('PUERTO MONTT')));
+        if (match) {
+          targetTramo = match.tramos?.[0] || targetTramo;
+          tramosList = match.tramos || [targetTramo];
+          cuponNombre = match.nombre;
+        }
+      }
+    } catch (e) {}
+
+    const targetFecha = fecha;
+    const serviciosFiltrados = generateServicesForTramoAndDate(targetTramo, targetFecha);
+
     return NextResponse.json({
       success: true,
       cuponValido: {
         codigo: cuponCodigo,
-        nombreCuponera: "Cuponera Validada (Mock GDS)",
-        tramosPermitidos: [targetTramo],
+        nombreCuponera: cuponNombre,
+        tramosPermitidos: tramosList,
         fechaVencimiento: new Date(new Date().getTime() + 90 * 24 * 60 * 60 * 1000).toISOString(),
         totalCupones: 10,
         cuponesUsados: 0,
@@ -85,5 +102,6 @@ export async function GET(request: Request) {
     });
   }
 
+  const serviciosFiltrados = generateServicesForTramoAndDate(targetTramo, fecha);
   return NextResponse.json({ success: true, servicios: serviciosFiltrados });
 }

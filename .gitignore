@@ -63,6 +63,7 @@ Thumbs.db
 # 8. TypeScript
 *.tsbuildinfo
 next-env.d.ts
+.agents/
 
 # 9. Datos Temporales / Pruebas Locales (Opcional: descomentar si no deseas subir compras o transacciones de prueba)
 # data/compras.json

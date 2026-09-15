@@ -23,8 +23,13 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const searchQuery = searchParams.get("q") || "";
 
-    const apiKey = process.env.NEXT_PUBLIC_KUPOS_API_KEY_PROD;
-    const URL_KUPOS = process.env.NEXT_PUBLIC_URL_KUPOS_PROD;
+    const isProd = process.env.NEXT_PUBLIC_KUPOS_ENV === "prod";
+    const apiKey = isProd
+      ? process.env.NEXT_PUBLIC_KUPOS_API_KEY_PROD
+      : process.env.NEXT_PUBLIC_KUPOS_API_KEY_DEV;
+    const URL_KUPOS = isProd
+      ? process.env.NEXT_PUBLIC_URL_KUPOS_PROD
+      : process.env.NEXT_PUBLIC_URL_KUPOS_DEV;
 
     if (!apiKey) {
       return NextResponse.json(

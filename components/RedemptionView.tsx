@@ -113,6 +113,36 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
 
     setValidatingCupon(true);
     try {
+      // 1. Intentar obtener la información real de la cuponera desde el dashboard del usuario
+      try {
+        const dashRes = await couponService.getDashboard();
+        if (dashRes && dashRes.success && Array.isArray(dashRes.cupones)) {
+          const found = dashRes.cupones.find((c: any) => 
+            c.codigo === codeToValidate || 
+            c.codigo.replace(/\D/g, '') === codeToValidate.replace(/\D/g, '')
+          );
+          if (found) {
+            setCuponInfo({
+              codigo: found.codigo,
+              nombreCuponera: found.nombreCuponera,
+              tramosPermitidos: found.tramosPermitidos || [],
+              fechaVencimiento: found.fechaVencimiento,
+              totalCupones: found.totalCupones,
+              cuponesUsados: found.cuponesUsados,
+              saldoDisponible: found.saldoDisponible
+            });
+            if (found.tramosPermitidos && found.tramosPermitidos.length > 0) {
+              setSelectedTramo(found.tramosPermitidos[0]);
+            }
+            setValidatingCupon(false);
+            return;
+          }
+        }
+      } catch (e) {
+        // Fallback al endpoint local si falla la llamada
+      }
+
+      // 2. Fallback
       const res = await fetch(`/api/servicios?cuponCodigo=${encodeURIComponent(codeToValidate)}`);
       const data = await res.json();
 
@@ -278,25 +308,30 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
       // 2. Confirmación final en DB y GDS (sin OTP)
       const [origenStr, destinoStr] = selectedTramo.split('-').map(s => s.trim());
 
-      const reservaRes = await fetch('/api/coupons/redeem', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          rut: rut,
-          idUsuarioCuponera: parseInt(cuponCodigo.replace(/\D/g, '')) || 1, // Fix mapping CuponCode -> id if needed
-          idRuta: 1, // Fallback if necessary
-          pnrNumber: generatedPnrNumber,
-          operatorPnr: generatedOperatorPnr || '',
-          travelId: selectedServicio?.travel_id?.toString() || '0',
-          origin: origenStr,
-          destination: destinoStr,
-          seatNumber: selectedAsiento,
-          travelDate: selectedServicio.travel_date || selectedFecha,
-          fare: seatObj?.price || 0
-        })
-      });
+      // Mapear idRuta para el tramo seleccionado
+      let rutaId = 1;
+      const origenLow = origenStr.toLowerCase();
+      const destinoLow = destinoStr.toLowerCase();
+      if (origenLow.includes('santiago') && destinoLow.includes('puerto montt')) {
+        rutaId = 75;
+      } else if (origenLow.includes('puerto montt') && destinoLow.includes('santiago')) {
+        rutaId = 76;
+      }
 
-      const reservaData = await reservaRes.json();
+      const reservaData = await couponService.redeemCoupon({
+        idUsuarioCuponera: parseInt(cuponCodigo.replace(/\D/g, '')) || 1, // Fix mapping CuponCode -> id if needed
+        idRuta: rutaId,
+        otpCode: '000000', // Código dummy de 6 dígitos requerido por el validador del backend remoto
+        pnrNumber: generatedPnrNumber,
+        operatorPnr: generatedOperatorPnr || '',
+        travelId: selectedServicio?.travel_id?.toString() || '0',
+        origin: origenStr,
+        destination: destinoStr,
+        seatNumber: selectedAsiento,
+        travelDate: selectedServicio.travel_date || selectedFecha,
+        fare: seatObj?.price || 0,
+        kuposEnv: process.env.NEXT_PUBLIC_KUPOS_ENV || 'dev'
+      });
 
       if (reservaData.success) {
         setEmitidoPasaje({

@@ -3,7 +3,16 @@ import { apiClient } from '../apiClient';
 export interface RedeemPayload {
   idUsuarioCuponera: number;
   idRuta: number;
-  otpCode: string;
+  otpCode?: string;
+  pnrNumber: string;
+  operatorPnr: string;
+  travelId: string;
+  origin: string;
+  destination: string;
+  seatNumber: string;
+  travelDate: string;
+  fare: number;
+  kuposEnv?: string;
 }
 
 export const couponService = {

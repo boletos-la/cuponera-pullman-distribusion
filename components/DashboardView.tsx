@@ -327,7 +327,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon }: Dashb
                           : 'border-slate-200 bg-slate-50 opacity-90'
                       }`}
                     >
-                      <div className="space-y-2">
+                      <div className="space-y-3">
                         <div className="flex justify-between items-start">
                           <span className="font-mono font-extrabold text-sm text-[#F05A24] bg-white px-3 py-1 rounded-lg border border-[#FFEDD5] shadow-xs">
                             ID: {c.codigo.split('WP')[1] || c.codigo}
@@ -337,11 +337,31 @@ export default function DashboardView({ initialRut = '', onCanjearCupon }: Dashb
                           </span>
                         </div>
                         <div>
-                          <h4 className="font-extrabold text-base text-slate-900">{c.nombreCuponera}</h4>
+                          <h4 className="font-extrabold text-base text-slate-900 leading-snug">{c.nombreCuponera}</h4>
+                          <p className="text-xs text-slate-500 mt-1 line-clamp-2">{c.descripcion || 'Cuponera promocional'}</p>
                         </div>
+                        
+                        {/* Tramos Habilitados */}
+                        {c.tramosPermitidos && c.tramosPermitidos.length > 0 && (
+                          <div className="space-y-1.5 pt-2">
+                            <span className="text-[11px] font-bold text-slate-700 uppercase tracking-wider">
+                              Tramos Habilitados ({c.tramosPermitidos.length}):
+                            </span>
+                            <div className="flex flex-wrap gap-1">
+                              {c.tramosPermitidos.map((t: string, idx: number) => (
+                                <span
+                                  key={idx}
+                                  className="bg-slate-100 text-slate-700 text-[10px] font-medium px-2 py-0.5 rounded-md border border-slate-200"
+                                >
+                                  {t}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
 
-                      <div className="bg-white p-4 rounded-xl border border-slate-200 space-y-2">
+                      <div className="bg-white p-4 rounded-xl border border-slate-200 space-y-3">
                         <div className="flex justify-between items-end">
                           <div>
                             <span className="text-[11px] font-bold text-slate-500 block uppercase tracking-wider">Saldo</span>
@@ -350,12 +370,23 @@ export default function DashboardView({ initialRut = '', onCanjearCupon }: Dashb
                               <span className="text-sm font-bold text-slate-400">/ {totalC}</span>
                             </div>
                           </div>
+                          
+                          <div className="text-right">
+                            <span className="text-[11px] font-bold text-slate-500 block uppercase tracking-wider">Días Restantes</span>
+                            <span className={`text-sm font-black ${daysLeft <= 7 ? 'text-red-500' : 'text-slate-700'}`}>
+                              {daysLeft} días
+                            </span>
+                          </div>
                         </div>
                         <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
                           <div
                             className={`h-full transition-all duration-500 ${saldoC > 0 ? 'bg-emerald-500' : 'bg-slate-300'}`}
                             style={{ width: `${porcentajeSaldo}%` }}
                           />
+                        </div>
+                        <div className="flex justify-between items-center pt-2 border-t border-slate-100">
+                          <span className="text-[11px] text-slate-400 font-medium">Valor por viaje</span>
+                          <span className="text-xs font-bold text-slate-700">${(c.valorUnitario || 0).toLocaleString('es-CL')}</span>
                         </div>
                       </div>
 

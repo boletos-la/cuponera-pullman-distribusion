@@ -171,7 +171,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
   };
 
   // Filtrado de cuponeras
-  const categories = ['Todos', 'Viña del Mar', 'Concón', 'Valparaíso', 'Litoral Central', 'Marga Marga', 'Quillota', 'San Antonio', 'Aconcagua'];
+  const categories = ['Todos', 'Viña del Mar', 'Concón', 'Valparaíso', 'Litoral Central', 'Marga Marga', 'Quillota', 'San Antonio', 'Aconcagua', 'Puerto Montt'];
 
   const filteredCuponeras = cuponeras.filter((c) => {
     const matchesSearch =
@@ -187,6 +187,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
     if (selectedCategory === 'Quillota') return matchesSearch && c.nombre.includes('LIMACHE');
     if (selectedCategory === 'San Antonio') return matchesSearch && c.nombre.includes('SAN ANTONIO');
     if (selectedCategory === 'Aconcagua') return matchesSearch && (c.nombre.includes('LOS ANDES') || c.nombre.includes('VALPO-LOS ANDES'));
+    if (selectedCategory === 'Puerto Montt') return matchesSearch && (c.nombre.includes('PUERTO MONTT') || c.categoria.includes('Puerto Montt'));
 
     return matchesSearch;
   });
