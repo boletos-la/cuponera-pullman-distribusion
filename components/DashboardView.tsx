@@ -97,6 +97,10 @@ export default function DashboardView({ initialRut = '', onCanjearCupon }: Dashb
         // El backend real retorna { success, rutFormateado, metricas, cupones }
         setCuponeras(res.cupones || []);
         
+        if (res.rutFormateado) {
+          setRutFormateado(res.rutFormateado);
+        }
+        
         if (res.metricas) {
           setMetricas({
             disponibles: res.metricas.disponibles || 0,
@@ -357,7 +361,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon }: Dashb
 
                       <button
                         disabled={!canCanjear}
-                        onClick={() => onCanjearCupon(c.id.toString(), rutFormateado)}
+                        onClick={() => onCanjearCupon(c.codigo, rutFormateado)}
                         className={`w-full font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 text-sm ${
                           canCanjear
                             ? 'bg-[#F05A24] hover:bg-[#D94B18] text-white shadow-md cursor-pointer'
