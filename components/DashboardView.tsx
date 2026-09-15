@@ -29,7 +29,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon }: Dashb
   const [newEmail, setNewEmail] = useState('');
   const [emailSuccessMsg, setEmailSuccessMsg] = useState('');
 
-  // 1. Solicitar OTP (Bypass directo por ahora)
+  // 1. Solicitar OTP
   const handleRequestOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     setRutError('');
@@ -39,21 +39,19 @@ export default function DashboardView({ initialRut = '', onCanjearCupon }: Dashb
       setRutError('RUT inválido según el algoritmo chileno Módulo 11.');
       return;
     }
-    // No requerimos email para el bypass
-    /* if (!emailInput) {
+    
+    if (!emailInput) {
       setRutError('El correo es requerido para enviar el código.');
       return;
-    } */
+    }
 
     setLoading(true);
     try {
-      // Usamos el código de bypass directamente sin llamar a sendOtp
       const formattedRut = formatRut(cleaned);
-      const res = await authService.verifyOtp({ rut: formattedRut, otpCode: '000000' });
-      if (res.success && res.token) {
-        setAuthToken(res.token); // Guardar JWT
+      const res = await authService.sendOtp({ rut: formattedRut, correo: emailInput });
+      if (res.success) {
         setRutFormateado(formattedRut);
-        await loadDashboard();
+        setStep('otp');
       }
     } catch (err: any) {
       setRutError(err.message || 'Error conectando con el servidor.');
