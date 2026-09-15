@@ -78,17 +78,11 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
   const [operatorPnr, setOperatorPnr] = useState<string | null>(null);
   const [travelName, setTravelName] = useState<string | null>(null);
 
-  // Modal 2FA OTP
-  const [showOtpModal, setShowOtpModal] = useState(false);
-  const [otpCodeInput, setOtpCodeInput] = useState('');
-  const [otpTimer, setOtpTimer] = useState(300);
-  const [generatingOtp, setGeneratingOtp] = useState(false);
-  const [verifyingOtp, setVerifyingOtp] = useState(false);
-  const [otpError, setOtpError] = useState('');
-
   // Emisión Final
   const [emitidoPasaje, setEmitidoPasaje] = useState<any | null>(null);
   const [showTicketModal, setShowTicketModal] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [processError, setProcessError] = useState('');
 
   useEffect(() => {
     fetch('/api/kupos/cities')
@@ -105,17 +99,7 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
     }
   }, [initialCuponCode, initialRut]);
 
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (showOtpModal && otpTimer > 0) {
-      interval = setInterval(() => {
-        setOtpTimer((prev) => prev - 1);
-      }, 1000);
-    } else if (otpTimer === 0) {
-      setOtpError('El token 2FA ha expirado (validez de 300s agotada). Por favor solicite un nuevo código.');
-    }
-    return () => clearInterval(interval);
-  }, [showOtpModal, otpTimer]);
+
 
   const handleValidateCupon = async (codeToValidate: string, rutToValidate: string) => {
     setCuponError('');
@@ -216,11 +200,11 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
     }
   };
 
-  const handleStart2FA = async () => {
+  const handleReserveAndEmit = async () => {
     if (!selectedServicio || !selectedAsiento || !cuponInfo) return;
 
-    setGeneratingOtp(true);
-    setOtpError('');
+    setIsProcessing(true);
+    setProcessError('');
     try {
       // 1. Reserva tentativa en Kupos
       const seatObj = availableSeats.find(s => s.number === selectedAsiento);
@@ -251,56 +235,21 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
 
       const bookData = await bookRes.json();
       if (!bookRes.ok || !bookData.success) {
-        setOtpError(`El asiento ya no está disponible en GDS Kupos. Detalle: ${bookData.error || 'Error desconocido'}`);
-        setGeneratingOtp(false);
+        setProcessError(`El asiento ya no está disponible en GDS Kupos. Detalle: ${bookData.error || 'Error desconocido'}`);
+        setIsProcessing(false);
         return;
       }
 
-      setPnrNumber(bookData.pnrNumber);
-      setOperatorPnr(bookData.operatorPnr);
+      const generatedPnrNumber = bookData.pnrNumber;
+      const generatedOperatorPnr = bookData.operatorPnr;
+
+      setPnrNumber(generatedPnrNumber);
+      setOperatorPnr(generatedOperatorPnr);
       setTravelName(bookData.travelName);
 
-      // 2. Si reserva tentativa ok, solicitar 2FA
-      const otpRes = await fetch('/api/coupons/send-redeem-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ rut })
-      });
-      const otpData = await otpRes.json();
-
-      if (otpData.success) {
-        setOtpTimer(300);
-        setShowOtpModal(true);
-      } else {
-        setOtpError(otpData.message || 'No se pudo generar el código 2FA.');
-      }
-    } catch (err: any) {
-      setOtpError(err.message || 'Error conectando con el servicio de autenticación.');
-    } finally {
-      setGeneratingOtp(false);
-    }
-  };
-
-  const handleVerifyOtpAndEmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setOtpError('');
-
-    if (otpTimer === 0) {
-      setOtpError('El token ha expirado. Solicite un nuevo código.');
-      return;
-    }
-
-    if (!pnrNumber) {
-      setOtpError('Error crítico: PNR no encontrado. Reinicie el proceso de canje.');
-      return;
-    }
-
-    setVerifyingOtp(true);
-    try {
-      const seatObj = availableSeats.find(s => s.number === selectedAsiento);
+      // 2. Confirmación final en DB y GDS (sin OTP)
       const [origenStr, destinoStr] = selectedTramo.split('-').map(s => s.trim());
 
-      // Llamar al backend para validar OTP y confirmar reserva en DB y GDS
       const reservaRes = await fetch('/api/coupons/redeem', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -308,9 +257,8 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
           rut: rut,
           idUsuarioCuponera: parseInt(cuponCodigo.replace(/\D/g, '')) || 1, // Fix mapping CuponCode -> id if needed
           idRuta: 1, // Fallback if necessary
-          otpCode: otpCodeInput,
-          pnrNumber: pnrNumber,
-          operatorPnr: operatorPnr || '',
+          pnrNumber: generatedPnrNumber,
+          operatorPnr: generatedOperatorPnr || '',
           travelId: selectedServicio?.travel_id?.toString() || '0',
           origin: origenStr,
           destination: destinoStr,
@@ -323,9 +271,8 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
       const reservaData = await reservaRes.json();
 
       if (reservaData.success) {
-        setShowOtpModal(false);
         setEmitidoPasaje({
-          codigo: reservaData.data?.boletoExterno || pnrNumber,
+          codigo: reservaData.data?.boletoExterno || generatedPnrNumber,
           cuponCodigo: reservaData.data?.codigoCupon || cuponCodigo,
           rutCliente: rut,
           nombreCliente: 'Titular de Cuenta',
@@ -337,7 +284,7 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
           horaSalida: selectedServicio?.dep_time || '00:00',
           asientoNumero: selectedAsiento || 0,
           tipoBus: selectedServicio?.bus_type || 'Bus',
-          patente: operatorPnr || 'PNR-OP',
+          patente: generatedOperatorPnr || 'PNR-OP',
           estado: 'Emitido',
           fechaEmision: new Date().toISOString(),
           codigoQR: 'qr-placeholder',
@@ -345,12 +292,12 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
         });
         setShowTicketModal(true);
       } else {
-        setOtpError(reservaData.message || 'Error al emitir el pasaje en el Backend.');
+        setProcessError(reservaData.message || 'Error al emitir el pasaje en el Backend.');
       }
     } catch (err: any) {
-      setOtpError(err.message || 'Ocurrió un error en la autenticación y emisión.');
+      setProcessError(err.message || 'Ocurrió un error en el canje.');
     } finally {
-      setVerifyingOtp(false);
+      setIsProcessing(false);
     }
   };
 
@@ -364,7 +311,7 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
           </span>
           <h2 className="text-xl font-black text-slate-900 flex items-center gap-2 mt-1">
             <Bus className="w-5 h-5 text-[#F05A24]" />
-            Canje de Cupón por Pasaje (Con Autorización 2FA)
+            Canje de Cupón por Pasaje (1-Clic)
           </h2>
           <p className="text-xs text-slate-500 font-medium">
             Ingresa tu código de cupón activo y RUT para buscar viajes en la red Kupos.
@@ -575,25 +522,28 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
                     </div>
                   )}
 
-                  {selectedAsiento && (
                     <div className="bg-[#FFF7ED] border border-[#FFEDD5] p-4 rounded-2xl flex flex-col sm:flex-row justify-between items-center gap-3">
                       <div>
                         <span className="text-xs text-slate-900 font-bold block">Asiento Seleccionado: {selectedAsiento}</span>
-                        <span className="text-[11px] text-slate-600">Siguiente paso: Reserva tentativa y Autorización 2FA.</span>
+                        <span className="text-[11px] text-slate-600">Siguiente paso: Reserva tentativa y Emisión.</span>
                       </div>
                       <button
-                        onClick={handleStart2FA}
-                        disabled={generatingOtp}
+                        onClick={handleReserveAndEmit}
+                        disabled={isProcessing}
                         className="w-full sm:w-auto bg-[#F05A24] hover:bg-[#D94B18] text-white font-extrabold text-xs px-6 py-3 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
                       >
-                        {generatingOtp ? (
+                        {isProcessing ? (
                           <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                         ) : (
-                          <><ShieldCheck className="w-4 h-4 text-white" /><span>Solicitar 2FA e Iniciar Canje</span></>
+                          <><ShieldCheck className="w-4 h-4 text-white" /><span>Confirmar Reserva y Emitir</span></>
                         )}
                       </button>
                     </div>
-                  )}
+                    {processError && (
+                      <div className="p-3 mt-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 font-medium flex items-center gap-2">
+                        <AlertCircle className="w-4 h-4 text-red-600 shrink-0" /><span>{processError}</span>
+                      </div>
+                    )}
                 </div>
               ) : (
                 <div className="bg-white rounded-2xl p-12 text-center text-slate-400 border border-slate-200 space-y-2">
@@ -606,64 +556,7 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
         </div>
       )}
 
-      {showOtpModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-md animate-fade-in">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-100 space-y-6">
-            <div className="flex justify-between items-start">
-              <div className="flex items-center gap-2">
-                <div className="w-10 h-10 rounded-xl bg-orange-100 text-[#FF6B00] flex items-center justify-center"><KeyRound className="w-5 h-5" /></div>
-                <div>
-                  <span className="text-[10px] font-black text-[#FF6B00] uppercase tracking-wider block">GDS KUPOS</span>
-                  <h3 className="text-lg font-black text-slate-900">Autorización 2FA de 6 Dígitos</h3>
-                </div>
-              </div>
-              <button onClick={() => setShowOtpModal(false)} className="text-slate-400 hover:text-slate-600 p-1 cursor-pointer"><X className="w-5 h-5" /></button>
-            </div>
-            
-            <p className="text-xs text-slate-600">
-              Reserva tentativa creada exitosamente (PNR: {pnrNumber}). Se ha enviado una clave dinámica a su correo. Ingrésela a continuación para confirmar la emisión.
-            </p>
 
-            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-3.5 flex justify-between items-center">
-              <span className="text-xs font-semibold text-slate-600">Vigencia del Token:</span>
-              <span className={`font-mono font-black text-base ${otpTimer < 60 ? 'text-red-600 animate-pulse' : 'text-[#0A4DA6]'}`}>
-                {Math.floor(otpTimer / 60)}:{(otpTimer % 60).toString().padStart(2, '0')} min
-              </span>
-            </div>
-
-            <form onSubmit={handleVerifyOtpAndEmit} className="space-y-4">
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Ingresa el Código 2FA *</label>
-                <input
-                  type="text"
-                  maxLength={6}
-                  required
-                  placeholder="123456"
-                  value={otpCodeInput}
-                  onChange={(e) => setOtpCodeInput(e.target.value.replace(/\D/g, ''))}
-                  className="w-full text-center tracking-widest font-mono text-2xl font-black bg-slate-50 border border-slate-300 rounded-xl py-3 focus:outline-none focus:ring-2 focus:ring-[#0A4DA6]"
-                />
-              </div>
-              {otpError && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 font-medium flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 text-red-600 shrink-0" /><span>{otpError}</span>
-                </div>
-              )}
-              <button
-                type="submit"
-                disabled={verifyingOtp || otpCodeInput.length !== 6 || otpTimer === 0}
-                className="w-full bg-[#0A4DA6] hover:bg-blue-900 text-white font-extrabold py-3.5 px-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-base cursor-pointer disabled:opacity-50"
-              >
-                {verifyingOtp ? (
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                ) : (
-                  <><ShieldCheck className="w-5 h-5 text-[#FF6B00]" /><span>Confirmar Reserva Kupos y Emitir</span></>
-                )}
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
 
       {showTicketModal && emitidoPasaje && (
         <TicketModal

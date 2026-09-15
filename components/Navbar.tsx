@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { ShoppingCart, LayoutDashboard, RotateCcw, ShieldAlert, Trash2 } from 'lucide-react';
+import { ShoppingCart, LayoutDashboard, RotateCcw, ShieldAlert, Trash2, User, LogOut, LogIn } from 'lucide-react';
+import { getAuthToken, removeAuthToken } from '@/lib/apiClient';
 
 interface NavbarProps {
   activeTab: string;
@@ -15,6 +16,33 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
     { id: 'dashboard', label: 'Mi Dashboard', icon: LayoutDashboard },
     { id: 'anulacion', label: 'Anular Pasaje', icon: RotateCcw },
   ];
+
+  const [userProfile, setUserProfile] = React.useState<{ nombre: string; rut: string } | null>(null);
+
+  React.useEffect(() => {
+    const token = getAuthToken();
+    if (token) {
+      try {
+        const payloadStr = atob(token.split('.')[1]);
+        const payload = JSON.parse(payloadStr);
+        setUserProfile({
+          nombre: payload.nombre || 'Usuario',
+          rut: payload.rut
+        });
+      } catch (e) {
+        console.error('Invalid token format');
+      }
+    }
+  }, []);
+
+  const handleLogout = () => {
+    removeAuthToken();
+    window.location.reload();
+  };
+
+  const handleLoginClick = () => {
+    setActiveTab('dashboard');
+  };
 
   const handleResetData = async () => {
     if (confirm('¿Estás seguro de que deseas borrar todos los datos de compras, cupones y pasajes registrados?')) {
@@ -106,6 +134,36 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
               );
             })}
           </nav>
+          
+          {/* User Profile & Auth */}
+          <div className="hidden lg:flex items-center gap-4 ml-4 pl-4 border-l border-slate-200">
+            {userProfile ? (
+              <div className="flex items-center gap-3">
+                <div className="flex flex-col items-end">
+                  <span className="text-sm font-bold text-slate-800">{userProfile.nombre}</span>
+                  <span className="text-[10px] font-mono font-semibold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">{userProfile.rut}</span>
+                </div>
+                <div className="w-8 h-8 rounded-full bg-orange-100 text-[#F05A24] flex items-center justify-center border border-orange-200">
+                  <User className="w-4 h-4" />
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
+                  title="Cerrar Sesión"
+                >
+                  <LogOut className="w-4 h-4" />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={handleLoginClick}
+                className="flex items-center gap-2 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-sm font-bold rounded-xl transition-all shadow-sm cursor-pointer"
+              >
+                <LogIn className="w-4 h-4" />
+                <span>Iniciar Sesión</span>
+              </button>
+            )}
+          </div>
         </div>
       </div>
 

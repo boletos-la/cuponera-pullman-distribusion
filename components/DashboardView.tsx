@@ -5,7 +5,7 @@ import { validateRut, formatRut, cleanRut } from '@/lib/rutValidator';
 import { Search, LayoutDashboard, Ticket, Clock, CheckCircle, Mail, ArrowRight, AlertCircle, Ban, ShieldCheck, KeyRound } from 'lucide-react';
 import { authService } from '@/lib/services/authService';
 import { couponService } from '@/lib/services/couponService';
-import { setAuthToken } from '@/lib/apiClient';
+import { getAuthToken, setAuthToken } from '@/lib/apiClient';
 
 interface DashboardViewProps {
   initialRut?: string;
@@ -28,6 +28,14 @@ export default function DashboardView({ initialRut = '', onCanjearCupon }: Dashb
   const [editingEmail, setEditingEmail] = useState(false);
   const [newEmail, setNewEmail] = useState('');
   const [emailSuccessMsg, setEmailSuccessMsg] = useState('');
+
+  // Auto-Login
+  useEffect(() => {
+    const token = getAuthToken();
+    if (token) {
+      loadDashboard();
+    }
+  }, []);
 
   // 1. Solicitar OTP
   const handleRequestOtp = async (e: React.FormEvent) => {
@@ -101,7 +109,9 @@ export default function DashboardView({ initialRut = '', onCanjearCupon }: Dashb
         setStep('dashboard');
       }
     } catch (err: any) {
-      setRutError(err.message || 'Error al cargar el dashboard.');
+      // Si el token expiró o es inválido, mostramos login
+      setStep('login');
+      setRutError(err.message || 'La sesión expiró. Inicia sesión nuevamente.');
     }
   };
 
