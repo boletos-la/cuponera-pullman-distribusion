@@ -1,5 +1,5 @@
 export const getApiUrl = () => {
-  return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+  return process.env.NEXT_PUBLIC_API_URL || 'https://cuponera.dev-wit.com/api';
 };
 
 export const getAuthToken = () => {
@@ -23,7 +23,7 @@ export const removeAuthToken = () => {
 
 export const apiClient = async (endpoint: string, options: RequestInit = {}) => {
   const url = `${getApiUrl()}${endpoint}`;
-  
+
   const headers = new Headers(options.headers);
   headers.set('Content-Type', 'application/json');
 
@@ -38,7 +38,7 @@ export const apiClient = async (endpoint: string, options: RequestInit = {}) => 
   });
 
   const data = await response.json();
-  
+
   if (!response.ok) {
     throw new Error(data.message || 'Error en la solicitud al servidor');
   }
