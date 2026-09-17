@@ -18,7 +18,6 @@ export default function TicketCancellationView() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
-    setRutError('');
     setResultadoExitosa(null);
 
     if (!pasajeCodigo) {
