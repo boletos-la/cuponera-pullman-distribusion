@@ -4,7 +4,25 @@ export const getApiUrl = () => {
 
 export const getAuthToken = () => {
   if (typeof window !== 'undefined') {
-    return localStorage.getItem('jwt_token');
+    const token = localStorage.getItem('jwt_token');
+    if (token) {
+      try {
+        const payloadStr = atob(token.split('.')[1]);
+        const payload = JSON.parse(payloadStr);
+        const now = Math.floor(Date.now() / 1000);
+        
+        if (payload.exp && payload.exp < now) {
+          localStorage.removeItem('jwt_token');
+          // Trigger event so Navbar knows to update state if it happens dynamically
+          window.dispatchEvent(new Event('auth-change'));
+          return null;
+        }
+        return token;
+      } catch (e) {
+        localStorage.removeItem('jwt_token');
+        return null;
+      }
+    }
   }
   return null;
 };
