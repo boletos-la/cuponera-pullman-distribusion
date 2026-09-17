@@ -39,8 +39,8 @@ export default function TicketCancellationView() {
       }
 
       setResultadoExitosa({
-        mensaje: res.data?.message || 'Pasaje anulado correctamente.',
-        cuponCodigoReintegrado: pasajeCodigo
+        mensaje: res.message || 'Pasaje anulado correctamente.',
+        cuponCodigoReintegrado: res.cuponCodigoReintegrado || pasajeCodigo
       });
 
     } catch (err: any) {
