@@ -5,7 +5,7 @@ import Navbar from '@/components/Navbar';
 import HeroBanner from '@/components/HeroBanner';
 import CatalogView from '@/components/CatalogView';
 import DashboardView from '@/components/DashboardView';
-import RedemptionView from '@/components/RedemptionView';
+import { RedemptionFlow } from '@/components/redemption/RedemptionFlow';
 import TicketCancellationView from '@/components/TicketCancellationView';
 import AdminMaintainer from '@/components/AdminMaintainer';
 import ExceptionSimulator from '@/components/ExceptionSimulator';
@@ -68,7 +68,7 @@ export default function Home() {
           )}
 
           {activeTab === 'canje' && (
-            <RedemptionView
+            <RedemptionFlow
               initialCuponCode={selectedCuponCode}
               initialRut={selectedRut}
               onFinishRedemption={(rut) => handleGoToDashboardWithRut(rut)}
