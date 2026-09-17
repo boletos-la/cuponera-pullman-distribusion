@@ -7,6 +7,7 @@ import { paymentService } from '@/lib/services/paymentService';
 import { validateRut, formatRut, cleanRut } from '@/lib/rutValidator';
 import { ShoppingCart, Check, AlertCircle, ShieldCheck, Ticket, Sparkles, Filter, CreditCard, ArrowRight, X, CheckCircle, XCircle } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { getAuthUser } from '@/lib/apiClient';
 
 interface CatalogViewProps {
   onGoToDashboardWithRut: (rut: string) => void;
@@ -111,6 +112,14 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
     setSelectedCuponera(c);
     setSubmitError('');
     setRutError('');
+
+    // Pre-cargar datos del usuario si está autenticado
+    const authUser = getAuthUser();
+    if (authUser) {
+      if (authUser.nombre) setNombre(authUser.nombre);
+      if (authUser.rut) setRut(formatRut(authUser.rut));
+      if (authUser.correo) setEmail(authUser.correo);
+    }
   };
 
   const handleCloseCheckout = () => {

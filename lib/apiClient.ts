@@ -27,6 +27,21 @@ export const getAuthToken = () => {
   return null;
 };
 
+export const getAuthUser = () => {
+  if (typeof window !== 'undefined') {
+    const token = getAuthToken();
+    if (token) {
+      try {
+        const payloadStr = atob(token.split('.')[1]);
+        return JSON.parse(payloadStr);
+      } catch (e) {
+        return null;
+      }
+    }
+  }
+  return null;
+};
+
 export const setAuthToken = (token: string) => {
   if (typeof window !== 'undefined') {
     localStorage.setItem('jwt_token', token);
