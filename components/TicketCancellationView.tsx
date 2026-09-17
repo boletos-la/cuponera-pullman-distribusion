@@ -7,8 +7,6 @@ import { couponService } from '@/lib/services/couponService';
 
 export default function TicketCancellationView() {
   const [pasajeCodigo, setPasajeCodigo] = useState('');
-  const [rut, setRut] = useState('');
-  const [rutError, setRutError] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -23,16 +21,11 @@ export default function TicketCancellationView() {
     setRutError('');
     setResultadoExitosa(null);
 
-    if (!pasajeCodigo || !rut) {
+    if (!pasajeCodigo) {
       setErrorMsg('Complete todos los campos requeridos.');
       return;
     }
 
-    const cleanedRut = cleanRut(rut);
-    if (!validateRut(cleanedRut)) {
-      setRutError('RUT inválido según algoritmo chileno Módulo 11.');
-      return;
-    }
 
     setLoading(true);
     try {
@@ -98,21 +91,6 @@ export default function TicketCancellationView() {
             />
           </div>
 
-          <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">RUT del Titular del Pasaje * (Módulo 11)</label>
-            <input
-              type="text"
-              required
-              placeholder="12.345.678-K"
-              value={rut}
-              onChange={(e) => {
-                setRut(formatRut(e.target.value));
-                setRutError('');
-              }}
-              className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#F05A24]"
-            />
-            {rutError && <p className="text-xs text-red-600 font-medium mt-1">{rutError}</p>}
-          </div>
 
           {errorMsg && (
             <div className="p-4 bg-red-50 border border-red-200 rounded-2xl text-xs text-red-700 font-medium space-y-1">
@@ -126,7 +104,7 @@ export default function TicketCancellationView() {
 
           <button
             type="submit"
-            disabled={loading || !pasajeCodigo || !rut}
+            disabled={loading || !pasajeCodigo}
             className="w-full bg-[#F05A24] hover:bg-[#D94B18] text-white font-extrabold py-3.5 px-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-base cursor-pointer disabled:opacity-50"
           >
             {loading ? (
