@@ -8,6 +8,8 @@ import { useCuponStore } from "@/lib/cupon-store";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 
+import { useReservationStore } from "@/lib/reservation-store";
+
 interface StepConfirmationProps {
   bookingData: BookingData;
   onFinish: () => void;
@@ -15,15 +17,19 @@ interface StepConfirmationProps {
 
 export function StepConfirmation({ bookingData, onFinish }: StepConfirmationProps) {
   const { cuponInfo } = useCuponStore();
+  const departureBooking = useReservationStore((state) => state.getDepartureBooking());
 
   const handlePrint = () => {
     window.print();
   };
 
-  const pnr = bookingData.transactionId || "N/A";
-  const origen = bookingData.origin;
-  const destino = bookingData.destination;
-  const asiento = bookingData.selectedSeats[0] || "N/A";
+  const pnr = bookingData.transactionId || departureBooking?.pnrNumbers?.[0] || "N/A";
+  const origen = bookingData.origin || departureBooking?.origin || "N/A";
+  const destino = bookingData.destination || departureBooking?.destination || "N/A";
+  const asiento = bookingData.selectedSeats?.[0] || departureBooking?.selectedSeats?.[0] || "N/A";
+  const dateObj = bookingData.date || (departureBooking?.date ? new Date(departureBooking.date) : null);
+  const timeStr = bookingData.departureTime || departureBooking?.dep_time || "N/A";
+  const busTypeStr = bookingData.busType || departureBooking?.travel_name || "N/A";
 
   return (
     <div className="max-w-3xl mx-auto space-y-8 animate-fade-in print:max-w-full">
@@ -87,7 +93,7 @@ export function StepConfirmation({ bookingData, onFinish }: StepConfirmationProp
               <div>
                 <span className="text-xs text-slate-500 block">Fecha y Hora</span>
                 <span className="font-bold">
-                  {bookingData.date && format(bookingData.date, "dd MMM yyyy", { locale: es })} a las {bookingData.departureTime}
+                  {dateObj && format(dateObj, "dd MMM yyyy", { locale: es })} a las {timeStr}
                 </span>
               </div>
               <div className="text-right">
@@ -97,7 +103,7 @@ export function StepConfirmation({ bookingData, onFinish }: StepConfirmationProp
             </div>
 
             <div className="flex justify-between items-center text-xs pt-2 text-slate-600">
-              <span>Tipo: {bookingData.busType}</span>
+              <span>Tipo: {busTypeStr}</span>
             </div>
           </div>
         </div>

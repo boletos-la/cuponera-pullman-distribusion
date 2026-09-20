@@ -696,7 +696,7 @@ export function TravelSearch({ onNext, onBack }: TravelSearchProps) {
                   htmlFor="destination"
                   className="flex items-center gap-2"
                 >
-                  <MapPin className="h-4 w-4 text-accent" />
+                  <MapPin className="h-4 w-4 text-primary" />
                   {searchMode === "departure" ? "Destino" : "Destino (vuelta)"}
                 </Label>
                 <ComboBox
@@ -729,7 +729,7 @@ export function TravelSearch({ onNext, onBack }: TravelSearchProps) {
                     htmlFor="departure-date"
                     className="flex items-center gap-2"
                   >
-                    <Calendar className="h-4 w-4 text-secondary" />
+                    <Calendar className="h-4 w-4 text-primary" />
                     Fecha Ida
                   </Label>
                   <ModernDatePicker
@@ -748,7 +748,7 @@ export function TravelSearch({ onNext, onBack }: TravelSearchProps) {
                     htmlFor="return-date"
                     className="flex items-center gap-2"
                   >
-                    <Calendar className="h-4 w-4 text-secondary" />
+                    <Calendar className="h-4 w-4 text-primary" />
                     Fecha Vuelta
                   </Label>
 

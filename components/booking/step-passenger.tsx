@@ -258,7 +258,7 @@ export function StepPassenger({
               {/* Route */}
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
-                  <MapPin className="h-5 w-5 text-secondary mt-0.5" />
+                  <MapPin className="h-5 w-5 text-blue-600 mt-0.5" />
                   <div>
                     <p className="font-medium">{displayOrigin}</p>
                     <p className="text-sm text-muted-foreground">
@@ -319,9 +319,9 @@ export function StepPassenger({
 
               {/* Total */}
               <div className="pt-4 border-t">
-                <div className="flex justify-between">
-                  <span className="font-semibold">Total a Pagar</span>
-                  <span className="text-2xl font-bold text-secondary">
+                <div className="flex justify-between items-baseline">
+                  <span className="font-semibold text-foreground">Total a Pagar</span>
+                  <span className="text-2xl font-bold text-primary">
                     ${totalPrice.toLocaleString("es-CL")}
                   </span>
                 </div>
