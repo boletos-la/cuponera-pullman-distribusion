@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Ticket, Bus, Calendar, Clock, MapPin, User, Loader2, AlertCircle } from "lucide-react";
+import { Ticket, Bus, Calendar, Clock, MapPin, User, Loader2, AlertCircle, ChevronRight } from "lucide-react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import type { BookingData } from "@/types/booking";
@@ -96,70 +96,124 @@ export function StepCanje({
   const displaySelectedSeats = departureBooking?.selectedSeats || bookingData.selectedSeats;
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="text-center mb-8">
-        <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-2">
+    <div className="max-w-4xl mx-auto animate-fade-in">
+      <div className="text-center mb-10">
+        <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
+          <Ticket className="w-8 h-8 text-primary" />
+        </div>
+        <h2 className="text-3xl font-extrabold text-slate-900 mb-2">
           Confirmación de Canje
         </h2>
-        <p className="text-slate-500">
-          Revisa los detalles antes de canjear tu cupón
+        <p className="text-slate-500 text-lg max-w-xl mx-auto">
+          Revisa detalladamente tu viaje antes de aplicar tu cupón.
         </p>
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mb-6">
-        <div className="bg-slate-50 border-b border-slate-200 p-4">
-          <h3 className="font-bold flex items-center gap-2">
-            <Ticket className="w-5 h-5 text-primary" />
-            Cupón a Utilizar: {cuponInfo.codigo}
-          </h3>
+      <div className="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden mb-8">
+        {/* Banner Superior de Cupón */}
+        <div className="bg-gradient-to-r from-primary/90 to-primary text-white p-5 px-8 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="bg-white/20 p-2 rounded-lg">
+              <Ticket className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <p className="text-primary-foreground/80 text-xs font-medium uppercase tracking-wider mb-0.5">Cupón a Aplicar</p>
+              <h3 className="font-bold text-xl tracking-wide">{cuponInfo.codigo}</h3>
+            </div>
+          </div>
+          <div className="hidden sm:block text-right">
+            <span className="bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full uppercase">
+              Costo: $0
+            </span>
+          </div>
         </div>
-        <div className="p-6 grid sm:grid-cols-2 gap-6">
-          <div className="space-y-4">
-            <h4 className="font-semibold text-slate-900 flex items-center gap-2">
-              <Bus className="w-4 h-4 text-slate-500" /> Detalle del Viaje
+
+        <div className="p-8 grid md:grid-cols-2 gap-8">
+          {/* Tarjeta Detalle de Viaje */}
+          <div className="bg-slate-50 rounded-2xl p-6 border border-slate-100 shadow-sm relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
+              <Bus className="w-32 h-32" />
+            </div>
+            
+            <h4 className="font-bold text-slate-800 flex items-center gap-2 mb-6 text-lg border-b border-slate-200 pb-3">
+              <div className="bg-blue-100 p-1.5 rounded-md">
+                <Bus className="w-5 h-5 text-blue-600" />
+              </div>
+              Detalle del Viaje
             </h4>
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <span className="text-slate-500 block text-xs">Origen</span>
-                <span className="font-medium">{displayOrigin}</span>
+            
+            <div className="space-y-5 relative z-10">
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className="text-slate-400 font-semibold text-xs uppercase tracking-wider block mb-1">Origen</span>
+                  <span className="font-bold text-slate-900 text-lg">{displayOrigin}</span>
+                </div>
+                <div className="flex-1 px-4 flex items-center justify-center text-slate-300">
+                  <div className="h-px bg-slate-300 w-full"></div>
+                  <ChevronRight className="w-5 h-5 mx-2 text-slate-400" />
+                  <div className="h-px bg-slate-300 w-full"></div>
+                </div>
+                <div className="text-right">
+                  <span className="text-slate-400 font-semibold text-xs uppercase tracking-wider block mb-1">Destino</span>
+                  <span className="font-bold text-slate-900 text-lg">{displayDestination}</span>
+                </div>
               </div>
-              <div>
-                <span className="text-slate-500 block text-xs">Destino</span>
-                <span className="font-medium">{displayDestination}</span>
+
+              <div className="grid grid-cols-2 gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-100">
+                <div className="flex items-start gap-3">
+                  <Calendar className="w-5 h-5 text-primary mt-0.5" />
+                  <div>
+                    <span className="text-slate-400 font-medium text-xs block">Fecha</span>
+                    <span className="font-bold text-slate-700">
+                      {displayDate && format(displayDate, "dd MMM yyyy", { locale: es })}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Clock className="w-5 h-5 text-primary mt-0.5" />
+                  <div>
+                    <span className="text-slate-400 font-medium text-xs block">Horario</span>
+                    <span className="font-bold text-slate-700">{displayDepartureTime}</span>
+                  </div>
+                </div>
               </div>
-              <div>
-                <span className="text-slate-500 block text-xs">Fecha</span>
-                <span className="font-medium">
-                  {displayDate && format(displayDate, "dd MMM yyyy", { locale: es })}
-                </span>
-              </div>
-              <div>
-                <span className="text-slate-500 block text-xs">Horario</span>
-                <span className="font-medium">{displayDepartureTime} - {displayArrivalTime}</span>
-              </div>
-              <div>
-                <span className="text-slate-500 block text-xs">Asiento(s)</span>
-                <span className="font-bold text-primary">{displaySelectedSeats.join(", ")}</span>
+
+              <div className="bg-primary/5 p-4 rounded-xl flex items-center justify-between border border-primary/10">
+                <span className="text-slate-600 font-medium">Asiento(s) Seleccionado(s)</span>
+                <div className="flex gap-2">
+                  {displaySelectedSeats.map((s: string) => (
+                    <span key={s} className="bg-primary text-white font-bold text-sm px-3 py-1 rounded-md shadow-sm">
+                      #{s}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
           
-          <div className="space-y-4 border-t sm:border-t-0 sm:border-l border-slate-200 pt-4 sm:pt-0 sm:pl-6">
-            <h4 className="font-semibold text-slate-900 flex items-center gap-2">
-              <User className="w-4 h-4 text-slate-500" /> Pasajero
+          {/* Tarjeta Pasajero */}
+          <div className="bg-slate-50 rounded-2xl p-6 border border-slate-100 shadow-sm relative overflow-hidden">
+            <h4 className="font-bold text-slate-800 flex items-center gap-2 mb-6 text-lg border-b border-slate-200 pb-3">
+              <div className="bg-emerald-100 p-1.5 rounded-md">
+                <User className="w-5 h-5 text-emerald-600" />
+              </div>
+              Datos del Pasajero
             </h4>
-            <div className="space-y-2 text-sm">
-              <div>
-                <span className="text-slate-500 block text-xs">Nombre Completo</span>
-                <span className="font-medium">{bookingData.passengerName}</span>
+            
+            <div className="space-y-4">
+              <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex flex-col gap-1">
+                <span className="text-slate-400 font-semibold text-xs uppercase tracking-wider">Nombre Completo</span>
+                <span className="font-bold text-slate-800 text-base">{bookingData.passengerName}</span>
               </div>
-              <div>
-                <span className="text-slate-500 block text-xs">RUT</span>
-                <span className="font-medium">{bookingData.passengerRut}</span>
+              
+              <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex flex-col gap-1">
+                <span className="text-slate-400 font-semibold text-xs uppercase tracking-wider">RUT Titular</span>
+                <span className="font-mono font-bold text-slate-800 text-base">{bookingData.passengerRut}</span>
               </div>
-              <div>
-                <span className="text-slate-500 block text-xs">Email E-Ticket</span>
-                <span className="font-medium">{bookingData.passengerEmail}</span>
+              
+              <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex flex-col gap-1">
+                <span className="text-slate-400 font-semibold text-xs uppercase tracking-wider">Email para E-Ticket</span>
+                <span className="font-medium text-slate-800 text-base">{bookingData.passengerEmail}</span>
               </div>
             </div>
           </div>
@@ -167,21 +221,33 @@ export function StepCanje({
       </div>
 
       {errorMsg && (
-        <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-xl mb-6 flex items-start gap-3">
-          <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
-          <div className="text-sm font-medium">{errorMsg}</div>
+        <div className="bg-red-50 border-l-4 border-red-500 text-red-700 p-5 rounded-r-xl mb-8 shadow-sm flex items-start gap-3">
+          <AlertCircle className="w-6 h-6 shrink-0 mt-0.5" />
+          <div className="flex-1">
+            <h4 className="font-bold text-red-800 mb-1">Ocurrió un problema</h4>
+            <p className="text-sm">{errorMsg}</p>
+          </div>
         </div>
       )}
 
-      <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-        <Button variant="outline" onClick={onBack} disabled={isProcessing} className="w-full sm:w-32">
-          Volver
+      <div className="flex flex-col-reverse sm:flex-row justify-between items-center gap-4 pt-4 border-t border-slate-200">
+        <Button 
+          variant="outline" 
+          onClick={onBack} 
+          disabled={isProcessing} 
+          className="w-full sm:w-auto px-8 py-6 text-base font-semibold text-slate-600 hover:text-slate-900 border-2 rounded-xl transition-all"
+        >
+          Regresar
         </Button>
-        <Button onClick={handleConfirmRedemption} disabled={isProcessing || !displaySelectedSeats.length} className="w-full sm:w-auto min-w-[200px]">
+        <Button 
+          onClick={handleConfirmRedemption} 
+          disabled={isProcessing || !displaySelectedSeats.length} 
+          className="w-full sm:w-auto px-10 py-6 text-base font-bold text-white bg-primary hover:bg-primary/90 shadow-lg hover:shadow-xl rounded-xl transition-all min-w-[240px]"
+        >
           {isProcessing ? (
-            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Procesando Canje...</>
+            <><Loader2 className="mr-3 h-5 w-5 animate-spin" /> Procesando Canje...</>
           ) : (
-            <><Ticket className="mr-2 h-4 w-4" /> Confirmar Canje de Cupón</>
+            <><Ticket className="mr-3 h-5 w-5" /> Confirmar Canje de Cupón</>
           )}
         </Button>
       </div>
