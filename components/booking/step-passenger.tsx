@@ -333,7 +333,7 @@ export function StepPassenger({
               {/* Buttons */}
               <div className="space-y-2 pt-2">
                 <Button
-                  className="w-full bg-secondary hover:bg-secondary/90 text-secondary-foreground"
+                  className="w-full bg-primary hover:bg-primary/90 text-white"
                   onClick={handleContinue}
                 >
                   Confirmar Compra

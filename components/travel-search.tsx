@@ -782,7 +782,7 @@ export function TravelSearch({ onNext, onBack }: TravelSearchProps) {
               <Button
                 onClick={handleSearch}
                 disabled={isSearchDisabled}
-                className="flex-1 bg-accent hover:bg-accent/90"
+                className="flex-1 bg-primary hover:bg-primary/90 text-white"
               >
                 {currentLoading ? (
                   <>

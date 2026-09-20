@@ -1067,8 +1067,8 @@ export function ServiceDetailDialog({
                 disabled={selectedSeats.length === 0 || loading}
                 className={`w-full sm:w-auto order-1 sm:order-2 ${
                   selectedSeats.length === 0
-                    ? "opacity-50 cursor-not-allowed bg-accent hover:bg-accent/90 text-accent-foreground"
-                    : "bg-accent hover:bg-accent/90 text-accent-foreground"
+                    ? "opacity-50 cursor-not-allowed bg-primary/50 text-white"
+                    : "bg-primary hover:bg-primary/90 text-white"
                 }`}
               >
                 {loading ? (

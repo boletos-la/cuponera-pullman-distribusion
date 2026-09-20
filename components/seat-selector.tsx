@@ -85,7 +85,7 @@ export function SeatSelector({
         </div>
         <div style="margin-top: 15px; padding: 10px; background-color: #f3f4f6; border-radius: 6px;">
           <p style="color: #4b5563; font-size: 0.85rem; margin: 0;">
-            Asientos seleccionados: <strong>${selectedSeats.join(", ")}</strong>
+            N° de asiento seleccionado: <strong>${selectedSeats.join(", ")}</strong>
           </p>
         </div>
         <p style="margin-top: 12px; font-size: 0.8rem; color: #6b7280;">
@@ -505,7 +505,7 @@ export function SeatSelector({
       {selectedSeats.length > 0 && (
         <div className="text-center p-3 sm:p-4 bg-primary/10 border border-primary/20 rounded-lg mx-2 sm:mx-6 md:mx-8">
           <p className="text-base sm:text-lg font-bold text-primary">
-            Asientos seleccionados:{" "}
+            N° de asiento seleccionado:{" "}
             <span className="text-xl sm:text-2xl">
               {selectedSeats.join(", ")}
             </span>

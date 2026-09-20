@@ -1,20 +1,56 @@
 @import "tailwindcss";
 
-:root {
-  --pullman-primary: #F05A24;
-  --pullman-primary-dark: #D94B18;
-  --pullman-primary-light: #FFF5F0;
-  --pullman-secondary-blue: #EFF6FF;
-  --pullman-secondary-blue-border: #DBEAFE;
-  --pullman-bg-light: #F8FAFC;
-  --pullman-card-orange: #FFF5F0;
-  --pullman-border-orange: #FFE4D6;
-  --pullman-icon-peach: #FFEDD5;
-  --pullman-text-dark: #0F172A;
-  --pullman-text-muted: #64748B;
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+}
+
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
 }
 
 @layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
   @keyframes fadeIn {
     from {
       opacity: 0;
@@ -29,13 +65,68 @@
   .animate-fade-in {
     animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
+
+  /* Ocultar barra de desplazamiento */
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }
 
-/* Ocultar barra de desplazamiento */
-.scrollbar-none::-webkit-scrollbar {
-  display: none;
-}
-.scrollbar-none {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+@layer base {
+  :root {
+    --background: #F8FAFC;
+    --foreground: #0F172A;
+
+    --card: #FFFFFF;
+    --card-foreground: #0F172A;
+
+    --popover: #FFFFFF;
+    --popover-foreground: #0F172A;
+
+    /* Primary: Pullman Orange (#F05A24) */
+    --primary: #F05A24;
+    --primary-foreground: #FFFFFF;
+
+    /* Secondary: Pullman Blue (#EFF6FF) */
+    --secondary: #EFF6FF;
+    --secondary-foreground: #1E3A8A;
+
+    --muted: #F1F5F9;
+    --muted-foreground: #64748B;
+
+    --accent: #F1F5F9;
+    --accent-foreground: #0F172A;
+
+    --destructive: #EF4444;
+    --destructive-foreground: #FFFFFF;
+
+    --border: #E2E8F0;
+    --input: #E2E8F0;
+    --ring: #F05A24;
+
+    --radius: 0.5rem;
+
+    /* Pullman specific legacy variables */
+    --pullman-primary: #F05A24;
+    --pullman-primary-dark: #D94B18;
+    --pullman-primary-light: #FFF5F0;
+    --pullman-secondary-blue: #EFF6FF;
+    --pullman-secondary-blue-border: #DBEAFE;
+    --pullman-bg-light: #F8FAFC;
+    --pullman-card-orange: #FFF5F0;
+    --pullman-border-orange: #FFE4D6;
+    --pullman-icon-peach: #FFEDD5;
+    --pullman-text-dark: #0F172A;
+    --pullman-text-muted: #64748B;
+  }
+  
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: Arial, Helvetica, sans-serif;
+  }
 }

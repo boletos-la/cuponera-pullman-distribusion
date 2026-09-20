@@ -69,38 +69,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
-      {/* Top Bar Informativo */}
-      <div className="bg-gradient-to-r from-[#D94B18] via-[#F05A24] to-[#FF7336] text-white text-xs py-1.5 px-4 font-medium">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <span className="bg-white text-[#F05A24] px-2 py-0.5 rounded font-black uppercase text-[10px] tracking-wider shadow-xs">
-              Pullmanbus
-            </span>
-            <span className="hidden sm:inline text-orange-100">
-              Portal Oficial de Cuponeras Digitales • Venta y Autogestión con Tarifa Congelada
-            </span>
-          </div>
 
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handleResetData}
-              className="flex items-center gap-1 bg-slate-900/80 hover:bg-slate-900 text-white px-2.5 py-0.5 rounded-full font-semibold transition-all text-[11px] cursor-pointer"
-              title="Borrar compras y cupones creados"
-            >
-              <Trash2 className="w-3.5 h-3.5" />
-              <span>Limpiar Datos</span>
-            </button>
-
-            <button
-              onClick={onOpenExceptionModal}
-              className="flex items-center gap-1 bg-white/20 hover:bg-white/30 text-white px-2.5 py-0.5 rounded-full font-semibold transition-all text-[11px] cursor-pointer backdrop-blur-xs"
-            >
-              <ShieldAlert className="w-3.5 h-3.5" />
-              <span>Simulador de 7 Excepciones</span>
-            </button>
-          </div>
-        </div>
-      </div>
 
       {/* Main Navbar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

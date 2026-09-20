@@ -344,7 +344,7 @@ export function BusServiceCard({
           <Button
             onClick={() => setShowServiceDetail(true)}
             disabled={service.available_seats === 0}
-            className="w-full bg-accent hover:bg-accent/90 text-accent-foreground transition-all duration-200 text-sm sm:text-base"
+            className="w-full bg-primary hover:bg-primary/90 text-white transition-all duration-200 text-sm sm:text-base"
             size="default"
           >
             {service.available_seats === 0 ? (

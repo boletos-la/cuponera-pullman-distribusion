@@ -116,9 +116,7 @@ export default function Home() {
 
           <div className="flex flex-col sm:flex-row justify-between items-center text-xs text-slate-500 gap-2">
             <p>© 2026 Pullman Costa Central / WIT SPA. Todos los derechos reservados.</p>
-            <p className="flex items-center gap-1">
-              Desarrollado con Next.js (App Router), Tailwind CSS y backend simulado JSON
-            </p>
+
           </div>
         </div>
       </footer>
