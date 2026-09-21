@@ -1,0 +1,304 @@
+[
+  {
+    "id": 1,
+    "nombre": "CUPONERA CONCON (10 CUPONES)",
+    "descripcion": "Paquete preferencial de 10 viajes",
+    "tramos": [
+      "Santiago-Concón",
+      "Concón-Santiago"
+    ],
+    "valorUnitario": 5500,
+    "cantidadCupones": 10,
+    "precioTotal": 55000,
+    "activa": true,
+    "categoria": "Concón",
+    "badge": "Popular"
+  },
+  {
+    "id": 2,
+    "nombre": "CUPONERA VIÑA DEL MAR (20 CUPONES)",
+    "descripcion": "20 viajes a tarifa congelada para trayecto directo Santiago - Viña del Mar.",
+    "tramos": [
+      "Santiago-Viña Del Mar",
+      "Viña Del Mar-Santiago"
+    ],
+    "valorUnitario": 4900,
+    "cantidadCupones": 20,
+    "precioTotal": 98000,
+    "activa": true,
+    "categoria": "Viña del Mar",
+    "badge": "Más Vendida"
+  },
+  {
+    "id": 3,
+    "nombre": "CUPONERA V.ALEMANA (10 CUPONES)",
+    "descripcion": "10 cupones de viaje para Villa Alemana y Quilpué.",
+    "tramos": [
+      "Santiago-Villa Alemana",
+      "Villa Alemana-Santiago",
+      "Quilpué-Santiago",
+      "Santiago-Quilpué"
+    ],
+    "valorUnitario": 4900,
+    "cantidadCupones": 10,
+    "precioTotal": 49000,
+    "activa": true,
+    "categoria": "Interior Marga Marga"
+  },
+  {
+    "id": 4,
+    "nombre": "CUPONERA CONCON (20 CUPONES)",
+    "descripcion": "20 pasajes preferenciales para conexión directa Santiago - Concón.",
+    "tramos": [
+      "Santiago-Concón",
+      "Concón-Santiago"
+    ],
+    "valorUnitario": 5500,
+    "cantidadCupones": 20,
+    "precioTotal": 110000,
+    "activa": true,
+    "categoria": "Concón"
+  },
+  {
+    "id": 5,
+    "nombre": "CUPONERA LITORAL (10 CUPONES)",
+    "descripcion": "10 cupones flexibles para Algarrobo, El Quisco y El Tabo.",
+    "tramos": [
+      "Santiago-Algarrobo",
+      "Algarrobo-Santiago",
+      "Santiago-El Quisco",
+      "El Quisco-Santiago",
+      "Santiago-El Tabo",
+      "El Tabo-Santiago"
+    ],
+    "valorUnitario": 4900,
+    "cantidadCupones": 10,
+    "precioTotal": 49000,
+    "activa": true,
+    "categoria": "Litoral Central"
+  },
+  {
+    "id": 6,
+    "nombre": "CUPONERA VIÑA DEL MAR (10 CUPONES)",
+    "descripcion": "10 cupones congelados para viajes entre Santiago y Viña del Mar.",
+    "tramos": [
+      "Santiago-Viña Del Mar",
+      "Viña Del Mar-Santiago"
+    ],
+    "valorUnitario": 4900,
+    "cantidadCupones": 10,
+    "precioTotal": 49000,
+    "activa": true,
+    "categoria": "Viña del Mar"
+  },
+  {
+    "id": 7,
+    "nombre": "CUPONERA V. ALEMANA (20 CUPONES)",
+    "descripcion": "20 viajes congelados para usuarios de Villa Alemana y Quilpué.",
+    "tramos": [
+      "Villa Alemana-Santiago",
+      "Santiago-Villa Alemana",
+      "Quilpué-Santiago",
+      "Santiago-Quilpué"
+    ],
+    "valorUnitario": 4900,
+    "cantidadCupones": 20,
+    "precioTotal": 98000,
+    "activa": true,
+    "categoria": "Interior Marga Marga"
+  },
+  {
+    "id": 8,
+    "nombre": "CUPONERA LITORAL (20 CUPONES)",
+    "descripcion": "20 pasajes para el circuito completo del Litoral Central (El Tabo, El Quisco, Algarrobo).",
+    "tramos": [
+      "El Tabo-Santiago",
+      "El Quisco-Santiago",
+      "Algarrobo-Santiago",
+      "Santiago-El Tabo",
+      "Santiago-El Quisco",
+      "Santiago-Algarrobo"
+    ],
+    "valorUnitario": 4900,
+    "cantidadCupones": 20,
+    "precioTotal": 98000,
+    "activa": true,
+    "categoria": "Litoral Central"
+  },
+  {
+    "id": 9,
+    "nombre": "CUPONERA VALPARAISO (20 CUPONES)",
+    "descripcion": "20 viajes de alta frecuencia para tramo Santiago - Valparaíso.",
+    "tramos": [
+      "Santiago-Valparaiso",
+      "Valparaiso-Santiago"
+    ],
+    "valorUnitario": 4900,
+    "cantidadCupones": 20,
+    "precioTotal": 98000,
+    "activa": true,
+    "categoria": "Valparaíso"
+  },
+  {
+    "id": 10,
+    "nombre": "CUPONERA LIMACHE (20 CUPONES)",
+    "descripcion": "20 pasajes para Olmué, Quillota y Limache.",
+    "tramos": [
+      "Olmue-Santiago",
+      "Santiago-Olmue",
+      "Quillota-Santiago",
+      "Santiago-Quillota",
+      "Limache-Santiago",
+      "Santiago-Limache"
+    ],
+    "valorUnitario": 5500,
+    "cantidadCupones": 20,
+    "precioTotal": 110000,
+    "activa": true,
+    "categoria": "Provincia de Quillota / Olmué"
+  },
+  {
+    "id": 11,
+    "nombre": "CUPONERA VALPARAISO (10 CUPONES)",
+    "descripcion": "10 pasajes individuales congelados para Santiago - Valparaíso.",
+    "tramos": [
+      "Valparaiso-Santiago",
+      "Santiago-Valparaiso"
+    ],
+    "valorUnitario": 4900,
+    "cantidadCupones": 10,
+    "precioTotal": 49000,
+    "activa": true,
+    "categoria": "Valparaíso"
+  },
+  {
+    "id": 12,
+    "nombre": "CUPONERA LIMACHE (10 CUPONES)",
+    "descripcion": "10 viajes congelados para Limache, Olmué y Quillota.",
+    "tramos": [
+      "Olmue-Santiago",
+      "Santiago-Olmue",
+      "Limache-Santiago",
+      "Santiago-Limache",
+      "Quillota-Santiago",
+      "Santiago-Quillota"
+    ],
+    "valorUnitario": 5500,
+    "cantidadCupones": 10,
+    "precioTotal": 55000,
+    "activa": true,
+    "categoria": "Provincia de Quillota / Olmué"
+  },
+  {
+    "id": 13,
+    "nombre": "CUPONERA CARTAGENA (10 CUPONES)",
+    "descripcion": "10 pasajes directo Cartagena - Santiago.",
+    "tramos": [
+      "Cartagena-Santiago",
+      "Santiago-Cartagena"
+    ],
+    "valorUnitario": 4900,
+    "cantidadCupones": 10,
+    "precioTotal": 49000,
+    "activa": true,
+    "categoria": "Litoral Sur"
+  },
+  {
+    "id": 14,
+    "nombre": "CUPONERA SAN ANTONIO - STO DOMINGO (20 CUPONES)",
+    "descripcion": "20 cupones congelados para San Antonio y Santo Domingo.",
+    "tramos": [
+      "Santiago-San Antonio",
+      "San Antonio-Santiago",
+      "Santo Domingo-Santiago",
+      "Santiago-Santo Domingo"
+    ],
+    "valorUnitario": 4900,
+    "cantidadCupones": 20,
+    "precioTotal": 98000,
+    "activa": true,
+    "categoria": "San Antonio / Santo Domingo"
+  },
+  {
+    "id": 15,
+    "nombre": "CUPONERA SAN ANTONIO- STO DOMINGO (10 CUPONES)",
+    "descripcion": "10 pasajes para San Antonio y Santo Domingo.",
+    "tramos": [
+      "San Antonio-Santiago",
+      "Santiago-San Antonio",
+      "Santo Domingo-Santiago",
+      "Santiago-Santo Domingo"
+    ],
+    "valorUnitario": 5000,
+    "cantidadCupones": 10,
+    "precioTotal": 50000,
+    "activa": true,
+    "categoria": "San Antonio / Santo Domingo"
+  },
+  {
+    "id": 16,
+    "nombre": "CUPONERA LOS ANDES (20 CUPONES)",
+    "descripcion": "20 pasajes preferenciales para Los Andes y San Felipe.",
+    "tramos": [
+      "Santiago-Los Andes",
+      "Los Andes-Santiago",
+      "San Felipe-Santiago",
+      "Santiago-San Felipe"
+    ],
+    "valorUnitario": 4500,
+    "cantidadCupones": 20,
+    "precioTotal": 90000,
+    "activa": true,
+    "categoria": "Valle del Aconcagua"
+  },
+  {
+    "id": 17,
+    "nombre": "CUPONERA LOS ANDES (10 CUPONES)",
+    "descripcion": "10 pasajes para conexión Santiago - Los Andes / San Felipe.",
+    "tramos": [
+      "Los Andes-Santiago",
+      "Santiago-Los Andes",
+      "San Felipe-Santiago",
+      "Santiago-San Felipe"
+    ],
+    "valorUnitario": 4500,
+    "cantidadCupones": 10,
+    "precioTotal": 45000,
+    "activa": true,
+    "categoria": "Valle del Aconcagua"
+  },
+  {
+    "id": 18,
+    "nombre": "CUPONERA VALPO-LOS ANDES (20 CUPONES)",
+    "descripcion": "20 cupones interprovinciales entre Valparaíso / Viña del Mar y Los Andes / San Felipe.",
+    "tramos": [
+      "Valparaiso-Los Andes",
+      "Los Andes-Valparaiso",
+      "Valparaiso-San Felipe",
+      "San Felipe-Valparaiso",
+      "Viña Del Mar-Los Andes",
+      "Los Andes-Viña Del Mar",
+      "Viña Del Mar-San Felipe",
+      "San Felipe-Viña Del Mar"
+    ],
+    "valorUnitario": 6000,
+    "cantidadCupones": 20,
+    "precioTotal": 120000,
+    "activa": true,
+    "categoria": "Interprovincial V Región"
+  },
+  {
+    "id": 19,
+    "nombre": "CUPONERA CARTAGENA (20 CUPONES)",
+    "descripcion": "20 pasajes congelados para Cartagena - Santiago.",
+    "tramos": [
+      "Cartagena-Santiago",
+      "Santiago-Cartagena"
+    ],
+    "valorUnitario": 4900,
+    "cantidadCupones": 20,
+    "precioTotal": 98000,
+    "activa": true,
+    "categoria": "Litoral Sur"
+  }
+]

@@ -25,6 +25,7 @@ export interface CompletedBooking {
   dep_time: string;
   arr_time: string;
   travel_name: string;
+  travel_id?: string | number;
   selectedSeats: string[];
   seats: string[];
   passengers: BookingPassenger[];

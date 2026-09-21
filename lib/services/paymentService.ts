@@ -5,6 +5,7 @@ export interface InitPaymentPayload {
   rut: string;
   email: string;
   nombre: string;
+  telefono?: string;
   frontend_url?: string;
 }
 

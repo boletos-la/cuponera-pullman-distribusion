@@ -192,18 +192,39 @@ export default function AdminMaintainer() {
         </div>
 
         <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
-          {auditoria.map((log) => (
-            <div key={log.id} className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs space-y-1">
-              <div className="flex justify-between items-center">
-                <span className="font-mono text-[10px] font-bold bg-[#0A4DA6] text-white px-2 py-0.5 rounded">
-                  {log.accion}
-                </span>
-                <span className="text-slate-400 text-[11px]">{new Date(log.fechaHora).toLocaleString('es-CL')}</span>
-              </div>
-              <p className="text-slate-800 font-medium">{log.detalles}</p>
-              {log.rutUsuario && <p className="text-[10px] text-slate-500">Usuario: {log.rutUsuario}</p>}
+          {auditoria.length === 0 ? (
+            <div className="text-center py-8 text-slate-400 text-xs">
+              No hay registros de trazabilidad y auditoría disponibles.
             </div>
-          ))}
+          ) : (
+            auditoria.map((log) => {
+              let badgeColor = 'bg-blue-600 text-white';
+              if (log.accion === 'CANJE_CUPON') badgeColor = 'bg-emerald-600 text-white';
+              else if (log.accion === 'ANULACION_PASAJE') badgeColor = 'bg-rose-600 text-white';
+              else if (log.accion === 'COMPRA_CUPONERA') badgeColor = 'bg-[#0A4DA6] text-white';
+              else if (log.accion === 'OTP_VALIDADO') badgeColor = 'bg-teal-600 text-white';
+              else if (log.accion === 'OTP_GENERADO') badgeColor = 'bg-amber-600 text-white';
+              else if (log.accion === 'CREACION_CUPONERA' || log.accion === 'EDICION_CUPONERA') badgeColor = 'bg-orange-600 text-white';
+
+              return (
+                <div key={log.id} className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs space-y-1">
+                  <div className="flex justify-between items-center">
+                    <span className={`font-mono text-[10px] font-bold px-2 py-0.5 rounded ${badgeColor}`}>
+                      {log.accion}
+                    </span>
+                    <span className="text-slate-400 text-[11px]">{new Date(log.fechaHora).toLocaleString('es-CL')}</span>
+                  </div>
+                  <p className="text-slate-800 font-medium">{log.detalles}</p>
+                  {(log.rutUsuario || log.nombreUsuario) && (
+                    <p className="text-[10px] text-slate-500">
+                      Usuario: <span className="font-semibold text-slate-700">{log.nombreUsuario || ''}</span>
+                      {log.rutUsuario ? ` (${log.rutUsuario})` : ''}
+                    </p>
+                  )}
+                </div>
+              );
+            })
+          )}
         </div>
       </div>
 

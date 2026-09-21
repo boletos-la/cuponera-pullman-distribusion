@@ -330,7 +330,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon }: Dashb
                       <div className="space-y-3">
                         <div className="flex justify-between items-start">
                           <span className="font-mono font-extrabold text-sm text-[#F05A24] bg-white px-3 py-1 rounded-lg border border-[#FFEDD5] shadow-xs">
-                            ID: {c.codigo.split('WP')[1] || c.codigo}
+                            {c.codigo}
                           </span>
                           <span className={`text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider ${canCanjear ? 'bg-emerald-600 text-white' : 'bg-slate-600 text-white'}`}>
                             {canCanjear ? 'Activa' : 'Sin Saldo'}

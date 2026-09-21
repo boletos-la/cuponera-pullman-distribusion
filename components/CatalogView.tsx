@@ -153,6 +153,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
           rut,
           email,
           nombre,
+          telefono,
           frontend_url: window.location.origin
         });
         if (res.success && res.data.redirect_url && res.data.token_ws) {

@@ -61,12 +61,12 @@ export function StepCanje({
         otpCode: '000000', 
         pnrNumber: generatedPnrNumber,
         operatorPnr: generatedOperatorPnr || '',
-        travelId: bookingData.travelId?.toString() || '0',
+        travelId: (departureBooking?.travel_id || bookingData.travelId || '0').toString(),
         origin: origin,
         destination: destination,
         seatNumber: selectedAsiento,
         travelDate: departureBooking.date ? format(new Date(departureBooking.date), "yyyy-MM-dd") : "",
-        fare: departureBooking.totalPrice || bookingData.tripPrice
+        fare: departureBooking.realPrice || departureBooking.totalPrice || bookingData.tripPrice || 0
       });
 
       if (reservaData.success) {

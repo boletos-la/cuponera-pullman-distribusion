@@ -741,6 +741,7 @@ export function ServiceDetailDialog({
         dep_time: freshService.dep_time,
         arr_time: freshService.arr_time,
         travel_name: freshService.travels_name,
+        travel_id: freshService.travel_id || freshService.id || '0',
         selectedSeats: selectedSeats,
         seats: selectedSeats,
         passengers: passengersData.map((p) => p.passenger),
