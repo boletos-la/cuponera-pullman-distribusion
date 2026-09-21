@@ -66,8 +66,7 @@ export function StepCanje({
         destination: destination,
         seatNumber: selectedAsiento,
         travelDate: departureBooking.date ? format(new Date(departureBooking.date), "yyyy-MM-dd") : "",
-        fare: departureBooking.totalPrice || bookingData.tripPrice,
-        kuposEnv: process.env.NEXT_PUBLIC_KUPOS_ENV || 'dev'
+        fare: departureBooking.totalPrice || bookingData.tripPrice
       });
 
       if (reservaData.success) {

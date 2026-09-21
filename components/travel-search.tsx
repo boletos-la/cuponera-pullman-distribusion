@@ -26,6 +26,7 @@ import { BusServiceCard } from "@/components/bus-service-card";
 import { ModernDatePicker } from "@/components/ui/modern-date-picker";
 import { Badge } from "@/components/ui/badge";
 import { useCuponStore } from "@/lib/cupon-store";
+import { getApiUrl } from "@/lib/apiClient";
 
 interface City {
   id: number;
@@ -127,7 +128,7 @@ export function TravelSearch({ onNext, onBack }: TravelSearchProps) {
   useEffect(() => {
     const loadCities = async () => {
       try {
-        const res = await fetch("/api/kupos/cities");
+        const res = await fetch(`${getApiUrl()}/gds/cities`);
         if (!res.ok) throw new Error("Error loading cities");
         const data = await res.json();
         const allCities = (data.cities || []) as City[];
@@ -341,7 +342,7 @@ export function TravelSearch({ onNext, onBack }: TravelSearchProps) {
         date: returnDateString,
       });
 
-      const url = `/api/kupos/search?${params}`;
+      const url = `${getApiUrl()}/gds/search?${params}`;
       const res = await fetch(url);
 
       if (!res.ok) {
@@ -451,7 +452,7 @@ export function TravelSearch({ onNext, onBack }: TravelSearchProps) {
         date: searchDate,
       });
 
-      const url = `/api/kupos/search?${params}`;
+      const url = `${getApiUrl()}/gds/search?${params}`;
       const res = await fetch(url);
 
       if (!res.ok) {

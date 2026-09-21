@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { validateRut, formatRut, cleanRut } from '@/lib/rutValidator';
 import { couponService } from '@/lib/services/couponService';
+import { getApiUrl } from '@/lib/apiClient';
 import { Bus, ShieldCheck, Calendar, Clock, MapPin, CheckCircle2, AlertCircle, KeyRound, Ticket, Lock, ArrowRight, UserCheck, X } from 'lucide-react';
 import TicketModal from './TicketModal';
 
@@ -85,7 +86,7 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
   const [processError, setProcessError] = useState('');
 
   useEffect(() => {
-    fetch('/api/kupos/cities')
+    fetch(`${getApiUrl()}/gds/cities`)
       .then(res => res.json())
       .then(data => {
         if (data.cities) setCities(data.cities);
@@ -195,7 +196,7 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
         });
 
         promises.push(
-          fetch(`/api/kupos/search?${params}`)
+          fetch(`${getApiUrl()}/gds/search?${params}`)
             .then(res => res.json())
             .catch(() => ({ error: true }))
         );
@@ -238,7 +239,7 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
     setLoadingSeats(true);
     
     try {
-      const res = await fetch(`/api/kupos/service-detail/${srv.id}`);
+      const res = await fetch(`${getApiUrl()}/gds/service-detail/${srv.id}`);
       const data = await res.json();
       
       if (data.service && data.service.bus_layout && data.service.bus_layout.available) {
@@ -269,7 +270,7 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
       const boardingPoint = selectedServicio.boarding_stages?.split('|')[0] || '';
       const dropoffPoint = selectedServicio.dropoff_stages?.split('|')[0] || '';
 
-      const bookRes = await fetch('/api/kupos/reserve', {
+      const bookRes = await fetch(`${getApiUrl()}/gds/reserve`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -329,8 +330,7 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
         destination: destinoStr,
         seatNumber: selectedAsiento,
         travelDate: selectedServicio.travel_date || selectedFecha,
-        fare: seatObj?.price || 0,
-        kuposEnv: process.env.NEXT_PUBLIC_KUPOS_ENV || 'dev'
+        fare: seatObj?.price || 0
       });
 
       if (reservaData.success) {

@@ -32,6 +32,7 @@ import { useCuponStore } from "@/lib/cupon-store";
 import { SeatSelector } from "@/components/seat-selector";
 import type { ServiceDetail, Seat } from "@/types/service-detail";
 import { useTravel } from "@/components/context/travel-context";
+import { getApiUrl } from "@/lib/apiClient";
 import {
   useReservationStore,
   type CompletedBooking,
@@ -336,7 +337,7 @@ export function ServiceDetailDialog({
   }, [selectedSeats, tripType, savedPassengers]);
 
   const fetchServiceDetailSilent = async () => {
-    const res = await fetch(`/api/kupos/service-detail/${serviceId}`);
+    const res = await fetch(`${getApiUrl()}/gds/service-detail/${serviceId}`);
 
     if (!res.ok) {
       throw new Error(`Error: ${res.status}`);
@@ -590,7 +591,7 @@ export function ServiceDetailDialog({
         const seatBasePrice = seatObj?.basePrice || 0;
         const seatFinalPrice = getDiscountedPrice(seatBasePrice);
 
-        const bookResponse = await fetch("/api/kupos/reserve", {
+        const bookResponse = await fetch(`${getApiUrl()}/gds/reserve`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
