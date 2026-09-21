@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Ticket, Bus, Calendar, Clock, MapPin, User, Loader2, AlertCircle, ChevronRight, KeyRound, ShieldCheck, X, RefreshCw } from "lucide-react";
 import { format } from "date-fns";
@@ -34,6 +35,22 @@ export function StepCanje({
   const [isResendingOtp, setIsResendingOtp] = useState(false);
   const [otpError, setOtpError] = useState("");
   const [otpSuccessMsg, setOtpSuccessMsg] = useState("");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (showOtpModal) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [showOtpModal]);
 
   const userRut = bookingData.passengerRut || cuponInfo?.rutUsuario || "";
 
@@ -324,9 +341,9 @@ export function StepCanje({
       </div>
 
       {/* Modal de Validación 2FA (OTP) */}
-      {showOtpModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-100 space-y-6 animate-scale-up">
+      {mounted && showOtpModal && createPortal(
+        <div className="fixed inset-0 z-[9999] w-screen h-screen min-h-screen flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-100 space-y-6 animate-fade-in relative">
             <div className="flex justify-between items-start border-b border-slate-100 pb-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center">
@@ -415,7 +432,8 @@ export function StepCanje({
               </form>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

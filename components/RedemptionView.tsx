@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { validateRut, formatRut, cleanRut } from '@/lib/rutValidator';
 import { couponService } from '@/lib/services/couponService';
 import { getApiUrl } from '@/lib/apiClient';
@@ -90,6 +91,22 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
   const [otpCode, setOtpCode] = useState('');
   const [isSendingOtp, setIsSendingOtp] = useState(false);
   const [otpError, setOtpError] = useState('');
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (showOtpModal) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [showOtpModal]);
 
   useEffect(() => {
     fetch(`${getApiUrl()}/gds/cities`)
@@ -664,9 +681,9 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
       )}
 
       {/* Modal 2FA OTP */}
-      {showOtpModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
-          <div className="bg-white rounded-3xl p-6 shadow-2xl w-full max-w-sm relative">
+      {mounted && showOtpModal && createPortal(
+        <div className="fixed inset-0 z-[9999] w-screen h-screen min-h-screen flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-2xl w-full max-w-sm relative animate-fade-in">
             <button
               onClick={() => setShowOtpModal(false)}
               className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-colors"
@@ -703,7 +720,8 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

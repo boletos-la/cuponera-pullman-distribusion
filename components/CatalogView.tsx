@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Cuponera, Compra, Cupon } from '@/lib/dataStore';
 import { couponService } from '@/lib/services/couponService';
 import { paymentService } from '@/lib/services/paymentService';
@@ -45,6 +46,22 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
   const [showTransbankSuccess, setShowTransbankSuccess] = useState(false);
   const [showTransbankError, setShowTransbankError] = useState(false);
   const [transbankErrorMessage, setTransbankErrorMessage] = useState('');
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (selectedCuponera || showTransbankSuccess || showTransbankError) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [selectedCuponera, showTransbankSuccess, showTransbankError]);
 
   useEffect(() => {
     fetchCuponeras();
@@ -362,9 +379,9 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
       )}
 
       {/* ---------------- MODAL DE CHECKOUT Y PASARELA WEBPAY ---------------- */}
-      {selectedCuponera && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto space-y-6">
+      {mounted && selectedCuponera && createPortal(
+        <div className="fixed inset-0 z-[9999] w-screen h-screen min-h-screen flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto space-y-6 animate-fade-in relative">
             <div className="flex justify-between items-start border-b border-slate-100 pb-4">
               <div>
                 <span className="text-xs font-bold text-[#FF6B00] uppercase tracking-wider">Flujo E2E • Pasos 3, 4 y 5</span>
@@ -564,13 +581,14 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
               </div>
             )}
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* ---------------- MODAL DE COMPROBANTE EXITOSO (PASO 7) ---------------- */}
-      {compraExitosa && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-100 space-y-6">
+      {mounted && compraExitosa && createPortal(
+        <div className="fixed inset-0 z-[9999] w-screen h-screen min-h-screen flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-100 space-y-6 animate-fade-in relative">
             <div className="text-center space-y-2">
               <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto shadow-md">
                 <Check className="w-8 h-8 stroke-[3]" />
@@ -661,12 +679,13 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
               )}
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* Modal de Éxito Transbank Webpay */}
-      {showTransbankSuccess && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-[60]">
+      {mounted && showTransbankSuccess && createPortal(
+        <div className="fixed inset-0 w-screen h-screen min-h-screen bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-[9999]">
           <div className="bg-white rounded-3xl max-w-md w-full shadow-2xl overflow-hidden transform transition-all animate-in zoom-in-95 duration-200">
             {/* Header del Modal */}
             <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 p-6 text-center text-white relative">
@@ -700,12 +719,13 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* Modal de Error Transbank Webpay */}
-      {showTransbankError && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-[60]">
+      {mounted && showTransbankError && createPortal(
+        <div className="fixed inset-0 w-screen h-screen min-h-screen bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-[9999]">
           <div className="bg-white rounded-3xl max-w-md w-full shadow-2xl overflow-hidden transform transition-all animate-in zoom-in-95 duration-200">
             {/* Header del Modal */}
             <div className="bg-gradient-to-r from-red-500 to-red-600 p-6 text-center text-white relative">
@@ -738,7 +758,8 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

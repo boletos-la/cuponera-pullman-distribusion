@@ -1,6 +1,7 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Pasaje } from '@/lib/dataStore';
 import { Printer, Download, CheckCircle, X, Bus, Calendar, MapPin, QrCode, LayoutDashboard } from 'lucide-react';
 
@@ -10,13 +11,25 @@ interface TicketModalProps {
 }
 
 export default function TicketModal({ pasaje, onClose }: TicketModalProps) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, []);
+
   const handlePrint = () => {
     window.print();
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-md animate-fade-in print:p-0 print:bg-white">
-      <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-100 space-y-6 relative print:shadow-none print:border-none print:max-w-full">
+  if (!mounted) return null;
+
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] w-screen h-screen min-h-screen flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-md print:p-0 print:bg-white">
+      <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-100 space-y-6 relative animate-fade-in print:shadow-none print:border-none print:max-w-full">
         {/* Botón Cerrar (Oculto en Impresión) */}
         <button
           onClick={onClose}
@@ -121,6 +134,7 @@ export default function TicketModal({ pasaje, onClose }: TicketModalProps) {
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
