@@ -5,8 +5,9 @@ import { Cuponera, Compra, Cupon } from '@/lib/dataStore';
 import { couponService } from '@/lib/services/couponService';
 import { paymentService } from '@/lib/services/paymentService';
 import { validateRut, formatRut, cleanRut } from '@/lib/rutValidator';
-import { ShoppingCart, Check, AlertCircle, ShieldCheck, Ticket, Sparkles, Filter, CreditCard, ArrowRight, X, CheckCircle, XCircle } from 'lucide-react';
+import { ShoppingCart, Check, AlertCircle, ShieldCheck, Ticket, Sparkles, Filter, CreditCard, ArrowRight, X, CheckCircle, XCircle, KeyRound, Mail } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { authService } from '@/lib/services/authService';
 import { getAuthUser } from '@/lib/apiClient';
 
 interface CatalogViewProps {
@@ -31,6 +32,8 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
   const [rutError, setRutError] = useState('');
   const [submitError, setSubmitError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [step, setStep] = useState<'form' | 'otp'>('form');
+  const [otpCode, setOtpCode] = useState('');
 
   // Resultado de Compra Aprobada
   const [compraExitosa, setCompraExitosa] = useState<{
@@ -112,6 +115,8 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
     setSelectedCuponera(c);
     setSubmitError('');
     setRutError('');
+    setStep('form');
+    setOtpCode('');
 
     // Pre-cargar datos del usuario si está autenticado
     const authUser = getAuthUser();
@@ -126,7 +131,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
     setSelectedCuponera(null);
   };
 
-  const handleProcessPurchase = async (e: React.FormEvent) => {
+  const handleRequestOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitError('');
 
@@ -147,6 +152,28 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
 
     setSubmitting(true);
     try {
+      const res = await authService.sendOtp({ rut, email, nombre, telefono }, true); // true = purchase
+      if (res.success) {
+        setStep('otp');
+      }
+    } catch (err: any) {
+      setSubmitError(err.message || 'Error enviando el código 2FA.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleProcessPurchase = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitError('');
+
+    if (otpCode.length < 6) {
+      setSubmitError('Ingrese el código OTP de 6 dígitos.');
+      return;
+    }
+
+    setSubmitting(true);
+    try {
       if (selectedCuponera) {
         const res = await paymentService.initPayment({ 
           id_cuponera: selectedCuponera.id,
@@ -154,10 +181,10 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
           email,
           nombre,
           telefono,
-          frontend_url: window.location.origin
+          frontend_url: window.location.origin,
+          otpCode
         });
         if (res.success && res.data.redirect_url && res.data.token_ws) {
-          // Transbank requiere que enviemos el token_ws mediante un POST form oculto a la redirect_url
           const form = document.createElement('form');
           form.method = 'POST';
           form.action = res.data.redirect_url;
@@ -354,127 +381,188 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
               </button>
             </div>
 
-            <form onSubmit={handleProcessPurchase} className="space-y-4">
-              {/* Formulario de Datos del Comprador */}
-              <div className="space-y-3">
-                <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider">
-                  Paso 3: Datos de Identidad del Titular
-                </h4>
+            {step === 'form' && (
+              <form onSubmit={handleRequestOtp} className="space-y-4">
+                {/* Formulario de Datos del Comprador */}
+                <div className="space-y-3">
+                  <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                    Paso 3: Datos de Identidad del Titular
+                  </h4>
 
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Nombre Completo *</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="ej. María González Tapia"
-                    value={nombre}
-                    onChange={(e) => setNombre(e.target.value)}
-                    className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#0A4DA6]"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    RUT Titular * (Validación Módulo 11)
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="12.345.678-K"
-                    value={rut}
-                    onChange={handleRutChange}
-                    className={`w-full text-sm bg-slate-50 border rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 ${
-                      rutError ? 'border-red-500 focus:ring-red-500' : 'border-slate-300 focus:ring-[#0A4DA6]'
-                    }`}
-                  />
-                  {rutError && <p className="text-xs text-red-600 font-medium mt-1">{rutError}</p>}
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1">Correo Electrónico *</label>
+                    <label className="block text-xs font-semibold text-slate-700 mb-1">Nombre Completo *</label>
                     <input
-                      type="email"
+                      type="text"
                       required
-                      placeholder="cliente@ejemplo.cl"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="ej. María González Tapia"
+                      value={nombre}
+                      onChange={(e) => setNombre(e.target.value)}
                       className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#0A4DA6]"
                     />
                   </div>
+
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1">Teléfono Móvil</label>
+                    <label className="block text-xs font-semibold text-slate-700 mb-1">
+                      RUT Titular * (Validación Módulo 11)
+                    </label>
                     <input
-                      type="tel"
-                      placeholder="+56 9 1234 5678"
-                      value={telefono}
-                      onChange={(e) => setTelefono(e.target.value)}
-                      className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#0A4DA6]"
+                      type="text"
+                      required
+                      placeholder="12.345.678-K"
+                      value={rut}
+                      onChange={handleRutChange}
+                      className={`w-full text-sm bg-slate-50 border rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 ${
+                        rutError ? 'border-red-500 focus:ring-red-500' : 'border-slate-300 focus:ring-[#0A4DA6]'
+                      }`}
                     />
+                    {rutError && <p className="text-xs text-red-600 font-medium mt-1">{rutError}</p>}
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-700 mb-1">Correo Electrónico *</label>
+                      <input
+                        type="email"
+                        required
+                        placeholder="cliente@ejemplo.cl"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#0A4DA6]"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-700 mb-1">Teléfono Móvil</label>
+                      <input
+                        type="tel"
+                        placeholder="+56 9 1234 5678"
+                        value={telefono}
+                        onChange={(e) => setTelefono(e.target.value)}
+                        className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#0A4DA6]"
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Paso 4: Condiciones de Compra */}
-              <div className="bg-[#FFF7ED] border border-[#FFEDD5] rounded-2xl p-4 space-y-2">
-                <div className="flex items-start gap-2">
+                {/* Paso 4: Condiciones de Compra */}
+                <div className="bg-[#FFF7ED] border border-[#FFEDD5] rounded-2xl p-4 space-y-2">
+                  <div className="flex items-start gap-2">
+                    <input
+                      type="checkbox"
+                      id="condiciones"
+                      checked={aceptaTerminos}
+                      onChange={(e) => setAceptaTerminos(e.target.checked)}
+                      className="mt-0.5 rounded text-[#F05A24] focus:ring-[#F05A24]"
+                    />
+                    <label htmlFor="condiciones" className="text-xs text-slate-700 font-medium leading-tight">
+                      Acepto las condiciones de compra: Los cupones emitidos tienen una{' '}
+                      <span className="font-bold text-[#F05A24]">vigencia exacta de 90 días corridos</span> y sólo son válidos para los tramos contratados ({selectedCuponera.tramos.join(', ')}).
+                    </label>
+                  </div>
+                </div>
+
+                {/* Toggle de Simulación Excepción 1 (Pago Rechazado) */}
+                <div className="bg-amber-50 border border-amber-200 rounded-2xl p-3.5 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <CreditCard className="w-4 h-4 text-amber-600" />
+                    <div>
+                      <span className="text-xs font-bold text-amber-900 block">Probador de Excepción #1</span>
+                      <span className="text-[11px] text-amber-700">Simular rechazo en pasarela Webpay</span>
+                    </div>
+                  </div>
                   <input
                     type="checkbox"
-                    id="condiciones"
-                    checked={aceptaTerminos}
-                    onChange={(e) => setAceptaTerminos(e.target.checked)}
-                    className="mt-0.5 rounded text-[#F05A24] focus:ring-[#F05A24]"
+                    checked={simularRechazo}
+                    onChange={(e) => setSimularRechazo(e.target.checked)}
+                    className="rounded text-amber-600 focus:ring-amber-500 cursor-pointer"
                   />
-                  <label htmlFor="condiciones" className="text-xs text-slate-700 font-medium leading-tight">
-                    Acepto las condiciones de compra: Los cupones emitidos tienen una{' '}
-                    <span className="font-bold text-[#F05A24]">vigencia exacta de 90 días corridos</span> y sólo son válidos para los tramos contratados ({selectedCuponera.tramos.join(', ')}).
-                  </label>
                 </div>
-              </div>
 
-              {/* Toggle de Simulación Excepción 1 (Pago Rechazado) */}
-              <div className="bg-amber-50 border border-amber-200 rounded-2xl p-3.5 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <CreditCard className="w-4 h-4 text-amber-600" />
-                  <div>
-                    <span className="text-xs font-bold text-amber-900 block">Probador de Excepción #1</span>
-                    <span className="text-[11px] text-amber-700">Simular rechazo en pasarela Webpay</span>
+                {submitError && (
+                  <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 font-medium flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+                    <span>{submitError}</span>
                   </div>
-                </div>
-                <input
-                  type="checkbox"
-                  checked={simularRechazo}
-                  onChange={(e) => setSimularRechazo(e.target.checked)}
-                  className="rounded text-amber-600 focus:ring-amber-500 cursor-pointer"
-                />
-              </div>
-
-              {submitError && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 font-medium flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
-                  <span>{submitError}</span>
-                </div>
-              )}
-
-              {/* Paso 5: Botón Pagar con Webpay */}
-              <button
-                type="submit"
-                disabled={submitting || !!rutError}
-                className="w-full bg-gradient-to-r from-[#FF6B00] to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-extrabold py-3.5 px-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-base cursor-pointer disabled:opacity-50"
-              >
-                {submitting ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    <span>Conectando con Webpay Plus...</span>
-                  </>
-                ) : (
-                  <>
-                    <CreditCard className="w-5 h-5" />
-                    <span>Pagar ${selectedCuponera.precioTotal.toLocaleString('es-CL')} CLP en Webpay</span>
-                  </>
                 )}
-              </button>
-            </form>
+
+                {/* Paso 5: Botón Pagar con Webpay */}
+                <button
+                  type="submit"
+                  disabled={submitting || !!rutError}
+                  className="w-full bg-gradient-to-r from-[#FF6B00] to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-extrabold py-3.5 px-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-base cursor-pointer disabled:opacity-50"
+                >
+                  {submitting ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      <span>Validando y conectando...</span>
+                    </>
+                  ) : (
+                    <>
+                      <ShieldCheck className="w-5 h-5" />
+                      <span>Validar Email y Proceder al Pago</span>
+                    </>
+                  )}
+                </button>
+              </form>
+            )}
+
+            {step === 'otp' && (
+              <div className="animate-fade-in space-y-6">
+                <div className="text-center space-y-2">
+                  <div className="w-16 h-16 rounded-full bg-[#FFF5F0] text-[#F05A24] flex items-center justify-center mx-auto shadow-md">
+                    <KeyRound className="w-8 h-8 stroke-[2.5]" />
+                  </div>
+                  <h3 className="text-2xl font-black text-slate-900">Validación de Seguridad</h3>
+                  <p className="text-xs text-slate-500">
+                    Hemos enviado un código de 6 dígitos a <span className="font-semibold text-slate-700">{email}</span>.
+                  </p>
+                </div>
+
+                <form onSubmit={handleProcessPurchase} className="space-y-4">
+                  <div className="space-y-1.5 text-center">
+                    <label className="block text-xs font-extrabold text-[#0F172A] uppercase tracking-wider">
+                      Código OTP
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      maxLength={6}
+                      value={otpCode}
+                      onChange={(e) => setOtpCode(e.target.value)}
+                      className="w-48 mx-auto text-center text-2xl tracking-widest font-black bg-white border border-slate-300 rounded-xl py-3 focus:outline-none focus:ring-2 focus:ring-[#F05A24]"
+                    />
+                  </div>
+                  
+                  {submitError && (
+                    <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 font-medium flex items-center gap-2">
+                      <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+                      <span>{submitError}</span>
+                    </div>
+                  )}
+                  
+                  <button
+                    type="submit"
+                    disabled={submitting || otpCode.length < 6}
+                    className="w-full bg-gradient-to-r from-[#FF6B00] to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-extrabold py-3.5 px-6 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-base cursor-pointer disabled:opacity-50"
+                  >
+                    {submitting ? (
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <>
+                        <CreditCard className="w-5 h-5" />
+                        <span>Confirmar y Pagar ${selectedCuponera.precioTotal.toLocaleString('es-CL')}</span>
+                      </>
+                    )}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setStep('form')}
+                    className="w-full text-slate-500 hover:text-slate-700 font-semibold text-xs py-2 cursor-pointer"
+                  >
+                    Volver a los datos
+                  </button>
+                </form>
+              </div>
+            )}
           </div>
         </div>
       )}

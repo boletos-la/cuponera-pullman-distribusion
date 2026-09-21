@@ -6,6 +6,8 @@ interface CuponInfo {
   tramosPermitidos: string[];
   fechaVencimiento: string;
   rutUsuario: string;
+  emailUsuario?: string;
+  nombreUsuario?: string;
 }
 
 interface CuponStore {

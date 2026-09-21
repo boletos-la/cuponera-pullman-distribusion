@@ -122,7 +122,7 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
     try {
       // 1. Intentar obtener la información real de la cuponera desde el dashboard del usuario
       try {
-        const dashRes = await couponService.getDashboard();
+        const dashRes = await couponService.getDashboard(rutToValidate);
         if (dashRes && dashRes.success && Array.isArray(dashRes.cupones)) {
           const found = dashRes.cupones.find((c: any) => 
             c.codigo === codeToValidate || 
@@ -313,7 +313,7 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
       setTravelName(bookData.travelName);
 
       // Instead of confirming directly, send OTP and show modal
-      const otpRes = await couponService.sendRedeemOtp();
+      const otpRes = await couponService.sendRedeemOtp(rut);
       if (!otpRes || !otpRes.success) {
         setProcessError(otpRes?.message || 'Error al enviar código OTP. Verifica tu sesión y correo.');
         setIsProcessing(false);
@@ -353,6 +353,7 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
       }
 
       const reservaData = await couponService.redeemCoupon({
+        rut,
         idUsuarioCuponera: parseInt(cuponCodigo.replace(/\D/g, '')) || 1,
         idRuta: rutaId,
         otpCode: otpCode,
@@ -364,7 +365,7 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
         seatNumber: selectedAsiento || '',
         travelDate: selectedServicio?.travel_date || selectedFecha,
         fare: seatObj?.price || 0
-      });
+      } as any);
 
       if (reservaData.success) {
         setEmitidoPasaje({

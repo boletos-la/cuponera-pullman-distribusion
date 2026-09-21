@@ -7,6 +7,7 @@ export interface InitPaymentPayload {
   nombre: string;
   telefono?: string;
   frontend_url?: string;
+  otpCode?: string;
 }
 
 export const paymentService = {

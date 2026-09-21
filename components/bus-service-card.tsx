@@ -163,7 +163,7 @@ export function BusServiceCard({
               <div className="flex flex-wrap items-center gap-2">
                 <Bus className="h-5 w-5 text-primary flex-shrink-0" />
                 <span className="font-bold text-base sm:text-lg truncate">
-                  {service.travel_name}
+                  Pullman Bus - {getMainBusType(service.bus_type) || "Clásico"}
                 </span>
                 <Badge variant="outline" className="text-xs flex-shrink-0">
                   {tripType === "departure" ? "Ida" : "Vuelta"}

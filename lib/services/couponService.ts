@@ -1,6 +1,7 @@
 import { apiClient } from '../apiClient';
 
 export interface RedeemPayload {
+  rut: string;
   idUsuarioCuponera: number;
   idRuta: number;
   otpCode?: string;
@@ -22,15 +23,16 @@ export const couponService = {
     });
   },
 
-  getDashboard: async () => {
-    return await apiClient('/coupons/dashboard', {
+  getDashboard: async (rut: string) => {
+    return await apiClient(`/coupons/dashboard?rut=${rut}`, {
       method: 'GET',
     });
   },
   
-  sendRedeemOtp: async () => {
+  sendRedeemOtp: async (rut: string) => {
     return await apiClient('/coupons/send-otp', {
       method: 'POST',
+      body: JSON.stringify({ rut }),
     });
   },
 
@@ -41,10 +43,10 @@ export const couponService = {
     });
   },
 
-  cancelCoupon: async (codigoCupon: string) => {
+  cancelCoupon: async (codigoCupon: string, rut: string, otpCode: string) => {
     return await apiClient('/coupons/cancel', {
       method: 'POST',
-      body: JSON.stringify({ codigoCupon }),
+      body: JSON.stringify({ codigoCupon, rut, otpCode }),
     });
   }
 };

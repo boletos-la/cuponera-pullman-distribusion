@@ -61,7 +61,7 @@ export function RedemptionFlow({ initialCuponCode = '', initialRut = '', onFinis
   useEffect(() => {
     // Validar el cupón inicial
     if (initialCuponCode && initialRut) {
-      couponService.getDashboard().then(res => {
+      couponService.getDashboard(initialRut).then(res => {
         if (res.success && res.cupones) {
           // Buscar el cupon
           const cup = res.cupones.find((c: any) => c.codigo === initialCuponCode);
@@ -72,6 +72,8 @@ export function RedemptionFlow({ initialCuponCode = '', initialRut = '', onFinis
               tramosPermitidos: cup.tramosPermitidos,
               fechaVencimiento: cup.fechaVencimiento,
               rutUsuario: initialRut,
+              emailUsuario: cup.emailCliente,
+              nombreUsuario: cup.nombreCliente,
             });
           } else {
             console.error("No se encontró el cupón en las cuponeras del usuario.");

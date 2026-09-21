@@ -2,9 +2,9 @@
 
 import React from "react";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { MapPin, Building2, Calendar, Bus, CreditCard, Mail, User, ArrowRight, ArrowLeft } from "lucide-react";
+import { MapPin, Calendar, Bus, CreditCard, Mail, User, ArrowRight, ArrowLeft } from "lucide-react";
 import { useReservationStore } from "@/lib/reservation-store";
 import {
   Card,
@@ -67,6 +67,7 @@ function validateEmail(email: string): boolean {
 }
 
 import { getAuthUser } from "@/lib/apiClient";
+import { useCuponStore } from "@/lib/cupon-store";
 
 export function StepPassenger({
   bookingData,
@@ -75,12 +76,25 @@ export function StepPassenger({
   onBack,
 }: StepPassengerProps) {
   const authUser = getAuthUser();
-  const isAutofilled = !!authUser;
+  const cuponInfo = useCuponStore((state) => state.cuponInfo);
+  const isAutofilled = !!authUser || !!cuponInfo;
 
-  const [name, setName] = useState(bookingData.passengerName || authUser?.nombre || "");
-  const [rut, setRut] = useState(bookingData.passengerRut || (authUser?.rut ? formatRut(authUser.rut) : ""));
-  const [email, setEmail] = useState(bookingData.passengerEmail || authUser?.correo || "");
+  const defaultRut = bookingData.passengerRut || (cuponInfo?.rutUsuario ? formatRut(cuponInfo.rutUsuario) : (authUser?.rut ? formatRut(authUser.rut) : ""));
+  const defaultName = bookingData.passengerName || cuponInfo?.nombreUsuario || authUser?.nombre || "";
+  const defaultEmail = bookingData.passengerEmail || cuponInfo?.emailUsuario || authUser?.correo || "";
+
+  const [name, setName] = useState(defaultName);
+  const [rut, setRut] = useState(defaultRut);
+  const [email, setEmail] = useState(defaultEmail);
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    if (cuponInfo) {
+      if (!name && cuponInfo.nombreUsuario) setName(cuponInfo.nombreUsuario);
+      if (!rut && cuponInfo.rutUsuario) setRut(formatRut(cuponInfo.rutUsuario));
+      if (!email && cuponInfo.emailUsuario) setEmail(cuponInfo.emailUsuario);
+    }
+  }, [cuponInfo]);
 
   const handleRutChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formatted = formatRut(e.target.value);
@@ -242,18 +256,6 @@ export function StepPassenger({
               <CardTitle className="text-lg">Resumen del Viaje</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              {/* Convenio Badge */}
-              <div className="bg-primary/10 rounded-lg p-3">
-                <div className="flex items-center gap-2 text-primary">
-                  <Building2 className="h-4 w-4" />
-                  <span className="text-sm font-medium">
-                    Convenio Corporativo
-                  </span>
-                </div>
-                <p className="text-sm text-foreground mt-1">
-                  {bookingData.convenioName}
-                </p>
-              </div>
 
               {/* Route */}
               <div className="space-y-3">
@@ -325,9 +327,6 @@ export function StepPassenger({
                     ${totalPrice.toLocaleString("es-CL")}
                   </span>
                 </div>
-                <p className="text-xs text-green-600 text-right">
-                  Incluye 25% dto. convenio
-                </p>
               </div>
 
               {/* Buttons */}

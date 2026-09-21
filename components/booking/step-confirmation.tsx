@@ -29,7 +29,15 @@ export function StepConfirmation({ bookingData, onFinish }: StepConfirmationProp
   const asiento = bookingData.selectedSeats?.[0] || departureBooking?.selectedSeats?.[0] || "N/A";
   const dateObj = bookingData.date || (departureBooking?.date ? new Date(departureBooking.date) : null);
   const timeStr = bookingData.departureTime || departureBooking?.dep_time || "N/A";
-  const busTypeStr = bookingData.busType || departureBooking?.travel_name || "N/A";
+  const formatBusType = (busType: string | null | undefined): string => {
+    if (!busType) return "Estándar";
+    const parts = busType.split(",").map((p) => p.trim());
+    const ignore = ["2+2", "2+1", "AC", "Video", "WiFi", "Baño"];
+    const main = parts.find((p) => !ignore.includes(p));
+    return main || parts[0];
+  };
+
+  const busTypeStr = bookingData.busType ? formatBusType(bookingData.busType) : (departureBooking?.bus_type ? formatBusType(departureBooking.bus_type) : "N/A");
 
   return (
     <div className="max-w-3xl mx-auto space-y-8 animate-fade-in print:max-w-full">

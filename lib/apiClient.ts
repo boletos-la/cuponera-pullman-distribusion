@@ -72,10 +72,24 @@ export const apiClient = async (endpoint: string, options: RequestInit = {}) => 
     headers,
   });
 
-  const data = await response.json();
+  let data: any;
+  const contentType = response.headers.get('content-type') || '';
+  if (contentType.includes('application/json')) {
+    data = await response.json();
+  } else {
+    const text = await response.text();
+    if (!response.ok) {
+      throw new Error(`Error del servidor (${response.status}): ${response.statusText || 'Respuesta no válida'}`);
+    }
+    try {
+      data = JSON.parse(text);
+    } catch {
+      data = { message: text };
+    }
+  }
 
   if (!response.ok) {
-    throw new Error(data.message || 'Error en la solicitud al servidor');
+    throw new Error(data?.message || data?.error?.message || `Error en la solicitud (${response.status})`);
   }
 
   return data;

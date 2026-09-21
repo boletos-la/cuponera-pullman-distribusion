@@ -3,9 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { validateRut, formatRut, cleanRut } from '@/lib/rutValidator';
 import { Search, LayoutDashboard, Ticket, Clock, CheckCircle, Mail, ArrowRight, AlertCircle, Ban, ShieldCheck, KeyRound } from 'lucide-react';
-import { authService } from '@/lib/services/authService';
 import { couponService } from '@/lib/services/couponService';
-import { getAuthToken, setAuthToken } from '@/lib/apiClient';
 
 interface DashboardViewProps {
   initialRut?: string;
@@ -14,11 +12,9 @@ interface DashboardViewProps {
 
 export default function DashboardView({ initialRut = '', onCanjearCupon }: DashboardViewProps) {
   const [rutInput, setRutInput] = useState(initialRut ? formatRut(initialRut) : '');
-  const [emailInput, setEmailInput] = useState('');
-  const [otpCode, setOtpCode] = useState('');
-  const [rutError, setRutError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [step, setStep] = useState<'login' | 'otp' | 'dashboard'>('login');
+  const [rutError, setRutError] = useState('');
+  const [step, setStep] = useState<'login' | 'dashboard'>('login');
   
   const [rutFormateado, setRutFormateado] = useState('');
   const [metricas, setMetricas] = useState({ disponibles: 0, utilizados: 0, vencidos: 0, total: 0 });
@@ -29,16 +25,13 @@ export default function DashboardView({ initialRut = '', onCanjearCupon }: Dashb
   const [newEmail, setNewEmail] = useState('');
   const [emailSuccessMsg, setEmailSuccessMsg] = useState('');
 
-  // Auto-Login
   useEffect(() => {
-    const token = getAuthToken();
-    if (token) {
-      loadDashboard();
+    if (initialRut) {
+      loadDashboard(initialRut);
     }
-  }, []);
+  }, [initialRut]);
 
-  // 1. Solicitar OTP
-  const handleRequestOtp = async (e: React.FormEvent) => {
+  const handleRequestDashboard = async (e: React.FormEvent) => {
     e.preventDefault();
     setRutError('');
     const cleaned = cleanRut(rutInput);
@@ -48,53 +41,14 @@ export default function DashboardView({ initialRut = '', onCanjearCupon }: Dashb
       return;
     }
     
-    if (!emailInput) {
-      setRutError('El correo es requerido para enviar el código.');
-      return;
-    }
-
     setLoading(true);
-    try {
-      const formattedRut = formatRut(cleaned);
-      const res = await authService.sendOtp({ rut: formattedRut, email: emailInput });
-      if (res.success) {
-        setRutFormateado(formattedRut);
-        setStep('otp');
-      }
-    } catch (err: any) {
-      setRutError(err.message || 'Error conectando con el servidor.');
-    } finally {
-      setLoading(false);
-    }
+    await loadDashboard(formatRut(cleaned));
   };
 
-  // 2. Verificar OTP y Cargar Dashboard
-  const handleVerifyOtp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setRutError('');
-    const cleaned = cleanRut(rutInput);
-
-    setLoading(true);
+  const loadDashboard = async (rut: string) => {
     try {
-      const formattedRut = formatRut(cleaned);
-      const res = await authService.verifyOtp({ rut: formattedRut, otpCode });
-      if (res.success && res.token) {
-        setAuthToken(res.token); // Guardar JWT
-        await loadDashboard();
-      }
-    } catch (err: any) {
-      setRutError(err.message || 'Código OTP inválido.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // 3. Cargar Dashboard usando JWT
-  const loadDashboard = async () => {
-    try {
-      const res = await couponService.getDashboard();
+      const res = await couponService.getDashboard(rut);
       if (res.success) {
-        // El backend real retorna { success, rutFormateado, metricas, cupones }
         setCuponeras(res.cupones || []);
         
         if (res.rutFormateado) {
@@ -113,9 +67,10 @@ export default function DashboardView({ initialRut = '', onCanjearCupon }: Dashb
         setStep('dashboard');
       }
     } catch (err: any) {
-      // Si el token expiró o es inválido, mostramos login
       setStep('login');
-      setRutError(err.message || 'La sesión expiró. Inicia sesión nuevamente.');
+      setRutError(err.message || 'No se pudieron cargar las cuponeras para este RUT.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -137,18 +92,20 @@ export default function DashboardView({ initialRut = '', onCanjearCupon }: Dashb
             </div>
             <div>
               <span className="bg-[#FFF5F0] text-[#F05A24] text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider border border-[#FED7AA]">
-                Autenticación 2FA
+                Buscador Público
               </span>
               <h2 className="text-2xl font-black text-[#0F172A] mt-1">
-                Ingreso al Dashboard
+                Buscador de Cuponeras
               </h2>
               <p className="text-xs text-[#64748B] font-medium mt-0.5">
-                Ingresa tu RUT y correo para recibir un código de acceso único (OTP).
+                Ingresa tu RUT para consultar tus cuponeras y saldo disponible.
               </p>
             </div>
           </div>
 
-          <form onSubmit={handleRequestOtp} className="space-y-4">
+            {rutError && <p className="text-xs text-red-600 font-bold mt-1">{rutError}</p>}
+
+          <form onSubmit={handleRequestDashboard} className="space-y-4">
             <div className="space-y-1.5">
               <label className="block text-xs font-extrabold text-[#0F172A] uppercase tracking-wider">
                 RUT del Titular
@@ -169,23 +126,6 @@ export default function DashboardView({ initialRut = '', onCanjearCupon }: Dashb
               </div>
             </div>
 
-            <div className="space-y-1.5">
-              <label className="block text-xs font-extrabold text-[#0F172A] uppercase tracking-wider">
-                Correo Electrónico
-              </label>
-              <div className="relative">
-                <input
-                  type="email"
-                  required
-                  placeholder="tu@correo.com"
-                  value={emailInput}
-                  onChange={(e) => setEmailInput(e.target.value)}
-                  className="w-full text-sm font-semibold bg-white border border-slate-200 rounded-xl pl-10 pr-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#F05A24] text-[#0F172A]"
-                />
-                <Mail className="w-5 h-5 text-slate-400 absolute left-3.5 top-4" />
-              </div>
-            </div>
-
             {rutError && <p className="text-xs text-red-600 font-bold mt-1">{rutError}</p>}
 
             <button
@@ -197,60 +137,10 @@ export default function DashboardView({ initialRut = '', onCanjearCupon }: Dashb
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
               ) : (
                 <>
-                  <ShieldCheck className="w-4 h-4" />
-                  <span>Ingresar al Dashboard</span>
+                  <Search className="w-4 h-4" />
+                  <span>Buscar Cuponeras</span>
                 </>
               )}
-            </button>
-          </form>
-        </div>
-      )}
-
-      {step === 'otp' && (
-        <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-[#FFE4D6] space-y-6">
-          <div className="text-center space-y-2">
-            <div className="w-16 h-16 rounded-full bg-[#FFF5F0] text-[#F05A24] flex items-center justify-center mx-auto shadow-md">
-              <KeyRound className="w-8 h-8 stroke-[2.5]" />
-            </div>
-            <h3 className="text-2xl font-black text-slate-900">Validación de Seguridad</h3>
-            <p className="text-xs text-slate-500">
-              Hemos enviado un código de 6 dígitos a <span className="font-semibold text-slate-700">{emailInput}</span>.
-            </p>
-          </div>
-
-          <form onSubmit={handleVerifyOtp} className="space-y-4">
-            <div className="space-y-1.5 text-center">
-              <label className="block text-xs font-extrabold text-[#0F172A] uppercase tracking-wider">
-                Código OTP
-              </label>
-              <input
-                type="text"
-                required
-                maxLength={6}
-                value={otpCode}
-                onChange={(e) => setOtpCode(e.target.value)}
-                className="w-48 mx-auto text-center text-2xl tracking-widest font-black bg-white border border-slate-300 rounded-xl py-3 focus:outline-none focus:ring-2 focus:ring-[#F05A24]"
-              />
-            </div>
-            {rutError && <p className="text-xs text-red-600 font-bold text-center mt-1">{rutError}</p>}
-            
-            <button
-              type="submit"
-              disabled={loading || otpCode.length < 6}
-              className="w-full bg-[#0A4DA6] hover:bg-blue-800 text-white font-extrabold py-3.5 px-6 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-sm cursor-pointer disabled:opacity-50"
-            >
-              {loading ? (
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              ) : (
-                <span>Verificar y Entrar</span>
-              )}
-            </button>
-            <button
-              type="button"
-              onClick={() => setStep('login')}
-              className="w-full text-slate-500 hover:text-slate-700 font-semibold text-xs py-2 cursor-pointer"
-            >
-              Volver
             </button>
           </form>
         </div>
