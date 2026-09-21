@@ -752,6 +752,7 @@ export function ServiceDetailDialog({
         bookingTime: new Date().toISOString(),
         terminalOrigen,
         terminalDestino,
+        bus_type: freshService.bus_type,
         bookingData: bookings,
       };
 

@@ -36,6 +36,7 @@ export interface CompletedBooking {
   bookingTime: string;
   terminalOrigen: string | null;
   terminalDestino: string | null;
+  bus_type?: string;
   bookingData: BookingSeat[];
 }
 

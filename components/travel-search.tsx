@@ -125,6 +125,18 @@ export function TravelSearch({ onNext, onBack }: TravelSearchProps) {
     }
   };
 
+  const handleBack = () => {
+    if (searchMode === "return") {
+      setSearchMode("departure");
+      setDepartureBooked(false);
+      setReturnServices([]);
+      return;
+    }
+    if (onBack) {
+      onBack();
+    }
+  };
+
   useEffect(() => {
     const loadCities = async () => {
       try {
@@ -895,7 +907,7 @@ export function TravelSearch({ onNext, onBack }: TravelSearchProps) {
           </div>
         )}
         <div className="flex justify-between pt-4">
-          <Button variant="outline" onClick={onBack}>
+          <Button variant="outline" onClick={handleBack}>
             <ArrowLeft className="h-4 w-4" />
             Volver
           </Button>

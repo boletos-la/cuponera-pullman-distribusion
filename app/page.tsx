@@ -72,6 +72,13 @@ export default function Home() {
               initialCuponCode={selectedCuponCode}
               initialRut={selectedRut}
               onFinishRedemption={(rut) => handleGoToDashboardWithRut(rut)}
+              onBack={() => {
+                if (selectedRut) {
+                  handleGoToDashboardWithRut(selectedRut);
+                } else {
+                  setActiveTab('dashboard');
+                }
+              }}
             />
           )}
 

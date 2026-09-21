@@ -26,9 +26,10 @@ interface RedemptionFlowProps {
   initialCuponCode?: string;
   initialRut?: string;
   onFinishRedemption?: (rut: string) => void;
+  onBack?: () => void;
 }
 
-export function RedemptionFlow({ initialCuponCode = '', initialRut = '', onFinishRedemption }: RedemptionFlowProps) {
+export function RedemptionFlow({ initialCuponCode = '', initialRut = '', onFinishRedemption, onBack }: RedemptionFlowProps) {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
   const [loadingInitial, setLoadingInitial] = useState(true);
@@ -97,7 +98,15 @@ export function RedemptionFlow({ initialCuponCode = '', initialRut = '', onFinis
   };
 
   const prevStep = () => {
-    if (currentStep > 1) setCurrentStep(currentStep - 1);
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    } else {
+      if (onBack) {
+        onBack();
+      } else {
+        router.push('/');
+      }
+    }
   };
 
   const updateBookingData = (data: Partial<BookingData>) => {
