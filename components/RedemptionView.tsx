@@ -85,6 +85,12 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
   const [isProcessing, setIsProcessing] = useState(false);
   const [processError, setProcessError] = useState('');
 
+  // OTP Modal
+  const [showOtpModal, setShowOtpModal] = useState(false);
+  const [otpCode, setOtpCode] = useState('');
+  const [isSendingOtp, setIsSendingOtp] = useState(false);
+  const [otpError, setOtpError] = useState('');
+
   useEffect(() => {
     fetch(`${getApiUrl()}/gds/cities`)
       .then(res => res.json())
@@ -306,10 +312,37 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
       setOperatorPnr(generatedOperatorPnr);
       setTravelName(bookData.travelName);
 
-      // 2. Confirmación final en DB y GDS (sin OTP)
-      const [origenStr, destinoStr] = selectedTramo.split('-').map(s => s.trim());
+      // Instead of confirming directly, send OTP and show modal
+      const otpRes = await couponService.sendRedeemOtp();
+      if (!otpRes || !otpRes.success) {
+        setProcessError(otpRes?.message || 'Error al enviar código OTP. Verifica tu sesión y correo.');
+        setIsProcessing(false);
+        return;
+      }
+      
+      setShowOtpModal(true);
+      setOtpError('');
+      setOtpCode('');
+    } catch (err: any) {
+      setProcessError(err.message || 'Ocurrió un error en la reserva.');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
 
-      // Mapear idRuta para el tramo seleccionado
+  const handleConfirmWithOtp = async () => {
+    if (!otpCode || otpCode.length < 6) {
+      setOtpError('Ingresa el código de 6 dígitos.');
+      return;
+    }
+
+    setIsSendingOtp(true);
+    setOtpError('');
+
+    try {
+      const [origenStr, destinoStr] = selectedTramo.split('-').map(s => s.trim());
+      const seatObj = availableSeats.find(s => s.number === selectedAsiento);
+
       let rutaId = 1;
       const origenLow = origenStr.toLowerCase();
       const destinoLow = destinoStr.toLowerCase();
@@ -320,22 +353,22 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
       }
 
       const reservaData = await couponService.redeemCoupon({
-        idUsuarioCuponera: parseInt(cuponCodigo.replace(/\D/g, '')) || 1, // Fix mapping CuponCode -> id if needed
+        idUsuarioCuponera: parseInt(cuponCodigo.replace(/\D/g, '')) || 1,
         idRuta: rutaId,
-        otpCode: '000000', // Código dummy de 6 dígitos requerido por el validador del backend remoto
-        pnrNumber: generatedPnrNumber,
-        operatorPnr: generatedOperatorPnr || '',
+        otpCode: otpCode,
+        pnrNumber: pnrNumber || '',
+        operatorPnr: operatorPnr || '',
         travelId: selectedServicio?.travel_id?.toString() || '0',
         origin: origenStr,
         destination: destinoStr,
-        seatNumber: selectedAsiento,
-        travelDate: selectedServicio.travel_date || selectedFecha,
+        seatNumber: selectedAsiento || '',
+        travelDate: selectedServicio?.travel_date || selectedFecha,
         fare: seatObj?.price || 0
       });
 
       if (reservaData.success) {
         setEmitidoPasaje({
-          codigo: reservaData.data?.boletoExterno || generatedPnrNumber,
+          codigo: reservaData.data?.boletoExterno || pnrNumber,
           cuponCodigo: reservaData.data?.codigoCupon || cuponCodigo,
           rutCliente: rut,
           nombreCliente: 'Titular de Cuenta',
@@ -343,24 +376,25 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
           servicioId: selectedServicio?.id || 'SRV',
           origen: origenStr,
           destino: destinoStr,
-          fechaSalida: selectedServicio.travel_date || selectedFecha,
+          fechaSalida: selectedServicio?.travel_date || selectedFecha,
           horaSalida: selectedServicio?.dep_time || '00:00',
           asientoNumero: selectedAsiento || 0,
           tipoBus: selectedServicio?.bus_type || 'Bus',
-          patente: generatedOperatorPnr || 'PNR-OP',
+          patente: operatorPnr || 'PNR-OP',
           estado: 'Emitido',
           fechaEmision: new Date().toISOString(),
           codigoQR: 'qr-placeholder',
           codigoBarras: 'barras-placeholder'
         });
+        setShowOtpModal(false);
         setShowTicketModal(true);
       } else {
-        setProcessError(reservaData.message || 'Error al emitir el pasaje en el Backend.');
+        setOtpError(reservaData.message || 'Código incorrecto o expirado.');
       }
     } catch (err: any) {
-      setProcessError(err.message || 'Ocurrió un error en el canje.');
+      setOtpError(err.message || 'Ocurrió un error en el canje final.');
     } finally {
-      setIsProcessing(false);
+      setIsSendingOtp(false);
     }
   };
 
@@ -626,6 +660,49 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
             }
           }}
         />
+      )}
+
+      {/* Modal 2FA OTP */}
+      {showOtpModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+          <div className="bg-white rounded-3xl p-6 shadow-2xl w-full max-w-sm relative">
+            <button
+              onClick={() => setShowOtpModal(false)}
+              className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <div className="text-center space-y-4 pt-4">
+              <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto">
+                <ShieldCheck className="w-8 h-8 text-[#0A4DA6]" />
+              </div>
+              <div>
+                <h3 className="text-lg font-black text-slate-900">Validación de Seguridad</h3>
+                <p className="text-xs text-slate-500 mt-1">Hemos enviado un código de 6 dígitos a tu correo registrado. Ingresa el código para confirmar el canje.</p>
+              </div>
+              <input
+                type="text"
+                maxLength={6}
+                placeholder="000000"
+                value={otpCode}
+                onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))}
+                className="w-full text-center text-3xl font-mono tracking-widest font-black bg-slate-50 border border-slate-300 rounded-2xl p-4 focus:outline-none focus:ring-4 focus:ring-[#0A4DA6]/20 focus:border-[#0A4DA6] transition-all"
+              />
+              {otpError && <p className="text-xs text-red-600 font-bold">{otpError}</p>}
+              <button
+                onClick={handleConfirmWithOtp}
+                disabled={isSendingOtp || otpCode.length < 6}
+                className="w-full bg-[#0A4DA6] hover:bg-[#083b82] text-white font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-blue-500/30 transition-all disabled:opacity-50 flex justify-center items-center gap-2"
+              >
+                {isSendingOtp ? (
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <>Verificar y Canjear</>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
