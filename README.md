@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚌 Pullman Bus Cuponera Web (Frontend)
 
-## Getting Started
+Aplicación Web moderna y responsive construida con **Next.js (App Router)** y **React**, diseñada para la compra, administración y canje de cuponeras de viaje interurbano de Pullman Bus.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 🚀 Características Principales
+
+* **🛒 Catálogo de Cuponeras:** Visualización de paquetes de viajes (estándar y por tramos específicos), precios unitarios y totales, con modal de compra interactivo.
+* **💳 Pasarela de Pago Webpay Plus:** Integración con Transbank Webpay Plus mediante flujo seguro server-to-server (`/api/payments/init` y retorno automático). Captura de RUT, Nombre, Email y Teléfono del cliente.
+* **📊 Mi Dashboard:**
+  * Vista general de saldo de cupones y cuponeras activas.
+  * Identificación clara con prefijo oficial `CUP-WP{id}` para cada cuponera comprada.
+  * Historial de pasajes emitidos con opciones de descarga y anulación.
+* **🎟️ Flujo de Canje Integral (Kupos GDS):**
+  1. Búsqueda de itinerarios, fechas y terminales de salida/llegada.
+  2. Selección de asiento interactiva con mapa de bus en tiempo real.
+  3. Reserva provisoria y confirmación de boleto electrónico oficial.
+* **↩️ Anulación Normativa:** Permite anular el pasaje y reintegrar el saldo de la cuponera si restan 4 horas o más para la salida del servicio.
+* **🛡️ Panel de Administración:** Mantenedor de cuponeras del catálogo y visualizador de registros de auditoría de canjes y pagos.
+
+---
+
+## 🛠️ Tecnologías
+
+* **Framework:** Next.js 15+ (App Router)
+* **Lenguaje:** TypeScript
+* **Estilos:** Tailwind CSS + Lucide Icons + Radix UI
+* **Gestión de Estado:** React Hooks & Zustand / LocalStorage
+
+---
+
+## ⚙️ Configuración y Variables de Entorno (`.env.local`)
+
+```env
+# URL base del Backend Centralizado Express
+NEXT_PUBLIC_API_URL=https://cuponera.dev-wit.com/api
+# Para entorno local:
+# NEXT_PUBLIC_API_URL=http://localhost:3000/api
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 💻 Ejecución en Desarrollo
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+# Instalar dependencias
+npm install
 
-## Learn More
+# Iniciar servidor de desarrollo
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+La aplicación estará disponible en [http://localhost:3000](http://localhost:3000).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📦 Build para Producción
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run build
+npm run start
+```
