@@ -4,7 +4,7 @@ import React from "react";
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { MapPin, Calendar, Bus, CreditCard, Mail, User, ArrowRight, ArrowLeft } from "lucide-react";
+import { MapPin, Calendar, Bus, CreditCard, Mail, User, ArrowRight, ArrowLeft, Ticket } from "lucide-react";
 import { useReservationStore } from "@/lib/reservation-store";
 import {
   Card,
@@ -14,6 +14,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { format } from "date-fns";
@@ -161,7 +162,7 @@ export function StepPassenger({
     }
   };
 
-  const totalPrice = displaySelectedSeats.length * bookingData.tripPrice;
+  const totalPrice = departureBooking?.totalPrice || departureBooking?.realPrice || (displaySelectedSeats.length * (bookingData.tripPrice || 0));
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -320,12 +321,25 @@ export function StepPassenger({
               </div>
 
               {/* Total */}
-              <div className="pt-4 border-t">
-                <div className="flex justify-between items-baseline">
-                  <span className="font-semibold text-foreground">Total a Pagar</span>
-                  <span className="text-2xl font-bold text-primary">
-                    ${totalPrice.toLocaleString("es-CL")}
-                  </span>
+              <div className="pt-4 border-t space-y-2">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <span className="font-semibold text-foreground block">Total a Pagar</span>
+                    <Badge variant="outline" className="mt-1.5 bg-emerald-50 text-emerald-700 border-emerald-200 text-xs font-semibold py-1 px-2.5 flex items-center gap-1.5 shadow-none">
+                      <Ticket className="w-3.5 h-3.5 text-emerald-600" />
+                      <span>Se usará tu cupón para pagar</span>
+                    </Badge>
+                  </div>
+                  <div className="text-right">
+                    {totalPrice > 0 && (
+                      <span className="text-sm font-semibold text-muted-foreground line-through block">
+                        ${totalPrice.toLocaleString("es-CL")}
+                      </span>
+                    )}
+                    <span className="text-2xl font-black text-emerald-600">
+                      $0
+                    </span>
+                  </div>
                 </div>
               </div>
 

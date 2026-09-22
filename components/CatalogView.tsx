@@ -29,7 +29,6 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
   const [email, setEmail] = useState('');
   const [telefono, setTelefono] = useState('');
   const [aceptaTerminos, setAceptaTerminos] = useState(true);
-  const [simularRechazo, setSimularRechazo] = useState(false);
   const [rutError, setRutError] = useState('');
   const [submitError, setSubmitError] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -384,7 +383,6 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
           <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto space-y-6 animate-fade-in relative">
             <div className="flex justify-between items-start border-b border-slate-100 pb-4">
               <div>
-                <span className="text-xs font-bold text-[#FF6B00] uppercase tracking-wider">Flujo E2E • Pasos 3, 4 y 5</span>
                 <h3 className="text-xl font-black text-slate-900">{selectedCuponera.nombre}</h3>
                 <p className="text-xs text-slate-500 mt-0.5">
                   {selectedCuponera.cantidadCupones} viajes • Total: ${selectedCuponera.precioTotal.toLocaleString('es-CL')} CLP
@@ -477,22 +475,6 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                   </div>
                 </div>
 
-                {/* Toggle de Simulación Excepción 1 (Pago Rechazado) */}
-                <div className="bg-amber-50 border border-amber-200 rounded-2xl p-3.5 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <CreditCard className="w-4 h-4 text-amber-600" />
-                    <div>
-                      <span className="text-xs font-bold text-amber-900 block">Probador de Excepción #1</span>
-                      <span className="text-[11px] text-amber-700">Simular rechazo en pasarela Webpay</span>
-                    </div>
-                  </div>
-                  <input
-                    type="checkbox"
-                    checked={simularRechazo}
-                    onChange={(e) => setSimularRechazo(e.target.checked)}
-                    className="rounded text-amber-600 focus:ring-amber-500 cursor-pointer"
-                  />
-                </div>
 
                 {submitError && (
                   <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 font-medium flex items-center gap-2">
