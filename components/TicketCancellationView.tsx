@@ -2,14 +2,12 @@
 
 import React, { useState } from 'react';
 import { validateRut, formatRut, cleanRut } from '@/lib/rutValidator';
-import { RotateCcw, AlertTriangle, CheckCircle2, ShieldAlert, ArrowLeft, KeyRound, Search, Mail } from 'lucide-react';
+import { RotateCcw, AlertTriangle, CheckCircle2, ShieldAlert, ArrowLeft, KeyRound, Search } from 'lucide-react';
 import { couponService } from '@/lib/services/couponService';
-import { authService } from '@/lib/services/authService';
 
 export default function TicketCancellationView() {
   const [pasajeCodigo, setPasajeCodigo] = useState('');
   const [rutInput, setRutInput] = useState('');
-  const [emailInput, setEmailInput] = useState('');
   const [otpCode, setOtpCode] = useState('');
   
   const [loading, setLoading] = useState(false);
@@ -29,7 +27,7 @@ export default function TicketCancellationView() {
 
     const cleaned = cleanRut(rutInput);
 
-    if (!pasajeCodigo || !rutInput || !emailInput) {
+    if (!pasajeCodigo || !rutInput) {
       setErrorMsg('Complete todos los campos requeridos.');
       return;
     }
@@ -42,8 +40,7 @@ export default function TicketCancellationView() {
     setLoading(true);
     try {
       const formattedRut = formatRut(cleaned);
-      // Usamos el propósito REDEEM_COUPON para anulación también
-      const res = await authService.sendOtp({ rut: formattedRut, email: emailInput });
+      const res = await couponService.sendRedeemOtp(formattedRut);
       if (res.success) {
         setStep('otp');
       }
@@ -136,27 +133,14 @@ export default function TicketCancellationView() {
               </div>
             </div>
 
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Correo Electrónico *</label>
-              <div className="relative">
-                <input
-                  type="email"
-                  required
-                  placeholder="tu@correo.com"
-                  value={emailInput}
-                  onChange={(e) => setEmailInput(e.target.value)}
-                  className="w-full text-sm font-semibold bg-white border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#F05A24] text-[#0F172A]"
-                />
-                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-              </div>
-            </div>
+
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Código del Cupón a Anular *</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1">Código del Pasaje (PNR) a Anular *</label>
               <input
                 type="text"
                 required
-                placeholder="ej. CUP-94821"
+                placeholder="ej. ASD1234 o Boleto"
                 value={pasajeCodigo}
                 onChange={(e) => setPasajeCodigo(e.target.value.toUpperCase())}
                 className="w-full text-sm font-mono font-bold bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#F05A24]"
@@ -175,7 +159,7 @@ export default function TicketCancellationView() {
 
             <button
               type="submit"
-              disabled={loading || !pasajeCodigo || !rutInput || !emailInput}
+              disabled={loading || !pasajeCodigo || !rutInput}
               className="w-full bg-[#F05A24] hover:bg-[#D94B18] text-white font-extrabold py-3.5 px-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-base cursor-pointer disabled:opacity-50"
             >
               {loading ? (
@@ -198,7 +182,7 @@ export default function TicketCancellationView() {
               </div>
               <h3 className="text-2xl font-black text-slate-900">Validación para Anular</h3>
               <p className="text-xs text-slate-500">
-                Hemos enviado un código de 6 dígitos a <span className="font-semibold text-slate-700">{emailInput}</span>.
+                Hemos enviado un código de 6 dígitos a tu <span className="font-semibold text-slate-700">correo registrado</span>.
               </p>
             </div>
 
@@ -262,7 +246,7 @@ export default function TicketCancellationView() {
             <p className="text-xs text-emerald-800">{resultadoExitosa.mensaje}</p>
 
             <div className="inline-block bg-white border border-emerald-200 px-4 py-2 rounded-xl text-xs font-mono font-bold text-[#0A4DA6]">
-              Cupón Reintegrado: {resultadoExitosa.cuponCodigoReintegrado} (Estado: Activo)
+              1 uso reintegrado a su cuponera (Cupón devuelto: {resultadoExitosa.cuponCodigoReintegrado})
             </div>
           </div>
         )}
