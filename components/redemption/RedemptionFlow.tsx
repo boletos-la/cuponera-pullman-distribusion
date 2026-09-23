@@ -112,6 +112,24 @@ export function RedemptionFlow({ initialCuponCode = '', initialRut = '', onFinis
     }
   };
 
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      const departureBooking = useReservationStore.getState().getDepartureBooking();
+      if (departureBooking?.pnrNumbers?.length && departureBooking?.selectedSeats?.length) {
+        // Use sendBeacon or just fire and forget fetch to release the seat before tab closes
+        const pnr = departureBooking.pnrNumbers[0];
+        const seat = departureBooking.selectedSeats[0];
+        // En Next.js / fetch con keepalive true es lo ideal, pero un fetch normal fire-and-forget suele funcionar en Chrome moderno
+        couponService.releaseSeat(pnr, seat).catch(() => {});
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
+
   const prevStep = async () => {
     if (currentStep > 1) {
       await handleReleaseSeat();
