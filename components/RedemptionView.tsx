@@ -61,6 +61,8 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
     totalCupones?: number;
     cuponesUsados?: number;
     saldoDisponible?: number;
+    nombreCliente?: string;
+    emailCliente?: string;
   } | null>(null);
 
   // Búsqueda de Servicios

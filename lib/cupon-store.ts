@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-interface CuponInfo {
+export interface CuponInfo {
   codigo: string;
   nombreCuponera: string;
   tramosPermitidos: string[];
@@ -8,6 +8,8 @@ interface CuponInfo {
   rutUsuario: string;
   emailUsuario?: string;
   nombreUsuario?: string;
+  nombreCliente?: string;
+  emailCliente?: string;
 }
 
 interface CuponStore {
