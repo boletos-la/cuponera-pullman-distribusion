@@ -55,6 +55,14 @@ export interface BookingData {
   totalPrice?: number;
   paymentStatus: "pending" | "processing" | "completed" | "failed";
   transactionId: string;
+  gdsData?: {
+    boardingAt?: string;
+    boardingTime?: string;
+    dropOffAt?: string;
+    arrivalTime?: string;
+    operatorPnr?: string;
+    qrCodeUrl?: string;
+  };
   returnDate?: Date;
   returnOrigin?: string;
   returnDestination?: string;

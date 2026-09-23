@@ -162,6 +162,7 @@ export function StepCanje({
         updateBookingData({
           transactionId: reservaData.data?.boletoExterno || generatedPnrNumber,
           paymentStatus: "completed",
+          gdsData: reservaData.data?.gdsData,
         });
         setShowOtpModal(false);
         onNext();

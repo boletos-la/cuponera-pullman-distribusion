@@ -63,7 +63,10 @@ export function StepConfirmation({ bookingData, onFinish }: StepConfirmationProp
           </div>
 
           <h3 className="text-xl font-bold text-slate-900">Boleto Electrónico de Viaje</h3>
-          <p className="text-xs font-mono font-bold text-primary">PNR: {pnr}</p>
+          <div className="flex justify-center gap-4 text-xs font-mono font-bold text-primary">
+            <span>PNR: {pnr}</span>
+            {bookingData.gdsData?.operatorPnr && <span>OP: {bookingData.gdsData.operatorPnr}</span>}
+          </div>
         </div>
 
         {/* Cuerpo del Pasaje */}
@@ -99,9 +102,28 @@ export function StepConfirmation({ bookingData, onFinish }: StepConfirmationProp
 
             <div className="grid grid-cols-2 gap-4 pt-4 border-t border-blue-100">
               <div>
-                <span className="text-xs text-slate-500 block">Fecha y Hora</span>
+                <span className="text-[10px] text-slate-400 font-bold uppercase block">Embarque</span>
+                <span className="text-sm font-medium text-slate-800">{bookingData.gdsData?.boardingAt || origen}</span>
+                <span className="text-xs text-slate-500 block">
+                  Salida: <span className="font-bold text-primary">{bookingData.gdsData?.boardingTime || timeStr}</span>
+                </span>
+              </div>
+              <div className="text-right">
+                <span className="text-[10px] text-slate-400 font-bold uppercase block">Desembarque</span>
+                <span className="text-sm font-medium text-slate-800">{bookingData.gdsData?.dropOffAt || destino}</span>
+                {bookingData.gdsData?.arrivalTime && (
+                  <span className="text-xs text-slate-500 block">
+                    Llegada: <span className="font-bold text-slate-600">{bookingData.gdsData.arrivalTime}</span>
+                  </span>
+                )}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-blue-100">
+              <div>
+                <span className="text-xs text-slate-500 block">Fecha del Viaje</span>
                 <span className="font-bold">
-                  {dateObj && format(dateObj, "dd MMM yyyy", { locale: es })} a las {timeStr}
+                  {dateObj && format(dateObj, "dd MMM yyyy", { locale: es })}
                 </span>
               </div>
               <div className="text-right">
@@ -114,6 +136,17 @@ export function StepConfirmation({ bookingData, onFinish }: StepConfirmationProp
               <span>Tipo: {busTypeStr}</span>
             </div>
           </div>
+          
+          {/* QR Code */}
+          {bookingData.gdsData?.qrCodeUrl && (
+            <div className="flex flex-col items-center justify-center pt-2 pb-2">
+              <span className="text-[10px] font-bold text-slate-400 mb-2 uppercase tracking-widest">Presenta este código al abordar</span>
+              <div className="p-2 bg-white rounded-xl border border-slate-200 shadow-sm print:shadow-none print:border-slate-300">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={bookingData.gdsData.qrCodeUrl} alt="Código QR del Pasaje" className="w-32 h-32 object-contain print:w-40 print:h-40" />
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
