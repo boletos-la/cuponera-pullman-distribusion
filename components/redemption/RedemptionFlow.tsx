@@ -141,8 +141,14 @@ export function RedemptionFlow({ initialCuponCode = '', initialRut = '', onFinis
         <div className="container mx-auto px-4 py-4">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="flex items-center gap-4">
-              <div className="relative h-10 w-40">
-                <Image src="/logo-pullman.png" alt="Pullman Bus" fill className="object-contain" />
+              <div className="flex flex-col">
+                <div className="flex items-baseline gap-0.5">
+                  <span className="font-black text-2xl tracking-tighter text-[#E85D04]">pullman</span>
+                  <span className="font-black text-2xl tracking-tighter text-[#F05A24]">bus</span>
+                </div>
+                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-none -mt-1">
+                  Cuponeras Digitales
+                </span>
               </div>
               <div className="h-8 w-px bg-slate-200 hidden md:block"></div>
               <div className="hidden md:flex flex-col">

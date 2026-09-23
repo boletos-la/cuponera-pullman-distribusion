@@ -607,9 +607,9 @@ export function ServiceDetailDialog({
             cost: freshService.cost,
             boardingAt: boardingPoint,
             dropoffAt: dropoffPoint,
-            passengerName: "Usuario Cupon",
-            passengerEmail: "correo@correo.cl",
-            passengerRut: cuponInfo?.rutUsuario || "11111111-1",
+            passengerName: passengerData.passenger?.name || cuponInfo?.nombreCliente || "Titular de Cuponera",
+            passengerEmail: passengerData.passenger?.email || cuponInfo?.emailCliente || "correo@reservas.cl",
+            passengerRut: passengerData.passenger?.rut || cuponInfo?.rutUsuario || "11111111-1",
           }),
         });
 

@@ -309,8 +309,8 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
           cost: selectedServicio.cost,
           boardingAt: boardingPoint,
           dropoffAt: dropoffPoint,
-          passengerName: 'Titular de Cuponera',
-          passengerEmail: 'correo@reservas.cl', // This should ideally be the real email
+          passengerName: cuponInfo.nombreCliente || 'Titular de Cuponera',
+          passengerEmail: cuponInfo.emailCliente || 'correo@reservas.cl',
           passengerRut: rut,
         })
       });
@@ -381,7 +381,9 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
         destination: destinoStr,
         seatNumber: selectedAsiento || '',
         travelDate: selectedServicio?.travel_date || selectedFecha,
-        fare: seatObj?.price || 0
+        fare: seatObj?.price || 0,
+        busType: selectedServicio?.bus_type || 'Bus',
+        boardingAt: selectedServicio?.boarding_stages?.split('|')[0] || ''
       } as any);
 
       if (reservaData.success) {
