@@ -40,7 +40,7 @@ export default function TicketCancellationView() {
     setLoading(true);
     try {
       const formattedRut = formatRut(cleaned);
-      const res = await couponService.sendRedeemOtp(formattedRut);
+      const res = await couponService.sendRedeemOtp(formattedRut, 'anulacion');
       if (res.success) {
         setStep('otp');
       }

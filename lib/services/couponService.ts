@@ -29,10 +29,10 @@ export const couponService = {
     });
   },
   
-  sendRedeemOtp: async (rut: string) => {
+  sendRedeemOtp: async (rut: string, action: 'canje' | 'anulacion' = 'canje') => {
     return await apiClient('/coupons/send-otp', {
       method: 'POST',
-      body: JSON.stringify({ rut }),
+      body: JSON.stringify({ rut, action }),
     });
   },
 
@@ -47,6 +47,13 @@ export const couponService = {
     return await apiClient('/coupons/cancel', {
       method: 'POST',
       body: JSON.stringify({ codigoCupon, rut, otpCode }),
+    });
+  },
+
+  releaseSeat: async (pnrNumber: string, seatNumber: string) => {
+    return await apiClient('/gds/cancel', {
+      method: 'POST',
+      body: JSON.stringify({ ticket_number: pnrNumber, seat_numbers: seatNumber }),
     });
   }
 };

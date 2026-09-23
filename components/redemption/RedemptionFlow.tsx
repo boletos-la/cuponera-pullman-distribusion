@@ -97,10 +97,28 @@ export function RedemptionFlow({ initialCuponCode = '', initialRut = '', onFinis
     if (currentStep < 4) setCurrentStep(currentStep + 1);
   };
 
-  const prevStep = () => {
+  const handleReleaseSeat = async () => {
+    const departureBooking = useReservationStore.getState().getDepartureBooking();
+    if (departureBooking?.pnrNumbers?.length && departureBooking?.selectedSeats?.length) {
+      try {
+        await couponService.releaseSeat(
+          departureBooking.pnrNumbers[0],
+          departureBooking.selectedSeats[0]
+        );
+      } catch (err) {
+        console.error("Error releasing seat", err);
+      }
+    }
+  };
+
+  const prevStep = async () => {
     if (currentStep > 1) {
+      await handleReleaseSeat();
+      clearAllReservations();
       setCurrentStep(currentStep - 1);
     } else {
+      await handleReleaseSeat();
+      clearAllReservations();
       if (onBack) {
         onBack();
       } else {

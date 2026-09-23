@@ -33,6 +33,7 @@ import { SeatSelector } from "@/components/seat-selector";
 import type { ServiceDetail, Seat } from "@/types/service-detail";
 import { useTravel } from "@/components/context/travel-context";
 import { getApiUrl } from "@/lib/apiClient";
+import { couponService } from "@/lib/services/couponService";
 import {
   useReservationStore,
   type CompletedBooking,
@@ -540,6 +541,8 @@ export function ServiceDetailDialog({
     setBookingError(null);
     setLoading(true);
 
+    let bookings: BookingSeat[] = [];
+
     try {
       // 1. Refetch antes de reservar
       const freshService = await fetchServiceDetailSilent();
@@ -581,7 +584,7 @@ export function ServiceDetailDialog({
       const boardingPoint = freshService.boarding_stages?.split("|")[0];
       const dropoffPoint = freshService.dropoff_stages?.split("|")[0];
       const availableSeats = parseSeats(freshService);
-      const bookings: BookingSeat[] = [];
+      bookings = [];
 
       // Solo reservar cada asiento (sin confirmar)
       for (const passengerData of passengersData) {
@@ -806,6 +809,17 @@ export function ServiceDetailDialog({
           ? err.message
           : "Error inesperado al procesar las reservas",
       );
+      
+      // Rollback any seats successfully locked before the error
+      for (const b of bookings) {
+        if (b.pnrNumber && b.seat) {
+          try {
+            await couponService.releaseSeat(b.pnrNumber, b.seat);
+          } catch (releaseErr) {
+            console.error("Error releasing seat during rollback:", releaseErr);
+          }
+        }
+      }
     } finally {
       setLoading(false);
     }
