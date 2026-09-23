@@ -104,7 +104,11 @@ export default function TicketModal({ pasaje, onClose }: TicketModalProps) {
             <div className="inline-block p-2 bg-white rounded-xl border border-slate-200 shadow-sm">
               {/* Image element embedding QR code */}
               <img
-                src={pasaje.codigoQR}
+                src={
+                  pasaje.codigoQR.startsWith("http") || pasaje.codigoQR.startsWith("data:")
+                    ? pasaje.codigoQR
+                    : `data:image/png;base64,${pasaje.codigoQR}`
+                }
                 alt={`QR Pasaje ${pasaje.codigo}`}
                 className="w-36 h-36 mx-auto object-contain"
               />

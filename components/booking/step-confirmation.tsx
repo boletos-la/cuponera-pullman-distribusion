@@ -149,7 +149,15 @@ export function StepConfirmation({ bookingData, onFinish }: StepConfirmationProp
               <span className="text-[10px] font-bold text-slate-400 mb-2 uppercase tracking-widest">Presenta este código al abordar</span>
               <div className="p-2 bg-white rounded-xl border border-slate-200 shadow-sm print:shadow-none print:border-slate-300">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={bookingData.gdsData.qrCodeUrl} alt="Código QR del Pasaje" className="w-32 h-32 object-contain print:w-40 print:h-40" />
+                <img 
+                  src={
+                    bookingData.gdsData.qrCodeUrl.startsWith("http") || bookingData.gdsData.qrCodeUrl.startsWith("data:") 
+                      ? bookingData.gdsData.qrCodeUrl 
+                      : `data:image/png;base64,${bookingData.gdsData.qrCodeUrl}`
+                  } 
+                  alt="Código QR del Pasaje" 
+                  className="w-32 h-32 object-contain print:w-40 print:h-40" 
+                />
               </div>
             </div>
           )}
