@@ -104,15 +104,21 @@ export function StepConfirmation({ bookingData, onFinish }: StepConfirmationProp
               <div>
                 <span className="text-[10px] text-slate-400 font-bold uppercase block">Embarque</span>
                 <span className="text-sm font-medium text-slate-800">{bookingData.gdsData?.boardingAt || origen}</span>
-                <span className="text-xs text-slate-500 block">
+                {bookingData.gdsData?.boardingAddress && (
+                  <span className="text-[11px] text-slate-500 block leading-tight mt-0.5">{bookingData.gdsData.boardingAddress}</span>
+                )}
+                <span className="text-xs text-slate-500 block mt-1">
                   Salida: <span className="font-bold text-primary">{bookingData.gdsData?.boardingTime || timeStr}</span>
                 </span>
               </div>
               <div className="text-right">
                 <span className="text-[10px] text-slate-400 font-bold uppercase block">Desembarque</span>
                 <span className="text-sm font-medium text-slate-800">{bookingData.gdsData?.dropOffAt || destino}</span>
+                {bookingData.gdsData?.dropOffAddress && (
+                  <span className="text-[11px] text-slate-500 block leading-tight mt-0.5">{bookingData.gdsData.dropOffAddress}</span>
+                )}
                 {bookingData.gdsData?.arrivalTime && (
-                  <span className="text-xs text-slate-500 block">
+                  <span className="text-xs text-slate-500 block mt-1">
                     Llegada: <span className="font-bold text-slate-600">{bookingData.gdsData.arrivalTime}</span>
                   </span>
                 )}

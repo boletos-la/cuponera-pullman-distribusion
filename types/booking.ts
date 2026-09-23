@@ -57,8 +57,10 @@ export interface BookingData {
   transactionId: string;
   gdsData?: {
     boardingAt?: string;
+    boardingAddress?: string;
     boardingTime?: string;
     dropOffAt?: string;
+    dropOffAddress?: string;
     arrivalTime?: string;
     operatorPnr?: string;
     qrCodeUrl?: string;
