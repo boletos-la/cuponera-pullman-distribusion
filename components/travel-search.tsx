@@ -27,6 +27,7 @@ import { ModernDatePicker } from "@/components/ui/modern-date-picker";
 import { Badge } from "@/components/ui/badge";
 import { useCuponStore } from "@/lib/cupon-store";
 import { getApiUrl } from "@/lib/apiClient";
+import { BusRouteLoader } from "@/components/ui/custom-loaders";
 
 interface City {
   id: number;
@@ -873,6 +874,12 @@ export function TravelSearch({ onNext, onBack }: TravelSearchProps) {
                       : "No hay servicios"}
                 </Badge>
               </div>
+
+              {currentLoading && (
+                <div className="py-12 bg-white rounded-xl border border-slate-100 shadow-sm">
+                  <BusRouteLoader message="Buscando los mejores recorridos para ti..." />
+                </div>
+              )}
 
               {!currentLoading && currentServices.length > 0 && (
                 <div className="grid gap-4">

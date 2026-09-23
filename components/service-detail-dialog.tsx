@@ -34,6 +34,7 @@ import type { ServiceDetail, Seat } from "@/types/service-detail";
 import { useTravel } from "@/components/context/travel-context";
 import { getApiUrl } from "@/lib/apiClient";
 import { couponService } from "@/lib/services/couponService";
+import { SeatMapLoader, EmissionLoader } from "@/components/ui/custom-loaders";
 import {
   useReservationStore,
   type CompletedBooking,
@@ -883,6 +884,7 @@ export function ServiceDetailDialog({
           e.preventDefault();
         }}
       >
+        {loading && <EmissionLoader message="Confirmando tus asientos y emitiendo tu boleto electrónico..." />}
         <DialogHeader>
           <DialogTitle className="text-xl sm:text-2xl flex items-center gap-2">
             Detalles del Servicio
@@ -898,10 +900,7 @@ export function ServiceDetailDialog({
         </DialogHeader>
 
         {loadingDetail ? (
-          <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            <span className="ml-2">Cargando detalles del servicio...</span>
-          </div>
+          <SeatMapLoader message="Trazando el plano del bus y validando disponibilidad..." />
         ) : error ? (
           <Alert variant="destructive">
             <AlertDescription>{error}</AlertDescription>

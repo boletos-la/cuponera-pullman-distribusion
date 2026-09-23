@@ -9,6 +9,7 @@ import { es } from "date-fns/locale";
 import type { BookingData } from "@/types/booking";
 import { couponService } from "@/lib/services/couponService";
 import { useReservationStore } from "@/lib/reservation-store";
+import { EmissionLoader } from "@/components/ui/custom-loaders";
 
 interface StepCanjeProps {
   bookingData: BookingData;
@@ -344,6 +345,7 @@ export function StepCanje({
       {/* Modal de Validación 2FA (OTP) */}
       {mounted && showOtpModal && createPortal(
         <div className="fixed inset-0 z-[9999] w-screen h-screen min-h-screen flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+          {isSubmittingOtp && <EmissionLoader message="Confirmando código y emitiendo boleto electrónico..." />}
           <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-100 space-y-6 animate-fade-in relative">
             <div className="flex justify-between items-start border-b border-slate-100 pb-4">
               <div className="flex items-center gap-3">

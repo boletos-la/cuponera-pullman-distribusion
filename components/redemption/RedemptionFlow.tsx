@@ -14,6 +14,7 @@ import { useCleanupStorage } from "@/hooks/useCleanupStorage";
 import { useRouter } from "next/navigation";
 import { StepCanje } from "./step-canje";
 import { couponService } from "@/lib/services/couponService";
+import { TicketLoader } from "@/components/ui/custom-loaders";
 
 const steps = [
   { id: 1, name: "Búsqueda", icon: Bus },
@@ -133,10 +134,7 @@ export function RedemptionFlow({ initialCuponCode = '', initialRut = '', onFinis
 
   if (loadingInitial) {
     return (
-      <div className="py-20 flex flex-col items-center justify-center">
-        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-[#F05A24]"></div>
-        <p className="mt-4 text-sm font-medium text-slate-500">Validando cupón...</p>
-      </div>
+      <TicketLoader message="Obteniendo datos de tu cuponera..." />
     );
   }
 
