@@ -248,12 +248,13 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
   });
 
   // Ordenamiento
+  const availableBadges = Array.from(new Set(cuponeras.map(c => c.badge).filter(Boolean))) as string[];
   let displayCuponeras = [...filteredCuponeras];
-  if (sortBy === 'badge') {
+  if (sortBy.startsWith('badge_')) {
+    const targetBadge = sortBy.replace('badge_', '');
     displayCuponeras.sort((a, b) => {
-      if (a.badge && !b.badge) return -1;
-      if (!a.badge && b.badge) return 1;
-      if (a.badge && b.badge) return a.badge.localeCompare(b.badge);
+      if (a.badge === targetBadge && b.badge !== targetBadge) return -1;
+      if (a.badge !== targetBadge && b.badge === targetBadge) return 1;
       return 0;
     });
   } else if (sortBy === 'price_asc') {
@@ -292,7 +293,11 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
               className="w-full sm:w-auto text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#0A4DA6] text-slate-700 font-medium"
             >
               <option value="default">Recomendados</option>
-              <option value="badge">Destacados (Badges)</option>
+              {availableBadges.map((b) => (
+                <option key={b} value={`badge_${b}`}>
+                  Primero: {b}
+                </option>
+              ))}
               <option value="price_asc">Menor Precio</option>
               <option value="price_desc">Mayor Precio</option>
             </select>
