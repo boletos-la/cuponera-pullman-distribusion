@@ -295,7 +295,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
               <option value="default">Recomendados</option>
               {availableBadges.map((b) => (
                 <option key={b} value={`badge_${b}`}>
-                  Primero: {b}
+                  {b}
                 </option>
               ))}
               <option value="price_asc">Menor Precio</option>
