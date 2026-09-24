@@ -22,6 +22,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
   const [selectedCategory, setSelectedCategory] = useState<string>('Todos');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
+  const [sortBy, setSortBy] = useState<string>('default');
 
   // Modal de Compra y Checkout
   const [selectedCuponera, setSelectedCuponera] = useState<Cuponera | null>(null);
@@ -246,6 +247,21 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
     return matchesSearch;
   });
 
+  // Ordenamiento
+  let displayCuponeras = [...filteredCuponeras];
+  if (sortBy === 'badge') {
+    displayCuponeras.sort((a, b) => {
+      if (a.badge && !b.badge) return -1;
+      if (!a.badge && b.badge) return 1;
+      if (a.badge && b.badge) return a.badge.localeCompare(b.badge);
+      return 0;
+    });
+  } else if (sortBy === 'price_asc') {
+    displayCuponeras.sort((a, b) => (a.precioTotal || 0) - (b.precioTotal || 0));
+  } else if (sortBy === 'price_desc') {
+    displayCuponeras.sort((a, b) => (b.precioTotal || 0) - (a.precioTotal || 0));
+  }
+
   return (
     <div className="space-y-6">
       {/* Barra de Búsqueda y Filtros */}
@@ -269,6 +285,18 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full sm:w-64 text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#0A4DA6]"
             />
+            
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="w-full sm:w-auto text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#0A4DA6] text-slate-700 font-medium"
+            >
+              <option value="default">Recomendados</option>
+              <option value="badge">Destacados (Badges)</option>
+              <option value="price_asc">Menor Precio</option>
+              <option value="price_desc">Mayor Precio</option>
+            </select>
+
             <div className="flex bg-slate-100 rounded-xl p-1 border border-slate-200">
               <button
                 onClick={() => setViewMode('grid')}
@@ -276,7 +304,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                   viewMode === 'grid' ? 'bg-white text-[#0A4DA6] shadow-sm' : 'text-slate-500 hover:text-slate-700'
                 }`}
               >
-                <LayoutGrid className="w-4 h-4" /> Grid
+                <LayoutGrid className="w-4 h-4" /> Tarjetas
               </button>
               <button
                 onClick={() => setViewMode('table')}
@@ -334,7 +362,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {filteredCuponeras.map((item) => (
+              {displayCuponeras.map((item) => (
                 <tr key={item.id} className="hover:bg-slate-50/80 transition-colors group">
                   <td className="px-4 py-4 min-w-[200px]">
                     <div className="flex flex-col gap-1">
@@ -387,7 +415,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredCuponeras.map((item) => (
+          {displayCuponeras.map((item) => (
             <div
               key={item.id}
               className="bg-white rounded-2xl border border-slate-200 hover:border-[#0A4DA6] shadow-sm hover:shadow-md transition-all flex flex-col justify-between overflow-hidden group"
