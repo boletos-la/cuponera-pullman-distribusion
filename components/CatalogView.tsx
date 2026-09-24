@@ -5,9 +5,7 @@ import { createPortal } from 'react-dom';
 import { Cuponera, Compra, Cupon } from '@/lib/dataStore';
 import { couponService } from '@/lib/services/couponService';
 import { paymentService } from '@/lib/services/paymentService';
-import { validateRut, formatRut, cleanRut } from '@/lib/rutValidator';
-import { ShoppingCart, Check, AlertCircle, ShieldCheck, Ticket, Sparkles, Filter, CreditCard, ArrowRight, X, CheckCircle, XCircle, KeyRound, Mail } from 'lucide-react';
-import confetti from 'canvas-confetti';
+import { ShoppingCart, Check, AlertCircle, ShieldCheck, Ticket, Sparkles, Filter, CreditCard, ArrowRight, X, CheckCircle, XCircle, KeyRound, Mail, LayoutGrid, List } from 'lucide-react';
 import { authService } from '@/lib/services/authService';
 import { getAuthUser } from '@/lib/apiClient';
 
@@ -18,9 +16,9 @@ interface CatalogViewProps {
 
 export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCupon }: CatalogViewProps) {
   const [cuponeras, setCuponeras] = useState<Cuponera[]>([]);
-  const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>('Todos');
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
 
   // Modal de Compra y Checkout
   const [selectedCuponera, setSelectedCuponera] = useState<Cuponera | null>(null);
@@ -260,14 +258,32 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
             </p>
           </div>
 
-          <div className="w-full sm:w-72">
+          <div className="w-full sm:w-auto flex flex-col sm:flex-row gap-3">
             <input
               type="text"
               placeholder="Buscar por ciudad o tramo (ej. Viña, Concón)..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#0A4DA6]"
+              className="w-full sm:w-64 text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#0A4DA6]"
             />
+            <div className="flex bg-slate-100 rounded-xl p-1 border border-slate-200">
+              <button
+                onClick={() => setViewMode('grid')}
+                className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
+                  viewMode === 'grid' ? 'bg-white text-[#0A4DA6] shadow-sm' : 'text-slate-500 hover:text-slate-700'
+                }`}
+              >
+                <LayoutGrid className="w-4 h-4" /> Grid
+              </button>
+              <button
+                onClick={() => setViewMode('table')}
+                className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
+                  viewMode === 'table' ? 'bg-white text-[#0A4DA6] shadow-sm' : 'text-slate-500 hover:text-slate-700'
+                }`}
+              >
+                <List className="w-4 h-4" /> Tabla
+              </button>
+            </div>
           </div>
         </div>
 
@@ -289,7 +305,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
         </div>
       </div>
 
-      {/* Grid de Tarjetas de Cuponeras */}
+      {/* Listado de Cuponeras (Grid o Tabla) */}
       {loading ? (
         <div className="py-20 text-center space-y-3">
           <div className="inline-block w-8 h-8 border-4 border-[#0A4DA6] border-t-transparent rounded-full animate-spin" />
@@ -300,6 +316,71 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
           <AlertCircle className="w-10 h-10 text-orange-500 mx-auto" />
           <h3 className="text-lg font-bold text-slate-800">No se encontraron cuponeras</h3>
           <p className="text-xs text-slate-500">Prueba ajustando el filtro o la palabra clave de búsqueda.</p>
+        </div>
+      ) : viewMode === 'table' ? (
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-slate-50 border-b border-slate-200 text-xs uppercase tracking-wider text-slate-500 font-bold">
+                <th className="px-4 py-3">Cuponera</th>
+                <th className="px-4 py-3">Tramos</th>
+                <th className="px-4 py-3 text-center">Cupones</th>
+                <th className="px-4 py-3 text-right">V. Unitario</th>
+                <th className="px-4 py-3 text-right">V. Total</th>
+                <th className="px-4 py-3 text-center">Acción</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {filteredCuponeras.map((item) => (
+                <tr key={item.id} className="hover:bg-slate-50/80 transition-colors group">
+                  <td className="px-4 py-4 min-w-[200px]">
+                    <div className="flex flex-col gap-1">
+                      <span className="font-bold text-slate-900 group-hover:text-[#F05A24] transition-colors">{item.nombre}</span>
+                      {item.badge && (
+                        <span className="w-max bg-[#F05A24] text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">
+                          {item.badge}
+                        </span>
+                      )}
+                    </div>
+                  </td>
+                  <td className="px-4 py-4 min-w-[200px]">
+                    <div className="flex flex-wrap gap-1">
+                      {item.tramos.slice(0, 3).map((t, idx) => (
+                        <span key={idx} className="bg-slate-100 text-slate-700 text-[10px] font-medium px-2 py-0.5 rounded border border-slate-200 truncate max-w-[120px]">
+                          {t}
+                        </span>
+                      ))}
+                      {item.tramos.length > 3 && (
+                        <span className="bg-slate-100 text-slate-500 text-[10px] font-bold px-2 py-0.5 rounded border border-slate-200">
+                          +{item.tramos.length - 3}
+                        </span>
+                      )}
+                    </div>
+                  </td>
+                  <td className="px-4 py-4 text-center">
+                    <span className="bg-[#FFF7ED] text-[#F05A24] font-bold text-xs px-2 py-1 rounded-lg border border-[#FFEDD5]">
+                      {item.cantidadCupones}
+                    </span>
+                  </td>
+                  <td className="px-4 py-4 text-right font-medium text-sm text-slate-700">
+                    ${(item.valorUnitario || 0).toLocaleString('es-CL')}
+                  </td>
+                  <td className="px-4 py-4 text-right font-black text-[#F05A24] text-base">
+                    ${(item.precioTotal || 0).toLocaleString('es-CL')}
+                  </td>
+                  <td className="px-4 py-4 text-center">
+                    <button
+                      onClick={() => handleOpenCheckout(item)}
+                      className="bg-[#F05A24] hover:bg-[#D94B18] text-white font-bold py-2 px-3 rounded-xl shadow-sm transition-all text-xs inline-flex items-center gap-1.5 cursor-pointer"
+                    >
+                      <ShoppingCart className="w-3.5 h-3.5" />
+                      Comprar
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
