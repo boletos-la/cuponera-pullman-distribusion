@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import AdminMaintainer from '@/components/AdminMaintainer';
 import { Lock, LogOut, ShieldCheck, ArrowLeft, KeyRound, UserCheck, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
+import { getApiUrl } from '@/lib/apiClient';
 
 export default function MantenedorPage() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -20,24 +21,35 @@ export default function MantenedorPage() {
     }
   }, []);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
     setLoading(true);
 
-    setTimeout(() => {
-      // Credenciales oficiales de prueba
-      if (
-        (username.toLowerCase().trim() === 'admin' && (password === 'pullman2026' || password === 'admin123')) ||
-        (username.toLowerCase().trim() === 'wit' && password === 'wit2026')
-      ) {
+    try {
+      const res = await fetch(`${getApiUrl()}/admin/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.success) {
         setIsAuthenticated(true);
         sessionStorage.setItem('admin_authenticated', 'true');
+        sessionStorage.setItem('admin_token', data.token);
       } else {
-        setErrorMsg('Usuario o contraseña incorrectos. Verifique sus credenciales.');
+        setErrorMsg(data.message || 'Usuario o contraseña incorrectos.');
       }
+    } catch (err) {
+      console.error('Login error:', err);
+      setErrorMsg('Error de conexión con el servidor.');
+    } finally {
       setLoading(false);
-    }, 400);
+    }
   };
 
   const handleLogout = () => {

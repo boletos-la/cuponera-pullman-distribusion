@@ -58,7 +58,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { id, nombre, descripcion, tramos, valorUnitario, cantidadCupones, categoria, activa } = body;
+    const { id, nombre, descripcion, tramos, valorUnitario, cantidadCupones, categoria, activa, badge } = body;
 
     const cuponeras = readJsonFile<Cuponera[]>('cuponeras.json', INITIAL_CUPONERAS);
     const auditoria = readJsonFile<AuditoriaLog[]>('auditoria.json', []);
@@ -83,7 +83,8 @@ export async function POST(request: Request) {
           cantidadCupones,
           precioTotal,
           categoria,
-          activa
+          activa,
+          badge
         };
 
         // Agregar log de auditoría
@@ -109,7 +110,8 @@ export async function POST(request: Request) {
         cantidadCupones,
         precioTotal,
         categoria,
-        activa
+        activa,
+        badge
       };
       cuponeras.push(newCuponera);
 
