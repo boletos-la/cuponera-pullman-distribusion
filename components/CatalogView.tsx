@@ -5,7 +5,9 @@ import { createPortal } from 'react-dom';
 import { Cuponera, Compra, Cupon } from '@/lib/dataStore';
 import { couponService } from '@/lib/services/couponService';
 import { paymentService } from '@/lib/services/paymentService';
+import { validateRut, formatRut, cleanRut } from '@/lib/rutValidator';
 import { ShoppingCart, Check, AlertCircle, ShieldCheck, Ticket, Sparkles, Filter, CreditCard, ArrowRight, X, CheckCircle, XCircle, KeyRound, Mail, LayoutGrid, List } from 'lucide-react';
+import confetti from 'canvas-confetti';
 import { authService } from '@/lib/services/authService';
 import { getAuthUser } from '@/lib/apiClient';
 
@@ -16,6 +18,7 @@ interface CatalogViewProps {
 
 export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCupon }: CatalogViewProps) {
   const [cuponeras, setCuponeras] = useState<Cuponera[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>('Todos');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
