@@ -6,7 +6,7 @@ import { Cuponera, Compra, Cupon } from '@/lib/dataStore';
 import { couponService } from '@/lib/services/couponService';
 import { paymentService } from '@/lib/services/paymentService';
 import { validateRut, formatRut, cleanRut } from '@/lib/rutValidator';
-import { ShoppingCart, Check, AlertCircle, ShieldCheck, Ticket, Sparkles, Filter, CreditCard, ArrowRight, X, CheckCircle, XCircle, KeyRound, Mail, LayoutGrid, List } from 'lucide-react';
+import { ShoppingCart, Check, AlertCircle, ShieldCheck, Ticket, Sparkles, Filter, CreditCard, ArrowRight, X, CheckCircle, XCircle, KeyRound, Mail, LayoutGrid, List, Bus, RotateCcw } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { authService } from '@/lib/services/authService';
 import { getAuthUser } from '@/lib/apiClient';
@@ -47,6 +47,17 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
   const [showTransbankSuccess, setShowTransbankSuccess] = useState(false);
   const [showTransbankError, setShowTransbankError] = useState(false);
   const [transbankErrorMessage, setTransbankErrorMessage] = useState('');
+  const [pendingPurchaseData, setPendingPurchaseData] = useState<{
+    rut: string;
+    nombre: string;
+    email: string;
+    telefono?: string;
+    idCuponera?: number;
+    nombreCuponera?: string;
+    cantidadCupones?: number;
+    precioTotal?: number;
+    tramos?: string[];
+  } | null>(null);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -70,15 +81,40 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
     // Verificar si venimos de un pago exitoso o fallido
     const params = new URLSearchParams(window.location.search);
     if (params.get('payment_success') === 'true') {
+      try {
+        const saved = sessionStorage.getItem('pending_purchase');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          setPendingPurchaseData(parsed);
+          sessionStorage.removeItem('pending_purchase');
+        }
+      } catch (e) {
+        console.error('Error recuperando pending_purchase:', e);
+      }
       setShowTransbankSuccess(true);
-      // Limpiar URL
       window.history.replaceState({}, document.title, window.location.pathname);
+      confetti({
+        particleCount: 80,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
     } else if (params.get('payment_error') === 'true') {
+      try {
+        const saved = sessionStorage.getItem('pending_purchase');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          setPendingPurchaseData(parsed);
+        }
+      } catch (e) {
+        console.error('Error recuperando pending_purchase:', e);
+      }
       const reason = params.get('reason');
       if (reason === 'cancelled') {
-        setTransbankErrorMessage('El pago fue anulado por el usuario.');
+        setTransbankErrorMessage('La transacción fue cancelada por el usuario en Webpay.');
+      } else if (reason === 'rejected') {
+        setTransbankErrorMessage('El pago fue rechazado por el banco emisor o la tarjeta.');
       } else {
-        setTransbankErrorMessage('Hubo un error al procesar el pago o fue rechazado por el banco.');
+        setTransbankErrorMessage('Hubo un problema al procesar la transacción o la sesión ha expirado.');
       }
       setShowTransbankError(true);
       window.history.replaceState({}, document.title, window.location.pathname);
@@ -193,6 +229,22 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
     setSubmitting(true);
     try {
       if (selectedCuponera) {
+        try {
+          sessionStorage.setItem('pending_purchase', JSON.stringify({
+            rut,
+            nombre,
+            email,
+            telefono,
+            idCuponera: selectedCuponera.id,
+            nombreCuponera: selectedCuponera.nombre,
+            cantidadCupones: selectedCuponera.cantidadCupones,
+            precioTotal: selectedCuponera.precioTotal,
+            tramos: selectedCuponera.tramos
+          }));
+        } catch (storageErr) {
+          console.error('Error guardando pending_purchase en storage:', storageErr);
+        }
+
         const res = await paymentService.initPayment({ 
           id_cuponera: selectedCuponera.id,
           rut,
@@ -784,37 +836,124 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
 
       {/* Modal de Éxito Transbank Webpay */}
       {mounted && showTransbankSuccess && createPortal(
-        <div className="fixed inset-0 w-screen h-screen min-h-screen bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-[9999]">
-          <div className="bg-white rounded-3xl max-w-md w-full shadow-2xl overflow-hidden transform transition-all animate-in zoom-in-95 duration-200">
-            {/* Header del Modal */}
-            <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 p-6 text-center text-white relative">
-              <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3 backdrop-blur-md">
-                <CheckCircle className="w-10 h-10 text-white" />
+        <div className="fixed inset-0 z-[9999] w-screen h-screen min-h-screen flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-100 space-y-6 relative animate-fade-in">
+            {/* Botón Cerrar */}
+            <button
+              onClick={() => {
+                setShowTransbankSuccess(false);
+                setPendingPurchaseData(null);
+              }}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-2 rounded-xl hover:bg-slate-100 transition-colors cursor-pointer"
+              aria-label="Cerrar modal"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            {/* Cabecera del Modal */}
+            <div className="text-center space-y-2">
+              <div className="inline-flex items-center gap-1.5 bg-[#FFF7ED] text-[#F05A24] border border-[#FFEDD5] px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider shadow-xs mb-1">
+                <Bus className="w-3.5 h-3.5 text-[#F05A24]" />
+                <span>Pullman Bus Cuponeras</span>
               </div>
-              <h3 className="text-xl font-bold">¡Pago Exitoso!</h3>
-              <p className="text-emerald-50 text-sm mt-1 opacity-90">
-                Tu cuponera ha sido activada
+
+              <div className="w-16 h-16 rounded-full bg-emerald-50 border-4 border-emerald-100 text-emerald-600 flex items-center justify-center mx-auto shadow-sm">
+                <Check className="w-8 h-8 stroke-[3]" />
+              </div>
+
+              <span className="text-xs font-bold text-emerald-600 uppercase tracking-wider block">
+                Pago Aprobado y Cuponera Activada
+              </span>
+              <h3 className="text-2xl font-black text-slate-900">¡Pago Exitoso en Webpay!</h3>
+              <p className="text-xs text-slate-500 max-w-sm mx-auto">
+                {pendingPurchaseData?.email ? (
+                  <>Se envió el comprobante y detalle de compra a <span className="font-semibold text-slate-700">{pendingPurchaseData.email}</span>.</>
+                ) : (
+                  <>Tu compra en Webpay Plus se completó correctamente y tus pasajes ya están disponibles para su uso inmediato.</>
+                )}
               </p>
             </div>
 
-            {/* Contenido */}
-            <div className="p-6 space-y-5 bg-slate-50">
-              <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm text-center">
-                <p className="text-slate-600 text-sm leading-relaxed">
-                  El pago a través de Transbank se completó correctamente y tus pasajes ya se encuentran disponibles en tu cuenta.
-                </p>
-                <div className="mt-4 inline-block bg-emerald-100 text-emerald-800 px-4 py-2 rounded-lg text-sm font-semibold border border-emerald-200">
-                  Estado: Aprobado
-                </div>
+            {/* Resumen de la Orden */}
+            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 sm:p-5 space-y-2.5 text-xs text-left">
+              <div className="flex items-center justify-between border-b border-slate-200 pb-2.5">
+                <span className="text-slate-500 font-medium">Estado de Transacción</span>
+                <span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded-full text-[11px]">
+                  <CheckCircle className="w-3 h-3 text-emerald-600" />
+                  Aprobada por Transbank
+                </span>
               </div>
 
-              {/* Botón Acción */}
+              {pendingPurchaseData ? (
+                <>
+                  <div className="flex justify-between items-center border-b border-slate-200 pb-2">
+                    <span className="text-slate-500 font-medium">Cuponera</span>
+                    <span className="font-bold text-[#0A4DA6] text-right">{pendingPurchaseData.nombreCuponera}</span>
+                  </div>
+                  <div className="flex justify-between items-center border-b border-slate-200 pb-2">
+                    <span className="text-slate-500 font-medium">Titular / RUT</span>
+                    <span className="font-bold text-slate-900 text-right">{pendingPurchaseData.nombre} ({pendingPurchaseData.rut})</span>
+                  </div>
+                  <div className="flex justify-between items-center border-b border-slate-200 pb-2">
+                    <span className="text-slate-500 font-medium">Pasajes Disponibles</span>
+                    <span className="font-bold text-[#FF6B00]">
+                      {pendingPurchaseData.cantidadCupones} viajes listos para canjear
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center border-b border-slate-200 pb-2">
+                    <span className="text-slate-500 font-medium">Total Pagado</span>
+                    <span className="font-black text-slate-900">
+                      ${(pendingPurchaseData.precioTotal || 0).toLocaleString('es-CL')} CLP
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center pt-0.5">
+                    <span className="text-slate-500 font-medium">Vigencia</span>
+                    <span className="font-bold text-slate-700">90 días corridos</span>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex justify-between items-center border-b border-slate-200 pb-2">
+                    <span className="text-slate-500 font-medium">Medio de Pago</span>
+                    <span className="font-bold text-[#0A4DA6]">Webpay Plus (Transbank)</span>
+                  </div>
+                  <div className="flex justify-between items-center border-b border-slate-200 pb-2">
+                    <span className="text-slate-500 font-medium">Disponibilidad</span>
+                    <span className="font-bold text-emerald-600">Inmediata</span>
+                  </div>
+                  <div className="flex justify-between items-center pt-0.5">
+                    <span className="text-slate-500 font-medium">Vigencia</span>
+                    <span className="font-bold text-slate-700">90 días corridos</span>
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* Acciones */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
               <button
-                onClick={() => setShowTransbankSuccess(false)}
-                className="w-full bg-[#0A4DA6] hover:bg-blue-800 text-white font-bold py-3.5 px-4 rounded-xl transition-all shadow-md flex items-center justify-center gap-2"
+                onClick={() => {
+                  const targetRut = pendingPurchaseData?.rut;
+                  setShowTransbankSuccess(false);
+                  setPendingPurchaseData(null);
+                  if (targetRut) {
+                    onGoToDashboardWithRut(targetRut);
+                  }
+                }}
+                className="w-full bg-[#F05A24] hover:bg-[#D94B18] text-white font-bold py-3.5 px-4 rounded-xl transition-all text-xs flex items-center justify-center gap-2 cursor-pointer shadow-md hover:shadow-lg"
               >
-                <span>Aceptar y Continuar</span>
-                <ArrowRight className="w-4 h-4" />
+                <Ticket className="w-4 h-4 text-white" />
+                <span>Ver en Mi Dashboard</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setShowTransbankSuccess(false);
+                  setPendingPurchaseData(null);
+                }}
+                className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3.5 px-4 rounded-xl border border-slate-200 transition-all text-xs flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <span>Volver al Catálogo</span>
               </button>
             </div>
           </div>
@@ -824,34 +963,92 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
 
       {/* Modal de Error Transbank Webpay */}
       {mounted && showTransbankError && createPortal(
-        <div className="fixed inset-0 w-screen h-screen min-h-screen bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-[9999]">
-          <div className="bg-white rounded-3xl max-w-md w-full shadow-2xl overflow-hidden transform transition-all animate-in zoom-in-95 duration-200">
-            {/* Header del Modal */}
-            <div className="bg-gradient-to-r from-red-500 to-red-600 p-6 text-center text-white relative">
-              <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3 backdrop-blur-md">
-                <XCircle className="w-10 h-10 text-white" />
+        <div className="fixed inset-0 z-[9999] w-screen h-screen min-h-screen flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-100 space-y-6 relative animate-fade-in">
+            {/* Botón Cerrar */}
+            <button
+              onClick={() => {
+                setShowTransbankError(false);
+              }}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-2 rounded-xl hover:bg-slate-100 transition-colors cursor-pointer"
+              aria-label="Cerrar modal"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            {/* Cabecera del Modal */}
+            <div className="text-center space-y-2">
+              <div className="inline-flex items-center gap-1.5 bg-red-50 text-red-600 border border-red-200 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider shadow-xs mb-1">
+                <AlertCircle className="w-3.5 h-3.5 text-red-600" />
+                <span>Transacción No Procesada</span>
               </div>
-              <h3 className="text-xl font-bold">Pago Fallido</h3>
-              <p className="text-red-50 text-sm mt-1 opacity-90">
-                No se pudo procesar tu compra
+
+              <div className="w-16 h-16 rounded-full bg-red-50 border-4 border-red-100 text-red-500 flex items-center justify-center mx-auto shadow-sm">
+                <XCircle className="w-8 h-8 stroke-[2.5]" />
+              </div>
+
+              <span className="text-xs font-bold text-red-600 uppercase tracking-wider block">
+                Webpay Plus / Transbank
+              </span>
+              <h3 className="text-2xl font-black text-slate-900">Pago No Realizado</h3>
+              <p className="text-xs text-slate-500 max-w-sm mx-auto">
+                No te preocupes, no se ha efectuado ningún cobro ni descuento en tu medio de pago.
               </p>
             </div>
 
-            {/* Contenido */}
-            <div className="p-6 space-y-5 bg-slate-50">
-              <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm text-center">
-                <p className="text-slate-600 text-sm leading-relaxed">
-                  {transbankErrorMessage}
-                </p>
-                <div className="mt-4 inline-block bg-red-100 text-red-800 px-4 py-2 rounded-lg text-sm font-semibold border border-red-200">
-                  Estado: Rechazado o Anulado
-                </div>
+            {/* Resumen del Error */}
+            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 sm:p-5 space-y-3 text-xs text-left">
+              <div className="flex items-center justify-between border-b border-slate-200 pb-2.5">
+                <span className="text-slate-500 font-medium">Estado del Pago</span>
+                <span className="inline-flex items-center gap-1 bg-red-100 text-red-800 font-bold px-2.5 py-0.5 rounded-full text-[11px]">
+                  <XCircle className="w-3 h-3 text-red-600" />
+                  Rechazado o Cancelado
+                </span>
               </div>
 
-              {/* Botón Acción */}
+              <div className="flex justify-between items-start border-b border-slate-200 pb-2.5">
+                <span className="text-slate-500 font-medium shrink-0">Motivo:</span>
+                <span className="font-semibold text-slate-800 text-right ml-2">{transbankErrorMessage}</span>
+              </div>
+
+              {pendingPurchaseData && (
+                <div className="flex justify-between items-center border-b border-slate-200 pb-2.5">
+                  <span className="text-slate-500 font-medium">Cuponera Intentada</span>
+                  <span className="font-bold text-[#0A4DA6] text-right">{pendingPurchaseData.nombreCuponera}</span>
+                </div>
+              )}
+
+              <div className="p-3 bg-blue-50/70 border border-blue-100 rounded-xl text-xs text-slate-600 flex items-start gap-2.5">
+                <ShieldCheck className="w-4 h-4 text-[#0A4DA6] shrink-0 mt-0.5" />
+                <p className="leading-snug">
+                  Puedes intentar nuevamente seleccionando otro medio de pago o verificar que tu banco tenga habilitadas las compras en línea.
+                </p>
+              </div>
+            </div>
+
+            {/* Acciones */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
               <button
-                onClick={() => setShowTransbankError(false)}
-                className="w-full bg-[#0A4DA6] hover:bg-blue-800 text-white font-bold py-3.5 px-4 rounded-xl transition-all shadow-md flex items-center justify-center gap-2"
+                onClick={() => {
+                  setShowTransbankError(false);
+                  if (pendingPurchaseData?.idCuponera) {
+                    const cup = cuponeras.find(c => c.id === pendingPurchaseData.idCuponera);
+                    if (cup) {
+                      handleOpenCheckout(cup);
+                    }
+                  }
+                }}
+                className="w-full bg-[#F05A24] hover:bg-[#D94B18] text-white font-bold py-3.5 px-4 rounded-xl transition-all text-xs flex items-center justify-center gap-2 cursor-pointer shadow-md hover:shadow-lg"
+              >
+                <RotateCcw className="w-4 h-4 text-white" />
+                <span>Reintentar Compra</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setShowTransbankError(false);
+                }}
+                className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3.5 px-4 rounded-xl border border-slate-200 transition-all text-xs flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span>Cerrar</span>
               </button>
