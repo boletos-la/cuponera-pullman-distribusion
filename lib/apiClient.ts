@@ -29,11 +29,18 @@ export const getAuthToken = () => {
 
 export const getAuthUser = () => {
   if (typeof window !== 'undefined') {
-    const token = getAuthToken();
+    const token = localStorage.getItem('jwt_token');
     if (token) {
       try {
         const payloadStr = atob(token.split('.')[1]);
-        return JSON.parse(payloadStr);
+        const payload = JSON.parse(payloadStr);
+        const now = Math.floor(Date.now() / 1000);
+        
+        if (payload.exp && payload.exp < now) {
+          localStorage.removeItem('jwt_token');
+          return null;
+        }
+        return payload;
       } catch (e) {
         return null;
       }
