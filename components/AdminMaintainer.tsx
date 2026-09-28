@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Cuponera, AuditoriaLog } from '@/lib/dataStore';
 import { getApiUrl, apiClient } from '@/lib/apiClient';
-import { Settings, Plus, Edit2, History, Check, X, ShieldAlert, Trash2, ArrowLeftRight, Users, CreditCard, Ticket, ShoppingBag, Search, ChevronUp, ChevronDown } from 'lucide-react';
+import { Settings, Plus, Edit2, History, Check, X, ShieldAlert, Trash2, ArrowLeftRight, Users, CreditCard, Ticket, ShoppingBag, Search, ChevronUp, ChevronDown, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 import { ComboBox } from '@/components/ui/combobox';
 
 interface TramoItem {
@@ -65,8 +65,23 @@ export default function AdminMaintainer() {
   };
 
   const getSortIcon = (key: string) => {
-    if (!sortConfig || sortConfig.key !== key) return null;
-    return sortConfig.direction === 'asc' ? <ChevronUp className="inline w-3 h-3" /> : <ChevronDown className="inline w-3 h-3" />;
+    const isSorted = sortConfig && sortConfig.key === key;
+    if (isSorted) {
+      return sortConfig.direction === 'asc' ? (
+        <span className="inline-flex items-center justify-center w-4 h-4 ml-1 rounded bg-blue-100 text-[#0A4DA6] shadow-xs" title="Orden ascendente (clic para alternar)">
+          <ArrowUp className="w-3 h-3 stroke-[2.5]" />
+        </span>
+      ) : (
+        <span className="inline-flex items-center justify-center w-4 h-4 ml-1 rounded bg-blue-100 text-[#0A4DA6] shadow-xs" title="Orden descendente (clic para alternar)">
+          <ArrowDown className="w-3 h-3 stroke-[2.5]" />
+        </span>
+      );
+    }
+    return (
+      <span className="inline-flex items-center justify-center w-4 h-4 ml-1 text-slate-300 group-hover:text-slate-600 transition-colors" title="Ordenar por esta columna">
+        <ArrowUpDown className="w-3 h-3 opacity-60 group-hover:opacity-100" />
+      </span>
+    );
   };
 
   const sortData = (data: any[]) => {
@@ -77,14 +92,22 @@ export default function AdminMaintainer() {
       
       // Handle nested values
       if (sortConfig.key === 'cuponera.nombre') {
-        aVal = a.UsuarioCuponera?.Cuponera?.nombre || a.Cuponera?.nombre || '';
-        bVal = b.UsuarioCuponera?.Cuponera?.nombre || b.Cuponera?.nombre || '';
+        aVal = a.CuponeraCatalogo?.nombre || a.UsuarioCuponera?.Cuponera?.nombre || a.Cuponera?.nombre || '';
+        bVal = b.CuponeraCatalogo?.nombre || b.UsuarioCuponera?.Cuponera?.nombre || b.Cuponera?.nombre || '';
       } else if (sortConfig.key === 'cupon.codigo') {
         aVal = a.Cupon?.codigo || '';
         bVal = b.Cupon?.codigo || '';
       } else if (sortConfig.key === 'cupon.UsuarioCuponera.Cuponera.nombre') {
         aVal = a.Cupon?.UsuarioCuponera?.Cuponera?.nombre || '';
         bVal = b.Cupon?.UsuarioCuponera?.Cuponera?.nombre || '';
+      }
+
+      if (aVal == null) aVal = '';
+      if (bVal == null) bVal = '';
+
+      if (typeof aVal === 'string' && typeof bVal === 'string') {
+        const cmp = aVal.localeCompare(bVal, 'es', { numeric: true, sensitivity: 'base' });
+        return sortConfig.direction === 'asc' ? cmp : -cmp;
       }
 
       if (aVal < bVal) return sortConfig.direction === 'asc' ? -1 : 1;
@@ -271,13 +294,25 @@ export default function AdminMaintainer() {
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-[120px] z-20">
                   <tr>
-                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('id')}>ID {getSortIcon('id')}</th>
-                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('nombre')}>Nombre {getSortIcon('nombre')}</th>
+                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('id')}>
+                      <div className="inline-flex items-center gap-1">ID {getSortIcon('id')}</div>
+                    </th>
+                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('nombre')}>
+                      <div className="inline-flex items-center gap-1">Nombre {getSortIcon('nombre')}</div>
+                    </th>
                     <th className="p-3">Tramos Habilitados</th>
-                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('valorUnitario')}>Valor Uni. {getSortIcon('valorUnitario')}</th>
-                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('cantidadCupones')}>N° Cupones {getSortIcon('cantidadCupones')}</th>
-                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('precioTotal')}>Precio Total {getSortIcon('precioTotal')}</th>
-                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('activa')}>Publicada {getSortIcon('activa')}</th>
+                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('valorUnitario')}>
+                      <div className="inline-flex items-center gap-1">Valor Uni. {getSortIcon('valorUnitario')}</div>
+                    </th>
+                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('cantidadCupones')}>
+                      <div className="inline-flex items-center gap-1">N° Cupones {getSortIcon('cantidadCupones')}</div>
+                    </th>
+                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('precioTotal')}>
+                      <div className="inline-flex items-center gap-1">Precio Total {getSortIcon('precioTotal')}</div>
+                    </th>
+                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('activa')}>
+                      <div className="inline-flex items-center gap-1">Publicada {getSortIcon('activa')}</div>
+                    </th>
                     <th className="p-3 text-right">Acción</th>
                   </tr>
                 </thead>
@@ -315,12 +350,24 @@ export default function AdminMaintainer() {
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-[120px] z-20">
                   <tr>
-                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('rut')}>RUT {getSortIcon('rut')}</th>
-                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('nombre')}>Nombre {getSortIcon('nombre')}</th>
-                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('correo')}>Correo {getSortIcon('correo')}</th>
-                    <th className="p-3">Teléfono</th>
-                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('rol')}>Rol {getSortIcon('rol')}</th>
-                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('createdAt')}>Registro {getSortIcon('createdAt')}</th>
+                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('rut')}>
+                      <div className="inline-flex items-center gap-1">RUT {getSortIcon('rut')}</div>
+                    </th>
+                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('nombre')}>
+                      <div className="inline-flex items-center gap-1">Nombre {getSortIcon('nombre')}</div>
+                    </th>
+                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('correo')}>
+                      <div className="inline-flex items-center gap-1">Correo {getSortIcon('correo')}</div>
+                    </th>
+                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('telefono')}>
+                      <div className="inline-flex items-center gap-1">Teléfono {getSortIcon('telefono')}</div>
+                    </th>
+                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('rol')}>
+                      <div className="inline-flex items-center gap-1">Rol {getSortIcon('rol')}</div>
+                    </th>
+                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('createdAt')}>
+                      <div className="inline-flex items-center gap-1">Registro {getSortIcon('createdAt')}</div>
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
@@ -353,13 +400,27 @@ export default function AdminMaintainer() {
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-[120px] z-20">
                   <tr>
-                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('orden_compra')}>Orden {getSortIcon('orden_compra')}</th>
-                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('cuponera.nombre')}>Cuponera {getSortIcon('cuponera.nombre')}</th>
-                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('rut_usuario')}>RUT Usuario {getSortIcon('rut_usuario')}</th>
-                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('monto')}>Monto {getSortIcon('monto')}</th>
-                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('estado')}>Estado {getSortIcon('estado')}</th>
-                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('codigo_autorizacion')}>Cod. Aut {getSortIcon('codigo_autorizacion')}</th>
-                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('createdAt')}>Fecha {getSortIcon('createdAt')}</th>
+                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('orden_compra')}>
+                      <div className="inline-flex items-center gap-1">Orden {getSortIcon('orden_compra')}</div>
+                    </th>
+                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('cuponera.nombre')}>
+                      <div className="inline-flex items-center gap-1">Cuponera {getSortIcon('cuponera.nombre')}</div>
+                    </th>
+                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('rut_usuario')}>
+                      <div className="inline-flex items-center gap-1">RUT Usuario {getSortIcon('rut_usuario')}</div>
+                    </th>
+                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('monto')}>
+                      <div className="inline-flex items-center gap-1">Monto {getSortIcon('monto')}</div>
+                    </th>
+                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('estado')}>
+                      <div className="inline-flex items-center gap-1">Estado {getSortIcon('estado')}</div>
+                    </th>
+                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('codigo_autorizacion')}>
+                      <div className="inline-flex items-center gap-1">Cod. Aut {getSortIcon('codigo_autorizacion')}</div>
+                    </th>
+                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('createdAt')}>
+                      <div className="inline-flex items-center gap-1">Fecha {getSortIcon('createdAt')}</div>
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
@@ -399,11 +460,21 @@ export default function AdminMaintainer() {
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-[120px] z-20">
                   <tr>
-                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('cuponera.nombre')}>Cuponera {getSortIcon('cuponera.nombre')}</th>
-                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('rut_usuario')}>RUT Usuario {getSortIcon('rut_usuario')}</th>
-                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('usos_restantes')}>Usos Restantes {getSortIcon('usos_restantes')}</th>
-                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('activa')}>Estado {getSortIcon('activa')}</th>
-                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('fecha_expiracion')}>Expiración {getSortIcon('fecha_expiracion')}</th>
+                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('cuponera.nombre')}>
+                      <div className="inline-flex items-center gap-1">Cuponera {getSortIcon('cuponera.nombre')}</div>
+                    </th>
+                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('rut_usuario')}>
+                      <div className="inline-flex items-center gap-1">RUT Usuario {getSortIcon('rut_usuario')}</div>
+                    </th>
+                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('usos_restantes')}>
+                      <div className="inline-flex items-center gap-1">Usos Restantes {getSortIcon('usos_restantes')}</div>
+                    </th>
+                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('activa')}>
+                      <div className="inline-flex items-center gap-1">Estado {getSortIcon('activa')}</div>
+                    </th>
+                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('fecha_expiracion')}>
+                      <div className="inline-flex items-center gap-1">Expiración {getSortIcon('fecha_expiracion')}</div>
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
@@ -438,14 +509,30 @@ export default function AdminMaintainer() {
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-[120px] z-20">
                   <tr>
-                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('pnr_kupos')}>PNR Kupos {getSortIcon('pnr_kupos')}</th>
-                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('cupon.codigo')}>Cod. Cupón {getSortIcon('cupon.codigo')}</th>
-                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('cupon.UsuarioCuponera.Cuponera.nombre')}>Cuponera {getSortIcon('cupon.UsuarioCuponera.Cuponera.nombre')}</th>
-                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('rut_usuario')}>RUT Pasajero {getSortIcon('rut_usuario')}</th>
-                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('origen')}>Ruta {getSortIcon('origen')}</th>
-                    <th className="p-3">Asiento</th>
-                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('estado')}>Estado {getSortIcon('estado')}</th>
-                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('fecha_viaje')}>Fecha Viaje {getSortIcon('fecha_viaje')}</th>
+                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('pnr_kupos')}>
+                      <div className="inline-flex items-center gap-1">PNR Kupos {getSortIcon('pnr_kupos')}</div>
+                    </th>
+                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('cupon.codigo')}>
+                      <div className="inline-flex items-center gap-1">Cod. Cupón {getSortIcon('cupon.codigo')}</div>
+                    </th>
+                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('cupon.UsuarioCuponera.Cuponera.nombre')}>
+                      <div className="inline-flex items-center gap-1">Cuponera {getSortIcon('cupon.UsuarioCuponera.Cuponera.nombre')}</div>
+                    </th>
+                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('rut_usuario')}>
+                      <div className="inline-flex items-center gap-1">RUT Pasajero {getSortIcon('rut_usuario')}</div>
+                    </th>
+                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('origen')}>
+                      <div className="inline-flex items-center gap-1">Ruta {getSortIcon('origen')}</div>
+                    </th>
+                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('asiento')}>
+                      <div className="inline-flex items-center gap-1">Asiento {getSortIcon('asiento')}</div>
+                    </th>
+                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('estado')}>
+                      <div className="inline-flex items-center gap-1">Estado {getSortIcon('estado')}</div>
+                    </th>
+                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('fecha_viaje')}>
+                      <div className="inline-flex items-center gap-1">Fecha Viaje {getSortIcon('fecha_viaje')}</div>
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
