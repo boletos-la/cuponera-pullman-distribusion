@@ -8,9 +8,10 @@ import { couponService } from '@/lib/services/couponService';
 interface DashboardViewProps {
   initialRut?: string;
   onCanjearCupon: (codigoCupon: string, rut: string) => void;
+  onResetRut?: () => void;
 }
 
-export default function DashboardView({ initialRut = '', onCanjearCupon }: DashboardViewProps) {
+export default function DashboardView({ initialRut = '', onCanjearCupon, onResetRut }: DashboardViewProps) {
   const [rutInput, setRutInput] = useState(initialRut ? formatRut(initialRut) : '');
   const [loading, setLoading] = useState(false);
   const [rutError, setRutError] = useState('');
@@ -27,9 +28,27 @@ export default function DashboardView({ initialRut = '', onCanjearCupon }: Dashb
 
   useEffect(() => {
     if (initialRut) {
+      setRutInput(formatRut(initialRut));
       loadDashboard(initialRut);
+    } else {
+      setStep('login');
+      setRutInput('');
+      setRutFormateado('');
+      setCuponeras([]);
+      setRutError('');
     }
   }, [initialRut]);
+
+  const handleResetSearch = () => {
+    setStep('login');
+    setRutInput('');
+    setRutFormateado('');
+    setCuponeras([]);
+    setRutError('');
+    if (onResetRut) {
+      onResetRut();
+    }
+  };
 
   const handleRequestDashboard = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -182,15 +201,26 @@ export default function DashboardView({ initialRut = '', onCanjearCupon }: Dashb
           </div>
 
           <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 space-y-6">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-100 pb-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-100 pb-4">
               <div>
                 <h3 className="text-xl font-black text-slate-900">
                   Cuponeras Adquiridas ({cuponeras.length})
                 </h3>
               </div>
-              <span className="text-xs font-mono font-bold bg-blue-50 text-[#0A4DA6] px-3 py-1 rounded-full border border-blue-200">
-                Titular: {rutFormateado}
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-mono font-bold bg-blue-50 text-[#0A4DA6] px-3 py-1.5 rounded-full border border-blue-200">
+                  Titular: {rutFormateado}
+                </span>
+                <button
+                  type="button"
+                  onClick={handleResetSearch}
+                  className="text-xs font-bold text-slate-600 hover:text-[#F05A24] bg-slate-100 hover:bg-orange-50 px-3 py-1.5 rounded-xl border border-slate-200 transition-colors cursor-pointer flex items-center gap-1.5 shadow-2xs"
+                  title="Consultar otro RUT"
+                >
+                  <Search className="w-3.5 h-3.5" />
+                  <span>Consultar otro RUT</span>
+                </button>
+              </div>
             </div>
 
             {cuponeras.length === 0 ? (

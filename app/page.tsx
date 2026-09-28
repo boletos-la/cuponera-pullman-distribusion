@@ -33,7 +33,14 @@ export default function Home() {
       {/* Navbar Cabecera */}
       <Navbar
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        setActiveTab={(tab) => {
+          if (tab === 'dashboard') {
+            // Al hacer clic en Mi Dashboard desde la barra de navegación,
+            // se limpia el RUT en memoria para mostrar siempre el buscador público limpio
+            setSelectedRut('');
+          }
+          setActiveTab(tab);
+        }}
         onOpenExceptionModal={() => setShowExceptionModal(true)}
       />
 
@@ -43,7 +50,10 @@ export default function Home() {
         {activeTab === 'catalogo' && (
           <HeroBanner
             onGoToCatalog={() => setActiveTab('catalogo')}
-            onGoToDashboard={() => setActiveTab('dashboard')}
+            onGoToDashboard={() => {
+              setSelectedRut('');
+              setActiveTab('dashboard');
+            }}
           />
         )}
 
@@ -64,6 +74,7 @@ export default function Home() {
                 setSelectedRut(rut);
                 setActiveTab('canje');
               }}
+              onResetRut={() => setSelectedRut('')}
             />
           )}
 
