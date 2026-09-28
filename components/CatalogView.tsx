@@ -34,8 +34,8 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
   const [rutError, setRutError] = useState('');
   const [submitError, setSubmitError] = useState('');
   const [submitting, setSubmitting] = useState(false);
-  const [step, setStep] = useState<'form' | 'otp'>('form');
-  const [otpCode, setOtpCode] = useState('');
+  const [quiereRegistrarse, setQuiereRegistrarse] = useState(false);
+  const [password, setPassword] = useState('');
 
   // Resultado de Compra Aprobada
   const [compraExitosa, setCompraExitosa] = useState<{
@@ -169,8 +169,8 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
     setSelectedCuponera(c);
     setSubmitError('');
     setRutError('');
-    setStep('form');
-    setOtpCode('');
+    setQuiereRegistrarse(false);
+    setPassword('');
 
     // Pre-cargar datos del usuario si está autenticado
     const authUser = getAuthUser();
@@ -185,7 +185,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
     setSelectedCuponera(null);
   };
 
-  const handleRequestOtp = async (e: React.FormEvent) => {
+  const handleProcessPurchase = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitError('');
 
@@ -203,67 +203,50 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
       setSubmitError('Debe aceptar las condiciones de vigencia de 90 días.');
       return;
     }
-
-    setSubmitting(true);
-    try {
-      const res = await authService.sendOtp({ rut, email, nombre, telefono }, true); // true = purchase
-      if (res.success) {
-        setStep('otp');
-      }
-    } catch (err: any) {
-      setSubmitError(err.message || 'Error enviando el código 2FA.');
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const handleProcessPurchase = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitError('');
-
-    if (otpCode.length < 6) {
-      setSubmitError('Ingrese el código OTP de 6 dígitos.');
+    
+    if (quiereRegistrarse && password.length < 6) {
+      setSubmitError('La contraseña debe tener al menos 6 caracteres.');
       return;
     }
 
     setSubmitting(true);
     try {
+      if (quiereRegistrarse) {
+        // Registrar usuario
+        const regRes = await authService.register({ rut, nombre, correo: email, telefono, password });
+        if (!regRes.success) {
+           setSubmitError(regRes.message || 'Error al registrar la cuenta.');
+           setSubmitting(false);
+           return;
+        }
+      }
+
       if (selectedCuponera) {
         try {
           sessionStorage.setItem('pending_purchase', JSON.stringify({
-            rut,
-            nombre,
-            email,
-            telefono,
+            rut, nombre, email, telefono,
             idCuponera: selectedCuponera.id,
             nombreCuponera: selectedCuponera.nombre,
             cantidadCupones: selectedCuponera.cantidadCupones,
             precioTotal: selectedCuponera.precioTotal,
             tramos: selectedCuponera.tramos
           }));
-        } catch (storageErr) {
-          console.error('Error guardando pending_purchase en storage:', storageErr);
-        }
+        } catch (storageErr) {}
 
         const res = await paymentService.initPayment({ 
           id_cuponera: selectedCuponera.id,
-          rut,
-          email,
-          nombre,
-          telefono,
-          frontend_url: window.location.origin,
-          otpCode
+          rut, email, nombre, telefono,
+          frontend_url: window.location.origin
         });
+        
         if (res.success && res.data.redirect_url && res.data.token_ws) {
           const form = document.createElement('form');
           form.method = 'POST';
           form.action = res.data.redirect_url;
-          
           const tokenInput = document.createElement('input');
           tokenInput.type = 'hidden';
           tokenInput.name = 'token_ws';
           tokenInput.value = res.data.token_ws;
-          
           form.appendChild(tokenInput);
           document.body.appendChild(form);
           form.submit();
@@ -565,8 +548,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
               </button>
             </div>
 
-            {step === 'form' && (
-              <form onSubmit={handleRequestOtp} className="space-y-4">
+            <form onSubmit={handleProcessPurchase} className="space-y-4">
                 {/* Formulario de Datos del Comprador */}
                 <div className="space-y-3">
                   <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider">
@@ -627,6 +609,34 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                   </div>
                 </div>
 
+                <div className="bg-[#FFF7ED] border border-[#FFEDD5] rounded-2xl p-4 space-y-2">
+                  <div className="flex items-start gap-2">
+                    <input
+                      type="checkbox"
+                      id="quiereRegistrarse"
+                      checked={quiereRegistrarse}
+                      onChange={(e) => setQuiereRegistrarse(e.target.checked)}
+                      className="mt-0.5 rounded text-[#F05A24] focus:ring-[#F05A24]"
+                    />
+                    <label htmlFor="quiereRegistrarse" className="text-xs text-slate-700 font-bold leading-tight">
+                      Crear una cuenta para gestionar mis cuponeras fácilmente
+                    </label>
+                  </div>
+                  {quiereRegistrarse && (
+                    <div className="pt-2 pl-6">
+                      <label className="block text-xs font-semibold text-slate-700 mb-1">Contraseña</label>
+                      <input
+                        type="password"
+                        required={quiereRegistrarse}
+                        placeholder="Mínimo 6 caracteres"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#0A4DA6]"
+                      />
+                    </div>
+                  )}
+                </div>
+
                 {/* Paso 4: Condiciones de Compra */}
                 <div className="bg-[#FFF7ED] border border-[#FFEDD5] rounded-2xl p-4 space-y-2">
                   <div className="flex items-start gap-2">
@@ -643,8 +653,6 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                     </label>
                   </div>
                 </div>
-
-
                 {submitError && (
                   <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 font-medium flex items-center gap-2">
                     <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
@@ -671,66 +679,6 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                   )}
                 </button>
               </form>
-            )}
-
-            {step === 'otp' && (
-              <div className="animate-fade-in space-y-6">
-                <div className="text-center space-y-2">
-                  <div className="w-16 h-16 rounded-full bg-[#FFF5F0] text-[#F05A24] flex items-center justify-center mx-auto shadow-md">
-                    <KeyRound className="w-8 h-8 stroke-[2.5]" />
-                  </div>
-                  <h3 className="text-2xl font-black text-slate-900">Validación de Seguridad</h3>
-                  <p className="text-xs text-slate-500">
-                    Hemos enviado un código de 6 dígitos a <span className="font-semibold text-slate-700">{email}</span>.
-                  </p>
-                </div>
-
-                <form onSubmit={handleProcessPurchase} className="space-y-4">
-                  <div className="space-y-1.5 text-center">
-                    <label className="block text-xs font-extrabold text-[#0F172A] uppercase tracking-wider">
-                      Código OTP
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      maxLength={6}
-                      value={otpCode}
-                      onChange={(e) => setOtpCode(e.target.value)}
-                      className="w-48 mx-auto text-center text-2xl tracking-widest font-black bg-white border border-slate-300 rounded-xl py-3 focus:outline-none focus:ring-2 focus:ring-[#F05A24]"
-                    />
-                  </div>
-                  
-                  {submitError && (
-                    <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 font-medium flex items-center gap-2">
-                      <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
-                      <span>{submitError}</span>
-                    </div>
-                  )}
-                  
-                  <button
-                    type="submit"
-                    disabled={submitting || otpCode.length < 6}
-                    className="w-full bg-gradient-to-r from-[#FF6B00] to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-extrabold py-3.5 px-6 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-base cursor-pointer disabled:opacity-50"
-                  >
-                    {submitting ? (
-                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    ) : (
-                      <>
-                        <CreditCard className="w-5 h-5" />
-                        <span>Confirmar y Pagar ${selectedCuponera.precioTotal.toLocaleString('es-CL')}</span>
-                      </>
-                    )}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setStep('form')}
-                    className="w-full text-slate-500 hover:text-slate-700 font-semibold text-xs py-2 cursor-pointer"
-                  >
-                    Volver a los datos
-                  </button>
-                </form>
-              </div>
-            )}
           </div>
         </div>,
         document.body

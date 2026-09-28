@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { validateRut, formatRut, cleanRut } from '@/lib/rutValidator';
 import { couponService } from '@/lib/services/couponService';
-import { getApiUrl } from '@/lib/apiClient';
+import { getApiUrl, getAuthUser } from '@/lib/apiClient';
 import { Bus, ShieldCheck, Calendar, Clock, MapPin, CheckCircle2, AlertCircle, KeyRound, Ticket, Lock, ArrowRight, UserCheck, X } from 'lucide-react';
 import TicketModal from './TicketModal';
 
@@ -120,8 +120,16 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
   }, []);
 
   useEffect(() => {
-    if (initialCuponCode && initialRut) {
-      handleValidateCupon(initialCuponCode, initialRut);
+    let targetRut = initialRut;
+    if (!targetRut) {
+      const authUser = getAuthUser();
+      if (authUser && authUser.rut) {
+        targetRut = authUser.rut;
+        setRut(formatRut(targetRut));
+      }
+    }
+    if (initialCuponCode && targetRut) {
+      handleValidateCupon(initialCuponCode, targetRut);
     }
   }, [initialCuponCode, initialRut]);
 
@@ -331,10 +339,10 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
       setOperatorPnr(generatedOperatorPnr);
       setTravelName(bookData.travelName);
 
-      // Instead of confirming directly, send OTP and show modal
+      // Instead of confirming directly, send MFA and show modal
       const otpRes = await couponService.sendRedeemOtp(rut);
       if (!otpRes || !otpRes.success) {
-        setProcessError(otpRes?.message || 'Error al enviar código OTP. Verifica tu sesión y correo.');
+        setProcessError(otpRes?.message || 'Error al enviar código MFA. Verifica tu sesión y correo.');
         setIsProcessing(false);
         return;
       }
@@ -684,7 +692,7 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
         />
       )}
 
-      {/* Modal 2FA OTP */}
+      {/* Modal 2FA MFA */}
       {mounted && showOtpModal && createPortal(
         <div className="fixed inset-0 z-[9999] w-screen h-screen min-h-screen flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
           <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-2xl w-full max-w-sm relative animate-fade-in">
@@ -699,7 +707,7 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
                 <ShieldCheck className="w-8 h-8 text-[#0A4DA6]" />
               </div>
               <div>
-                <h3 className="text-lg font-black text-slate-900">Validación de Seguridad</h3>
+                <h3 className="text-lg font-black text-slate-900">Autenticación Multifactor (MFA)</h3>
                 <p className="text-xs text-slate-500 mt-1">Hemos enviado un código de 6 dígitos a tu correo registrado. Ingresa el código para confirmar el canje.</p>
               </div>
               <input

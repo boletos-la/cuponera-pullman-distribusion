@@ -27,4 +27,18 @@ export const authService = {
       body: JSON.stringify(payload),
     });
   },
+
+  register: async (payload: any) => {
+    return await apiClient('/auth/register', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  },
+
+  login: async (payload: any) => {
+    return await apiClient('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  },
 };

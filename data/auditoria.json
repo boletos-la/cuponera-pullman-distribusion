@@ -1,5 +1,93 @@
 [
   {
+    "id": "AUD-OTP-GEN-63",
+    "fechaHora": "2026-09-28T14:52:01.000Z",
+    "rutUsuario": "10.520.823-5",
+    "nombreUsuario": "Doriancito",
+    "accion": "OTP_GENERADO",
+    "detalles": "Código de seguridad 2FA temporal emitido para propósito: PURCHASE."
+  },
+  {
+    "id": "AUD-CANJE-29",
+    "fechaHora": "2026-09-28T14:29:51.000Z",
+    "rutUsuario": "21.051.782-0",
+    "nombreUsuario": "Diego Farias Albornoz",
+    "accion": "CANJE_CUPON",
+    "detalles": "Canje de cupón exitoso en GDS Kupos. Boleto PNR: TS260928112919542DQJE, Tramo: Santiago ➔ Puerto Montt, Asiento: 32."
+  },
+  {
+    "id": "AUD-OTP-VAL-62",
+    "fechaHora": "2026-09-28T14:29:49.000Z",
+    "rutUsuario": "21.051.782-0",
+    "nombreUsuario": "Diego Farias Albornoz",
+    "accion": "OTP_VALIDADO",
+    "detalles": "Verificación 2FA completada con éxito (REDEEM_COUPON). Acceso autorizado."
+  },
+  {
+    "id": "AUD-TX-37",
+    "fechaHora": "2026-09-28T14:27:38.000Z",
+    "rutUsuario": "21.051.782-0",
+    "nombreUsuario": "Diego Farias",
+    "accion": "COMPRA_CUPONERA",
+    "detalles": "Transacción Webpay Plus APROBADO por $50.000 [Orden: CUPONERA_20_1790605657875] (Cod. Aut: 1213)."
+  },
+  {
+    "id": "AUD-OTP-VAL-61",
+    "fechaHora": "2026-09-28T14:27:37.000Z",
+    "rutUsuario": "21.051.782-0",
+    "nombreUsuario": "Diego Farias Albornoz",
+    "accion": "OTP_VALIDADO",
+    "detalles": "Verificación 2FA completada con éxito (PURCHASE). Acceso autorizado."
+  },
+  {
+    "id": "AUD-TX-36",
+    "fechaHora": "2026-09-28T14:05:37.000Z",
+    "rutUsuario": "21.051.782-0",
+    "nombreUsuario": "Diego Farias Albonoz",
+    "accion": "COMPRA_CUPONERA",
+    "detalles": "Transacción Webpay Plus APROBADO por $98.000 [Orden: CUPONERA_2_1790604337285] (Cod. Aut: 1213)."
+  },
+  {
+    "id": "AUD-OTP-VAL-60",
+    "fechaHora": "2026-09-28T14:05:37.000Z",
+    "rutUsuario": "21.051.782-0",
+    "nombreUsuario": "Diego Farias Albornoz",
+    "accion": "OTP_VALIDADO",
+    "detalles": "Verificación 2FA completada con éxito (PURCHASE). Acceso autorizado."
+  },
+  {
+    "id": "AUD-TX-35",
+    "fechaHora": "2026-09-28T14:04:49.000Z",
+    "rutUsuario": "21.051.782-0",
+    "nombreUsuario": "Diego Farias Albornoz",
+    "accion": "COMPRA_CUPONERA",
+    "detalles": "Transacción Webpay Plus RECHAZADO por $98.000 [Orden: CUPONERA_2_1790604288486]."
+  },
+  {
+    "id": "AUD-OTP-VAL-59",
+    "fechaHora": "2026-09-28T14:04:48.000Z",
+    "rutUsuario": "21.051.782-0",
+    "nombreUsuario": "Diego Farias Albornoz",
+    "accion": "OTP_VALIDADO",
+    "detalles": "Verificación 2FA completada con éxito (PURCHASE). Acceso autorizado."
+  },
+  {
+    "id": "AUD-TX-34",
+    "fechaHora": "2026-09-28T13:54:59.000Z",
+    "rutUsuario": "21.051.782-0",
+    "nombreUsuario": "Juan Perez",
+    "accion": "COMPRA_CUPONERA",
+    "detalles": "Transacción Webpay Plus RECHAZADO por $98.000 [Orden: CUPONERA_2_1790603699174]."
+  },
+  {
+    "id": "AUD-OTP-VAL-58",
+    "fechaHora": "2026-09-28T13:54:59.000Z",
+    "rutUsuario": "21.051.782-0",
+    "nombreUsuario": "Diego Farias Albornoz",
+    "accion": "OTP_VALIDADO",
+    "detalles": "Verificación 2FA completada con éxito (PURCHASE). Acceso autorizado."
+  },
+  {
     "id": "AUD-TX-33",
     "fechaHora": "2026-09-24T13:44:35.000Z",
     "rutUsuario": "10.520.823-5",

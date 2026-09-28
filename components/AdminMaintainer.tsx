@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { Cuponera, AuditoriaLog } from '@/lib/dataStore';
-import { getApiUrl } from '@/lib/apiClient';
-import { Settings, Plus, Edit2, History, Check, X, ShieldAlert, Trash2, ArrowLeftRight } from 'lucide-react';
+import { getApiUrl, apiClient } from '@/lib/apiClient';
+import { Settings, Plus, Edit2, History, Check, X, ShieldAlert, Trash2, ArrowLeftRight, Users, CreditCard, Ticket, ShoppingBag, Search } from 'lucide-react';
 import { ComboBox } from '@/components/ui/combobox';
 
 interface TramoItem {
@@ -12,54 +12,38 @@ interface TramoItem {
 }
 
 const FREQUENT_CITIES = [
-  'Santiago',
-  'Viña Del Mar',
-  'Valparaiso',
-  'Concón',
-  'Quilpué',
-  'Villa Alemana',
-  'Quillota',
-  'Limache',
-  'Olmue',
-  'Algarrobo',
-  'El Quisco',
-  'El Tabo',
-  'Cartagena',
-  'San Antonio',
-  'Santo Domingo',
-  'Los Andes',
-  'San Felipe',
-  'Rancagua',
-  'La Serena',
-  'Coquimbo',
-  'Curicó',
-  'Talca',
-  'Chillán',
-  'Concepción',
-  'Los Ángeles',
-  'Temuco',
-  'Valdivia',
-  'Osorno',
-  'Puerto Montt'
+  'Santiago', 'Viña Del Mar', 'Valparaiso', 'Concón', 'Quilpué', 'Villa Alemana',
+  'Quillota', 'Limache', 'Olmue', 'Algarrobo', 'El Quisco', 'El Tabo', 'Cartagena',
+  'San Antonio', 'Santo Domingo', 'Los Andes', 'San Felipe', 'Rancagua', 'La Serena',
+  'Coquimbo', 'Curicó', 'Talca', 'Chillán', 'Concepción', 'Los Ángeles', 'Temuco',
+  'Valdivia', 'Osorno', 'Puerto Montt'
 ];
 
 export default function AdminMaintainer() {
+  const [activeTab, setActiveTab] = useState<'catalogo' | 'usuarios' | 'transacciones' | 'canjes' | 'compras' | 'auditoria'>('catalogo');
   const [cuponeras, setCuponeras] = useState<Cuponera[]>([]);
   const [auditoria, setAuditoria] = useState<AuditoriaLog[]>([]);
-  const [loading, setLoading] = useState(true);
+  
+  // Nuevos estados para las otras tablas
+  const [usuarios, setUsuarios] = useState<any[]>([]);
+  const [transacciones, setTransacciones] = useState<any[]>([]);
+  const [canjes, setCanjes] = useState<any[]>([]);
+  const [compras, setCompras] = useState<any[]>([]);
 
-  // Ciudades desde GDS
+  // Estados de busqueda
+  const [searchUsuario, setSearchUsuario] = useState('');
+  const [searchTx, setSearchTx] = useState('');
+  const [searchCanjes, setSearchCanjes] = useState('');
+
+  const [loading, setLoading] = useState(true);
   const [cities, setCities] = useState<string[]>([]);
   const [loadingCities, setLoadingCities] = useState(false);
 
-  // Formulario de Edición/Creación
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [nombre, setNombre] = useState('');
   const [descripcion, setDescripcion] = useState('');
-  const [tramosItems, setTramosItems] = useState<TramoItem[]>([
-    { origen: 'Santiago', destino: 'Viña Del Mar' }
-  ]);
+  const [tramosItems, setTramosItems] = useState<TramoItem[]>([{ origen: 'Santiago', destino: 'Viña Del Mar' }]);
   const [valorUnitario, setValorUnitario] = useState<number | ''>(4900);
   const [cantidadCupones, setCantidadCupones] = useState<number | ''>(20);
   const [categoria, setCategoria] = useState('');
@@ -71,6 +55,7 @@ export default function AdminMaintainer() {
 
   useEffect(() => {
     fetchAdminData();
+    fetchExtraData();
     loadCities();
   }, []);
 
@@ -84,12 +69,9 @@ export default function AdminMaintainer() {
           const map = new Map<string, string>();
           data.cities.forEach((c: { name: string }) => {
             const clean = (c.name || '').replace(/[\t\r\n]+/g, ' ').trim();
-            if (clean && !map.has(clean.toLowerCase())) {
-              map.set(clean.toLowerCase(), clean);
-            }
+            if (clean && !map.has(clean.toLowerCase())) map.set(clean.toLowerCase(), clean);
           });
-          const sorted = Array.from(map.values()).sort((a, b) => a.localeCompare('es'));
-          setCities(sorted);
+          setCities(Array.from(map.values()).sort((a, b) => a.localeCompare('es')));
         }
       }
     } catch (err) {
@@ -108,20 +90,6 @@ export default function AdminMaintainer() {
     return Array.from(map.values()).map(c => ({ label: c, value: c }));
   }, [cities]);
 
-  const handleAddTramo = () => {
-    setTramosItems(prev => [...prev, { origen: '', destino: '' }]);
-  };
-
-  const handleTramoChange = (index: number, field: 'origen' | 'destino', value: string) => {
-    setTramosItems(prev =>
-      prev.map((item, idx) => (idx === index ? { ...item, [field]: value } : item))
-    );
-  };
-
-  const handleRemoveTramo = (index: number) => {
-    setTramosItems(prev => prev.filter((_, idx) => idx !== index));
-  };
-
   const fetchAdminData = async () => {
     setLoading(true);
     try {
@@ -138,25 +106,32 @@ export default function AdminMaintainer() {
     }
   };
 
+  const fetchExtraData = async () => {
+    try {
+      const [resUsers, resTx, resCanjes, resCompras] = await Promise.all([
+        apiClient('/admin/usuarios'),
+        apiClient('/admin/transacciones'),
+        apiClient('/admin/canjes'),
+        apiClient('/admin/compras')
+      ]);
+      if (resUsers.success) setUsuarios(resUsers.data);
+      if (resTx.success) setTransacciones(resTx.data);
+      if (resCanjes.success) setCanjes(resCanjes.data);
+      if (resCompras.success) setCompras(resCompras.data);
+    } catch (err) {
+      console.error("Error fetching extra admin data:", err);
+    }
+  };
+
   const handleOpenNew = () => {
-    setEditingId(null);
-    setNombre('');
-    setDescripcion('');
-    setTramosItems([
-      { origen: 'Santiago', destino: 'Viña Del Mar' }
-    ]);
-    setValorUnitario(4900);
-    setCantidadCupones(20);
-    setCategoria('');
-    setBadge('');
-    setActiva(true);
+    setEditingId(null); setNombre(''); setDescripcion('');
+    setTramosItems([{ origen: 'Santiago', destino: 'Viña Del Mar' }]);
+    setValorUnitario(4900); setCantidadCupones(20); setCategoria(''); setBadge(''); setActiva(true);
     setShowModal(true);
   };
 
   const handleOpenEdit = (c: Cuponera) => {
-    setEditingId(c.id);
-    setNombre(c.nombre);
-    setDescripcion(c.descripcion);
+    setEditingId(c.id); setNombre(c.nombre); setDescripcion(c.descripcion);
     const parsedTramosMap = new Map<string, TramoItem>();
     (c.tramos || []).forEach(t => {
       const parts = t.split('-');
@@ -172,11 +147,7 @@ export default function AdminMaintainer() {
     });
     const parsed = Array.from(parsedTramosMap.values());
     setTramosItems(parsed.length > 0 ? parsed : [{ origen: '', destino: '' }]);
-    setValorUnitario(c.valorUnitario);
-    setCantidadCupones(c.cantidadCupones);
-    setCategoria(c.categoria || '');
-    setBadge(c.badge || '');
-    setActiva(c.activa);
+    setValorUnitario(c.valorUnitario); setCantidadCupones(c.cantidadCupones); setCategoria(c.categoria || ''); setBadge(c.badge || ''); setActiva(c.activa);
     setShowModal(true);
   };
 
@@ -184,45 +155,21 @@ export default function AdminMaintainer() {
     e.preventDefault();
     setSaving(true);
     setMsg('');
-
     const formattedTramos = Array.from(new Set(
-      tramosItems
-        .filter(t => t.origen.trim() && t.destino.trim())
-        .flatMap(t => [
-          `${t.origen.trim()}-${t.destino.trim()}`,
-          `${t.destino.trim()}-${t.origen.trim()}`
-        ])
+      tramosItems.filter(t => t.origen.trim() && t.destino.trim()).flatMap(t => [`${t.origen.trim()}-${t.destino.trim()}`, `${t.destino.trim()}-${t.origen.trim()}`])
     ));
-
     if (formattedTramos.length === 0) {
       setMsg('Debes configurar al menos un tramo con origen y destino válidos.');
-      setSaving(false);
-      return;
+      setSaving(false); return;
     }
-
     try {
       const res = await fetch('/api/admin/cuponeras', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          id: editingId,
-          nombre,
-          descripcion,
-          tramos: formattedTramos,
-          valorUnitario: Number(valorUnitario) || 0,
-          cantidadCupones: Number(cantidadCupones) || 1,
-          categoria,
-          badge,
-          activa
-        })
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: editingId, nombre, descripcion, tramos: formattedTramos, valorUnitario: Number(valorUnitario) || 0, cantidadCupones: Number(cantidadCupones) || 1, categoria, badge, activa })
       });
-
       const data = await res.json();
-
       if (data.success) {
-        setMsg(data.mensaje);
-        setShowModal(false);
-        fetchAdminData();
+        setMsg(data.mensaje); setShowModal(false); fetchAdminData();
       } else {
         setMsg(data.error || 'Error al guardar.');
       }
@@ -233,129 +180,238 @@ export default function AdminMaintainer() {
     }
   };
 
-  return (
-    <div className="space-y-8">
-      {/* Seccion Mantenedor (Sección 15) */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200 space-y-6">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div>
-            <span className="bg-[#FFF7ED] text-[#F05A24] border border-[#FFEDD5] text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">
-              Requerimiento Sección 15
-            </span>
-            <h2 className="text-2xl font-black text-slate-900 flex items-center gap-2 mt-1">
-              <Settings className="w-6 h-6 text-[#F05A24]" />
-              Mantenedor Administrativo de Cuponeras
-            </h2>
-            <p className="text-xs text-slate-500 font-medium">
-              Crea y edita paquetes de cuponeras, tramos autorizados, precios unitarios y conmuta la publicación en el catálogo.
-            </p>
-          </div>
+  const filteredUsuarios = usuarios.filter(u => u.rut.includes(searchUsuario) || u.nombre.toLowerCase().includes(searchUsuario.toLowerCase()));
+  const filteredTx = transacciones.filter(t => t.rut_usuario.includes(searchTx) || (t.orden_compra && t.orden_compra.includes(searchTx)));
+  const filteredCanjes = canjes.filter(c => (c.rut_usuario && c.rut_usuario.includes(searchCanjes)) || c.pnr_kupos.includes(searchCanjes));
 
-          <button
-            onClick={handleOpenNew}
-            className="bg-[#F05A24] hover:bg-[#D94B18] text-white font-bold px-4 py-2.5 rounded-xl shadow-md transition-all text-xs flex items-center gap-2 cursor-pointer"
-          >
-            <Plus className="w-4 h-4 text-white" />
-            <span>Crear Nueva Cuponera</span>
+  return (
+    <div className="space-y-6">
+      <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
+        <h2 className="text-2xl font-black text-slate-900 flex items-center gap-2 mb-6">
+          <Settings className="w-6 h-6 text-[#F05A24]" />
+          Mantenedor Administrativo
+        </h2>
+
+        {/* TABS */}
+        <div className="flex flex-wrap gap-2 mb-6 border-b border-slate-100 pb-4">
+          <button onClick={() => setActiveTab('catalogo')} className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${activeTab === 'catalogo' ? 'bg-[#F05A24] text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
+            <ShoppingBag className="w-4 h-4" /> Catálogo
+          </button>
+          <button onClick={() => setActiveTab('usuarios')} className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${activeTab === 'usuarios' ? 'bg-[#0A4DA6] text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
+            <Users className="w-4 h-4" /> Usuarios
+          </button>
+          <button onClick={() => setActiveTab('transacciones')} className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${activeTab === 'transacciones' ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
+            <CreditCard className="w-4 h-4" /> Pagos
+          </button>
+          <button onClick={() => setActiveTab('compras')} className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${activeTab === 'compras' ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
+            <Ticket className="w-4 h-4" /> Cuponeras (Usuarios)
+          </button>
+          <button onClick={() => setActiveTab('canjes')} className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${activeTab === 'canjes' ? 'bg-amber-500 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
+            <ArrowLeftRight className="w-4 h-4" /> Canjes
+          </button>
+          <button onClick={() => setActiveTab('auditoria')} className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${activeTab === 'auditoria' ? 'bg-slate-800 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
+            <History className="w-4 h-4" /> Auditoría
           </button>
         </div>
 
-        {msg && <p className="text-xs text-emerald-600 font-bold">{msg}</p>}
-
-        {/* Tabla Mantenedor */}
-        <div className="overflow-x-auto border border-slate-200 rounded-2xl">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
-              <tr>
-                <th className="p-3">ID</th>
-                <th className="p-3">Nombre</th>
-                <th className="p-3">Tramos Habilitados</th>
-                <th className="p-3">Valor Uni.</th>
-                <th className="p-3">N° Cupones</th>
-                <th className="p-3">Precio Total</th>
-                <th className="p-3">Publicada</th>
-                <th className="p-3 text-right">Acción</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {cuponeras.map((c) => (
-                <tr key={c.id} className="hover:bg-slate-50">
-                  <td className="p-3 font-mono font-bold text-slate-400">#{c.id}</td>
-                  <td className="p-3 font-bold text-slate-900">{c.nombre}</td>
-                  <td className="p-3 max-w-xs truncate text-slate-600">{c.tramos.join(', ')}</td>
-                  <td className="p-3 font-semibold text-slate-700">${c.valorUnitario.toLocaleString('es-CL')}</td>
-                  <td className="p-3 font-[#F05A24] font-bold text-[#F05A24]">{c.cantidadCupones}</td>
-                  <td className="p-3 font-black text-[#F05A24]">${c.precioTotal.toLocaleString('es-CL')}</td>
-                  <td className="p-3">
-                    <span
-                      className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
-                        c.activa ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-600'
-                      }`}
-                    >
-                      {c.activa ? 'Activa' : 'Inactiva'}
-                    </span>
-                  </td>
-                  <td className="p-3 text-right">
-                    <button
-                      onClick={() => handleOpenEdit(c)}
-                      className="p-1.5 bg-blue-50 text-[#0A4DA6] hover:bg-blue-100 rounded-lg font-bold text-[11px] cursor-pointer inline-flex items-center gap-1"
-                    >
-                      <Edit2 className="w-3.5 h-3.5" />
-                      <span>Editar</span>
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* Visor de Auditoría y Trazabilidad */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200 space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <History className="w-5 h-5 text-[#0A4DA6]" />
-            <h3 className="text-lg font-black text-slate-900">Logs de Trazabilidad y Auditoría (auditoria.json)</h3>
-          </div>
-          <span className="text-xs text-slate-400 font-semibold">{auditoria.length} registros cargados</span>
-        </div>
-
-        <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
-          {auditoria.length === 0 ? (
-            <div className="text-center py-8 text-slate-400 text-xs">
-              No hay registros de trazabilidad y auditoría disponibles.
+        {/* CONTENT */}
+        {activeTab === 'catalogo' && (
+          <div className="space-y-4 animate-fade-in">
+            <div className="flex justify-between items-center">
+              <p className="text-xs text-slate-500">Crea y edita paquetes de cuponeras.</p>
+              <button onClick={handleOpenNew} className="bg-[#F05A24] text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-2">
+                <Plus className="w-4 h-4" /> Crear Nueva
+              </button>
             </div>
-          ) : (
-            auditoria.map((log) => {
-              let badgeColor = 'bg-blue-600 text-white';
-              if (log.accion === 'CANJE_CUPON') badgeColor = 'bg-emerald-600 text-white';
-              else if (log.accion === 'ANULACION_PASAJE') badgeColor = 'bg-rose-600 text-white';
-              else if (log.accion === 'COMPRA_CUPONERA') badgeColor = 'bg-[#0A4DA6] text-white';
-              else if (log.accion === 'OTP_VALIDADO') badgeColor = 'bg-teal-600 text-white';
-              else if (log.accion === 'OTP_GENERADO') badgeColor = 'bg-amber-600 text-white';
-              else if (log.accion === 'CREACION_CUPONERA' || log.accion === 'EDICION_CUPONERA') badgeColor = 'bg-orange-600 text-white';
+            {msg && <p className="text-xs text-emerald-600 font-bold">{msg}</p>}
+            <div className="overflow-x-auto border border-slate-200 rounded-2xl">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
+                  <tr>
+                    <th className="p-3">ID</th><th className="p-3">Nombre</th><th className="p-3">Tramos Habilitados</th><th className="p-3">Valor Uni.</th><th className="p-3">N° Cupones</th><th className="p-3">Precio Total</th><th className="p-3">Publicada</th><th className="p-3 text-right">Acción</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {cuponeras.map(c => (
+                    <tr key={c.id} className="hover:bg-slate-50">
+                      <td className="p-3 font-mono font-bold text-slate-400">#{c.id}</td>
+                      <td className="p-3 font-bold text-slate-900">{c.nombre}</td>
+                      <td className="p-3 max-w-xs truncate text-slate-600">{c.tramos.join(', ')}</td>
+                      <td className="p-3 font-semibold">${c.valorUnitario.toLocaleString('es-CL')}</td>
+                      <td className="p-3 font-bold text-[#F05A24]">{c.cantidadCupones}</td>
+                      <td className="p-3 font-black text-[#F05A24]">${c.precioTotal.toLocaleString('es-CL')}</td>
+                      <td className="p-3"><span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${c.activa ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-600'}`}>{c.activa ? 'Activa' : 'Inactiva'}</span></td>
+                      <td className="p-3 text-right">
+                        <button onClick={() => handleOpenEdit(c)} className="p-1.5 bg-blue-50 text-[#0A4DA6] hover:bg-blue-100 rounded-lg font-bold inline-flex items-center gap-1"><Edit2 className="w-3.5 h-3.5" /> Editar</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
 
-              return (
-                <div key={log.id} className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs space-y-1">
-                  <div className="flex justify-between items-center">
-                    <span className={`font-mono text-[10px] font-bold px-2 py-0.5 rounded ${badgeColor}`}>
-                      {log.accion}
-                    </span>
-                    <span className="text-slate-400 text-[11px]">{new Date(log.fechaHora).toLocaleString('es-CL')}</span>
-                  </div>
-                  <p className="text-slate-800 font-medium">{log.detalles}</p>
-                  {(log.rutUsuario || log.nombreUsuario) && (
-                    <p className="text-[10px] text-slate-500">
-                      Usuario: <span className="font-semibold text-slate-700">{log.nombreUsuario || ''}</span>
-                      {log.rutUsuario ? ` (${log.rutUsuario})` : ''}
-                    </p>
-                  )}
-                </div>
-              );
-            })
-          )}
-        </div>
+        {activeTab === 'usuarios' && (
+          <div className="space-y-4 animate-fade-in">
+            <div className="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-200">
+              <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
+                <Search className="w-4 h-4 text-slate-400" />
+                Buscar Usuario:
+              </div>
+              <input type="text" placeholder="RUT o Nombre..." value={searchUsuario} onChange={e => setSearchUsuario(e.target.value)} className="text-xs px-3 py-1.5 rounded-lg border border-slate-300 w-64 focus:outline-none" />
+            </div>
+            <div className="overflow-x-auto border border-slate-200 rounded-2xl max-h-[500px]">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-0">
+                  <tr><th className="p-3">RUT</th><th className="p-3">Nombre</th><th className="p-3">Correo</th><th className="p-3">Teléfono</th><th className="p-3">Rol</th><th className="p-3">Registro</th></tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {filteredUsuarios.map(u => (
+                    <tr key={u.rut} className="hover:bg-slate-50">
+                      <td className="p-3 font-mono font-bold text-[#0A4DA6]">{u.rut}</td>
+                      <td className="p-3 font-semibold">{u.nombre}</td>
+                      <td className="p-3 text-slate-600">{u.correo}</td>
+                      <td className="p-3 text-slate-600">{u.telefono || '-'}</td>
+                      <td className="p-3 font-bold">{u.rol}</td>
+                      <td className="p-3 text-slate-500">{new Date(u.createdAt).toLocaleDateString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'transacciones' && (
+          <div className="space-y-4 animate-fade-in">
+            <div className="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-200">
+              <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
+                <Search className="w-4 h-4 text-slate-400" />
+                Buscar Transacción:
+              </div>
+              <input type="text" placeholder="Orden de compra o RUT..." value={searchTx} onChange={e => setSearchTx(e.target.value)} className="text-xs px-3 py-1.5 rounded-lg border border-slate-300 w-64 focus:outline-none" />
+            </div>
+            <div className="overflow-x-auto border border-slate-200 rounded-2xl max-h-[500px]">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-0">
+                  <tr><th className="p-3">Orden</th><th className="p-3">RUT Usuario</th><th className="p-3">Monto</th><th className="p-3">Estado</th><th className="p-3">Cod. Aut</th><th className="p-3">Fecha</th></tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {filteredTx.map(t => (
+                    <tr key={t.id} className="hover:bg-slate-50">
+                      <td className="p-3 font-mono font-bold text-slate-600">{t.orden_compra || '-'}</td>
+                      <td className="p-3 font-mono text-[#0A4DA6]">{t.rut_usuario}</td>
+                      <td className="p-3 font-bold">${Number(t.monto).toLocaleString('es-CL')}</td>
+                      <td className="p-3">
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${t.estado === 'APROBADO' ? 'bg-emerald-100 text-emerald-800' : t.estado === 'RECHAZADO' || t.estado === 'FALLIDO' ? 'bg-rose-100 text-rose-800' : 'bg-amber-100 text-amber-800'}`}>
+                          {t.estado}
+                        </span>
+                      </td>
+                      <td className="p-3 font-mono text-slate-500">{t.codigo_autorizacion || '-'}</td>
+                      <td className="p-3 text-slate-500">{new Date(t.createdAt).toLocaleString('es-CL')}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'compras' && (
+          <div className="space-y-4 animate-fade-in">
+             <div className="overflow-x-auto border border-slate-200 rounded-2xl max-h-[500px]">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-0">
+                  <tr><th className="p-3">ID Cuponera (Catalogo)</th><th className="p-3">RUT Usuario</th><th className="p-3">Usos Restantes</th><th className="p-3">Estado</th><th className="p-3">Expiración</th></tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {compras.map(c => (
+                    <tr key={c.id} className="hover:bg-slate-50">
+                      <td className="p-3 font-mono font-bold">#{c.id_cuponera}</td>
+                      <td className="p-3 font-mono text-[#0A4DA6]">{c.rut_usuario}</td>
+                      <td className="p-3 font-bold text-[#F05A24]">{c.usos_restantes}</td>
+                      <td className="p-3"><span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${c.activa ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-600'}`}>{c.activa ? 'Activa' : 'Inactiva'}</span></td>
+                      <td className="p-3 text-slate-500">{new Date(c.fecha_expiracion).toLocaleDateString('es-CL')}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'canjes' && (
+          <div className="space-y-4 animate-fade-in">
+             <div className="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-200">
+              <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
+                <Search className="w-4 h-4 text-slate-400" />
+                Buscar Canje:
+              </div>
+              <input type="text" placeholder="PNR o RUT..." value={searchCanjes} onChange={e => setSearchCanjes(e.target.value)} className="text-xs px-3 py-1.5 rounded-lg border border-slate-300 w-64 focus:outline-none" />
+            </div>
+             <div className="overflow-x-auto border border-slate-200 rounded-2xl max-h-[500px]">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-0">
+                  <tr><th className="p-3">PNR Kupos</th><th className="p-3">RUT Pasajero</th><th className="p-3">Ruta</th><th className="p-3">Asiento</th><th className="p-3">Estado</th><th className="p-3">Fecha Viaje</th></tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {filteredCanjes.map(c => (
+                    <tr key={c.id} className="hover:bg-slate-50">
+                      <td className="p-3 font-mono font-bold text-[#F05A24]">{c.pnr_kupos}</td>
+                      <td className="p-3 font-mono">{c.rut_usuario}</td>
+                      <td className="p-3 font-semibold">{c.origen} - {c.destino}</td>
+                      <td className="p-3 font-mono">{c.asiento}</td>
+                      <td className="p-3">
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${c.estado === 'CONFIRMADO' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}`}>
+                          {c.estado}
+                        </span>
+                      </td>
+                      <td className="p-3 text-slate-500">{new Date(c.fecha_viaje).toLocaleString('es-CL')}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'auditoria' && (
+          <div className="space-y-4 animate-fade-in">
+             <div className="space-y-2 max-h-[500px] overflow-y-auto pr-1">
+              {auditoria.length === 0 ? (
+                <div className="text-center py-8 text-slate-400 text-xs">No hay registros de trazabilidad y auditoría.</div>
+              ) : (
+                auditoria.map((log) => {
+                  let badgeColor = 'bg-blue-600 text-white';
+                  if (log.accion === 'CANJE_CUPON') badgeColor = 'bg-emerald-600 text-white';
+                  else if (log.accion === 'ANULACION_PASAJE') badgeColor = 'bg-rose-600 text-white';
+                  else if (log.accion === 'COMPRA_CUPONERA') badgeColor = 'bg-[#0A4DA6] text-white';
+                  else if (log.accion === 'OTP_VALIDADO') badgeColor = 'bg-teal-600 text-white';
+                  else if (log.accion === 'OTP_GENERADO') badgeColor = 'bg-amber-600 text-white';
+                  else if (log.accion === 'CREACION_CUPONERA' || log.accion === 'EDICION_CUPONERA') badgeColor = 'bg-orange-600 text-white';
+
+                  return (
+                    <div key={log.id} className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs space-y-1">
+                      <div className="flex justify-between items-center">
+                        <span className={`font-mono text-[10px] font-bold px-2 py-0.5 rounded ${badgeColor}`}>{log.accion}</span>
+                        <span className="text-slate-400 text-[11px]">{new Date(log.fechaHora).toLocaleString('es-CL')}</span>
+                      </div>
+                      <p className="text-slate-800 font-medium">{log.detalles}</p>
+                      {(log.rutUsuario || log.nombreUsuario) && (
+                        <p className="text-[10px] text-slate-500">
+                          Usuario: <span className="font-semibold text-slate-700">{log.nombreUsuario || ''}</span>
+                          {log.rutUsuario ? ` (${log.rutUsuario})` : ''}
+                        </p>
+                      )}
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          </div>
+        )}
+
       </div>
 
       {/* Modal Formulario Edición/Creación */}
@@ -370,174 +426,66 @@ export default function AdminMaintainer() {
                 <X className="w-5 h-5" />
               </button>
             </div>
-
             <form onSubmit={handleSave} className="space-y-4 text-xs">
               <div>
                 <label className="block font-bold text-slate-700 mb-1">Nombre Cuponera *</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="ej. CUPONERA VIÑA DEL MAR (20 CUPONES)"
-                  value={nombre}
-                  onChange={(e) => setNombre(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 focus:outline-none"
-                />
+                <input type="text" required placeholder="ej. CUPONERA VIÑA DEL MAR" value={nombre} onChange={(e) => setNombre(e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 focus:outline-none" />
               </div>
-
               <div>
                 <label className="block font-bold text-slate-700 mb-1">Descripción *</label>
-                <textarea
-                  required
-                  rows={2}
-                  placeholder="Descripción de la cuponera"
-                  value={descripcion}
-                  onChange={(e) => setDescripcion(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 focus:outline-none"
-                />
+                <textarea required rows={2} placeholder="Descripción..." value={descripcion} onChange={(e) => setDescripcion(e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 focus:outline-none" />
               </div>
-
               <div>
                 <label className="block font-bold text-slate-700 mb-1">Categoría *</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="ej. Viña del Mar, Litoral Central"
-                  value={categoria}
-                  onChange={(e) => setCategoria(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 focus:outline-none"
-                />
+                <input type="text" required placeholder="ej. Viña del Mar, Litoral" value={categoria} onChange={(e) => setCategoria(e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 focus:outline-none" />
               </div>
-
               <div>
                 <label className="block font-bold text-slate-700 mb-1">Badge (Opcional)</label>
-                <input
-                  type="text"
-                  placeholder="ej. Popular, Más Vendida"
-                  value={badge}
-                  onChange={(e) => setBadge(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 focus:outline-none"
-                />
+                <input type="text" placeholder="ej. Más Vendida" value={badge} onChange={(e) => setBadge(e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 focus:outline-none" />
               </div>
-
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <label className="block font-bold text-slate-700">Tramos Autorizados (GDS) *</label>
-                  {loadingCities && (
-                    <span className="text-[10px] text-blue-600 animate-pulse font-medium">
-                      Sincronizando ciudades GDS...
-                    </span>
-                  )}
+                  {loadingCities && <span className="text-[10px] text-blue-600 animate-pulse font-medium">Sincronizando GDS...</span>}
                 </div>
-
                 <div className="space-y-3 max-h-64 overflow-y-auto pr-1">
                   {tramosItems.map((tramo, index) => (
                     <div key={index} className="bg-slate-50 border border-slate-200 rounded-2xl p-3 space-y-2">
                       <div className="flex items-center justify-between text-[11px] text-slate-500 font-semibold">
-                        <span className="flex items-center gap-1.5">
-                          <span className="w-4 h-4 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-[10px] font-bold">
-                            {index + 1}
-                          </span>
-                          Tramo
-                        </span>
-                        {tramosItems.length > 1 && (
-                          <button
-                            type="button"
-                            onClick={() => handleRemoveTramo(index)}
-                            className="text-red-500 hover:text-red-700 flex items-center gap-1 font-normal cursor-pointer transition-colors"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" /> Eliminar
-                          </button>
-                        )}
+                        <span className="flex items-center gap-1.5"><span className="w-4 h-4 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-[10px] font-bold">{index + 1}</span>Tramo</span>
+                        {tramosItems.length > 1 && <button type="button" onClick={() => { setTramosItems(prev => prev.filter((_, idx) => idx !== index)) }} className="text-red-500 hover:text-red-700 flex items-center gap-1 font-normal cursor-pointer"><Trash2 className="w-3.5 h-3.5" /> Eliminar</button>}
                       </div>
-
                       <div className="grid grid-cols-[1fr_auto_1fr] gap-2 items-center">
                         <div>
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
-                            Origen
-                          </label>
-                          <ComboBox
-                            items={cityItems}
-                            value={tramo.origen}
-                            onChange={(val) => handleTramoChange(index, 'origen', val)}
-                            placeholder="Selecciona origen..."
-                          />
+                          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Origen</label>
+                          <ComboBox items={cityItems} value={tramo.origen} onChange={(val) => setTramosItems(prev => prev.map((item, idx) => idx === index ? { ...item, origen: val } : item))} placeholder="Origen..." />
                         </div>
-
-                        <div className="flex flex-col items-center justify-center pt-4">
-                          <ArrowLeftRight className="w-4 h-4 text-slate-300" />
-                        </div>
-
+                        <div className="flex flex-col items-center justify-center pt-4"><ArrowLeftRight className="w-4 h-4 text-slate-300" /></div>
                         <div>
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
-                            Destino
-                          </label>
-                          <ComboBox
-                            items={cityItems}
-                            value={tramo.destino}
-                            onChange={(val) => handleTramoChange(index, 'destino', val)}
-                            placeholder="Selecciona destino..."
-                          />
+                          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Destino</label>
+                          <ComboBox items={cityItems} value={tramo.destino} onChange={(val) => setTramosItems(prev => prev.map((item, idx) => idx === index ? { ...item, destino: val } : item))} placeholder="Destino..." />
                         </div>
                       </div>
-
                     </div>
                   ))}
                 </div>
-
-                <button
-                  type="button"
-                  onClick={handleAddTramo}
-                  className="text-xs font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1.5 mt-2 cursor-pointer"
-                >
-                  <Plus className="w-4 h-4" /> Agregar otro tramo
-                </button>
+                <button type="button" onClick={() => setTramosItems(prev => [...prev, { origen: '', destino: '' }])} className="text-xs font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1.5 mt-2 cursor-pointer"><Plus className="w-4 h-4" /> Agregar otro tramo</button>
               </div>
-
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block font-bold text-slate-700 mb-1">Valor Unitario (CLP) *</label>
-                  <input
-                    type="number"
-                    required
-                    min="1"
-                    value={valorUnitario}
-                    onChange={(e) => setValorUnitario(e.target.value === '' ? '' : Number(e.target.value))}
-                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 focus:outline-none"
-                  />
+                  <input type="number" required min="1" value={valorUnitario} onChange={(e) => setValorUnitario(e.target.value === '' ? '' : Number(e.target.value))} className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 focus:outline-none" />
                 </div>
                 <div>
                   <label className="block font-bold text-slate-700 mb-1">N° de Cupones *</label>
-                  <input
-                    type="number"
-                    required
-                    min="1"
-                    value={cantidadCupones}
-                    onChange={(e) => setCantidadCupones(e.target.value === '' ? '' : Number(e.target.value))}
-                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 focus:outline-none"
-                  />
+                  <input type="number" required min="1" value={cantidadCupones} onChange={(e) => setCantidadCupones(e.target.value === '' ? '' : Number(e.target.value))} className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 focus:outline-none" />
                 </div>
               </div>
-
               <div className="flex items-center gap-2 pt-2">
-                <input
-                  type="checkbox"
-                  id="activaToggle"
-                  checked={activa}
-                  onChange={(e) => setActiva(e.target.checked)}
-                  className="rounded text-[#0A4DA6]"
-                />
-                <label htmlFor="activaToggle" className="font-bold text-slate-700 cursor-pointer">
-                  Publicar y Activar Cuponera en el Catálogo Público
-                </label>
+                <input type="checkbox" id="activaToggle" checked={activa} onChange={(e) => setActiva(e.target.checked)} className="rounded text-[#0A4DA6]" />
+                <label htmlFor="activaToggle" className="font-bold text-slate-700 cursor-pointer">Publicar y Activar Cuponera en el Catálogo</label>
               </div>
-
-              <button
-                type="submit"
-                disabled={saving}
-                className="w-full bg-[#F05A24] hover:bg-[#D94B18] text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all text-sm cursor-pointer"
-              >
-                {saving ? 'Guardando...' : 'Guardar Cuponera'}
-              </button>
+              <button type="submit" disabled={saving} className="w-full bg-[#F05A24] hover:bg-[#D94B18] text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all text-sm cursor-pointer">{saving ? 'Guardando...' : 'Guardar Cuponera'}</button>
             </form>
           </div>
         </div>

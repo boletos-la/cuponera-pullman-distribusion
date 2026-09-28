@@ -2,7 +2,8 @@
 
 import React from 'react';
 import { ShoppingCart, LayoutDashboard, RotateCcw, ShieldAlert, Trash2, User, LogOut, LogIn } from 'lucide-react';
-import { getAuthToken, removeAuthToken } from '@/lib/apiClient';
+import { getAuthToken, removeAuthToken, getAuthUser } from '@/lib/apiClient';
+import LoginModal from './LoginModal';
 
 interface NavbarProps {
   activeTab: string;
@@ -17,8 +18,33 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
     { id: 'anulacion', label: 'Anular Pasaje', icon: RotateCcw },
   ];
 
+  const [showLoginModal, setShowLoginModal] = React.useState(false);
+  const [user, setUser] = React.useState<any>(null);
+
+  React.useEffect(() => {
+    const handleAuthChange = () => {
+      setUser(getAuthUser());
+    };
+    handleAuthChange();
+    window.addEventListener('auth-change', handleAuthChange);
+    return () => window.removeEventListener('auth-change', handleAuthChange);
+  }, []);
+
+  const handleLogout = () => {
+    removeAuthToken();
+    setActiveTab('catalogo');
+  };
+
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
+      {showLoginModal && (
+        <LoginModal
+          onClose={() => setShowLoginModal(false)}
+          onLoginSuccess={() => {
+            setActiveTab('dashboard');
+          }}
+        />
+      )}
 
 
       {/* Main Navbar */}
@@ -60,6 +86,32 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
                 </button>
               );
             })}
+            
+            <div className="w-px h-6 bg-slate-200 mx-2"></div>
+            
+            {user ? (
+              <div className="flex items-center gap-3 ml-2">
+                <div className="flex flex-col items-end">
+                  <span className="text-xs font-bold text-slate-800">{user.nombre || 'Usuario'}</span>
+                  <span className="text-[10px] text-slate-500 font-medium">{user.rut}</span>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors"
+                  title="Cerrar Sesión"
+                >
+                  <LogOut className="w-4 h-4" />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setShowLoginModal(true)}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-extrabold transition-all cursor-pointer bg-[#0A4DA6] text-white hover:bg-blue-700 shadow-sm ml-2"
+              >
+                <LogIn className="w-4 h-4" />
+                <span>Iniciar Sesión</span>
+              </button>
+            )}
           </nav>
         </div>
       </div>

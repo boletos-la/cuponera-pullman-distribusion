@@ -4,7 +4,7 @@ export const getApiUrl = () => {
 
 export const getAuthToken = () => {
   if (typeof window !== 'undefined') {
-    const token = localStorage.getItem('jwt_token');
+    const token = sessionStorage.getItem('admin_token') || localStorage.getItem('jwt_token');
     if (token) {
       try {
         const payloadStr = atob(token.split('.')[1]);

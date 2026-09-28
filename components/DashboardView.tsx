@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { validateRut, formatRut, cleanRut } from '@/lib/rutValidator';
 import { Search, LayoutDashboard, Ticket, Clock, CheckCircle, Mail, ArrowRight, AlertCircle, Ban, ShieldCheck, KeyRound } from 'lucide-react';
 import { couponService } from '@/lib/services/couponService';
+import { getAuthUser } from '@/lib/apiClient';
 
 interface DashboardViewProps {
   initialRut?: string;
@@ -31,11 +32,17 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
       setRutInput(formatRut(initialRut));
       loadDashboard(initialRut);
     } else {
-      setStep('login');
-      setRutInput('');
-      setRutFormateado('');
-      setCuponeras([]);
-      setRutError('');
+      const authUser = getAuthUser();
+      if (authUser && authUser.rut) {
+        setRutInput(formatRut(authUser.rut));
+        loadDashboard(authUser.rut);
+      } else {
+        setStep('login');
+        setRutInput('');
+        setRutFormateado('');
+        setCuponeras([]);
+        setRutError('');
+      }
     }
   }, [initialRut]);
 
