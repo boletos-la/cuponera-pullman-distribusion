@@ -365,8 +365,10 @@ export default function AdminMaintainer() {
                 <tbody className="divide-y divide-slate-100">
                   {filteredTx.map(t => (
                     <tr key={t.id} className="hover:bg-slate-50">
-                      <td className="p-3 font-mono font-bold text-slate-600">{t.orden_compra || '-'}</td>
-                      <td className="p-3 font-bold text-slate-900">{t.UsuarioCuponera?.Cuponera?.nombre || '-'}</td>
+                      <td className="p-3 font-mono font-bold text-slate-600">
+                        {t.orden_compra ? t.orden_compra : <span className="text-[10px] bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded font-bold">PRE-WEBPAY</span>}
+                      </td>
+                      <td className="p-3 font-bold text-slate-900">{t.CuponeraCatalogo?.nombre || t.UsuarioCuponera?.Cuponera?.nombre || '-'}</td>
                       <td className="p-3 font-mono text-[#0A4DA6]">{t.rut_usuario}</td>
                       <td className="p-3 font-bold">${Number(t.monto).toLocaleString('es-CL')}</td>
                       <td className="p-3">
