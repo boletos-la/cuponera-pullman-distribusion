@@ -37,11 +37,18 @@ export default function HistoryTab({ compras, canjes }: HistoryTabProps) {
                       <ShoppingCart className="w-5 h-5" />
                     </div>
                     <div>
-                      <h4 className="font-extrabold text-slate-900">Orden: {compra.orden_compra}</h4>
-                      <p className="text-xs text-slate-500 font-medium mt-0.5 flex items-center gap-2">
-                        <Calendar className="w-3.5 h-3.5" />
-                        {new Date(compra.createdAt).toLocaleDateString('es-CL', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute:'2-digit' })}
-                      </p>
+                      <h4 className="font-extrabold text-slate-900 flex items-center gap-2">
+                        {compra.UsuarioCuponera?.Cuponera?.nombre || 'Cuponera'}
+                        <span className="text-[10px] font-mono bg-white px-2 py-0.5 rounded border border-slate-200 text-slate-500 font-bold">
+                          {compra.orden_compra}
+                        </span>
+                      </h4>
+                      <div className="text-xs text-slate-500 font-medium mt-1 flex flex-wrap items-center gap-x-4 gap-y-1">
+                        <span className="flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5" /> Compra: {new Date(compra.createdAt).toLocaleDateString('es-CL', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute:'2-digit' })}</span>
+                        {compra.UsuarioCuponera?.Cuponera?.maximo_usos && (
+                          <span className="flex items-center gap-1.5"><Ticket className="w-3.5 h-3.5" /> {compra.UsuarioCuponera.Cuponera.maximo_usos} pasajes</span>
+                        )}
+                      </div>
                     </div>
                   </div>
                   <div className="text-right">
