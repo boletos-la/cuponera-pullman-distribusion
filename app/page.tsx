@@ -120,9 +120,9 @@ export default function Home() {
               </div>
               <div>
                 <h3 className="font-extrabold text-xl tracking-tight text-white">
-                  PULLMAN <span className="text-[#fa5e00]">COSTA CENTRAL</span>
+                  PULLMAN <span className="text-[#fa5e00]">BUS</span>
                 </h3>
-                <p className="text-sm font-medium text-slate-400 mt-1">Sistema de Cuponeras Digitales</p>
+                <p className="text-sm font-medium text-slate-400 mt-1">Cuponeras Digitales</p>
                 <div className="flex items-center gap-2 mt-2">
                   <span className="text-[10px] font-bold uppercase tracking-wider bg-slate-800/80 text-slate-300 px-2.5 py-1 rounded-full border border-slate-700">
                     Desarrollado por WIT SPA
@@ -155,7 +155,7 @@ export default function Home() {
           </div>
 
           <div className="flex flex-col sm:flex-row justify-between items-center text-xs font-medium text-slate-500 gap-4">
-            <p>© {new Date().getFullYear()} Pullman Costa Central / WIT SPA. Todos los derechos reservados.</p>
+            <p>© {new Date().getFullYear()} Pullman Bus Cuponeras / WIT SPA. Todos los derechos reservados.</p>
             <div className="flex gap-4">
               <a href="#" className="hover:text-[#fa5e00] transition-colors">Términos y Condiciones</a>
               <span className="text-slate-700">•</span>
