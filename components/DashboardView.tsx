@@ -119,19 +119,20 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       {step === 'login' && (
-        <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-[#FFE4D6] space-y-6">
-          <div className="flex items-center gap-4 border-b border-slate-100 pb-5">
-            <div className="w-12 h-12 rounded-2xl bg-[#FFEDD5] text-[#fa5e00] flex items-center justify-center shrink-0 shadow-2xs">
-              <LayoutDashboard className="w-6 h-6 text-[#fa5e00]" />
+        <div className="bg-white rounded-[2rem] p-6 sm:p-10 shadow-xl border border-slate-100 space-y-8 relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-2 bg-[#023caf]" />
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left border-b border-slate-100 pb-6">
+            <div className="w-16 h-16 rounded-2xl bg-blue-50 text-[#023caf] flex items-center justify-center shrink-0 shadow-sm border border-blue-100">
+              <LayoutDashboard className="w-8 h-8 text-[#023caf]" />
             </div>
-            <div>
-              <span className="bg-[#FFF5F0] text-[#fa5e00] text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider border border-[#FED7AA]">
-                Buscador Público
+            <div className="space-y-1.5">
+              <span className="bg-orange-50 text-[#fa5e00] text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider border border-orange-200">
+                Acceso a Cuponeras
               </span>
-              <h2 className="text-2xl font-black text-[#0F172A] mt-1">
-                Buscador de Cuponeras
+              <h2 className="text-2xl font-black text-[#023caf]">
+                Mi Dashboard
               </h2>
-              <p className="text-xs text-[#64748B] font-medium mt-0.5">
+              <p className="text-sm text-slate-500 font-medium">
                 Ingresa tu RUT para consultar tus cuponeras y saldo disponible.
               </p>
             </div>
@@ -165,13 +166,13 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
             <button
               type="submit"
               disabled={loading || !rutInput}
-              className="w-full bg-[#fa5e00] hover:bg-[#e55400] text-white font-extrabold py-3.5 px-6 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-sm cursor-pointer disabled:opacity-50"
+              className="w-full bg-[#fa5e00] hover:bg-[#e55400] text-white font-extrabold py-4 px-6 rounded-full shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 text-sm cursor-pointer disabled:opacity-50 disabled:hover:translate-y-0"
             >
               {loading ? (
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
               ) : (
                 <>
-                  <Search className="w-4 h-4" />
+                  <Search className="w-5 h-5" />
                   <span>Buscar Cuponeras</span>
                 </>
               )}
@@ -184,73 +185,74 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
         <div className="space-y-6 animate-fade-in">
           {/* Tarjetas Consolidadas de Métricas */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-white rounded-2xl p-5 border border-emerald-200 shadow-sm flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
-                <Ticket className="w-6 h-6" />
+            <div className="bg-white rounded-2xl p-5 border-l-4 border-l-emerald-500 border-t border-r border-b border-slate-100 shadow-sm flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0">
+                <Ticket className="w-6 h-6 text-emerald-600" />
               </div>
               <div>
-                <span className="text-xs text-slate-500 font-semibold block uppercase tracking-wider">Disponibles</span>
+                <span className="text-[10px] text-slate-500 font-bold block uppercase tracking-wider">Disponibles</span>
                 <span className="text-2xl font-black text-emerald-700">{metricas.disponibles}</span>
               </div>
             </div>
 
-            <div className="bg-white rounded-2xl p-5 border border-blue-200 shadow-sm flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-blue-100 text-[#023caf] flex items-center justify-center shrink-0">
-                <CheckCircle className="w-6 h-6" />
+            <div className="bg-white rounded-2xl p-5 border-l-4 border-l-[#023caf] border-t border-r border-b border-slate-100 shadow-sm flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center shrink-0">
+                <CheckCircle className="w-6 h-6 text-[#023caf]" />
               </div>
               <div>
-                <span className="text-xs text-slate-500 font-semibold block uppercase tracking-wider">Usados</span>
+                <span className="text-[10px] text-slate-500 font-bold block uppercase tracking-wider">Usados</span>
                 <span className="text-2xl font-black text-[#023caf]">{metricas.utilizados}</span>
               </div>
             </div>
 
-            <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0">
-                <LayoutDashboard className="w-6 h-6" />
+            <div className="bg-white rounded-2xl p-5 border-l-4 border-l-slate-800 border-t border-r border-b border-slate-100 shadow-sm flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center shrink-0">
+                <LayoutDashboard className="w-6 h-6 text-slate-700" />
               </div>
               <div>
-                <span className="text-xs text-slate-500 font-semibold block uppercase tracking-wider">Total Adquiridos</span>
+                <span className="text-[10px] text-slate-500 font-bold block uppercase tracking-wider">Total Adquiridos</span>
                 <span className="text-2xl font-black text-slate-900">{metricas.total}</span>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 space-y-6">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-100 pb-4">
-              <div className="flex flex-wrap gap-2">
+          <div className="bg-white rounded-[2rem] border border-slate-100 shadow-xl p-6 sm:p-8 space-y-6 relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-2 bg-[#023caf]" />
+            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b border-slate-100 pb-6 pt-2">
+              <div className="flex flex-wrap gap-2 bg-slate-50 p-1.5 rounded-full border border-slate-200">
                 <button
                   onClick={() => setActiveDashboardTab('cuponeras')}
-                  className={`px-4 py-2 text-sm font-bold rounded-xl transition-all ${activeDashboardTab === 'cuponeras' ? 'bg-[#fa5e00] text-white' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}
+                  className={`px-5 py-2.5 text-sm font-bold rounded-full transition-all ${activeDashboardTab === 'cuponeras' ? 'bg-[#023caf] text-white shadow-md' : 'text-slate-600 hover:text-[#023caf] hover:bg-white'}`}
                 >
                   Mis Cuponeras
                 </button>
                 <button
                   onClick={() => setActiveDashboardTab('historial')}
-                  className={`px-4 py-2 text-sm font-bold rounded-xl transition-all ${activeDashboardTab === 'historial' ? 'bg-[#fa5e00] text-white' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}
+                  className={`px-5 py-2.5 text-sm font-bold rounded-full transition-all ${activeDashboardTab === 'historial' ? 'bg-[#023caf] text-white shadow-md' : 'text-slate-600 hover:text-[#023caf] hover:bg-white'}`}
                 >
                   Historial
                 </button>
                 {authUser && (
                   <button
                     onClick={() => setActiveDashboardTab('perfil')}
-                    className={`px-4 py-2 text-sm font-bold rounded-xl transition-all ${activeDashboardTab === 'perfil' ? 'bg-[#fa5e00] text-white' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}
+                    className={`px-5 py-2.5 text-sm font-bold rounded-full transition-all ${activeDashboardTab === 'perfil' ? 'bg-[#023caf] text-white shadow-md' : 'text-slate-600 hover:text-[#023caf] hover:bg-white'}`}
                   >
                     Mis Datos
                   </button>
                 )}
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-mono font-bold bg-blue-50 text-[#023caf] px-3 py-1.5 rounded-full border border-blue-200">
+              <div className="flex items-center gap-3">
+                <span className="text-xs font-mono font-bold bg-blue-50 text-[#023caf] px-4 py-2 rounded-full border border-blue-200 shadow-xs">
                   Titular: {rutFormateado}
                 </span>
                 <button
                   type="button"
                   onClick={handleResetSearch}
-                  className="text-xs font-bold text-slate-600 hover:text-[#fa5e00] bg-slate-100 hover:bg-orange-50 px-3 py-1.5 rounded-xl border border-slate-200 transition-colors cursor-pointer flex items-center gap-1.5 shadow-2xs"
+                  className="text-xs font-bold text-[#fa5e00] hover:text-white bg-orange-50 hover:bg-[#fa5e00] px-4 py-2 rounded-full border border-orange-200 hover:border-[#fa5e00] transition-all cursor-pointer flex items-center gap-1.5 shadow-xs"
                   title="Consultar otro RUT"
                 >
                   <Search className="w-3.5 h-3.5" />
-                  <span>Consultar otro RUT</span>
+                  <span className="hidden sm:inline">Nueva Consulta</span>
                 </button>
               </div>
             </div>
@@ -274,10 +276,10 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
                     return (
                       <div
                         key={c.codigo}
-                        className={`p-6 rounded-2xl border transition-all flex flex-col justify-between space-y-4 ${
+                        className={`p-6 rounded-[1.5rem] border-2 transition-all flex flex-col justify-between space-y-5 hover:shadow-lg ${
                           canCanjear
-                            ? 'border-emerald-200 bg-emerald-50/30 shadow-sm'
-                            : 'border-slate-200 bg-slate-50 opacity-90'
+                            ? 'border-emerald-100 bg-white hover:border-emerald-300'
+                            : 'border-slate-100 bg-slate-50 opacity-90'
                         }`}
                       >
                         <div className="space-y-3">
@@ -346,9 +348,9 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
                         <button
                           disabled={!canCanjear}
                           onClick={() => onCanjearCupon(c.codigo, rutFormateado)}
-                          className={`w-full font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 text-sm ${
+                          className={`w-full font-bold py-3.5 px-4 rounded-full flex items-center justify-center gap-2 text-sm transition-all ${
                             canCanjear
-                              ? 'bg-[#fa5e00] hover:bg-[#e55400] text-white shadow-md cursor-pointer'
+                              ? 'bg-[#fa5e00] hover:bg-[#e55400] text-white shadow-md hover:shadow-lg hover:-translate-y-0.5 cursor-pointer'
                               : 'bg-slate-200 text-slate-400 cursor-not-allowed border border-slate-300'
                           }`}
                         >
