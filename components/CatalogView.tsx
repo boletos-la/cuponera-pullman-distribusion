@@ -36,6 +36,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
   const [submitting, setSubmitting] = useState(false);
   const [quiereRegistrarse, setQuiereRegistrarse] = useState(false);
   const [password, setPassword] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
 
   // Resultado de Compra Aprobada
   const [compraExitosa, setCompraExitosa] = useState<{
@@ -171,6 +172,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
     setRutError('');
     setQuiereRegistrarse(false);
     setPassword('');
+    setPasswordConfirm('');
 
     // Pre-cargar datos del usuario si está autenticado
     const authUser = getAuthUser();
@@ -204,9 +206,19 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
       return;
     }
     
-    if (quiereRegistrarse && password.length < 6) {
-      setSubmitError('La contraseña debe tener al menos 6 caracteres.');
-      return;
+    if (quiereRegistrarse) {
+      if (password.length < 8) {
+        setSubmitError('La contraseña debe tener al menos 8 caracteres.');
+        return;
+      }
+      if (!/(?=.*[A-Z])(?=.*[0-9])/.test(password)) {
+        setSubmitError('La contraseña debe contener al menos una mayúscula y un número.');
+        return;
+      }
+      if (password !== passwordConfirm) {
+        setSubmitError('Las contraseñas no coinciden.');
+        return;
+      }
     }
 
     setSubmitting(true);
@@ -551,9 +563,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
             <form onSubmit={handleProcessPurchase} className="space-y-4">
                 {/* Formulario de Datos del Comprador */}
                 <div className="space-y-3">
-                  <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider">
-                    Paso 3: Datos de Identidad del Titular
-                  </h4>
+                  {/* Título removido */}
 
                   <div>
                     <label className="block text-xs font-semibold text-slate-700 mb-1">Nombre Completo *</label>
@@ -619,20 +629,33 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                       className="mt-0.5 rounded text-[#F05A24] focus:ring-[#F05A24]"
                     />
                     <label htmlFor="quiereRegistrarse" className="text-xs text-slate-700 font-bold leading-tight">
-                      Crear una cuenta para gestionar mis cuponeras fácilmente
+                      ¿No tienes una cuenta? Regístrate para gestionar tus cuponeras fácilmente
                     </label>
                   </div>
                   {quiereRegistrarse && (
-                    <div className="pt-2 pl-6">
-                      <label className="block text-xs font-semibold text-slate-700 mb-1">Contraseña</label>
-                      <input
-                        type="password"
-                        required={quiereRegistrarse}
-                        placeholder="Mínimo 6 caracteres"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#0A4DA6]"
-                      />
+                    <div className="pt-2 pl-6 space-y-3">
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-700 mb-1">Contraseña</label>
+                        <input
+                          type="password"
+                          required={quiereRegistrarse}
+                          placeholder="Mínimo 8 caracteres, 1 mayúscula y 1 número"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#0A4DA6]"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-700 mb-1">Repetir Contraseña</label>
+                        <input
+                          type="password"
+                          required={quiereRegistrarse}
+                          placeholder="Repite tu contraseña"
+                          value={passwordConfirm}
+                          onChange={(e) => setPasswordConfirm(e.target.value)}
+                          className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#0A4DA6]"
+                        />
+                      </div>
                     </div>
                   )}
                 </div>

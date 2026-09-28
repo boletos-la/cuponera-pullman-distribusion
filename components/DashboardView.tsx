@@ -5,6 +5,8 @@ import { validateRut, formatRut, cleanRut } from '@/lib/rutValidator';
 import { Search, LayoutDashboard, Ticket, Clock, CheckCircle, Mail, ArrowRight, AlertCircle, Ban, ShieldCheck, KeyRound } from 'lucide-react';
 import { couponService } from '@/lib/services/couponService';
 import { getAuthUser } from '@/lib/apiClient';
+import ProfileTab from './ProfileTab';
+import HistoryTab from './HistoryTab';
 
 interface DashboardViewProps {
   initialRut?: string;
@@ -21,18 +23,18 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
   const [rutFormateado, setRutFormateado] = useState('');
   const [metricas, setMetricas] = useState({ disponibles: 0, utilizados: 0, vencidos: 0, total: 0 });
   const [cuponeras, setCuponeras] = useState<any[]>([]);
+  const [historialCompras, setHistorialCompras] = useState<any[]>([]);
+  const [historialCanjes, setHistorialCanjes] = useState<any[]>([]);
 
-  // Email update state
-  const [editingEmail, setEditingEmail] = useState(false);
-  const [newEmail, setNewEmail] = useState('');
-  const [emailSuccessMsg, setEmailSuccessMsg] = useState('');
+  const [activeDashboardTab, setActiveDashboardTab] = useState<'cuponeras' | 'historial' | 'perfil'>('cuponeras');
+  
+  const authUser = getAuthUser();
 
   useEffect(() => {
     if (initialRut) {
       setRutInput(formatRut(initialRut));
       loadDashboard(initialRut);
     } else {
-      const authUser = getAuthUser();
       if (authUser && authUser.rut) {
         setRutInput(formatRut(authUser.rut));
         loadDashboard(authUser.rut);
@@ -41,6 +43,8 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
         setRutInput('');
         setRutFormateado('');
         setCuponeras([]);
+        setHistorialCompras([]);
+        setHistorialCanjes([]);
         setRutError('');
       }
     }
@@ -51,6 +55,8 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
     setRutInput('');
     setRutFormateado('');
     setCuponeras([]);
+    setHistorialCompras([]);
+    setHistorialCanjes([]);
     setRutError('');
     if (onResetRut) {
       onResetRut();
@@ -76,6 +82,8 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
       const res = await couponService.getDashboard(rut);
       if (res.success) {
         setCuponeras(res.cupones || []);
+        setHistorialCompras(res.historialCompras || []);
+        setHistorialCanjes(res.historialCanjes || []);
         
         if (res.rutFormateado) {
           setRutFormateado(res.rutFormateado);
@@ -208,11 +216,28 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
           </div>
 
           <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 space-y-6">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-100 pb-4">
-              <div>
-                <h3 className="text-xl font-black text-slate-900">
-                  Cuponeras Adquiridas ({cuponeras.length})
-                </h3>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-100 pb-4">
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => setActiveDashboardTab('cuponeras')}
+                  className={`px-4 py-2 text-sm font-bold rounded-xl transition-all ${activeDashboardTab === 'cuponeras' ? 'bg-[#F05A24] text-white' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}
+                >
+                  Mis Cuponeras
+                </button>
+                <button
+                  onClick={() => setActiveDashboardTab('historial')}
+                  className={`px-4 py-2 text-sm font-bold rounded-xl transition-all ${activeDashboardTab === 'historial' ? 'bg-[#F05A24] text-white' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}
+                >
+                  Historial
+                </button>
+                {authUser && (
+                  <button
+                    onClick={() => setActiveDashboardTab('perfil')}
+                    className={`px-4 py-2 text-sm font-bold rounded-xl transition-all ${activeDashboardTab === 'perfil' ? 'bg-[#F05A24] text-white' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}
+                  >
+                    Mis Datos
+                  </button>
+                )}
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-xs font-mono font-bold bg-blue-50 text-[#0A4DA6] px-3 py-1.5 rounded-full border border-blue-200">
@@ -230,118 +255,128 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
               </div>
             </div>
 
-            {cuponeras.length === 0 ? (
-              <div className="p-12 text-center text-slate-500 text-xs space-y-2">
-                <AlertCircle className="w-8 h-8 text-amber-500 mx-auto" />
-                <p className="font-bold text-slate-700">No se encontraron cuponeras registradas.</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {cuponeras.map((c) => {
-                  const totalC = c.totalCupones || 10;
-                  const saldoC = c.saldoDisponible || 0;
-                  const daysLeft = getDaysLeft(c.fechaVencimiento);
-                  
-                  const canCanjear = saldoC > 0 && c.estado === 'Activo';
-                  const porcentajeSaldo = Math.round((saldoC / totalC) * 100);
+            {activeDashboardTab === 'cuponeras' && (
+              cuponeras.length === 0 ? (
+                <div className="p-12 text-center text-slate-500 text-xs space-y-2">
+                  <AlertCircle className="w-8 h-8 text-amber-500 mx-auto" />
+                  <p className="font-bold text-slate-700">No se encontraron cuponeras registradas.</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {cuponeras.map((c) => {
+                    const totalC = c.totalCupones || 10;
+                    const saldoC = c.saldoDisponible || 0;
+                    const daysLeft = getDaysLeft(c.fechaVencimiento);
+                    
+                    const canCanjear = saldoC > 0 && c.estado === 'Activo';
+                    const porcentajeSaldo = Math.round((saldoC / totalC) * 100);
 
-                  return (
-                    <div
-                      key={c.codigo}
-                      className={`p-6 rounded-2xl border transition-all flex flex-col justify-between space-y-4 ${
-                        canCanjear
-                          ? 'border-emerald-200 bg-emerald-50/30 shadow-sm'
-                          : 'border-slate-200 bg-slate-50 opacity-90'
-                      }`}
-                    >
-                      <div className="space-y-3">
-                        <div className="flex justify-between items-start">
-                          <span className="font-mono font-extrabold text-sm text-[#F05A24] bg-white px-3 py-1 rounded-lg border border-[#FFEDD5] shadow-xs">
-                            {c.codigo}
-                          </span>
-                          <span className={`text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider ${canCanjear ? 'bg-emerald-600 text-white' : 'bg-slate-600 text-white'}`}>
-                            {canCanjear ? 'Activa' : 'Sin Saldo'}
-                          </span>
-                        </div>
-                        <div>
-                          <h4 className="font-extrabold text-base text-slate-900 leading-snug">{c.nombreCuponera}</h4>
-                          <p className="text-xs text-slate-500 mt-1 line-clamp-2">{c.descripcion || 'Cuponera promocional'}</p>
-                        </div>
-                        
-                        {/* Tramos Habilitados */}
-                        {c.tramosPermitidos && c.tramosPermitidos.length > 0 && (
-                          <div className="space-y-1.5 pt-2">
-                            <span className="text-[11px] font-bold text-slate-700 uppercase tracking-wider">
-                              Tramos Habilitados ({c.tramosPermitidos.length}):
-                            </span>
-                            <div className="flex flex-wrap gap-1">
-                              {c.tramosPermitidos.map((t: string, idx: number) => (
-                                <span
-                                  key={idx}
-                                  className="bg-slate-100 text-slate-700 text-[10px] font-medium px-2 py-0.5 rounded-md border border-slate-200"
-                                >
-                                  {t}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="bg-white p-4 rounded-xl border border-slate-200 space-y-3">
-                        <div className="flex justify-between items-end">
-                          <div>
-                            <span className="text-[11px] font-bold text-slate-500 block uppercase tracking-wider">Saldo</span>
-                            <div className="flex items-baseline gap-1.5">
-                              <span className="text-3xl font-black text-emerald-600">{saldoC}</span>
-                              <span className="text-sm font-bold text-slate-400">/ {totalC}</span>
-                            </div>
-                          </div>
-                          
-                          <div className="text-right">
-                            <span className="text-[11px] font-bold text-slate-500 block uppercase tracking-wider">Días Restantes</span>
-                            <span className={`text-sm font-black ${daysLeft <= 7 ? 'text-red-500' : 'text-slate-700'}`}>
-                              {daysLeft} días
-                            </span>
-                          </div>
-                        </div>
-                        <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
-                          <div
-                            className={`h-full transition-all duration-500 ${saldoC > 0 ? 'bg-emerald-500' : 'bg-slate-300'}`}
-                            style={{ width: `${porcentajeSaldo}%` }}
-                          />
-                        </div>
-                        <div className="flex justify-between items-center pt-2 border-t border-slate-100">
-                          <span className="text-[11px] text-slate-400 font-medium">Valor por viaje</span>
-                          <span className="text-xs font-bold text-slate-700">${(c.valorUnitario || 0).toLocaleString('es-CL')}</span>
-                        </div>
-                      </div>
-
-                      <button
-                        disabled={!canCanjear}
-                        onClick={() => onCanjearCupon(c.codigo, rutFormateado)}
-                        className={`w-full font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 text-sm ${
+                    return (
+                      <div
+                        key={c.codigo}
+                        className={`p-6 rounded-2xl border transition-all flex flex-col justify-between space-y-4 ${
                           canCanjear
-                            ? 'bg-[#F05A24] hover:bg-[#D94B18] text-white shadow-md cursor-pointer'
-                            : 'bg-slate-200 text-slate-400 cursor-not-allowed border border-slate-300'
+                            ? 'border-emerald-200 bg-emerald-50/30 shadow-sm'
+                            : 'border-slate-200 bg-slate-50 opacity-90'
                         }`}
                       >
-                        {canCanjear ? (
-                          <>
-                            <span>Canjear Pasaje</span>
-                            <ArrowRight className="w-4 h-4" />
-                          </>
-                        ) : (
-                          <>
-                            <Ban className="w-4 h-4 text-slate-400" />
-                            <span>Agotada</span>
-                          </>
-                        )}
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
+                        <div className="space-y-3">
+                          <div className="flex justify-between items-start">
+                            <span className="font-mono font-extrabold text-sm text-[#F05A24] bg-white px-3 py-1 rounded-lg border border-[#FFEDD5] shadow-xs">
+                              {c.codigo}
+                            </span>
+                            <span className={`text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider ${canCanjear ? 'bg-emerald-600 text-white' : 'bg-slate-600 text-white'}`}>
+                              {canCanjear ? 'Activa' : 'Sin Saldo'}
+                            </span>
+                          </div>
+                          <div>
+                            <h4 className="font-extrabold text-base text-slate-900 leading-snug">{c.nombreCuponera}</h4>
+                            <p className="text-xs text-slate-500 mt-1 line-clamp-2">{c.descripcion || 'Cuponera promocional'}</p>
+                          </div>
+                          
+                          {/* Tramos Habilitados */}
+                          {c.tramosPermitidos && c.tramosPermitidos.length > 0 && (
+                            <div className="space-y-1.5 pt-2">
+                              <span className="text-[11px] font-bold text-slate-700 uppercase tracking-wider">
+                                Tramos Habilitados ({c.tramosPermitidos.length}):
+                              </span>
+                              <div className="flex flex-wrap gap-1">
+                                {c.tramosPermitidos.map((t: string, idx: number) => (
+                                  <span
+                                    key={idx}
+                                    className="bg-slate-100 text-slate-700 text-[10px] font-medium px-2 py-0.5 rounded-md border border-slate-200"
+                                  >
+                                    {t}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="bg-white p-4 rounded-xl border border-slate-200 space-y-3">
+                          <div className="flex justify-between items-end">
+                            <div>
+                              <span className="text-[11px] font-bold text-slate-500 block uppercase tracking-wider">Saldo</span>
+                              <div className="flex items-baseline gap-1.5">
+                                <span className="text-3xl font-black text-emerald-600">{saldoC}</span>
+                                <span className="text-sm font-bold text-slate-400">/ {totalC}</span>
+                              </div>
+                            </div>
+                            
+                            <div className="text-right">
+                              <span className="text-[11px] font-bold text-slate-500 block uppercase tracking-wider">Días Restantes</span>
+                              <span className={`text-sm font-black ${daysLeft <= 7 ? 'text-red-500' : 'text-slate-700'}`}>
+                                {daysLeft} días
+                              </span>
+                            </div>
+                          </div>
+                          <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                            <div
+                              className={`h-full transition-all duration-500 ${saldoC > 0 ? 'bg-emerald-500' : 'bg-slate-300'}`}
+                              style={{ width: `${porcentajeSaldo}%` }}
+                            />
+                          </div>
+                          <div className="flex justify-between items-center pt-2 border-t border-slate-100">
+                            <span className="text-[11px] text-slate-400 font-medium">Valor por viaje</span>
+                            <span className="text-xs font-bold text-slate-700">${(c.valorUnitario || 0).toLocaleString('es-CL')}</span>
+                          </div>
+                        </div>
+
+                        <button
+                          disabled={!canCanjear}
+                          onClick={() => onCanjearCupon(c.codigo, rutFormateado)}
+                          className={`w-full font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 text-sm ${
+                            canCanjear
+                              ? 'bg-[#F05A24] hover:bg-[#D94B18] text-white shadow-md cursor-pointer'
+                              : 'bg-slate-200 text-slate-400 cursor-not-allowed border border-slate-300'
+                          }`}
+                        >
+                          {canCanjear ? (
+                            <>
+                              <span>Canjear Pasaje</span>
+                              <ArrowRight className="w-4 h-4" />
+                            </>
+                          ) : (
+                            <>
+                              <Ban className="w-4 h-4 text-slate-400" />
+                              <span>Agotada</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              )
+            )}
+            
+            {activeDashboardTab === 'historial' && (
+              <HistoryTab compras={historialCompras} canjes={historialCanjes} />
+            )}
+
+            {activeDashboardTab === 'perfil' && authUser && (
+              <ProfileTab />
             )}
           </div>
         </div>
