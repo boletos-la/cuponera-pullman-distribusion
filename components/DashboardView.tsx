@@ -117,7 +117,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
   };
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
+    <div className={`space-y-6 ${step === 'login' ? 'max-w-xl' : 'w-full'} mx-auto`}>
       {step === 'login' && (
         <div className="bg-white rounded-[2rem] p-6 sm:p-10 shadow-xl border border-slate-100 space-y-8 relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-2 bg-[#023caf]" />
@@ -184,7 +184,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
       {step === 'dashboard' && (
         <div className="space-y-6 animate-fade-in">
           {/* Tarjetas Consolidadas de Métricas */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="bg-white rounded-2xl p-5 border-l-4 border-l-emerald-500 border-t border-r border-b border-slate-100 shadow-sm flex items-center gap-4">
               <div className="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0">
                 <Ticket className="w-6 h-6 text-emerald-600" />
@@ -264,7 +264,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
                   <p className="font-bold text-slate-700">No se encontraron cuponeras registradas.</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                   {cuponeras.map((c) => {
                     const totalC = c.totalCupones || 10;
                     const saldoC = c.saldoDisponible || 0;
@@ -276,7 +276,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
                     return (
                       <div
                         key={c.codigo}
-                        className={`p-6 rounded-[1.5rem] border-2 transition-all flex flex-col justify-between space-y-5 hover:shadow-lg ${
+                        className={`p-5 rounded-[1.5rem] border-2 transition-all flex flex-col justify-between space-y-4 hover:shadow-lg ${
                           canCanjear
                             ? 'border-emerald-100 bg-white hover:border-emerald-300'
                             : 'border-slate-100 bg-slate-50 opacity-90'
@@ -316,7 +316,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
                           )}
                         </div>
 
-                        <div className="bg-white p-4 rounded-xl border border-slate-200 space-y-3">
+                        <div className="bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200 space-y-3">
                           <div className="flex justify-between items-end">
                             <div>
                               <span className="text-[11px] font-bold text-slate-500 block uppercase tracking-wider">Saldo</span>
