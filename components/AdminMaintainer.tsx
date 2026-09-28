@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Cuponera, AuditoriaLog } from '@/lib/dataStore';
 import { getApiUrl, apiClient } from '@/lib/apiClient';
-import { Settings, Plus, Edit2, History, Check, X, ShieldAlert, Trash2, ArrowLeftRight, Users, CreditCard, Ticket, ShoppingBag, Search } from 'lucide-react';
+import { Settings, Plus, Edit2, History, Check, X, ShieldAlert, Trash2, ArrowLeftRight, Users, CreditCard, Ticket, ShoppingBag, Search, ChevronUp, ChevronDown } from 'lucide-react';
 import { ComboBox } from '@/components/ui/combobox';
 
 interface TramoItem {
@@ -52,6 +52,45 @@ export default function AdminMaintainer() {
 
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState('');
+
+  const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'asc' | 'desc' } | null>(null);
+
+  const requestSort = (key: string) => {
+    let direction: 'asc' | 'desc' = 'asc';
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const getSortIcon = (key: string) => {
+    if (!sortConfig || sortConfig.key !== key) return null;
+    return sortConfig.direction === 'asc' ? <ChevronUp className="inline w-3 h-3" /> : <ChevronDown className="inline w-3 h-3" />;
+  };
+
+  const sortData = (data: any[]) => {
+    if (!sortConfig) return data;
+    return [...data].sort((a, b) => {
+      let aVal = a[sortConfig.key];
+      let bVal = b[sortConfig.key];
+      
+      // Handle nested values
+      if (sortConfig.key === 'cuponera.nombre') {
+        aVal = a.UsuarioCuponera?.Cuponera?.nombre || '';
+        bVal = b.UsuarioCuponera?.Cuponera?.nombre || '';
+      } else if (sortConfig.key === 'cupon.codigo') {
+        aVal = a.Cupon?.codigo || '';
+        bVal = b.Cupon?.codigo || '';
+      } else if (sortConfig.key === 'cupon.UsuarioCuponera.Cuponera.nombre') {
+        aVal = a.Cupon?.UsuarioCuponera?.Cuponera?.nombre || '';
+        bVal = b.Cupon?.UsuarioCuponera?.Cuponera?.nombre || '';
+      }
+
+      if (aVal < bVal) return sortConfig.direction === 'asc' ? -1 : 1;
+      if (aVal > bVal) return sortConfig.direction === 'asc' ? 1 : -1;
+      return 0;
+    });
+  };
 
   useEffect(() => {
     fetchAdminData();
@@ -180,9 +219,12 @@ export default function AdminMaintainer() {
     }
   };
 
-  const filteredUsuarios = usuarios.filter(u => u.rut.includes(searchUsuario) || u.nombre.toLowerCase().includes(searchUsuario.toLowerCase()));
-  const filteredTx = transacciones.filter(t => t.rut_usuario.includes(searchTx) || (t.orden_compra && t.orden_compra.includes(searchTx)));
-  const filteredCanjes = canjes.filter(c => (c.rut_usuario && c.rut_usuario.includes(searchCanjes)) || c.pnr_kupos.includes(searchCanjes));
+  const filteredUsuarios = sortData(usuarios.filter(u => u.rut.includes(searchUsuario) || u.nombre.toLowerCase().includes(searchUsuario.toLowerCase())));
+  const filteredTx = sortData(transacciones.filter(t => t.rut_usuario.includes(searchTx) || (t.orden_compra && t.orden_compra.includes(searchTx))));
+  const filteredCanjes = sortData(canjes.filter(c => (c.rut_usuario && c.rut_usuario.includes(searchCanjes)) || c.pnr_kupos.includes(searchCanjes)));
+  const sortedCuponeras = sortData(cuponeras);
+  const sortedCompras = sortData(compras);
+  const sortedAuditoria = sortData(auditoria);
 
   return (
     <div className="space-y-6">
@@ -228,11 +270,18 @@ export default function AdminMaintainer() {
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
                   <tr>
-                    <th className="p-3">ID</th><th className="p-3">Nombre</th><th className="p-3">Tramos Habilitados</th><th className="p-3">Valor Uni.</th><th className="p-3">N° Cupones</th><th className="p-3">Precio Total</th><th className="p-3">Publicada</th><th className="p-3 text-right">Acción</th>
+                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('id')}>ID {getSortIcon('id')}</th>
+                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('nombre')}>Nombre {getSortIcon('nombre')}</th>
+                    <th className="p-3">Tramos Habilitados</th>
+                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('valorUnitario')}>Valor Uni. {getSortIcon('valorUnitario')}</th>
+                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('cantidadCupones')}>N° Cupones {getSortIcon('cantidadCupones')}</th>
+                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('precioTotal')}>Precio Total {getSortIcon('precioTotal')}</th>
+                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('activa')}>Publicada {getSortIcon('activa')}</th>
+                    <th className="p-3 text-right">Acción</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {cuponeras.map(c => (
+                  {sortedCuponeras.map(c => (
                     <tr key={c.id} className="hover:bg-slate-50">
                       <td className="p-3 font-mono font-bold text-slate-400">#{c.id}</td>
                       <td className="p-3 font-bold text-slate-900">{c.nombre}</td>
@@ -264,7 +313,14 @@ export default function AdminMaintainer() {
             <div className="overflow-x-auto border border-slate-200 rounded-2xl max-h-[500px]">
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-0">
-                  <tr><th className="p-3">RUT</th><th className="p-3">Nombre</th><th className="p-3">Correo</th><th className="p-3">Teléfono</th><th className="p-3">Rol</th><th className="p-3">Registro</th></tr>
+                  <tr>
+                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('rut')}>RUT {getSortIcon('rut')}</th>
+                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('nombre')}>Nombre {getSortIcon('nombre')}</th>
+                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('correo')}>Correo {getSortIcon('correo')}</th>
+                    <th className="p-3">Teléfono</th>
+                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('rol')}>Rol {getSortIcon('rol')}</th>
+                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('createdAt')}>Registro {getSortIcon('createdAt')}</th>
+                  </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {filteredUsuarios.map(u => (
@@ -295,12 +351,21 @@ export default function AdminMaintainer() {
             <div className="overflow-x-auto border border-slate-200 rounded-2xl max-h-[500px]">
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-0">
-                  <tr><th className="p-3">Orden</th><th className="p-3">RUT Usuario</th><th className="p-3">Monto</th><th className="p-3">Estado</th><th className="p-3">Cod. Aut</th><th className="p-3">Fecha</th></tr>
+                  <tr>
+                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('orden_compra')}>Orden {getSortIcon('orden_compra')}</th>
+                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('cuponera.nombre')}>Cuponera {getSortIcon('cuponera.nombre')}</th>
+                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('rut_usuario')}>RUT Usuario {getSortIcon('rut_usuario')}</th>
+                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('monto')}>Monto {getSortIcon('monto')}</th>
+                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('estado')}>Estado {getSortIcon('estado')}</th>
+                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('codigo_autorizacion')}>Cod. Aut {getSortIcon('codigo_autorizacion')}</th>
+                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('createdAt')}>Fecha {getSortIcon('createdAt')}</th>
+                  </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {filteredTx.map(t => (
                     <tr key={t.id} className="hover:bg-slate-50">
                       <td className="p-3 font-mono font-bold text-slate-600">{t.orden_compra || '-'}</td>
+                      <td className="p-3 font-bold text-slate-900">{t.UsuarioCuponera?.Cuponera?.nombre || '-'}</td>
                       <td className="p-3 font-mono text-[#0A4DA6]">{t.rut_usuario}</td>
                       <td className="p-3 font-bold">${Number(t.monto).toLocaleString('es-CL')}</td>
                       <td className="p-3">
@@ -323,10 +388,16 @@ export default function AdminMaintainer() {
              <div className="overflow-x-auto border border-slate-200 rounded-2xl max-h-[500px]">
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-0">
-                  <tr><th className="p-3">ID Cuponera (Catalogo)</th><th className="p-3">RUT Usuario</th><th className="p-3">Usos Restantes</th><th className="p-3">Estado</th><th className="p-3">Expiración</th></tr>
+                  <tr>
+                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('id_cuponera')}>ID Cuponera {getSortIcon('id_cuponera')}</th>
+                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('rut_usuario')}>RUT Usuario {getSortIcon('rut_usuario')}</th>
+                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('usos_restantes')}>Usos Restantes {getSortIcon('usos_restantes')}</th>
+                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('activa')}>Estado {getSortIcon('activa')}</th>
+                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('fecha_expiracion')}>Expiración {getSortIcon('fecha_expiracion')}</th>
+                  </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {compras.map(c => (
+                  {sortedCompras.map(c => (
                     <tr key={c.id} className="hover:bg-slate-50">
                       <td className="p-3 font-mono font-bold">#{c.id_cuponera}</td>
                       <td className="p-3 font-mono text-[#0A4DA6]">{c.rut_usuario}</td>
@@ -353,12 +424,23 @@ export default function AdminMaintainer() {
              <div className="overflow-x-auto border border-slate-200 rounded-2xl max-h-[500px]">
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-0">
-                  <tr><th className="p-3">PNR Kupos</th><th className="p-3">RUT Pasajero</th><th className="p-3">Ruta</th><th className="p-3">Asiento</th><th className="p-3">Estado</th><th className="p-3">Fecha Viaje</th></tr>
+                  <tr>
+                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('pnr_kupos')}>PNR Kupos {getSortIcon('pnr_kupos')}</th>
+                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('cupon.codigo')}>Cod. Cupón {getSortIcon('cupon.codigo')}</th>
+                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('cupon.UsuarioCuponera.Cuponera.nombre')}>Cuponera {getSortIcon('cupon.UsuarioCuponera.Cuponera.nombre')}</th>
+                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('rut_usuario')}>RUT Pasajero {getSortIcon('rut_usuario')}</th>
+                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('origen')}>Ruta {getSortIcon('origen')}</th>
+                    <th className="p-3">Asiento</th>
+                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('estado')}>Estado {getSortIcon('estado')}</th>
+                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('fecha_viaje')}>Fecha Viaje {getSortIcon('fecha_viaje')}</th>
+                  </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {filteredCanjes.map(c => (
                     <tr key={c.id} className="hover:bg-slate-50">
-                      <td className="p-3 font-mono font-bold text-[#F05A24]">{c.pnr_kupos}</td>
+                      <td className="p-3 font-mono font-bold text-slate-700">{c.pnr_kupos}</td>
+                      <td className="p-3 font-mono font-bold text-[#F05A24] bg-[#FFEDD5] px-2 py-1 rounded inline-block m-2 border border-[#FED7AA]">{c.Cupon?.codigo || '-'}</td>
+                      <td className="p-3 font-semibold text-slate-800">{c.Cupon?.UsuarioCuponera?.Cuponera?.nombre || 'Cuponera N/A'}</td>
                       <td className="p-3 font-mono">{c.rut_usuario}</td>
                       <td className="p-3 font-semibold">{c.origen} - {c.destino}</td>
                       <td className="p-3 font-mono">{c.asiento}</td>
@@ -379,10 +461,10 @@ export default function AdminMaintainer() {
         {activeTab === 'auditoria' && (
           <div className="space-y-4 animate-fade-in">
              <div className="space-y-2 max-h-[500px] overflow-y-auto pr-1">
-              {auditoria.length === 0 ? (
+              {sortedAuditoria.length === 0 ? (
                 <div className="text-center py-8 text-slate-400 text-xs">No hay registros de trazabilidad y auditoría.</div>
               ) : (
-                auditoria.map((log) => {
+                sortedAuditoria.map((log) => {
                   let badgeColor = 'bg-blue-600 text-white';
                   if (log.accion === 'CANJE_CUPON') badgeColor = 'bg-emerald-600 text-white';
                   else if (log.accion === 'ANULACION_PASAJE') badgeColor = 'bg-rose-600 text-white';
