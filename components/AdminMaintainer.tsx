@@ -236,7 +236,7 @@ export default function AdminMaintainer() {
         </h2>
 
         {/* TABS */}
-        <div className="flex flex-wrap gap-2 mb-6 border-b border-slate-100 pb-4">
+        <div className="sticky top-[64px] z-30 bg-white py-3 border-b border-slate-200 mb-6 flex flex-wrap gap-2 items-center -mx-6 px-6">
           <button onClick={() => setActiveTab('catalogo')} className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${activeTab === 'catalogo' ? 'bg-[#F05A24] text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
             <ShoppingBag className="w-4 h-4" /> Catálogo
           </button>
@@ -269,7 +269,7 @@ export default function AdminMaintainer() {
             {msg && <p className="text-xs text-emerald-600 font-bold">{msg}</p>}
             <div className="border border-slate-200 rounded-2xl">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-[73px] z-30">
+                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-[120px] z-20">
                   <tr>
                     <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('id')}>ID {getSortIcon('id')}</th>
                     <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('nombre')}>Nombre {getSortIcon('nombre')}</th>
@@ -313,7 +313,7 @@ export default function AdminMaintainer() {
             </div>
             <div className="border border-slate-200 rounded-2xl">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-[73px] z-30">
+                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-[120px] z-20">
                   <tr>
                     <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('rut')}>RUT {getSortIcon('rut')}</th>
                     <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('nombre')}>Nombre {getSortIcon('nombre')}</th>
@@ -351,7 +351,7 @@ export default function AdminMaintainer() {
             </div>
             <div className="border border-slate-200 rounded-2xl">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-[73px] z-30">
+                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-[120px] z-20">
                   <tr>
                     <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('orden_compra')}>Orden {getSortIcon('orden_compra')}</th>
                     <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('cuponera.nombre')}>Cuponera {getSortIcon('cuponera.nombre')}</th>
@@ -395,7 +395,7 @@ export default function AdminMaintainer() {
             </div>
             <div className="border border-slate-200 rounded-2xl">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-[73px] z-30">
+                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-[120px] z-20">
                   <tr>
                     <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('cuponera.nombre')}>Cuponera {getSortIcon('cuponera.nombre')}</th>
                     <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('rut_usuario')}>RUT Usuario {getSortIcon('rut_usuario')}</th>
@@ -434,7 +434,7 @@ export default function AdminMaintainer() {
             </div>
              <div className="border border-slate-200 rounded-2xl">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-[73px] z-30">
+                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-[120px] z-20">
                   <tr>
                     <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('pnr_kupos')}>PNR Kupos {getSortIcon('pnr_kupos')}</th>
                     <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('cupon.codigo')}>Cod. Cupón {getSortIcon('cupon.codigo')}</th>
