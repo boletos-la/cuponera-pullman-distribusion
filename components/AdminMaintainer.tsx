@@ -311,7 +311,7 @@ export default function AdminMaintainer() {
               </div>
               <input type="text" placeholder="RUT o Nombre..." value={searchUsuario} onChange={e => setSearchUsuario(e.target.value)} className="text-xs px-3 py-1.5 rounded-lg border border-slate-300 w-64 focus:outline-none" />
             </div>
-            <div className="overflow-x-auto border border-slate-200 rounded-2xl max-h-[500px]">
+            <div className="overflow-x-auto border border-slate-200 rounded-2xl">
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-0">
                   <tr>
@@ -349,7 +349,7 @@ export default function AdminMaintainer() {
               </div>
               <input type="text" placeholder="Orden de compra o RUT..." value={searchTx} onChange={e => setSearchTx(e.target.value)} className="text-xs px-3 py-1.5 rounded-lg border border-slate-300 w-64 focus:outline-none" />
             </div>
-            <div className="overflow-x-auto border border-slate-200 rounded-2xl max-h-[500px]">
+            <div className="overflow-x-auto border border-slate-200 rounded-2xl">
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-0">
                   <tr>
@@ -393,7 +393,7 @@ export default function AdminMaintainer() {
               </div>
               <input type="text" placeholder="Nombre o RUT..." value={searchCompras} onChange={e => setSearchCompras(e.target.value)} className="text-xs px-3 py-1.5 rounded-lg border border-slate-300 w-64 focus:outline-none" />
             </div>
-            <div className="overflow-x-auto border border-slate-200 rounded-2xl max-h-[500px]">
+            <div className="overflow-x-auto border border-slate-200 rounded-2xl">
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-0">
                   <tr>
@@ -432,7 +432,7 @@ export default function AdminMaintainer() {
               </div>
               <input type="text" placeholder="PNR o RUT..." value={searchCanjes} onChange={e => setSearchCanjes(e.target.value)} className="text-xs px-3 py-1.5 rounded-lg border border-slate-300 w-64 focus:outline-none" />
             </div>
-             <div className="overflow-x-auto border border-slate-200 rounded-2xl max-h-[500px]">
+             <div className="overflow-x-auto border border-slate-200 rounded-2xl">
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-0">
                   <tr>
@@ -471,7 +471,7 @@ export default function AdminMaintainer() {
 
         {activeTab === 'auditoria' && (
           <div className="space-y-4 animate-fade-in">
-             <div className="space-y-2 max-h-[500px] overflow-y-auto pr-1">
+             <div className="space-y-2">
               {sortedAuditoria.length === 0 ? (
                 <div className="text-center py-8 text-slate-400 text-xs">No hay registros de trazabilidad y auditoría.</div>
               ) : (
