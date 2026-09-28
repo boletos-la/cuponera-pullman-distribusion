@@ -1,5 +1,13 @@
 [
   {
+    "id": "AUD-TX-38",
+    "fechaHora": "2026-09-28T16:35:59.000Z",
+    "rutUsuario": "21.051.782-0",
+    "nombreUsuario": "Diego Farias Albornoz",
+    "accion": "COMPRA_CUPONERA",
+    "detalles": "Transacción Webpay Plus RECHAZADO por $55.000 [Orden: CUPONERA_1_1790613358843]."
+  },
+  {
     "id": "AUD-OTP-GEN-63",
     "fechaHora": "2026-09-28T14:52:01.000Z",
     "rutUsuario": "10.520.823-5",

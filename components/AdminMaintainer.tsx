@@ -34,6 +34,7 @@ export default function AdminMaintainer() {
   const [searchUsuario, setSearchUsuario] = useState('');
   const [searchTx, setSearchTx] = useState('');
   const [searchCanjes, setSearchCanjes] = useState('');
+  const [searchCompras, setSearchCompras] = useState('');
 
   const [loading, setLoading] = useState(true);
   const [cities, setCities] = useState<string[]>([]);
@@ -76,8 +77,8 @@ export default function AdminMaintainer() {
       
       // Handle nested values
       if (sortConfig.key === 'cuponera.nombre') {
-        aVal = a.UsuarioCuponera?.Cuponera?.nombre || '';
-        bVal = b.UsuarioCuponera?.Cuponera?.nombre || '';
+        aVal = a.UsuarioCuponera?.Cuponera?.nombre || a.Cuponera?.nombre || '';
+        bVal = b.UsuarioCuponera?.Cuponera?.nombre || b.Cuponera?.nombre || '';
       } else if (sortConfig.key === 'cupon.codigo') {
         aVal = a.Cupon?.codigo || '';
         bVal = b.Cupon?.codigo || '';
@@ -223,7 +224,7 @@ export default function AdminMaintainer() {
   const filteredTx = sortData(transacciones.filter(t => t.rut_usuario.includes(searchTx) || (t.orden_compra && t.orden_compra.includes(searchTx))));
   const filteredCanjes = sortData(canjes.filter(c => (c.rut_usuario && c.rut_usuario.includes(searchCanjes)) || c.pnr_kupos.includes(searchCanjes)));
   const sortedCuponeras = sortData(cuponeras);
-  const sortedCompras = sortData(compras);
+  const filteredCompras = sortData(compras.filter(c => (c.rut_usuario && c.rut_usuario.includes(searchCompras)) || (c.Cuponera?.nombre && c.Cuponera.nombre.toLowerCase().includes(searchCompras.toLowerCase())) || String(c.id_cuponera).includes(searchCompras)));
   const sortedAuditoria = sortData(auditoria);
 
   return (
@@ -385,11 +386,18 @@ export default function AdminMaintainer() {
 
         {activeTab === 'compras' && (
           <div className="space-y-4 animate-fade-in">
-             <div className="overflow-x-auto border border-slate-200 rounded-2xl max-h-[500px]">
+            <div className="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-200">
+              <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
+                <Search className="w-4 h-4 text-slate-400" />
+                Buscar Cuponera de Usuario:
+              </div>
+              <input type="text" placeholder="Nombre o RUT..." value={searchCompras} onChange={e => setSearchCompras(e.target.value)} className="text-xs px-3 py-1.5 rounded-lg border border-slate-300 w-64 focus:outline-none" />
+            </div>
+            <div className="overflow-x-auto border border-slate-200 rounded-2xl max-h-[500px]">
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-0">
                   <tr>
-                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('id_cuponera')}>ID Cuponera {getSortIcon('id_cuponera')}</th>
+                    <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('cuponera.nombre')}>Cuponera {getSortIcon('cuponera.nombre')}</th>
                     <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('rut_usuario')}>RUT Usuario {getSortIcon('rut_usuario')}</th>
                     <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('usos_restantes')}>Usos Restantes {getSortIcon('usos_restantes')}</th>
                     <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('activa')}>Estado {getSortIcon('activa')}</th>
@@ -397,9 +405,12 @@ export default function AdminMaintainer() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {sortedCompras.map(c => (
+                  {filteredCompras.map(c => (
                     <tr key={c.id} className="hover:bg-slate-50">
-                      <td className="p-3 font-mono font-bold">#{c.id_cuponera}</td>
+                      <td className="p-3">
+                        <div className="font-bold text-slate-800">{c.Cuponera?.nombre || 'Cuponera N/A'}</div>
+                        <div className="text-[10px] text-slate-400 font-mono">ID: #{c.id_cuponera}</div>
+                      </td>
                       <td className="p-3 font-mono text-[#0A4DA6]">{c.rut_usuario}</td>
                       <td className="p-3 font-bold text-[#F05A24]">{c.usos_restantes}</td>
                       <td className="p-3"><span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${c.activa ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-600'}`}>{c.activa ? 'Activa' : 'Inactiva'}</span></td>
