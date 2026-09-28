@@ -121,11 +121,11 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
       {step === 'login' && (
         <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-[#FFE4D6] space-y-6">
           <div className="flex items-center gap-4 border-b border-slate-100 pb-5">
-            <div className="w-12 h-12 rounded-2xl bg-[#FFEDD5] text-[#F05A24] flex items-center justify-center shrink-0 shadow-2xs">
-              <LayoutDashboard className="w-6 h-6 text-[#F05A24]" />
+            <div className="w-12 h-12 rounded-2xl bg-[#FFEDD5] text-[#fa5e00] flex items-center justify-center shrink-0 shadow-2xs">
+              <LayoutDashboard className="w-6 h-6 text-[#fa5e00]" />
             </div>
             <div>
-              <span className="bg-[#FFF5F0] text-[#F05A24] text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider border border-[#FED7AA]">
+              <span className="bg-[#FFF5F0] text-[#fa5e00] text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider border border-[#FED7AA]">
                 Buscador Público
               </span>
               <h2 className="text-2xl font-black text-[#0F172A] mt-1">
@@ -154,7 +154,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
                     setRutInput(formatRut(e.target.value));
                     setRutError('');
                   }}
-                  className="w-full text-sm font-semibold bg-white border border-slate-200 rounded-xl pl-10 pr-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#F05A24] text-[#0F172A]"
+                  className="w-full text-sm font-semibold bg-white border border-slate-200 rounded-xl pl-10 pr-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#fa5e00] text-[#0F172A]"
                 />
                 <Search className="w-5 h-5 text-slate-400 absolute left-3.5 top-4" />
               </div>
@@ -165,7 +165,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
             <button
               type="submit"
               disabled={loading || !rutInput}
-              className="w-full bg-[#F05A24] hover:bg-[#D94B18] text-white font-extrabold py-3.5 px-6 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-sm cursor-pointer disabled:opacity-50"
+              className="w-full bg-[#fa5e00] hover:bg-[#e55400] text-white font-extrabold py-3.5 px-6 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-sm cursor-pointer disabled:opacity-50"
             >
               {loading ? (
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -195,12 +195,12 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
             </div>
 
             <div className="bg-white rounded-2xl p-5 border border-blue-200 shadow-sm flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-blue-100 text-[#0A4DA6] flex items-center justify-center shrink-0">
+              <div className="w-12 h-12 rounded-xl bg-blue-100 text-[#023caf] flex items-center justify-center shrink-0">
                 <CheckCircle className="w-6 h-6" />
               </div>
               <div>
                 <span className="text-xs text-slate-500 font-semibold block uppercase tracking-wider">Usados</span>
-                <span className="text-2xl font-black text-[#0A4DA6]">{metricas.utilizados}</span>
+                <span className="text-2xl font-black text-[#023caf]">{metricas.utilizados}</span>
               </div>
             </div>
 
@@ -220,33 +220,33 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
               <div className="flex flex-wrap gap-2">
                 <button
                   onClick={() => setActiveDashboardTab('cuponeras')}
-                  className={`px-4 py-2 text-sm font-bold rounded-xl transition-all ${activeDashboardTab === 'cuponeras' ? 'bg-[#F05A24] text-white' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}
+                  className={`px-4 py-2 text-sm font-bold rounded-xl transition-all ${activeDashboardTab === 'cuponeras' ? 'bg-[#fa5e00] text-white' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}
                 >
                   Mis Cuponeras
                 </button>
                 <button
                   onClick={() => setActiveDashboardTab('historial')}
-                  className={`px-4 py-2 text-sm font-bold rounded-xl transition-all ${activeDashboardTab === 'historial' ? 'bg-[#F05A24] text-white' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}
+                  className={`px-4 py-2 text-sm font-bold rounded-xl transition-all ${activeDashboardTab === 'historial' ? 'bg-[#fa5e00] text-white' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}
                 >
                   Historial
                 </button>
                 {authUser && (
                   <button
                     onClick={() => setActiveDashboardTab('perfil')}
-                    className={`px-4 py-2 text-sm font-bold rounded-xl transition-all ${activeDashboardTab === 'perfil' ? 'bg-[#F05A24] text-white' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}
+                    className={`px-4 py-2 text-sm font-bold rounded-xl transition-all ${activeDashboardTab === 'perfil' ? 'bg-[#fa5e00] text-white' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}
                   >
                     Mis Datos
                   </button>
                 )}
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-mono font-bold bg-blue-50 text-[#0A4DA6] px-3 py-1.5 rounded-full border border-blue-200">
+                <span className="text-xs font-mono font-bold bg-blue-50 text-[#023caf] px-3 py-1.5 rounded-full border border-blue-200">
                   Titular: {rutFormateado}
                 </span>
                 <button
                   type="button"
                   onClick={handleResetSearch}
-                  className="text-xs font-bold text-slate-600 hover:text-[#F05A24] bg-slate-100 hover:bg-orange-50 px-3 py-1.5 rounded-xl border border-slate-200 transition-colors cursor-pointer flex items-center gap-1.5 shadow-2xs"
+                  className="text-xs font-bold text-slate-600 hover:text-[#fa5e00] bg-slate-100 hover:bg-orange-50 px-3 py-1.5 rounded-xl border border-slate-200 transition-colors cursor-pointer flex items-center gap-1.5 shadow-2xs"
                   title="Consultar otro RUT"
                 >
                   <Search className="w-3.5 h-3.5" />
@@ -282,7 +282,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
                       >
                         <div className="space-y-3">
                           <div className="flex justify-between items-start">
-                            <span className="font-mono font-extrabold text-sm text-[#F05A24] bg-white px-3 py-1 rounded-lg border border-[#FFEDD5] shadow-xs">
+                            <span className="font-mono font-extrabold text-sm text-[#fa5e00] bg-white px-3 py-1 rounded-lg border border-[#FFEDD5] shadow-xs">
                               {c.codigo}
                             </span>
                             <span className={`text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider ${canCanjear ? 'bg-emerald-600 text-white' : 'bg-slate-600 text-white'}`}>
@@ -348,7 +348,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
                           onClick={() => onCanjearCupon(c.codigo, rutFormateado)}
                           className={`w-full font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 text-sm ${
                             canCanjear
-                              ? 'bg-[#F05A24] hover:bg-[#D94B18] text-white shadow-md cursor-pointer'
+                              ? 'bg-[#fa5e00] hover:bg-[#e55400] text-white shadow-md cursor-pointer'
                               : 'bg-slate-200 text-slate-400 cursor-not-allowed border border-slate-300'
                           }`}
                         >

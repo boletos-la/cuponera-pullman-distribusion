@@ -57,8 +57,8 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
           >
             <div className="flex flex-col">
               <div className="flex items-baseline gap-0.5">
-                <span className="font-black text-2xl tracking-tighter text-[#E85D04]">pullman</span>
-                <span className="font-black text-2xl tracking-tighter text-[#F05A24]">bus</span>
+                <span className="font-black text-2xl tracking-tighter text-[#fa5e00]">pullman</span>
+                <span className="font-black text-2xl tracking-tighter text-[#fa5e00]">bus</span>
               </div>
               <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-none -mt-1">
                 Cuponeras Digitales
@@ -67,7 +67,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
           </div>
 
           {/* Enlaces de Navegación */}
-          <nav className="hidden lg:flex items-center space-x-2">
+          <nav className="hidden lg:flex items-center space-x-3">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
@@ -75,29 +75,29 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
-                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-extrabold transition-all cursor-pointer ${
+                  className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-transform hover:scale-105 cursor-pointer ${
                     isActive
-                      ? 'bg-[#F05A24] text-white shadow-md shadow-orange-500/20 scale-[1.02]'
-                      : 'text-slate-600 hover:text-[#F05A24] hover:bg-orange-50/80'
+                      ? 'bg-primary text-primary-foreground shadow-sm'
+                      : 'text-foreground/80 hover:text-foreground hover:bg-muted'
                   }`}
                 >
-                  <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-400'}`} />
+                  <Icon className={`w-4 h-4 ${isActive ? 'text-primary-foreground' : 'text-muted-foreground'}`} />
                   <span>{item.label}</span>
                 </button>
               );
             })}
             
-            <div className="w-px h-6 bg-slate-200 mx-2"></div>
+            <div className="w-px h-6 bg-border mx-2"></div>
             
             {user ? (
               <div className="flex items-center gap-3 ml-2">
                 <div className="flex flex-col items-end">
-                  <span className="text-xs font-bold text-slate-800">{user.nombre || 'Usuario'}</span>
-                  <span className="text-[10px] text-slate-500 font-medium">{user.rut}</span>
+                  <span className="text-xs font-bold text-foreground">{user.nombre || 'Usuario'}</span>
+                  <span className="text-[10px] text-muted-foreground font-medium">{user.rut}</span>
                 </div>
                 <button
                   onClick={handleLogout}
-                  className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors"
+                  className="p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-full transition-colors"
                   title="Cerrar Sesión"
                 >
                   <LogOut className="w-4 h-4" />
@@ -106,7 +106,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
             ) : (
               <button
                 onClick={() => setShowLoginModal(true)}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-extrabold transition-all cursor-pointer bg-[#0A4DA6] text-white hover:bg-blue-700 shadow-sm ml-2"
+                className="flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-semibold transition-transform hover:scale-105 cursor-pointer bg-[#fa5e00] text-white hover:bg-[#fa5e00]/90 shadow-sm ml-2"
               >
                 <LogIn className="w-4 h-4" />
                 <span>Iniciar Sesión</span>
@@ -117,7 +117,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
       </div>
 
       {/* Mobile Navigation Bar */}
-      <div className="lg:hidden flex overflow-x-auto border-t border-slate-200 bg-slate-50 p-1.5 gap-1 text-xs">
+      <div className="lg:hidden flex overflow-x-auto border-t border-border bg-muted/30 p-2 gap-2 text-xs">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;
@@ -125,8 +125,8 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
-              className={`flex-1 min-w-[100px] flex items-center justify-center gap-1.5 py-2 px-2 rounded-lg font-medium whitespace-nowrap ${
-                isActive ? 'bg-[#F05A24] text-white font-extrabold' : 'text-slate-600 bg-white border border-slate-200'
+              className={`flex-1 min-w-[100px] flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-full font-medium whitespace-nowrap transition-colors ${
+                isActive ? 'bg-primary text-primary-foreground font-semibold' : 'text-foreground/80 bg-background border border-border'
               }`}
             >
               <Icon className="w-3.5 h-3.5" />

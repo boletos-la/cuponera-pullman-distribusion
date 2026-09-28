@@ -71,7 +71,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
         </button>
 
         <div className="text-center space-y-2 mb-6">
-          <div className="w-16 h-16 rounded-full bg-[#FFF5F0] text-[#F05A24] flex items-center justify-center mx-auto shadow-md">
+          <div className="w-16 h-16 rounded-full bg-[#FFF5F0] text-[#fa5e00] flex items-center justify-center mx-auto shadow-md">
             <LogIn className="w-8 h-8 stroke-[2.5]" />
           </div>
           <h3 className="text-2xl font-black text-slate-900">Iniciar Sesión</h3>
@@ -90,7 +90,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
               value={rut}
               onChange={handleRutChange}
               className={`w-full text-sm bg-slate-50 border rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 ${
-                rutError ? 'border-red-500 focus:ring-red-500' : 'border-slate-300 focus:ring-[#0A4DA6]'
+                rutError ? 'border-red-500 focus:ring-red-500' : 'border-slate-300 focus:ring-[#023caf]'
               }`}
             />
             {rutError && <p className="text-xs text-red-600 font-medium mt-1">{rutError}</p>}
@@ -104,7 +104,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
               placeholder="Tu contraseña"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#0A4DA6]"
+              className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
             />
           </div>
 
@@ -118,7 +118,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
           <button
             type="submit"
             disabled={loading || !!rutError}
-            className="w-full bg-[#F05A24] hover:bg-[#D94B18] text-white font-extrabold py-3 px-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-sm cursor-pointer disabled:opacity-50 mt-2"
+            className="w-full bg-[#fa5e00] hover:bg-[#e55400] text-white font-extrabold py-3 px-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-sm cursor-pointer disabled:opacity-50 mt-2"
           >
             {loading ? (
               <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />

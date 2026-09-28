@@ -82,7 +82,7 @@ export default function ExceptionSimulator({ onClose, onNavigateTab }: Exception
           {exceptions.map((ex) => (
             <div key={ex.id} className="p-4 bg-slate-50 border border-slate-200 rounded-2xl flex items-start justify-between gap-4 hover:border-orange-300 transition-all">
               <div className="space-y-1">
-                <span className="font-extrabold text-sm text-[#0A4DA6] block">{ex.titulo}</span>
+                <span className="font-extrabold text-sm text-[#023caf] block">{ex.titulo}</span>
                 <p className="text-xs text-slate-600">{ex.descripcion}</p>
               </div>
 
@@ -91,7 +91,7 @@ export default function ExceptionSimulator({ onClose, onNavigateTab }: Exception
                   ex.accion();
                   onClose();
                 }}
-                className="bg-[#0A4DA6] hover:bg-blue-900 text-white text-xs font-bold px-3 py-2 rounded-xl transition-all whitespace-nowrap cursor-pointer shrink-0"
+                className="bg-[#023caf] hover:bg-blue-900 text-white text-xs font-bold px-3 py-2 rounded-xl transition-all whitespace-nowrap cursor-pointer shrink-0"
               >
                 Probar Ahora
               </button>

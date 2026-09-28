@@ -40,13 +40,13 @@ export default function TicketModal({ pasaje, onClose }: TicketModalProps) {
 
         {/* Encabezado Boleto */}
         <div className="text-center space-y-2 border-b border-dashed border-slate-200 pb-4">
-          <div className="inline-flex items-center gap-1.5 bg-[#F05A24] text-white px-3 py-1 rounded-full text-xs font-black uppercase shadow-xs">
+          <div className="inline-flex items-center gap-1.5 bg-[#fa5e00] text-white px-3 py-1 rounded-full text-xs font-black uppercase shadow-xs">
             <Bus className="w-3.5 h-3.5 text-white" />
             <span>Pullmanbus Cuponeras</span>
           </div>
 
           <h3 className="text-xl font-black text-slate-900">Boleto Electrónico de Viaje</h3>
-          <p className="text-xs font-mono font-bold text-[#F05A24]">Código: {pasaje.codigo}</p>
+          <p className="text-xs font-mono font-bold text-[#fa5e00]">Código: {pasaje.codigo}</p>
         </div>
 
         {/* Cuerpo del Pasaje */}
@@ -62,7 +62,7 @@ export default function TicketModal({ pasaje, onClose }: TicketModalProps) {
             </div>
             <div className="flex justify-between items-center border-b border-slate-200 pb-2">
               <span className="text-slate-500 font-medium">Cupón Canjeado</span>
-              <span className="font-mono font-bold text-[#0A4DA6]">{pasaje.cuponCodigo}</span>
+              <span className="font-mono font-bold text-[#023caf]">{pasaje.cuponCodigo}</span>
             </div>
           </div>
 
@@ -123,7 +123,7 @@ export default function TicketModal({ pasaje, onClose }: TicketModalProps) {
         <div className="grid grid-cols-2 gap-3 pt-2 border-t border-slate-100 print:hidden">
           <button
             onClick={handlePrint}
-            className="w-full bg-[#F05A24] hover:bg-[#D94B18] text-white font-bold py-3 px-3 rounded-xl transition-all text-xs flex items-center justify-center gap-2 cursor-pointer shadow-md"
+            className="w-full bg-[#fa5e00] hover:bg-[#e55400] text-white font-bold py-3 px-3 rounded-xl transition-all text-xs flex items-center justify-center gap-2 cursor-pointer shadow-md"
           >
             <Printer className="w-4 h-4 text-white" />
             <span>Imprimir / PDF</span>
@@ -133,7 +133,7 @@ export default function TicketModal({ pasaje, onClose }: TicketModalProps) {
             onClick={onClose}
             className="w-full bg-slate-900 hover:bg-slate-800 text-white font-extrabold py-3 px-3 rounded-xl transition-all text-xs flex items-center justify-center gap-2 cursor-pointer shadow-sm"
           >
-            <LayoutDashboard className="w-4 h-4 text-[#F05A24]" />
+            <LayoutDashboard className="w-4 h-4 text-[#fa5e00]" />
             <span>Volver a Mi Dashboard</span>
           </button>
         </div>

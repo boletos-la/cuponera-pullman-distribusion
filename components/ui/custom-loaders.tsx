@@ -20,12 +20,12 @@ export function TicketLoader({ message }: LoaderProps) {
           repeat: Infinity, 
           ease: "easeInOut" 
         }}
-        className="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center text-[#F05A24] shadow-lg shadow-orange-500/10"
+        className="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center text-[#fa5e00] shadow-lg shadow-orange-500/10"
       >
         <Ticket className="w-8 h-8" />
       </motion.div>
       <div className="flex flex-col items-center gap-2">
-        <Loader2 className="w-5 h-5 text-[#F05A24] animate-spin" />
+        <Loader2 className="w-5 h-5 text-[#fa5e00] animate-spin" />
         <p className="text-slate-600 font-medium text-sm animate-pulse">{message}</p>
       </div>
     </div>
@@ -55,7 +55,7 @@ export function BusRouteLoader({ message }: LoaderProps) {
 
         {/* Destination Pin */}
         <div className="relative z-10 w-5 h-5 rounded-full bg-orange-50 border-2 border-orange-200 flex items-center justify-center">
-          <MapPin className="w-3 h-3 text-[#F05A24]" />
+          <MapPin className="w-3 h-3 text-[#fa5e00]" />
         </div>
       </div>
       <p className="text-slate-600 font-medium text-sm animate-pulse">{message}</p>

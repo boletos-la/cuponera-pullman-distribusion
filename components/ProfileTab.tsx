@@ -70,7 +70,7 @@ export default function ProfileTab() {
 
       <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 space-y-6">
         <h3 className="text-xl font-black text-slate-900 flex items-center gap-2">
-          <Mail className="w-5 h-5 text-[#F05A24]" />
+          <Mail className="w-5 h-5 text-[#fa5e00]" />
           Actualizar Correo
         </h3>
         <form onSubmit={handleUpdateEmail} className="space-y-4 max-w-md">
@@ -81,13 +81,13 @@ export default function ProfileTab() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#0A4DA6]"
+              className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
             />
           </div>
           <button
             type="submit"
             disabled={loading || email === user.correo}
-            className="bg-[#0A4DA6] hover:bg-[#083b82] text-white font-bold py-2.5 px-6 rounded-xl transition-all disabled:opacity-50"
+            className="bg-[#023caf] hover:bg-[#083b82] text-white font-bold py-2.5 px-6 rounded-xl transition-all disabled:opacity-50"
           >
             Guardar Correo
           </button>
@@ -96,7 +96,7 @@ export default function ProfileTab() {
 
       <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 space-y-6">
         <h3 className="text-xl font-black text-slate-900 flex items-center gap-2">
-          <KeyRound className="w-5 h-5 text-[#F05A24]" />
+          <KeyRound className="w-5 h-5 text-[#fa5e00]" />
           Actualizar Contraseña
         </h3>
         <form onSubmit={handleUpdatePassword} className="space-y-4 max-w-md">
@@ -107,7 +107,7 @@ export default function ProfileTab() {
               required
               value={actualPassword}
               onChange={(e) => setActualPassword(e.target.value)}
-              className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#0A4DA6]"
+              className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
             />
           </div>
           <div>
@@ -118,7 +118,7 @@ export default function ProfileTab() {
               minLength={6}
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#0A4DA6]"
+              className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
             />
           </div>
           <div>
@@ -129,13 +129,13 @@ export default function ProfileTab() {
               minLength={6}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#0A4DA6]"
+              className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
             />
           </div>
           <button
             type="submit"
             disabled={loading || !actualPassword || !newPassword}
-            className="bg-[#F05A24] hover:bg-[#D94B18] text-white font-bold py-2.5 px-6 rounded-xl transition-all disabled:opacity-50"
+            className="bg-[#fa5e00] hover:bg-[#e55400] text-white font-bold py-2.5 px-6 rounded-xl transition-all disabled:opacity-50"
           >
             Actualizar Contraseña
           </button>

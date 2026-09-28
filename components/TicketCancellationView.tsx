@@ -94,7 +94,7 @@ export default function TicketCancellationView() {
             Proceso E • Regla Legal de 4 Horas
           </span>
           <h2 className="text-2xl font-black text-slate-900 flex items-center gap-2 mt-1">
-            <RotateCcw className="w-6 h-6 text-[#F05A24]" />
+            <RotateCcw className="w-6 h-6 text-[#fa5e00]" />
             Anulación de Viaje y Reintegro de Cupón
           </h2>
           <p className="text-xs text-slate-500 font-medium mt-1">
@@ -108,7 +108,7 @@ export default function TicketCancellationView() {
           <div className="text-xs text-amber-900 space-y-1">
             <span className="font-bold block">Normativa de Transporte Terrestre:</span>
             <p>
-              La anulación de pasajes sólo se autoriza si faltan <span className="font-extrabold text-[#F05A24]">4 horas o más</span> para la salida del servicio. Transcurrido ese plazo, el sistema bloquea automáticamente la anulación por ley.
+              La anulación de pasajes sólo se autoriza si faltan <span className="font-extrabold text-[#fa5e00]">4 horas o más</span> para la salida del servicio. Transcurrido ese plazo, el sistema bloquea automáticamente la anulación por ley.
             </p>
           </div>
         </div>
@@ -127,7 +127,7 @@ export default function TicketCancellationView() {
                     setRutInput(formatRut(e.target.value));
                     setErrorMsg('');
                   }}
-                  className="w-full text-sm font-semibold bg-white border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#F05A24] text-[#0F172A]"
+                  className="w-full text-sm font-semibold bg-white border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#fa5e00] text-[#0F172A]"
                 />
                 <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
               </div>
@@ -143,7 +143,7 @@ export default function TicketCancellationView() {
                 placeholder="ej. ASD1234 o Boleto"
                 value={pasajeCodigo}
                 onChange={(e) => setPasajeCodigo(e.target.value.toUpperCase())}
-                className="w-full text-sm font-mono font-bold bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#F05A24]"
+                className="w-full text-sm font-mono font-bold bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#fa5e00]"
               />
             </div>
 
@@ -160,7 +160,7 @@ export default function TicketCancellationView() {
             <button
               type="submit"
               disabled={loading || !pasajeCodigo || !rutInput}
-              className="w-full bg-[#F05A24] hover:bg-[#D94B18] text-white font-extrabold py-3.5 px-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-base cursor-pointer disabled:opacity-50"
+              className="w-full bg-[#fa5e00] hover:bg-[#e55400] text-white font-extrabold py-3.5 px-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-base cursor-pointer disabled:opacity-50"
             >
               {loading ? (
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -177,7 +177,7 @@ export default function TicketCancellationView() {
         {step === 'otp' && (
           <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-[#FFE4D6] space-y-6">
             <div className="text-center space-y-2">
-              <div className="w-16 h-16 rounded-full bg-[#FFF5F0] text-[#F05A24] flex items-center justify-center mx-auto shadow-md">
+              <div className="w-16 h-16 rounded-full bg-[#FFF5F0] text-[#fa5e00] flex items-center justify-center mx-auto shadow-md">
                 <KeyRound className="w-8 h-8 stroke-[2.5]" />
               </div>
               <h3 className="text-2xl font-black text-slate-900">Validación para Anular</h3>
@@ -197,7 +197,7 @@ export default function TicketCancellationView() {
                   maxLength={6}
                   value={otpCode}
                   onChange={(e) => setOtpCode(e.target.value)}
-                  className="w-48 mx-auto text-center text-2xl tracking-widest font-black bg-white border border-slate-300 rounded-xl py-3 focus:outline-none focus:ring-2 focus:ring-[#F05A24]"
+                  className="w-48 mx-auto text-center text-2xl tracking-widest font-black bg-white border border-slate-300 rounded-xl py-3 focus:outline-none focus:ring-2 focus:ring-[#fa5e00]"
                 />
               </div>
               
@@ -214,7 +214,7 @@ export default function TicketCancellationView() {
               <button
                 type="submit"
                 disabled={loading || otpCode.length < 6}
-                className="w-full bg-[#F05A24] hover:bg-orange-600 text-white font-extrabold py-3.5 px-6 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-sm cursor-pointer disabled:opacity-50"
+                className="w-full bg-[#fa5e00] hover:bg-orange-600 text-white font-extrabold py-3.5 px-6 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-sm cursor-pointer disabled:opacity-50"
               >
                 {loading ? (
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -245,7 +245,7 @@ export default function TicketCancellationView() {
             <h3 className="text-lg font-black text-emerald-900">¡Anulación Completada con Éxito!</h3>
             <p className="text-xs text-emerald-800">{resultadoExitosa.mensaje}</p>
 
-            <div className="inline-block bg-white border border-emerald-200 px-4 py-2 rounded-xl text-xs font-mono font-bold text-[#0A4DA6]">
+            <div className="inline-block bg-white border border-emerald-200 px-4 py-2 rounded-xl text-xs font-mono font-bold text-[#023caf]">
               1 uso reintegrado a su cuponera (Cupón devuelto: {resultadoExitosa.cuponCodigoReintegrado})
             </div>
           </div>

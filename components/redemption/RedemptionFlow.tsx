@@ -164,7 +164,7 @@ export function RedemptionFlow({ initialCuponCode = '', initialRut = '', onFinis
           <h2 className="text-lg font-bold mb-1.5 text-slate-900">Cupón Inválido</h2>
           <p className="text-xs text-slate-600 mb-5">No se pudo validar el cupón proporcionado. Por favor, vuelve al dashboard e intenta nuevamente.</p>
           <Button
-            className="bg-[#F05A24] hover:bg-[#D94B18] text-white font-semibold text-xs px-5 py-2 rounded-xl"
+            className="bg-[#fa5e00] hover:bg-[#e55400] text-white font-semibold text-xs px-5 py-2 rounded-xl"
             onClick={() => onBack ? onBack() : router.push('/')}
           >
             Volver al Dashboard
@@ -194,7 +194,7 @@ export function RedemptionFlow({ initialCuponCode = '', initialRut = '', onFinis
               </button>
             )}
 
-            <div className="w-10 h-10 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center text-[#F05A24] shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center text-[#fa5e00] shrink-0">
               <Ticket className="w-5 h-5" />
             </div>
 
@@ -203,7 +203,7 @@ export function RedemptionFlow({ initialCuponCode = '', initialRut = '', onFinis
                 <h2 className="text-base sm:text-lg font-bold text-slate-900 leading-tight">
                   Canje de Pasaje
                 </h2>
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-orange-50 text-[#D94B18] border border-orange-200/80">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-orange-50 text-[#e55400] border border-orange-200/80">
                   {cuponInfo.codigo}
                 </span>
               </div>
@@ -225,9 +225,9 @@ export function RedemptionFlow({ initialCuponCode = '', initialRut = '', onFinis
                     <div
                       className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
                         isActive
-                          ? "bg-[#F05A24] text-white shadow-md shadow-orange-500/20"
+                          ? "bg-[#fa5e00] text-white shadow-md shadow-orange-500/20"
                           : isCompleted
-                          ? "bg-orange-50 text-[#F05A24] border border-orange-100"
+                          ? "bg-orange-50 text-[#fa5e00] border border-orange-100"
                           : "text-slate-400 bg-slate-50 border border-slate-100"
                       }`}
                     >
@@ -236,7 +236,7 @@ export function RedemptionFlow({ initialCuponCode = '', initialRut = '', onFinis
                           isActive
                             ? "bg-white/25 text-white"
                             : isCompleted
-                            ? "bg-[#F05A24]/10 text-[#F05A24]"
+                            ? "bg-[#fa5e00]/10 text-[#fa5e00]"
                             : "bg-slate-200/70 text-slate-400"
                         }`}
                       >

@@ -14,13 +14,13 @@ export default function HistoryTab({ compras, canjes }: HistoryTabProps) {
       <div className="flex gap-4 border-b border-slate-200 pb-2">
         <button
           onClick={() => setView('compras')}
-          className={`pb-2 px-2 text-sm font-bold border-b-2 transition-all ${view === 'compras' ? 'border-[#F05A24] text-[#F05A24]' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
+          className={`pb-2 px-2 text-sm font-bold border-b-2 transition-all ${view === 'compras' ? 'border-[#fa5e00] text-[#fa5e00]' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
         >
           Historial de Compras
         </button>
         <button
           onClick={() => setView('canjes')}
-          className={`pb-2 px-2 text-sm font-bold border-b-2 transition-all ${view === 'canjes' ? 'border-[#F05A24] text-[#F05A24]' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
+          className={`pb-2 px-2 text-sm font-bold border-b-2 transition-all ${view === 'canjes' ? 'border-[#fa5e00] text-[#fa5e00]' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
         >
           Historial de Canjes
         </button>
@@ -33,7 +33,7 @@ export default function HistoryTab({ compras, canjes }: HistoryTabProps) {
               {compras.map((compra: any) => (
                 <div key={compra.id} className="p-4 border border-slate-100 rounded-xl bg-slate-50 flex flex-col md:flex-row justify-between md:items-center gap-4">
                   <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-full bg-blue-100 text-[#0A4DA6] flex items-center justify-center shrink-0">
+                    <div className="w-10 h-10 rounded-full bg-blue-100 text-[#023caf] flex items-center justify-center shrink-0">
                       <ShoppingCart className="w-5 h-5" />
                     </div>
                     <div>
@@ -83,7 +83,7 @@ export default function HistoryTab({ compras, canjes }: HistoryTabProps) {
                   </div>
                   <div className="text-left md:text-right flex flex-col items-start md:items-end gap-1">
                     {canje.Cupon?.codigo && (
-                      <span className="text-[10px] font-mono font-extrabold text-[#F05A24] bg-[#FFEDD5] px-2 py-1 rounded border border-[#FED7AA]">
+                      <span className="text-[10px] font-mono font-extrabold text-[#fa5e00] bg-[#FFEDD5] px-2 py-1 rounded border border-[#FED7AA]">
                         Cupón: {canje.Cupon.codigo}
                       </span>
                     )}

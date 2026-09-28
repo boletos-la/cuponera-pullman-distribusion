@@ -68,11 +68,11 @@ export default function AdminMaintainer() {
     const isSorted = sortConfig && sortConfig.key === key;
     if (isSorted) {
       return sortConfig.direction === 'asc' ? (
-        <span className="inline-flex items-center justify-center w-4 h-4 ml-1 rounded bg-blue-100 text-[#0A4DA6] shadow-xs" title="Orden ascendente (clic para alternar)">
+        <span className="inline-flex items-center justify-center w-4 h-4 ml-1 rounded bg-blue-100 text-[#023caf] shadow-xs" title="Orden ascendente (clic para alternar)">
           <ArrowUp className="w-3 h-3 stroke-[2.5]" />
         </span>
       ) : (
-        <span className="inline-flex items-center justify-center w-4 h-4 ml-1 rounded bg-blue-100 text-[#0A4DA6] shadow-xs" title="Orden descendente (clic para alternar)">
+        <span className="inline-flex items-center justify-center w-4 h-4 ml-1 rounded bg-blue-100 text-[#023caf] shadow-xs" title="Orden descendente (clic para alternar)">
           <ArrowDown className="w-3 h-3 stroke-[2.5]" />
         </span>
       );
@@ -254,16 +254,16 @@ export default function AdminMaintainer() {
     <div className="space-y-6">
       <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
         <h2 className="text-2xl font-black text-slate-900 flex items-center gap-2 mb-6">
-          <Settings className="w-6 h-6 text-[#F05A24]" />
+          <Settings className="w-6 h-6 text-[#fa5e00]" />
           Mantenedor Administrativo
         </h2>
 
         {/* TABS */}
         <div className="sticky top-[64px] z-30 bg-white py-3 border-b border-slate-200 mb-6 flex flex-wrap gap-2 items-center -mx-6 px-6">
-          <button onClick={() => setActiveTab('catalogo')} className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${activeTab === 'catalogo' ? 'bg-[#F05A24] text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
+          <button onClick={() => setActiveTab('catalogo')} className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${activeTab === 'catalogo' ? 'bg-[#fa5e00] text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
             <ShoppingBag className="w-4 h-4" /> Catálogo
           </button>
-          <button onClick={() => setActiveTab('usuarios')} className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${activeTab === 'usuarios' ? 'bg-[#0A4DA6] text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
+          <button onClick={() => setActiveTab('usuarios')} className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${activeTab === 'usuarios' ? 'bg-[#023caf] text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
             <Users className="w-4 h-4" /> Usuarios
           </button>
           <button onClick={() => setActiveTab('transacciones')} className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${activeTab === 'transacciones' ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
@@ -285,7 +285,7 @@ export default function AdminMaintainer() {
           <div className="space-y-4 animate-fade-in">
             <div className="flex justify-between items-center">
               <p className="text-xs text-slate-500">Crea y edita paquetes de cuponeras.</p>
-              <button onClick={handleOpenNew} className="bg-[#F05A24] text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-2">
+              <button onClick={handleOpenNew} className="bg-[#fa5e00] text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-2">
                 <Plus className="w-4 h-4" /> Crear Nueva
               </button>
             </div>
@@ -323,13 +323,13 @@ export default function AdminMaintainer() {
                       <td className="p-3 font-bold text-slate-900">{c.nombre}</td>
                       <td className="p-3 max-w-xs truncate text-slate-600">{c.tramos.join(', ')}</td>
                       <td className="p-3 font-semibold">${c.valorUnitario.toLocaleString('es-CL')}</td>
-                      <td className="p-3 font-bold text-[#F05A24]">{c.cantidadCupones}</td>
-                      <td className="p-3 font-black text-[#F05A24]">${c.precioTotal.toLocaleString('es-CL')}</td>
+                      <td className="p-3 font-bold text-[#fa5e00]">{c.cantidadCupones}</td>
+                      <td className="p-3 font-black text-[#fa5e00]">${c.precioTotal.toLocaleString('es-CL')}</td>
                       <td className="p-3"><span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${c.activa ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-600'}`}>{c.activa ? 'Activa' : 'Inactiva'}</span></td>
                       <td className="p-3 text-right w-28">
                         <button 
                           onClick={() => handleOpenEdit(c)} 
-                          className="opacity-0 group-hover:opacity-100 transition-all duration-200 transform translate-x-1 group-hover:translate-x-0 p-1.5 bg-blue-50 text-[#0A4DA6] hover:bg-[#0A4DA6] hover:text-white rounded-lg font-bold inline-flex items-center gap-1.5 shadow-xs cursor-pointer"
+                          className="opacity-0 group-hover:opacity-100 transition-all duration-200 transform translate-x-1 group-hover:translate-x-0 p-1.5 bg-blue-50 text-[#023caf] hover:bg-[#023caf] hover:text-white rounded-lg font-bold inline-flex items-center gap-1.5 shadow-xs cursor-pointer"
                         >
                           <Edit2 className="w-3.5 h-3.5" /> Editar
                         </button>
@@ -378,7 +378,7 @@ export default function AdminMaintainer() {
                 <tbody className="divide-y divide-slate-100">
                   {filteredUsuarios.map(u => (
                     <tr key={u.rut} className="hover:bg-slate-50">
-                      <td className="p-3 font-mono font-bold text-[#0A4DA6]">{u.rut}</td>
+                      <td className="p-3 font-mono font-bold text-[#023caf]">{u.rut}</td>
                       <td className="p-3 font-semibold">{u.nombre}</td>
                       <td className="p-3 text-slate-600">{u.correo}</td>
                       <td className="p-3 text-slate-600">{u.telefono || '-'}</td>
@@ -435,7 +435,7 @@ export default function AdminMaintainer() {
                         {t.orden_compra ? t.orden_compra : <span className="text-[10px] bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded font-bold">PRE-WEBPAY</span>}
                       </td>
                       <td className="p-3 font-bold text-slate-900">{t.CuponeraCatalogo?.nombre || t.UsuarioCuponera?.Cuponera?.nombre || '-'}</td>
-                      <td className="p-3 font-mono text-[#0A4DA6]">{t.rut_usuario}</td>
+                      <td className="p-3 font-mono text-[#023caf]">{t.rut_usuario}</td>
                       <td className="p-3 font-bold">${Number(t.monto).toLocaleString('es-CL')}</td>
                       <td className="p-3">
                         <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${t.estado === 'APROBADO' ? 'bg-emerald-100 text-emerald-800' : t.estado === 'RECHAZADO' || t.estado === 'FALLIDO' ? 'bg-rose-100 text-rose-800' : 'bg-amber-100 text-amber-800'}`}>
@@ -489,8 +489,8 @@ export default function AdminMaintainer() {
                         <div className="font-bold text-slate-800">{c.Cuponera?.nombre || 'Cuponera N/A'}</div>
                         <div className="text-[10px] text-slate-400 font-mono">ID: #{c.id_cuponera}</div>
                       </td>
-                      <td className="p-3 font-mono text-[#0A4DA6]">{c.rut_usuario}</td>
-                      <td className="p-3 font-bold text-[#F05A24]">{c.usos_restantes}</td>
+                      <td className="p-3 font-mono text-[#023caf]">{c.rut_usuario}</td>
+                      <td className="p-3 font-bold text-[#fa5e00]">{c.usos_restantes}</td>
                       <td className="p-3"><span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${c.activa ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-600'}`}>{c.activa ? 'Activa' : 'Inactiva'}</span></td>
                       <td className="p-3 text-slate-500">{new Date(c.fecha_expiracion).toLocaleDateString('es-CL')}</td>
                     </tr>
@@ -544,7 +544,7 @@ export default function AdminMaintainer() {
                   {filteredCanjes.map(c => (
                     <tr key={c.id} className="hover:bg-slate-50">
                       <td className="p-3 font-mono font-bold text-slate-700">{c.pnr_kupos}</td>
-                      <td className="p-3 font-mono font-bold text-[#F05A24] bg-[#FFEDD5] px-2 py-1 rounded inline-block m-2 border border-[#FED7AA]">{c.Cupon?.codigo || '-'}</td>
+                      <td className="p-3 font-mono font-bold text-[#fa5e00] bg-[#FFEDD5] px-2 py-1 rounded inline-block m-2 border border-[#FED7AA]">{c.Cupon?.codigo || '-'}</td>
                       <td className="p-3 font-semibold text-slate-800">{c.Cupon?.UsuarioCuponera?.Cuponera?.nombre || 'Cuponera N/A'}</td>
                       <td className="p-3 font-mono">{c.rut_usuario}</td>
                       <td className="p-3 font-semibold">{c.origen} - {c.destino}</td>
@@ -573,7 +573,7 @@ export default function AdminMaintainer() {
                   let badgeColor = 'bg-blue-600 text-white';
                   if (log.accion === 'CANJE_CUPON') badgeColor = 'bg-emerald-600 text-white';
                   else if (log.accion === 'ANULACION_PASAJE') badgeColor = 'bg-rose-600 text-white';
-                  else if (log.accion === 'COMPRA_CUPONERA') badgeColor = 'bg-[#0A4DA6] text-white';
+                  else if (log.accion === 'COMPRA_CUPONERA') badgeColor = 'bg-[#023caf] text-white';
                   else if (log.accion === 'OTP_VALIDADO') badgeColor = 'bg-teal-600 text-white';
                   else if (log.accion === 'OTP_GENERADO') badgeColor = 'bg-amber-600 text-white';
                   else if (log.accion === 'CREACION_CUPONERA' || log.accion === 'EDICION_CUPONERA') badgeColor = 'bg-orange-600 text-white';
@@ -669,10 +669,10 @@ export default function AdminMaintainer() {
                 </div>
               </div>
               <div className="flex items-center gap-2 pt-2">
-                <input type="checkbox" id="activaToggle" checked={activa} onChange={(e) => setActiva(e.target.checked)} className="rounded text-[#0A4DA6]" />
+                <input type="checkbox" id="activaToggle" checked={activa} onChange={(e) => setActiva(e.target.checked)} className="rounded text-[#023caf]" />
                 <label htmlFor="activaToggle" className="font-bold text-slate-700 cursor-pointer">Publicar y Activar Cuponera en el Catálogo</label>
               </div>
-              <button type="submit" disabled={saving} className="w-full bg-[#F05A24] hover:bg-[#D94B18] text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all text-sm cursor-pointer">{saving ? 'Guardando...' : 'Guardar Cuponera'}</button>
+              <button type="submit" disabled={saving} className="w-full bg-[#fa5e00] hover:bg-[#e55400] text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all text-sm cursor-pointer">{saving ? 'Guardando...' : 'Guardar Cuponera'}</button>
             </form>
           </div>
         </div>
