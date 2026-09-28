@@ -54,6 +54,7 @@ export default function MantenedorPage() {
 
   const handleLogout = () => {
     sessionStorage.removeItem('admin_authenticated');
+    sessionStorage.removeItem('admin_token');
     setIsAuthenticated(false);
     setUsername('');
     setPassword('');
