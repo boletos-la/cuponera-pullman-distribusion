@@ -267,9 +267,9 @@ export default function AdminMaintainer() {
               </button>
             </div>
             {msg && <p className="text-xs text-emerald-600 font-bold">{msg}</p>}
-            <div className="overflow-x-auto border border-slate-200 rounded-2xl">
+            <div className="border border-slate-200 rounded-2xl">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
+                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-[73px] z-30">
                   <tr>
                     <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('id')}>ID {getSortIcon('id')}</th>
                     <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('nombre')}>Nombre {getSortIcon('nombre')}</th>
@@ -311,9 +311,9 @@ export default function AdminMaintainer() {
               </div>
               <input type="text" placeholder="RUT o Nombre..." value={searchUsuario} onChange={e => setSearchUsuario(e.target.value)} className="text-xs px-3 py-1.5 rounded-lg border border-slate-300 w-64 focus:outline-none" />
             </div>
-            <div className="overflow-x-auto border border-slate-200 rounded-2xl">
+            <div className="border border-slate-200 rounded-2xl">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-0">
+                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-[73px] z-30">
                   <tr>
                     <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('rut')}>RUT {getSortIcon('rut')}</th>
                     <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('nombre')}>Nombre {getSortIcon('nombre')}</th>
@@ -349,9 +349,9 @@ export default function AdminMaintainer() {
               </div>
               <input type="text" placeholder="Orden de compra o RUT..." value={searchTx} onChange={e => setSearchTx(e.target.value)} className="text-xs px-3 py-1.5 rounded-lg border border-slate-300 w-64 focus:outline-none" />
             </div>
-            <div className="overflow-x-auto border border-slate-200 rounded-2xl">
+            <div className="border border-slate-200 rounded-2xl">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-0">
+                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-[73px] z-30">
                   <tr>
                     <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('orden_compra')}>Orden {getSortIcon('orden_compra')}</th>
                     <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('cuponera.nombre')}>Cuponera {getSortIcon('cuponera.nombre')}</th>
@@ -393,9 +393,9 @@ export default function AdminMaintainer() {
               </div>
               <input type="text" placeholder="Nombre o RUT..." value={searchCompras} onChange={e => setSearchCompras(e.target.value)} className="text-xs px-3 py-1.5 rounded-lg border border-slate-300 w-64 focus:outline-none" />
             </div>
-            <div className="overflow-x-auto border border-slate-200 rounded-2xl">
+            <div className="border border-slate-200 rounded-2xl">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-0">
+                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-[73px] z-30">
                   <tr>
                     <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('cuponera.nombre')}>Cuponera {getSortIcon('cuponera.nombre')}</th>
                     <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('rut_usuario')}>RUT Usuario {getSortIcon('rut_usuario')}</th>
@@ -432,9 +432,9 @@ export default function AdminMaintainer() {
               </div>
               <input type="text" placeholder="PNR o RUT..." value={searchCanjes} onChange={e => setSearchCanjes(e.target.value)} className="text-xs px-3 py-1.5 rounded-lg border border-slate-300 w-64 focus:outline-none" />
             </div>
-             <div className="overflow-x-auto border border-slate-200 rounded-2xl">
+             <div className="border border-slate-200 rounded-2xl">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-0">
+                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-[73px] z-30">
                   <tr>
                     <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('pnr_kupos')}>PNR Kupos {getSortIcon('pnr_kupos')}</th>
                     <th className="p-3 cursor-pointer select-none" onClick={() => requestSort('cupon.codigo')}>Cod. Cupón {getSortIcon('cupon.codigo')}</th>
