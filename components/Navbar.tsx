@@ -19,6 +19,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
   ];
 
   const [showLoginModal, setShowLoginModal] = React.useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = React.useState(false);
   const [user, setUser] = React.useState<any>(null);
 
   React.useEffect(() => {
@@ -33,6 +34,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
   const handleLogout = () => {
     removeAuthToken();
     setActiveTab('catalogo');
+    setShowLogoutConfirm(false);
   };
 
   return (
@@ -44,6 +46,34 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
             setActiveTab('catalogo');
           }}
         />
+      )}
+
+      {showLogoutConfirm && (
+        <div className="fixed inset-0 z-[9999] w-screen h-screen min-h-screen flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white rounded-[2rem] w-full max-w-sm p-6 sm:p-8 shadow-2xl border border-slate-100 text-center relative overflow-hidden">
+            <div className="w-16 h-16 rounded-2xl bg-red-50 text-red-500 flex items-center justify-center mx-auto shadow-inner border border-red-100 mb-6">
+              <LogOut className="w-8 h-8 ml-1" />
+            </div>
+            <h3 className="text-2xl font-black text-slate-900 mb-2">¿Cerrar Sesión?</h3>
+            <p className="text-sm text-slate-500 font-medium mb-8">
+              Tu sesión actual será finalizada. Tendrás que ingresar nuevamente para acceder a tus cuponeras.
+            </p>
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={handleLogout}
+                className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3.5 px-4 rounded-xl transition-all shadow-[0_4px_14px_0_rgba(239,68,68,0.39)] active:scale-[0.98]"
+              >
+                Sí, cerrar sesión
+              </button>
+              <button
+                onClick={() => setShowLogoutConfirm(false)}
+                className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3.5 px-4 rounded-xl transition-all active:scale-[0.98]"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
 
@@ -104,7 +134,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
                 </button>
                 <div className="w-px h-6 bg-slate-200 mx-1"></div>
                 <button
-                  onClick={handleLogout}
+                  onClick={() => setShowLogoutConfirm(true)}
                   className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors"
                   title="Cerrar Sesión"
                 >

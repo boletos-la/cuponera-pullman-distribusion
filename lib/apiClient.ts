@@ -4,7 +4,7 @@ export const getApiUrl = () => {
 
 export const getAuthToken = () => {
   if (typeof window !== 'undefined') {
-    const token = sessionStorage.getItem('admin_token') || localStorage.getItem('jwt_token');
+    const token = sessionStorage.getItem('admin_token') || localStorage.getItem('jwt_token') || sessionStorage.getItem('jwt_token');
     if (token) {
       try {
         const payloadStr = atob(token.split('.')[1]);
@@ -13,6 +13,7 @@ export const getAuthToken = () => {
         
         if (payload.exp && payload.exp < now) {
           localStorage.removeItem('jwt_token');
+          sessionStorage.removeItem('jwt_token');
           // Trigger event so Navbar knows to update state if it happens dynamically
           window.dispatchEvent(new Event('auth-change'));
           return null;
@@ -20,6 +21,7 @@ export const getAuthToken = () => {
         return token;
       } catch (e) {
         localStorage.removeItem('jwt_token');
+        sessionStorage.removeItem('jwt_token');
         return null;
       }
     }
@@ -29,7 +31,7 @@ export const getAuthToken = () => {
 
 export const getAuthUser = () => {
   if (typeof window !== 'undefined') {
-    const token = localStorage.getItem('jwt_token');
+    const token = localStorage.getItem('jwt_token') || sessionStorage.getItem('jwt_token');
     if (token) {
       try {
         const payloadStr = atob(token.split('.')[1]);
@@ -38,6 +40,7 @@ export const getAuthUser = () => {
         
         if (payload.exp && payload.exp < now) {
           localStorage.removeItem('jwt_token');
+          sessionStorage.removeItem('jwt_token');
           return null;
         }
         return payload;
@@ -49,9 +52,15 @@ export const getAuthUser = () => {
   return null;
 };
 
-export const setAuthToken = (token: string) => {
+export const setAuthToken = (token: string, rememberMe: boolean = true) => {
   if (typeof window !== 'undefined') {
-    localStorage.setItem('jwt_token', token);
+    if (rememberMe) {
+      localStorage.setItem('jwt_token', token);
+      sessionStorage.removeItem('jwt_token');
+    } else {
+      sessionStorage.setItem('jwt_token', token);
+      localStorage.removeItem('jwt_token');
+    }
     window.dispatchEvent(new Event('auth-change'));
   }
 };
@@ -59,6 +68,7 @@ export const setAuthToken = (token: string) => {
 export const removeAuthToken = () => {
   if (typeof window !== 'undefined') {
     localStorage.removeItem('jwt_token');
+    sessionStorage.removeItem('jwt_token');
     window.dispatchEvent(new Event('auth-change'));
   }
 };

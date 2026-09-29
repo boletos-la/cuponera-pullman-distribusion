@@ -23,6 +23,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
   const [rut, setRut] = useState('');
   const [rutError, setRutError] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(true);
   
   // Extra Register Fields
   const [nombre, setNombre] = useState('');
@@ -83,7 +84,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
     try {
       const res = await authService.login({ rut: formatRut(rut), password });
       if (res.success && res.token) {
-        setAuthToken(res.token);
+        setAuthToken(res.token, rememberMe);
         onLoginSuccess();
         onClose();
       } else {
@@ -267,6 +268,19 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
                     className="w-full text-sm font-semibold bg-slate-50 border-2 border-slate-200 rounded-xl pl-10 pr-4 py-3 focus:outline-none focus:ring-4 focus:ring-[#023caf]/10 focus:border-[#023caf] hover:border-slate-300 transition-all"
                   />
                 </div>
+              </div>
+
+              <div className="flex items-center gap-2 mt-1 px-1">
+                <input
+                  type="checkbox"
+                  id="rememberMe"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="w-4 h-4 rounded border-slate-300 text-[#023caf] focus:ring-[#023caf] cursor-pointer"
+                />
+                <label htmlFor="rememberMe" className="text-xs font-semibold text-slate-600 cursor-pointer">
+                  Mantener sesión iniciada
+                </label>
               </div>
 
               {error && (
