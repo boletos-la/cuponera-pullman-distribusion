@@ -304,7 +304,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
                     <input
                       type="text"
                       required
-                      placeholder="Juan Pérez"
+                      placeholder="Nombre y Apellidos"
                       value={nombre}
                       onChange={(e) => setNombre(e.target.value)}
                       className="w-full text-sm font-semibold bg-slate-50 border-2 border-slate-200 rounded-xl pl-9 pr-3 py-2.5 focus:outline-none focus:ring-4 focus:ring-[#023caf]/10 focus:border-[#023caf] transition-all"
