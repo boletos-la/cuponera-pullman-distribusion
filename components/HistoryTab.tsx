@@ -35,7 +35,7 @@ export default function HistoryTab({ compras, canjes }: HistoryTabProps) {
               <div className="relative w-full max-w-sm">
                 <input
                   type="text"
-                  placeholder="Buscar en compras..."
+                  placeholder="Buscar en compras (ej. orden, cuponera, nombre)..."
                   value={searchCompras}
                   onChange={(e) => setSearchCompras(e.target.value)}
                   className="w-full text-sm font-medium bg-white border border-slate-200 rounded-full pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#fa5e00] text-[#0F172A]"
@@ -56,37 +56,41 @@ export default function HistoryTab({ compras, canjes }: HistoryTabProps) {
                   (c.id_usuario_cuponera && `CUP-WP${c.id_usuario_cuponera}`.toLowerCase().includes(searchCompras.toLowerCase())) ||
                   (c.UsuarioCuponera?.id && `CUP-WP${c.UsuarioCuponera.id}`.toLowerCase().includes(searchCompras.toLowerCase()))
                 ).map((compra: any) => (
-                  <div key={compra.id} className="p-4 border border-slate-100 rounded-xl bg-slate-50 flex flex-col md:flex-row justify-between md:items-center gap-4">
-                    <div className="flex items-center gap-4">
+                  <div key={compra.id} className="p-4 border border-slate-100 rounded-xl bg-slate-50 flex flex-col md:flex-row justify-between gap-4">
+                    <div className="flex gap-4">
                       <div className="w-10 h-10 rounded-full bg-blue-100 text-[#023caf] flex items-center justify-center shrink-0">
                         <ShoppingCart className="w-5 h-5" />
                       </div>
                       <div>
-                        <h4 className="font-extrabold text-slate-900 flex items-center gap-2">
+                        <h4 className="font-extrabold text-slate-900">
                           {compra.UsuarioCuponera?.Cuponera?.nombre || 'Cuponera'}
-                          <span className="text-[10px] font-mono bg-white px-2 py-0.5 rounded border border-slate-200 text-slate-500 font-bold" title="Orden de Compra">
-                            ORD: {compra.orden_compra}
-                          </span>
-                          {(compra.id_usuario_cuponera || compra.UsuarioCuponera?.id) && (
-                            <span className="text-[10px] font-mono font-extrabold text-[#023caf] bg-blue-50 px-2 py-0.5 rounded border border-blue-200" title="Código de Cuponera">
-                              CUP-WP{compra.id_usuario_cuponera || compra.UsuarioCuponera?.id}
-                            </span>
-                          )}
                         </h4>
-                      <div className="text-xs text-slate-500 font-medium mt-1 flex flex-wrap items-center gap-x-4 gap-y-1">
-                        <span className="flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5" /> Compra: {new Date(compra.createdAt).toLocaleDateString('es-CL', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute:'2-digit' })}</span>
-                        {compra.UsuarioCuponera?.Cuponera?.maximo_usos && (
-                          <span className="flex items-center gap-1.5"><Ticket className="w-3.5 h-3.5" /> {compra.UsuarioCuponera.Cuponera.maximo_usos} pasajes</span>
-                        )}
+                        <div className="text-xs text-slate-500 font-medium mt-1 flex flex-wrap items-center gap-x-4 gap-y-1">
+                          <span className="flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5" /> Compra: {new Date(compra.createdAt).toLocaleDateString('es-CL', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute:'2-digit' })}</span>
+                          {compra.UsuarioCuponera?.Cuponera?.maximo_usos && (
+                            <span className="flex items-center gap-1.5"><Ticket className="w-3.5 h-3.5" /> {compra.UsuarioCuponera.Cuponera.maximo_usos} pasajes</span>
+                          )}
+                        </div>
                       </div>
                     </div>
+                    <div className="text-left md:text-right flex flex-col items-start md:items-end gap-1 shrink-0">
+                      <div className="flex items-baseline md:justify-end gap-2 mb-0.5">
+                        <span className="text-sm font-black text-emerald-600">${compra.monto.toLocaleString('es-CL')}</span>
+                        <span className="text-[10px] uppercase font-bold text-slate-500 bg-slate-200/60 px-1.5 py-0.5 rounded">{compra.pasarela}</span>
+                      </div>
+                      {(compra.id_usuario_cuponera || compra.UsuarioCuponera?.id) && (
+                        <span className="text-[10px] font-mono font-extrabold text-[#023caf] bg-blue-50 px-2 py-1 rounded border border-blue-200" title="Código de Cuponera Asociada">
+                          Cuponera: CUP-WP{compra.id_usuario_cuponera || compra.UsuarioCuponera?.id}
+                        </span>
+                      )}
+                      {compra.orden_compra && (
+                        <span className="text-[10px] font-mono bg-white px-2 py-1 rounded border border-slate-200 text-slate-600 font-medium" title="Orden de Compra">
+                          Orden de compra: {compra.orden_compra}
+                        </span>
+                      )}
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <span className="block text-sm font-black text-emerald-600">${compra.monto.toLocaleString('es-CL')}</span>
-                    <span className="text-[10px] uppercase font-bold text-slate-500">{compra.pasarela}</span>
-                  </div>
-                </div>
-              ))}
+                ))}
               </div>
             ) : (
               <p className="text-sm text-slate-500 text-center py-8">No se encontraron compras que coincidan con la búsqueda.</p>
