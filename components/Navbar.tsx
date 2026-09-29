@@ -41,7 +41,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
         <LoginModal
           onClose={() => setShowLoginModal(false)}
           onLoginSuccess={() => {
-            setActiveTab('dashboard');
+            setActiveTab('catalogo');
           }}
         />
       )}
