@@ -16,6 +16,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
   const [mode, setMode] = useState<Mode>('login');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [guestHint, setGuestHint] = useState('');
 
   // Form Fields
   const [rut, setRut] = useState('');
@@ -45,6 +46,26 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
       }
     } else {
       setRutError('');
+    }
+  };
+
+  const handleRutBlur = async () => {
+    if (mode !== 'register') return;
+    const cleaned = cleanRut(rut);
+    if (cleaned.length >= 8 && validateRut(cleaned)) {
+      try {
+        const res = await authService.checkRut(cleaned);
+        if (res.success && res.exists && res.isGuest) {
+          if (res.nombre && !nombre) setNombre(res.nombre);
+          if (res.correo_ofuscado) {
+            setGuestHint(`Hemos encontrado tu registro como invitado. Ingresa el correo asociado (${res.correo_ofuscado}) para validar tu cuenta.`);
+          }
+        } else {
+          setGuestHint('');
+        }
+      } catch (e) {
+        console.error(e);
+      }
     }
   };
 
@@ -99,7 +120,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
     setLoading(true);
     try {
       // Send OTP to the email provided for MFA validation
-      const res = await authService.sendOtp({ rut: cleanRut(rut), email, nombre });
+      const res = await authService.sendOtp({ rut: cleanRut(rut), email, nombre, isRegister: true });
       if (res.success) {
         setMode('mfa');
       } else {
@@ -291,6 +312,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
                     placeholder="12.345.678-K"
                     value={rut}
                     onChange={handleRutChange}
+                    onBlur={handleRutBlur}
                     className={`w-full text-sm font-semibold bg-slate-50 border-2 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-4 transition-all ${
                       rutError ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20' : 'border-slate-200 focus:border-[#023caf] focus:ring-[#023caf]/10'
                     }`}
@@ -327,6 +349,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
                       className="w-full text-sm font-semibold bg-slate-50 border-2 border-slate-200 rounded-xl pl-9 pr-3 py-2.5 focus:outline-none focus:ring-4 focus:ring-[#023caf]/10 focus:border-[#023caf] transition-all"
                     />
                   </div>
+                  {guestHint && <p className="text-[10px] text-[#023caf] font-bold ml-1">{guestHint}</p>}
                 </div>
                 <div className="space-y-1.5">
                   <label className="block text-xs font-extrabold text-slate-700 ml-1">Teléfono Móvil</label>

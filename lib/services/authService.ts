@@ -5,6 +5,7 @@ export interface SendOtpPayload {
   email: string;
   nombre?: string;
   telefono?: string;
+  isRegister?: boolean;
 }
 
 export interface VerifyOtpPayload {
@@ -13,6 +14,12 @@ export interface VerifyOtpPayload {
 }
 
 export const authService = {
+  checkRut: async (rut: string) => {
+    return await apiClient(`/auth/check-rut/${encodeURIComponent(rut)}`, {
+      method: 'GET',
+    });
+  },
+
   sendOtp: async (payload: SendOtpPayload, isPurchase: boolean = false) => {
     const endpoint = isPurchase ? '/payments/send-otp-purchase' : '/auth/send-otp';
     return await apiClient(endpoint, {
