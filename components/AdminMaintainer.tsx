@@ -35,6 +35,7 @@ export default function AdminMaintainer() {
   const [searchTx, setSearchTx] = useState('');
   const [searchCanjes, setSearchCanjes] = useState('');
   const [searchCompras, setSearchCompras] = useState('');
+  const [expandedUserCompras, setExpandedUserCompras] = useState<string | null>(null);
 
   const [loading, setLoading] = useState(true);
   const [cities, setCities] = useState<string[]>([]);
@@ -247,7 +248,13 @@ export default function AdminMaintainer() {
   const filteredTx = sortData(transacciones.filter(t => t.rut_usuario.includes(searchTx) || (t.orden_compra && t.orden_compra.includes(searchTx))));
   const filteredCanjes = sortData(canjes.filter(c => (c.rut_usuario && c.rut_usuario.includes(searchCanjes)) || c.pnr_kupos.includes(searchCanjes)));
   const sortedCuponeras = sortData(cuponeras);
-  const filteredCompras = sortData(compras.filter(c => (c.rut_usuario && c.rut_usuario.includes(searchCompras)) || (c.Cuponera?.nombre && c.Cuponera.nombre.toLowerCase().includes(searchCompras.toLowerCase())) || String(c.id_cuponera).includes(searchCompras)));
+  const filteredCompras = sortData(compras.filter(c => 
+    (c.rut_usuario && c.rut_usuario.includes(searchCompras)) || 
+    (c.Cuponera?.nombre && c.Cuponera.nombre.toLowerCase().includes(searchCompras.toLowerCase())) || 
+    (c.Usuario?.nombre && c.Usuario.nombre.toLowerCase().includes(searchCompras.toLowerCase())) ||
+    (c.nombre_usuario && c.nombre_usuario.toLowerCase().includes(searchCompras.toLowerCase())) ||
+    String(c.id_cuponera).includes(searchCompras)
+  ));
   const sortedAuditoria = sortData(auditoria);
 
   return (
@@ -458,85 +465,147 @@ export default function AdminMaintainer() {
         {activeTab === 'compras' && (
           <div className="space-y-4 animate-fade-in">
             {(() => {
-              const total = filteredCompras.length;
-              const activas = filteredCompras.filter(c => c.activa).length;
-              const inactivas = total - activas;
+              const userMap = new Map();
+              filteredCompras.forEach(c => {
+                const rut = c.rut_usuario;
+                if (!userMap.has(rut)) {
+                  const localUser = usuarios.find(u => u.rut === rut);
+                  userMap.set(rut, {
+                    rut,
+                    nombre: c.Usuario?.nombre || c.nombre_usuario || localUser?.nombre || 'Sin nombre registrado',
+                    total: 0,
+                    activas: 0,
+                    inactivas: 0,
+                    cuponeras: []
+                  });
+                }
+                const user = userMap.get(rut);
+                user.total += 1;
+                
+                const diffTime = new Date(c.fecha_expiracion).getTime() - new Date().getTime();
+                const isVencida = diffTime < 0;
+                
+                if (c.activa && !isVencida) {
+                  user.activas += 1;
+                } else {
+                  user.inactivas += 1;
+                }
+                user.cuponeras.push(c);
+              });
+              
+              const groupedUsers = Array.from(userMap.values());
+              const totalCuponeras = filteredCompras.length;
+              const totalActivas = groupedUsers.reduce((sum, u) => sum + u.activas, 0);
+              const totalInactivas = groupedUsers.reduce((sum, u) => sum + u.inactivas, 0);
+
               return (
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col items-center justify-center">
-                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Total Cuponeras</span>
-                    <span className="text-2xl font-black text-slate-800">{total}</span>
+                <>
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col items-center justify-center">
+                      <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Total Cuponeras</span>
+                      <span className="text-2xl font-black text-slate-800">{totalCuponeras}</span>
+                    </div>
+                    <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-4 flex flex-col items-center justify-center">
+                      <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider mb-1">Activas</span>
+                      <span className="text-2xl font-black text-emerald-700">{totalActivas}</span>
+                    </div>
+                    <div className="bg-rose-50 border border-rose-100 rounded-xl p-4 flex flex-col items-center justify-center">
+                      <span className="text-[10px] font-bold text-rose-600 uppercase tracking-wider mb-1">Inactivas / Vencidas</span>
+                      <span className="text-2xl font-black text-rose-700">{totalInactivas}</span>
+                    </div>
                   </div>
-                  <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-4 flex flex-col items-center justify-center">
-                    <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider mb-1">Activas</span>
-                    <span className="text-2xl font-black text-emerald-700">{activas}</span>
+                  
+                  <div className="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-200">
+                    <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
+                      <Search className="w-4 h-4 text-slate-400" />
+                      Buscar Usuario o Cuponera:
+                    </div>
+                    <input type="text" placeholder="Nombre o RUT..." value={searchCompras} onChange={e => setSearchCompras(e.target.value)} className="text-xs px-3 py-1.5 rounded-lg border border-slate-300 w-64 focus:outline-none" />
                   </div>
-                  <div className="bg-rose-50 border border-rose-100 rounded-xl p-4 flex flex-col items-center justify-center">
-                    <span className="text-[10px] font-bold text-rose-600 uppercase tracking-wider mb-1">Inactivas / Vencidas</span>
-                    <span className="text-2xl font-black text-rose-700">{inactivas}</span>
+                  
+                  <div className="border border-slate-200 rounded-2xl overflow-hidden">
+                    <table className="w-full text-left text-xs">
+                      <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
+                        <tr>
+                          <th className="p-3">Usuario</th>
+                          <th className="p-3 text-center">Total Cuponeras</th>
+                          <th className="p-3 text-center">Activas</th>
+                          <th className="p-3 text-center">Inactivas</th>
+                          <th className="p-3 text-right">Detalle</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        {groupedUsers.length === 0 && (
+                          <tr><td colSpan={5} className="p-4 text-center text-slate-500">No hay registros encontrados.</td></tr>
+                        )}
+                        {groupedUsers.map(user => (
+                          <React.Fragment key={user.rut}>
+                            <tr className="hover:bg-slate-50 cursor-pointer transition-colors" onClick={() => setExpandedUserCompras(prev => prev === user.rut ? null : user.rut)}>
+                              <td className="p-3">
+                                <div className="font-bold text-slate-800">{user.nombre}</div>
+                                <div className="text-[10px] font-mono text-[#023caf]">{user.rut}</div>
+                              </td>
+                              <td className="p-3 text-center font-bold text-slate-700">{user.total}</td>
+                              <td className="p-3 text-center font-bold text-emerald-600">{user.activas}</td>
+                              <td className="p-3 text-center font-bold text-rose-600">{user.inactivas}</td>
+                              <td className="p-3 text-right">
+                                <button className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors inline-flex items-center justify-center">
+                                  {expandedUserCompras === user.rut ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                                </button>
+                              </td>
+                            </tr>
+                            {expandedUserCompras === user.rut && (
+                              <tr>
+                                <td colSpan={5} className="bg-slate-50 p-0 border-t border-slate-100">
+                                  <div className="px-6 py-4 bg-slate-50/50 shadow-inner">
+                                    <h4 className="text-[10px] font-black uppercase text-slate-500 mb-2 tracking-wider">Cuponeras de {user.nombre.split(' ')[0]}</h4>
+                                    <div className="grid gap-2">
+                                      {user.cuponeras.map((c: any) => {
+                                        const cDiff = new Date(c.fecha_expiracion).getTime() - new Date().getTime();
+                                        const cDays = Math.ceil(cDiff / (1000 * 60 * 60 * 24));
+                                        const cVencida = cDays < 0;
+                                        
+                                        return (
+                                          <div key={c.id} className="bg-white border border-slate-200 rounded-lg p-3 flex justify-between items-center shadow-xs">
+                                            <div>
+                                              <div className="font-bold text-slate-800">{c.Cuponera?.nombre || 'Cuponera N/A'}</div>
+                                              <div className="text-[10px] text-slate-400 font-mono">ID Registro: #{c.id_cuponera}</div>
+                                            </div>
+                                            <div className="text-center">
+                                              <div className="text-[10px] text-slate-500 uppercase font-bold">Usos</div>
+                                              <div className="font-black text-[#fa5e00]">{c.usos_restantes}</div>
+                                            </div>
+                                            <div className="text-center">
+                                              <div className="text-[10px] text-slate-500 uppercase font-bold">Estado</div>
+                                              <span className={`px-2 py-0.5 mt-0.5 inline-block rounded-full text-[10px] font-bold ${c.activa && !cVencida ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}`}>
+                                                {c.activa && !cVencida ? 'Activa' : 'Inactiva / Vencida'}
+                                              </span>
+                                            </div>
+                                            <div className="text-right">
+                                              <div className="text-[10px] text-slate-500 uppercase font-bold">Expiración</div>
+                                              <div className="text-xs text-slate-700">{new Date(c.fecha_expiracion).toLocaleDateString('es-CL')}</div>
+                                              {!cVencida ? (
+                                                <div className="text-[10px] font-bold text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded-sm inline-block mt-0.5">Quedan {cDays} días</div>
+                                              ) : (
+                                                <div className="text-[10px] font-bold text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded-sm inline-block mt-0.5">Vencida</div>
+                                              )}
+                                            </div>
+                                          </div>
+                                        );
+                                      })}
+                                    </div>
+                                  </div>
+                                </td>
+                              </tr>
+                            )}
+                          </React.Fragment>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
-                </div>
+                </>
               );
             })()}
-            <div className="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-200">
-              <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
-                <Search className="w-4 h-4 text-slate-400" />
-                Buscar Cuponera de Usuario:
-              </div>
-              <input type="text" placeholder="Nombre o RUT..." value={searchCompras} onChange={e => setSearchCompras(e.target.value)} className="text-xs px-3 py-1.5 rounded-lg border border-slate-300 w-64 focus:outline-none" />
-            </div>
-            <div className="border border-slate-200 rounded-2xl">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-[120px] z-20">
-                  <tr>
-                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('cuponera.nombre')}>
-                      <div className="inline-flex items-center gap-1">Cuponera {getSortIcon('cuponera.nombre')}</div>
-                    </th>
-                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('rut_usuario')}>
-                      <div className="inline-flex items-center gap-1">RUT Usuario {getSortIcon('rut_usuario')}</div>
-                    </th>
-                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('usos_restantes')}>
-                      <div className="inline-flex items-center gap-1">Usos Restantes {getSortIcon('usos_restantes')}</div>
-                    </th>
-                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('activa')}>
-                      <div className="inline-flex items-center gap-1">Estado {getSortIcon('activa')}</div>
-                    </th>
-                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('fecha_expiracion')}>
-                      <div className="inline-flex items-center gap-1">Expiración {getSortIcon('fecha_expiracion')}</div>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {filteredCompras.map(c => {
-                    const diffTime = new Date(c.fecha_expiracion).getTime() - new Date().getTime();
-                    const daysLeft = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                    const isVencida = daysLeft < 0;
-                    
-                    return (
-                      <tr key={c.id} className="hover:bg-slate-50">
-                        <td className="p-3">
-                          <div className="font-bold text-slate-800">{c.Cuponera?.nombre || 'Cuponera N/A'}</div>
-                          <div className="text-[10px] text-slate-400 font-mono">ID: #{c.id_cuponera}</div>
-                        </td>
-                        <td className="p-3 font-mono text-[#023caf]">{c.rut_usuario}</td>
-                        <td className="p-3 font-bold text-[#fa5e00]">{c.usos_restantes}</td>
-                        <td className="p-3"><span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${c.activa ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-600'}`}>{c.activa ? 'Activa' : 'Inactiva'}</span></td>
-                        <td className="p-3 text-slate-500">
-                          <div className="flex flex-col items-start gap-0.5">
-                            <span>{new Date(c.fecha_expiracion).toLocaleDateString('es-CL')}</span>
-                            {!isVencida ? (
-                               <span className="text-[10px] font-bold text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded-sm">Quedan {daysLeft} días</span>
-                            ) : (
-                               <span className="text-[10px] font-bold text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded-sm">Vencida</span>
-                            )}
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
           </div>
         )}
 
