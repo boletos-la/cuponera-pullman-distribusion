@@ -526,13 +526,21 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                 </div>
               </div>
 
-              {/* Footer Button */}
+              {/* Footer Button con Llamado a la Acción (CTA) */}
               <button
                 onClick={() => handleOpenCheckout(item)}
-                className="bg-[#fa5e00] text-white w-full rounded-b-3xl px-6 py-4 flex justify-between items-center font-black text-sm hover:bg-[#e55400] transition-colors cursor-pointer"
+                className="bg-[#fa5e00] text-white w-full rounded-b-3xl px-6 py-3.5 flex justify-between items-center font-black text-sm hover:bg-[#e55400] transition-all group cursor-pointer shadow-inner"
               >
-                <span>TOTAL</span>
-                <span>CLP {(item.precioTotal || 0).toLocaleString('es-CL')}</span>
+                <div className="flex flex-col text-left">
+                  <span className="text-[10px] font-extrabold text-white/80 uppercase tracking-wider">TOTAL</span>
+                  <span className="text-base font-black leading-tight">CLP ${(item.precioTotal || 0).toLocaleString('es-CL')}</span>
+                </div>
+
+                <div className="flex items-center gap-1.5 bg-white text-[#fa5e00] group-hover:bg-orange-50 px-4 py-2 rounded-full text-xs font-black shadow-sm group-hover:scale-105 transition-all">
+                  <ShoppingCart className="w-3.5 h-3.5" />
+                  <span>Comprar</span>
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                </div>
               </button>
             </div>
           ))}
