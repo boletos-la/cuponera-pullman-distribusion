@@ -672,7 +672,7 @@ export default function AdminMaintainer() {
                       <td className="p-3 font-semibold">{c.origen} - {c.destino}</td>
                       <td className="p-3 font-mono">{c.asiento}</td>
                       <td className="p-3">
-                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${c.estado === 'CONFIRMADO' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}`}>
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${c.estado === 'CONFIRMADO' ? 'bg-emerald-100 text-emerald-800' : c.estado === 'ANULADO' ? 'bg-purple-100 text-purple-800' : 'bg-rose-100 text-rose-800'}`}>
                           {c.estado}
                         </span>
                       </td>
@@ -714,7 +714,7 @@ export default function AdminMaintainer() {
                     filteredAuditoria.map(log => {
                       let badgeColor = 'bg-blue-100 text-blue-800';
                       if (log.accion === 'CANJE_CUPON') badgeColor = 'bg-emerald-100 text-emerald-800';
-                      else if (log.accion === 'ANULACION_PASAJE') badgeColor = 'bg-rose-100 text-rose-800';
+                      else if (log.accion === 'ANULACION_PASAJE' || (log.accion?.includes('ANULACION') && !log.accion?.startsWith('ERROR'))) badgeColor = 'bg-purple-100 text-purple-800';
                       else if (log.accion === 'COMPRA_CUPONERA') badgeColor = 'bg-[#023caf]/10 text-[#023caf]';
                       else if (log.accion === 'OTP_VALIDADO') badgeColor = 'bg-teal-100 text-teal-800';
                       else if (log.accion === 'OTP_GENERADO') badgeColor = 'bg-amber-100 text-amber-800';

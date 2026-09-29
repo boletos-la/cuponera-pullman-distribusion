@@ -213,7 +213,11 @@
     "rutUsuario": "21.051.782-0",
     "nombreUsuario": "Sistema/Usuario",
     "accion": "ERROR_ANULACION_GDS",
-    "detalles": "{\"error\":\"No se puede anular con menos de 4 horas de anticipación al viaje.\",\"cupon_codigo\":\"TS260923155111118YKJF\"}"
+    "detalles": "Error o excepción capturada en el sistema",
+    "payload": {
+      "error": "No se puede anular con menos de 4 horas de anticipación al viaje.",
+      "cupon_codigo": "TS260923155111118YKJF"
+    }
   },
   {
     "id": "AUD-CANJE-25",
@@ -269,7 +273,12 @@
     "rutUsuario": "21.051.782-0",
     "nombreUsuario": "Sistema/Usuario",
     "accion": "ERROR_CANJE_GDS",
-    "detalles": "{\"pnr\":\"TS260923142841675DKOM\",\"ruta\":\"Santiago-Puerto Montt\",\"error\":\"Error al confirmar con Kupos: 200 OK {\\\"response\\\":{\\\"code\\\":400,\\\"message\\\":\\\"Fares got mismatched\\\"}}\"}"
+    "detalles": "Error o excepción capturada en el sistema",
+    "payload": {
+      "pnr": "TS260923142841675DKOM",
+      "ruta": "Santiago-Puerto Montt",
+      "error": "Error al confirmar con Kupos: 200 OK {\"response\":{\"code\":400,\"message\":\"Fares got mismatched\"}}"
+    }
   },
   {
     "id": "AUD-OTP-VAL-45",
