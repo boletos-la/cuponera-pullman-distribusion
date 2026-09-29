@@ -157,6 +157,7 @@ export function StepCanje({
         seatNumber: selectedAsiento,
         travelDate: departureBooking.date ? format(new Date(departureBooking.date), "yyyy-MM-dd") : "",
         fare: departureBooking.realPrice || departureBooking.totalPrice || bookingData.tripPrice || 0,
+        busType: departureBooking?.bus_type || bookingData.busType || "Clásico",
       });
 
       if (reservaData.success) {
@@ -184,6 +185,7 @@ export function StepCanje({
   const displayDepartureTime = departureBooking?.dep_time || bookingData.departureTime;
   const displayArrivalTime = departureBooking?.arr_time || bookingData.arrivalTime;
   const displaySelectedSeats = departureBooking?.selectedSeats || bookingData.selectedSeats;
+  const displayBusType = departureBooking?.bus_type || bookingData.busType || "Pullman Costa";
 
   return (
     <div className="max-w-4xl mx-auto animate-fade-in">
@@ -249,7 +251,7 @@ export function StepCanje({
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-100">
+              <div className="grid grid-cols-2 gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-100 mb-4">
                 <div className="flex items-start gap-3">
                   <Calendar className="w-5 h-5 text-primary mt-0.5" />
                   <div>
@@ -264,6 +266,13 @@ export function StepCanje({
                   <div>
                     <span className="text-slate-400 font-medium text-xs block">Horario</span>
                     <span className="font-bold text-slate-700">{displayDepartureTime}</span>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 col-span-2 pt-3 mt-1 border-t border-slate-100">
+                  <Bus className="w-5 h-5 text-primary mt-0.5" />
+                  <div>
+                    <span className="text-slate-400 font-medium text-xs block">Tipo de Bus</span>
+                    <span className="font-bold text-slate-700 capitalize">{displayBusType.toLowerCase()}</span>
                   </div>
                 </div>
               </div>
