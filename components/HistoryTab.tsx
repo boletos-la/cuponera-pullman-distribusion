@@ -13,7 +13,7 @@ export default function HistoryTab({ compras, canjes }: HistoryTabProps) {
 
   return (
     <div className="space-y-6">
-      <div className="flex gap-4 border-b border-slate-200 pb-2">
+      <div className="flex gap-4 border-b border-slate-200 sticky top-[154px] z-30 bg-white/95 backdrop-blur-sm py-4 -mx-6 px-6 sm:-mx-8 sm:px-8 shadow-[0_4px_6px_-1px_rgba(255,255,255,0.9)] mt-[-24px]">
         <button
           onClick={() => setView('compras')}
           className={`pb-2 px-2 text-sm font-bold border-b-2 transition-all ${view === 'compras' ? 'border-[#fa5e00] text-[#fa5e00]' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
@@ -31,7 +31,7 @@ export default function HistoryTab({ compras, canjes }: HistoryTabProps) {
       <div className="bg-white rounded-3xl border border-slate-200 p-6 space-y-4">
         {view === 'compras' && (
           <>
-            <div className="mb-4">
+            <div className="mb-4 sticky top-[220px] z-20 bg-white/95 backdrop-blur-md py-3 -mx-6 px-6 shadow-sm rounded-xl">
               <div className="relative w-full max-w-sm">
                 <input
                   type="text"
@@ -96,7 +96,7 @@ export default function HistoryTab({ compras, canjes }: HistoryTabProps) {
 
         {view === 'canjes' && (
           <>
-            <div className="mb-4">
+            <div className="mb-4 sticky top-[220px] z-20 bg-white/95 backdrop-blur-md py-3 -mx-6 px-6 shadow-sm rounded-xl">
               <div className="relative w-full max-w-sm">
                 <input
                   type="text"

@@ -218,9 +218,9 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
             </div>
           </div>
 
-          <div className="bg-white rounded-[2rem] border border-slate-100 shadow-xl p-6 sm:p-8 space-y-6 relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-2 bg-[#023caf]" />
-            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b border-slate-100 pb-6 pt-2">
+          <div className="bg-white rounded-[2rem] border border-slate-100 shadow-xl p-6 sm:p-8 space-y-6 relative">
+            <div className="absolute top-0 left-0 w-full h-2 bg-[#023caf] rounded-t-[2rem]" />
+            <div className="sticky top-[72px] z-40 bg-white/95 backdrop-blur-md pb-4 pt-4 border-b border-slate-100 shadow-[0_8px_10px_-4px_rgba(255,255,255,0.9)] -mx-6 px-6 sm:-mx-8 sm:px-8 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mt-[-8px] rounded-t-[1.5rem]">
               <div className="flex flex-wrap gap-2 bg-slate-50 p-1.5 rounded-full border border-slate-200">
                 <button
                   onClick={() => setActiveDashboardTab('cuponeras')}
@@ -261,7 +261,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
 
             {activeDashboardTab === 'cuponeras' && (
               <>
-                <div className="mb-4">
+                <div className="mb-4 sticky top-[154px] z-30 bg-white/95 backdrop-blur-sm py-3 -mx-6 px-6 sm:-mx-8 sm:px-8 shadow-[0_8px_10px_-4px_rgba(255,255,255,0.9)]">
                   <div className="relative w-full max-w-sm">
                     <input
                       type="text"
