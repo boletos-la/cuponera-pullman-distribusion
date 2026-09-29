@@ -78,7 +78,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
 
   useEffect(() => {
     fetchCuponeras();
-    
+
     // Verificar si venimos de un pago exitoso o fallido
     const params = new URLSearchParams(window.location.search);
     if (params.get('payment_success') === 'true') {
@@ -205,7 +205,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
       setSubmitError('Debe aceptar las condiciones de vigencia de 90 días.');
       return;
     }
-    
+
     if (quiereRegistrarse) {
       if (password.length < 8) {
         setSubmitError('La contraseña debe tener al menos 8 caracteres.');
@@ -227,9 +227,9 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
         // Registrar usuario
         const regRes = await authService.register({ rut, nombre, correo: email, telefono, password });
         if (!regRes.success) {
-           setSubmitError(regRes.message || 'Error al registrar la cuenta.');
-           setSubmitting(false);
-           return;
+          setSubmitError(regRes.message || 'Error al registrar la cuenta.');
+          setSubmitting(false);
+          return;
         }
       }
 
@@ -243,14 +243,14 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
             precioTotal: selectedCuponera.precioTotal,
             tramos: selectedCuponera.tramos
           }));
-        } catch (storageErr) {}
+        } catch (storageErr) { }
 
-        const res = await paymentService.initPayment({ 
+        const res = await paymentService.initPayment({
           id_cuponera: selectedCuponera.id,
           rut, email, nombre, telefono,
           frontend_url: window.location.origin
         });
-        
+
         if (res.success && res.data.redirect_url && res.data.token_ws) {
           const form = document.createElement('form');
           form.method = 'POST';
@@ -333,7 +333,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full sm:w-64 text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
             />
-            
+
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
@@ -352,17 +352,15 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
             <div className="flex bg-slate-100 rounded-xl p-1 border border-slate-200">
               <button
                 onClick={() => setViewMode('grid')}
-                className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
-                  viewMode === 'grid' ? 'bg-white text-[#023caf] shadow-sm' : 'text-slate-500 hover:text-slate-700'
-                }`}
+                className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${viewMode === 'grid' ? 'bg-white text-[#023caf] shadow-sm' : 'text-slate-500 hover:text-slate-700'
+                  }`}
               >
                 <LayoutGrid className="w-4 h-4" /> Tarjetas
               </button>
               <button
                 onClick={() => setViewMode('table')}
-                className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
-                  viewMode === 'table' ? 'bg-white text-[#023caf] shadow-sm' : 'text-slate-500 hover:text-slate-700'
-                }`}
+                className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${viewMode === 'table' ? 'bg-white text-[#023caf] shadow-sm' : 'text-slate-500 hover:text-slate-700'
+                  }`}
               >
                 <List className="w-4 h-4" /> Tabla
               </button>
@@ -376,11 +374,10 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
-                selectedCategory === cat
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${selectedCategory === cat
                   ? 'bg-[#fa5e00] text-white shadow-sm'
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-              }`}
+                }`}
             >
               {cat}
             </button>
@@ -485,7 +482,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                 <div className="text-[#fa5e00] font-black text-2xl tracking-tighter mb-2">
                   pullmanbus
                 </div>
-                
+
                 {/* Nombre de la Cuponera */}
                 <h3 className="text-lg font-black text-slate-900 leading-snug mb-3">
                   {item.nombre}
@@ -507,7 +504,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                     <MapPin className="w-4 h-4 text-slate-400" />
                     <span className="text-sm font-medium">{item.tramos[0]?.split(' - ')[1]?.trim() || item.tramos[0] || 'Destino'}</span>
                   </div>
-                  
+
                   {/* Validez */}
                   <div className="flex items-center gap-3 mt-4 pt-4 border-t border-slate-50">
                     <div className="bg-emerald-50 text-emerald-600 text-xs font-bold px-3 py-1.5 rounded-lg border border-emerald-100 inline-flex items-center gap-2">
@@ -567,147 +564,146 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
             </div>
 
             <form onSubmit={handleProcessPurchase} className="space-y-4">
-                {/* Formulario de Datos del Comprador */}
-                <div className="space-y-3">
-                  {/* Título removido */}
+              {/* Formulario de Datos del Comprador */}
+              <div className="space-y-3">
+                {/* Título removido */}
 
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Nombre Completo *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="ej. María González Tapia"
+                    value={nombre}
+                    onChange={(e) => setNombre(e.target.value)}
+                    className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    RUT Titular * (Validación Módulo 11)
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="12.345.678-K"
+                    value={rut}
+                    onChange={handleRutChange}
+                    className={`w-full text-sm bg-slate-50 border rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 ${rutError ? 'border-red-500 focus:ring-red-500' : 'border-slate-300 focus:ring-[#023caf]'
+                      }`}
+                  />
+                  {rutError && <p className="text-xs text-red-600 font-medium mt-1">{rutError}</p>}
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1">Nombre Completo *</label>
+                    <label className="block text-xs font-semibold text-slate-700 mb-1">Correo Electrónico *</label>
                     <input
-                      type="text"
+                      type="email"
                       required
-                      placeholder="ej. María González Tapia"
-                      value={nombre}
-                      onChange={(e) => setNombre(e.target.value)}
+                      placeholder="cliente@ejemplo.cl"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
                     />
                   </div>
-
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1">
-                      RUT Titular * (Validación Módulo 11)
-                    </label>
+                    <label className="block text-xs font-semibold text-slate-700 mb-1">Teléfono Móvil</label>
                     <input
-                      type="text"
-                      required
-                      placeholder="12.345.678-K"
-                      value={rut}
-                      onChange={handleRutChange}
-                      className={`w-full text-sm bg-slate-50 border rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 ${
-                        rutError ? 'border-red-500 focus:ring-red-500' : 'border-slate-300 focus:ring-[#023caf]'
-                      }`}
+                      type="tel"
+                      placeholder="+56 9 1234 5678"
+                      value={telefono}
+                      onChange={(e) => setTelefono(e.target.value)}
+                      className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
                     />
-                    {rutError && <p className="text-xs text-red-600 font-medium mt-1">{rutError}</p>}
                   </div>
+                </div>
+              </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="bg-[#FFF7ED] border border-[#FFEDD5] rounded-2xl p-4 space-y-2">
+                <div className="flex items-start gap-2">
+                  <input
+                    type="checkbox"
+                    id="quiereRegistrarse"
+                    checked={quiereRegistrarse}
+                    onChange={(e) => setQuiereRegistrarse(e.target.checked)}
+                    className="mt-0.5 rounded text-[#fa5e00] focus:ring-[#fa5e00]"
+                  />
+                  <label htmlFor="quiereRegistrarse" className="text-xs text-slate-700 font-bold leading-tight">
+                    ¿No tienes una cuenta? Regístrate para gestionar tus cuponeras fácilmente
+                  </label>
+                </div>
+                {quiereRegistrarse && (
+                  <div className="pt-2 pl-6 space-y-3">
                     <div>
-                      <label className="block text-xs font-semibold text-slate-700 mb-1">Correo Electrónico *</label>
+                      <label className="block text-xs font-semibold text-slate-700 mb-1">Contraseña</label>
                       <input
-                        type="email"
-                        required
-                        placeholder="cliente@ejemplo.cl"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
+                        type="password"
+                        required={quiereRegistrarse}
+                        placeholder="Mínimo 8 caracteres, 1 mayúscula y 1 número"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-slate-700 mb-1">Teléfono Móvil</label>
+                      <label className="block text-xs font-semibold text-slate-700 mb-1">Repetir Contraseña</label>
                       <input
-                        type="tel"
-                        placeholder="+56 9 1234 5678"
-                        value={telefono}
-                        onChange={(e) => setTelefono(e.target.value)}
-                        className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
+                        type="password"
+                        required={quiereRegistrarse}
+                        placeholder="Repite tu contraseña"
+                        value={passwordConfirm}
+                        onChange={(e) => setPasswordConfirm(e.target.value)}
+                        className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
                       />
                     </div>
-                  </div>
-                </div>
-
-                <div className="bg-[#FFF7ED] border border-[#FFEDD5] rounded-2xl p-4 space-y-2">
-                  <div className="flex items-start gap-2">
-                    <input
-                      type="checkbox"
-                      id="quiereRegistrarse"
-                      checked={quiereRegistrarse}
-                      onChange={(e) => setQuiereRegistrarse(e.target.checked)}
-                      className="mt-0.5 rounded text-[#fa5e00] focus:ring-[#fa5e00]"
-                    />
-                    <label htmlFor="quiereRegistrarse" className="text-xs text-slate-700 font-bold leading-tight">
-                      ¿No tienes una cuenta? Regístrate para gestionar tus cuponeras fácilmente
-                    </label>
-                  </div>
-                  {quiereRegistrarse && (
-                    <div className="pt-2 pl-6 space-y-3">
-                      <div>
-                        <label className="block text-xs font-semibold text-slate-700 mb-1">Contraseña</label>
-                        <input
-                          type="password"
-                          required={quiereRegistrarse}
-                          placeholder="Mínimo 8 caracteres, 1 mayúscula y 1 número"
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-semibold text-slate-700 mb-1">Repetir Contraseña</label>
-                        <input
-                          type="password"
-                          required={quiereRegistrarse}
-                          placeholder="Repite tu contraseña"
-                          value={passwordConfirm}
-                          onChange={(e) => setPasswordConfirm(e.target.value)}
-                          className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
-                        />
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Paso 4: Condiciones de Compra */}
-                <div className="bg-[#FFF7ED] border border-[#FFEDD5] rounded-2xl p-4 space-y-2">
-                  <div className="flex items-start gap-2">
-                    <input
-                      type="checkbox"
-                      id="condiciones"
-                      checked={aceptaTerminos}
-                      onChange={(e) => setAceptaTerminos(e.target.checked)}
-                      className="mt-0.5 rounded text-[#fa5e00] focus:ring-[#fa5e00]"
-                    />
-                    <label htmlFor="condiciones" className="text-xs text-slate-700 font-medium leading-tight">
-                      Acepto las condiciones de compra: Los cupones emitidos tienen una{' '}
-                      <span className="font-bold text-[#fa5e00]">vigencia exacta de 90 días corridos</span> y sólo son válidos para los tramos contratados ({selectedCuponera.tramos.join(', ')}).
-                    </label>
-                  </div>
-                </div>
-                {submitError && (
-                  <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 font-medium flex items-center gap-2">
-                    <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
-                    <span>{submitError}</span>
                   </div>
                 )}
+              </div>
 
-                {/* Paso 5: Botón Pagar con Webpay */}
-                <button
-                  type="submit"
-                  disabled={submitting || !!rutError}
-                  className="w-full bg-gradient-to-r from-[#FF6B00] to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-extrabold py-3.5 px-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-base cursor-pointer disabled:opacity-50"
-                >
-                  {submitting ? (
-                    <>
-                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      <span>Validando y conectando...</span>
-                    </>
-                  ) : (
-                    <>
-                      <ShieldCheck className="w-5 h-5" />
-                      <span>Validar Email y Proceder al Pago</span>
-                    </>
-                  )}
-                </button>
-              </form>
+              {/* Paso 4: Condiciones de Compra */}
+              <div className="bg-[#FFF7ED] border border-[#FFEDD5] rounded-2xl p-4 space-y-2">
+                <div className="flex items-start gap-2">
+                  <input
+                    type="checkbox"
+                    id="condiciones"
+                    checked={aceptaTerminos}
+                    onChange={(e) => setAceptaTerminos(e.target.checked)}
+                    className="mt-0.5 rounded text-[#fa5e00] focus:ring-[#fa5e00]"
+                  />
+                  <label htmlFor="condiciones" className="text-xs text-slate-700 font-medium leading-tight">
+                    Acepto las condiciones de compra: Los cupones emitidos tienen una{' '}
+                    <span className="font-bold text-[#fa5e00]">vigencia exacta de 90 días corridos</span> y sólo son válidos para los tramos contratados ({selectedCuponera.tramos.join(', ')}).
+                  </label>
+                </div>
+              </div>
+              {submitError && (
+                <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 font-medium flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+                  <span>{submitError}</span>
+                </div>
+              )}
+
+              {/* Paso 5: Botón Pagar con Webpay */}
+              <button
+                type="submit"
+                disabled={submitting || !!rutError}
+                className="w-full bg-gradient-to-r from-[#FF6B00] to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-extrabold py-3.5 px-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-base cursor-pointer disabled:opacity-50"
+              >
+                {submitting ? (
+                  <>
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <span>Validando y conectando...</span>
+                  </>
+                ) : (
+                  <>
+                    <ShieldCheck className="w-5 h-5" />
+                    <span>Proceder al Pago</span>
+                  </>
+                )}
+              </button>
+            </form>
           </div>
         </div>,
         document.body

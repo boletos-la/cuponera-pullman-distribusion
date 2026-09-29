@@ -9,7 +9,7 @@ export default function TicketCancellationView() {
   const [pasajeCodigo, setPasajeCodigo] = useState('');
   const [rutInput, setRutInput] = useState('');
   const [otpCode, setOtpCode] = useState('');
-  
+
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [step, setStep] = useState<'form' | 'otp'>('form');
@@ -95,7 +95,7 @@ export default function TicketCancellationView() {
 
       {/* Tarjeta Principal */}
       <div className="relative bg-white/80 backdrop-blur-2xl rounded-[2rem] p-6 sm:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/60 space-y-8 animate-fade-in-up">
-        
+
         {/* Cabecera */}
         <div className="text-center space-y-3">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-100/50 text-orange-700 text-[10px] font-black uppercase tracking-widest shadow-sm">
@@ -206,8 +206,7 @@ export default function TicketCancellationView() {
                 ) : (
                   <>
                     <span className="relative z-10 flex items-center gap-2">
-                      <ShieldCheck className="w-5 h-5 text-orange-100" />
-                      Solicitar Código de Seguridad (2FA)
+                      Anular Viaje
                       <ArrowRight className="w-4 h-4 opacity-70 group-hover:translate-x-1 transition-transform" />
                     </span>
                   </>
@@ -248,7 +247,7 @@ export default function TicketCancellationView() {
                   placeholder="------"
                 />
               </div>
-              
+
               {errorMsg && (
                 <div className="p-4 bg-red-50 border border-red-200/60 rounded-xl text-xs text-red-700 font-medium space-y-1.5 text-left shadow-sm">
                   <div className="flex items-center gap-2 font-black text-red-900">
@@ -258,7 +257,7 @@ export default function TicketCancellationView() {
                   <p className="pl-6 text-red-800/80">{errorMsg}</p>
                 </div>
               )}
-              
+
               <div className="space-y-3 pt-2">
                 <button
                   type="submit"
