@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { validateRut, formatRut, cleanRut } from '@/lib/rutValidator';
-import { Search, LayoutDashboard, Ticket, Clock, CheckCircle, Mail, ArrowRight, AlertCircle, Ban, ShieldCheck, KeyRound } from 'lucide-react';
+import { Search, LayoutDashboard, Ticket, Clock, CheckCircle, Mail, ArrowRight, AlertCircle, Ban, ShieldCheck, KeyRound, Star, MapPin, Target, ShoppingCart } from 'lucide-react';
 import { couponService } from '@/lib/services/couponService';
 import { getAuthUser } from '@/lib/apiClient';
 import ProfileTab from './ProfileTab';
@@ -276,95 +276,93 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
                     return (
                       <div
                         key={c.codigo}
-                        className={`p-5 rounded-[1.5rem] border-2 transition-all flex flex-col justify-between space-y-4 hover:shadow-lg ${
-                          canCanjear
-                            ? 'border-emerald-100 bg-white hover:border-emerald-300'
-                            : 'border-slate-100 bg-slate-50 opacity-90'
-                        }`}
+                        className={`relative bg-white rounded-3xl shadow-lg hover:shadow-xl transition-shadow border border-slate-100 flex flex-col mt-4 ${!canCanjear ? 'opacity-80' : ''}`}
                       >
-                        <div className="space-y-3">
-                          <div className="flex justify-between items-start">
-                            <span className="font-mono font-extrabold text-sm text-[#fa5e00] bg-white px-3 py-1 rounded-lg border border-[#FFEDD5] shadow-xs">
-                              {c.codigo}
-                            </span>
-                            <span className={`text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider ${canCanjear ? 'bg-emerald-600 text-white' : 'bg-slate-600 text-white'}`}>
-                              {canCanjear ? 'Activa' : 'Sin Saldo'}
-                            </span>
-                          </div>
-                          <div>
-                            <h4 className="font-extrabold text-base text-slate-900 leading-snug">{c.nombreCuponera}</h4>
-                            <p className="text-xs text-slate-500 mt-1 line-clamp-2">{c.descripcion || 'Cuponera promocional'}</p>
+                        {/* Badge Activa / Sin Saldo */}
+                        <div className={`absolute -top-3 right-4 font-bold text-xs px-3 py-1 rounded-full shadow-sm border border-white z-10 ${canCanjear ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-700'}`}>
+                           {canCanjear ? 'Activa' : 'Agotada'}
+                        </div>
+
+                        {/* Card Content */}
+                        <div className="p-6 pb-5 flex-1 flex flex-col">
+                          {/* Logo textual */}
+                          <div className="text-[#fa5e00] font-black text-2xl tracking-tighter mb-2">
+                            pullmanbus
                           </div>
                           
-                          {/* Tramos Habilitados */}
-                          {c.tramosPermitidos && c.tramosPermitidos.length > 0 && (
-                            <div className="space-y-1.5 pt-2">
-                              <span className="text-[11px] font-bold text-slate-700 uppercase tracking-wider">
-                                Tramos Habilitados ({c.tramosPermitidos.length}):
-                              </span>
-                              <div className="flex flex-wrap gap-1">
-                                {c.tramosPermitidos.map((t: string, idx: number) => (
-                                  <span
-                                    key={idx}
-                                    className="bg-slate-100 text-slate-700 text-[10px] font-medium px-2 py-0.5 rounded-md border border-slate-200"
-                                  >
-                                    {t}
-                                  </span>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-                        </div>
+                          {/* Nombre de la Cuponera */}
+                          <h3 className="text-lg font-black text-slate-900 leading-snug mb-3">
+                            {c.nombreCuponera}
+                          </h3>
 
-                        <div className="bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200 space-y-3">
-                          <div className="flex justify-between items-end">
-                            <div>
-                              <span className="text-[11px] font-bold text-slate-500 block uppercase tracking-wider">Saldo</span>
-                              <div className="flex items-baseline gap-1.5">
-                                <span className="text-3xl font-black text-emerald-600">{saldoC}</span>
-                                <span className="text-sm font-bold text-slate-400">/ {totalC}</span>
-                              </div>
+                          {/* Subtitle / Category */}
+                          <div className="flex items-center gap-2 text-slate-700 font-extrabold text-sm mb-4">
+                            <Star className="w-4 h-4 text-[#fa5e00] fill-current" />
+                            <span>4 {c.categoria || 'Pullman Costa'}</span>
+                          </div>
+
+                          {/* Route details */}
+                          <div className="space-y-3 mb-6">
+                            <div className="flex items-center gap-3 text-slate-600">
+                              <Target className="w-4 h-4 text-slate-400" />
+                              <span className="text-sm font-medium">{c.tramosPermitidos?.[0]?.split(' - ')[0]?.trim() || 'Santiago'}</span>
+                            </div>
+                            <div className="flex items-center gap-3 text-slate-600">
+                              <MapPin className="w-4 h-4 text-slate-400" />
+                              <span className="text-sm font-medium">{c.tramosPermitidos?.[0]?.split(' - ')[1]?.trim() || c.tramosPermitidos?.[0] || 'Destino'}</span>
                             </div>
                             
-                            <div className="text-right">
-                              <span className="text-[11px] font-bold text-slate-500 block uppercase tracking-wider">Días Restantes</span>
-                              <span className={`text-sm font-black ${daysLeft <= 7 ? 'text-red-500' : 'text-slate-700'}`}>
-                                {daysLeft} días
-                              </span>
+                            {/* Días Restantes */}
+                            <div className="flex items-center gap-3 mt-4 pt-4 border-t border-slate-50">
+                              <div className={`text-xs font-bold px-3 py-1.5 rounded-lg border inline-flex items-center gap-2 ${daysLeft <= 7 ? 'bg-red-50 text-red-600 border-red-100' : 'bg-emerald-50 text-emerald-600 border-emerald-100'}`}>
+                                <CheckCircle className="w-3.5 h-3.5" />
+                                Quedan {daysLeft} días
+                              </div>
                             </div>
                           </div>
-                          <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
-                            <div
-                              className={`h-full transition-all duration-500 ${saldoC > 0 ? 'bg-emerald-500' : 'bg-slate-300'}`}
-                              style={{ width: `${porcentajeSaldo}%` }}
-                            />
-                          </div>
-                          <div className="flex justify-between items-center pt-2 border-t border-slate-100">
-                            <span className="text-[11px] text-slate-400 font-medium">Valor por viaje</span>
-                            <span className="text-xs font-bold text-slate-700">${(c.valorUnitario || 0).toLocaleString('es-CL')}</span>
+
+                          <div className="mt-auto"></div>
+
+                          {/* Progress bar / Saldo */}
+                          <div className="mb-4">
+                            <div className="flex justify-between items-end mb-1.5">
+                              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Saldo</span>
+                              <div className="flex items-baseline gap-1">
+                                <span className="text-xl font-black text-emerald-600">{saldoC}</span>
+                                <span className="text-xs font-bold text-slate-400">/ {totalC}</span>
+                              </div>
+                            </div>
+                            <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden mb-2">
+                              <div
+                                className={`h-full transition-all duration-500 ${saldoC > 0 ? 'bg-emerald-500' : 'bg-slate-300'}`}
+                                style={{ width: `${porcentajeSaldo}%` }}
+                              />
+                            </div>
+                            <div className="flex justify-between items-center pt-2">
+                              <span className="text-[10px] font-bold text-slate-400">Código: {c.codigo}</span>
+                            </div>
                           </div>
                         </div>
 
+                        {/* Footer Button */}
                         <button
                           disabled={!canCanjear}
                           onClick={() => onCanjearCupon(c.codigo, rutFormateado)}
-                          className={`w-full font-bold py-3.5 px-4 rounded-full flex items-center justify-center gap-2 text-sm transition-all ${
-                            canCanjear
-                              ? 'bg-[#fa5e00] hover:bg-[#e55400] text-white shadow-md hover:shadow-lg hover:-translate-y-0.5 cursor-pointer'
-                              : 'bg-slate-200 text-slate-400 cursor-not-allowed border border-slate-300'
-                          }`}
+                          className={`w-full rounded-b-3xl px-6 py-4 flex justify-between items-center font-black text-sm transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${canCanjear ? 'bg-[#fa5e00] hover:bg-[#e55400] text-white' : 'bg-slate-200 text-slate-500'}`}
                         >
-                          {canCanjear ? (
-                            <>
-                              <span>Canjear Pasaje</span>
-                              <ArrowRight className="w-4 h-4" />
-                            </>
-                          ) : (
-                            <>
-                              <Ban className="w-4 h-4 text-slate-400" />
-                              <span>Agotada</span>
-                            </>
-                          )}
+                          <span className="mx-auto flex items-center gap-2">
+                            {canCanjear ? (
+                              <>
+                                <span>Canjear Pasaje</span>
+                                <ArrowRight className="w-4 h-4" />
+                              </>
+                            ) : (
+                              <>
+                                <Ban className="w-4 h-4" />
+                                <span>Agotada</span>
+                              </>
+                            )}
+                          </span>
                         </button>
                       </div>
                     );

@@ -482,9 +482,14 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
               {/* Card Content */}
               <div className="p-6 pb-5 flex-1 flex flex-col">
                 {/* Logo textual */}
-                <div className="text-[#fa5e00] font-black text-2xl tracking-tighter mb-4">
+                <div className="text-[#fa5e00] font-black text-2xl tracking-tighter mb-2">
                   pullmanbus
                 </div>
+                
+                {/* Nombre de la Cuponera */}
+                <h3 className="text-lg font-black text-slate-900 leading-snug mb-3">
+                  {item.nombre}
+                </h3>
 
                 {/* Subtitle / Category */}
                 <div className="flex items-center gap-2 text-slate-700 font-extrabold text-sm mb-4">

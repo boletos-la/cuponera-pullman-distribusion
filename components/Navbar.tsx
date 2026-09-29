@@ -112,6 +112,14 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
                 <span>Iniciar Sesión</span>
               </button>
             )}
+
+            {/* Separador y Logo WIT SPA */}
+            <div className="w-px h-6 bg-border mx-2"></div>
+            <div className="flex items-center">
+              <span className="text-[11px] font-black tracking-widest text-[#023caf] bg-blue-50/50 px-3 py-1.5 rounded-md border border-blue-100">
+                WIT
+              </span>
+            </div>
           </nav>
         </div>
       </div>
