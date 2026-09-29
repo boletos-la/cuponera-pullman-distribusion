@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import HeroBanner from '@/components/HeroBanner';
 import CatalogView from '@/components/CatalogView';
@@ -11,21 +12,39 @@ import AdminMaintainer from '@/components/AdminMaintainer';
 import ExceptionSimulator from '@/components/ExceptionSimulator';
 import { ShieldCheck, Bus, Heart } from 'lucide-react';
 
-export default function Home() {
-  const [activeTab, setActiveTab] = useState<string>('catalogo');
-  const [selectedRut, setSelectedRut] = useState<string>('');
-  const [selectedCuponCode, setSelectedCuponCode] = useState<string>('');
+function HomeContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+
+  const activeTab = searchParams.get('tab') || 'catalogo';
+  const selectedRut = searchParams.get('rut') || '';
+  const selectedCuponCode = searchParams.get('cupon') || '';
   const [showExceptionModal, setShowExceptionModal] = useState<boolean>(false);
 
+  const updateUrl = (tab: string, rut?: string, cupon?: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('tab', tab);
+    
+    if (rut !== undefined) {
+      if (rut) params.set('rut', rut);
+      else params.delete('rut');
+    }
+    
+    if (cupon !== undefined) {
+      if (cupon) params.set('cupon', cupon);
+      else params.delete('cupon');
+    }
+
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  };
+
   const handleGoToDashboardWithRut = (rut: string) => {
-    setSelectedRut(rut);
-    setActiveTab('dashboard');
+    updateUrl('dashboard', rut);
   };
 
   const handleGoToCanjeWithCupon = (cupon: string, rut: string) => {
-    setSelectedCuponCode(cupon);
-    setSelectedRut(rut);
-    setActiveTab('canje');
+    updateUrl('canje', rut, cupon);
   };
 
   return (
@@ -37,9 +56,10 @@ export default function Home() {
           if (tab === 'dashboard') {
             // Al hacer clic en Mi Dashboard desde la barra de navegación,
             // se limpia el RUT en memoria para mostrar siempre el buscador público limpio
-            setSelectedRut('');
+            updateUrl(tab, '');
+          } else {
+            updateUrl(tab);
           }
-          setActiveTab(tab);
         }}
         onOpenExceptionModal={() => setShowExceptionModal(true)}
       />
@@ -49,11 +69,8 @@ export default function Home() {
         {/* Banner Hero desplegado en la vista de Catálogo */}
         {activeTab === 'catalogo' && (
           <HeroBanner
-            onGoToCatalog={() => setActiveTab('catalogo')}
-            onGoToDashboard={() => {
-              setSelectedRut('');
-              setActiveTab('dashboard');
-            }}
+            onGoToCatalog={() => updateUrl('catalogo')}
+            onGoToDashboard={() => updateUrl('dashboard', '')}
           />
         )}
 
@@ -69,12 +86,8 @@ export default function Home() {
           {activeTab === 'dashboard' && (
             <DashboardView
               initialRut={selectedRut}
-              onCanjearCupon={(codigo, rut) => {
-                setSelectedCuponCode(codigo);
-                setSelectedRut(rut);
-                setActiveTab('canje');
-              }}
-              onResetRut={() => setSelectedRut('')}
+              onCanjearCupon={(codigo, rut) => handleGoToCanjeWithCupon(codigo, rut)}
+              onResetRut={() => updateUrl('dashboard', '')}
             />
           )}
 
@@ -87,7 +100,7 @@ export default function Home() {
                 if (selectedRut) {
                   handleGoToDashboardWithRut(selectedRut);
                 } else {
-                  setActiveTab('dashboard');
+                  updateUrl('dashboard');
                 }
               }}
             />
@@ -101,7 +114,7 @@ export default function Home() {
       {showExceptionModal && (
         <ExceptionSimulator
           onClose={() => setShowExceptionModal(false)}
-          onNavigateTab={(tab) => setActiveTab(tab)}
+          onNavigateTab={(tab) => updateUrl(tab)}
         />
       )}
 
@@ -162,5 +175,13 @@ export default function Home() {
         </div>
       </footer>
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-background"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div>}>
+      <HomeContent />
+    </Suspense>
   );
 }
