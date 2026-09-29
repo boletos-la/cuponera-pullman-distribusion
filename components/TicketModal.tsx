@@ -134,7 +134,7 @@ export default function TicketModal({ pasaje, onClose }: TicketModalProps) {
             className="w-full bg-slate-900 hover:bg-slate-800 text-white font-extrabold py-3 px-3 rounded-xl transition-all text-xs flex items-center justify-center gap-2 cursor-pointer shadow-sm"
           >
             <LayoutDashboard className="w-4 h-4 text-[#fa5e00]" />
-            <span>Volver a Mi Dashboard</span>
+            <span>Volver a Mis cuponeras</span>
           </button>
         </div>
       </div>

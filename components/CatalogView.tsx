@@ -784,7 +784,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                 className="w-full bg-[#fa5e00] hover:bg-[#e55400] text-white font-bold py-3 px-3 rounded-xl transition-all text-xs flex items-center justify-center gap-2 cursor-pointer shadow-md"
               >
                 <Ticket className="w-4 h-4 text-white" />
-                <span>Ver en Mi Dashboard</span>
+                <span>Ver en Mis cuponeras</span>
               </button>
 
               {onGoToCanjeWithCupon && (
@@ -916,7 +916,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                 className="w-full bg-[#fa5e00] hover:bg-[#e55400] text-white font-bold py-3.5 px-4 rounded-xl transition-all text-xs flex items-center justify-center gap-2 cursor-pointer shadow-md hover:shadow-lg"
               >
                 <Ticket className="w-4 h-4 text-white" />
-                <span>Ver en Mi Dashboard</span>
+                <span>Ver en Mis cuponeras</span>
               </button>
 
               <button

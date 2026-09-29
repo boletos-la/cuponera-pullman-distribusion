@@ -128,11 +128,8 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
               <LayoutDashboard className="w-8 h-8 text-[#023caf]" />
             </div>
             <div className="space-y-1.5">
-              <span className="bg-orange-50 text-[#fa5e00] text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider border border-orange-200">
-                Acceso a Cuponeras
-              </span>
               <h2 className="text-2xl font-black text-[#023caf]">
-                Mi Dashboard
+                Mis cuponeras
               </h2>
               <p className="text-sm text-slate-500 font-medium">
                 Ingresa tu RUT para consultar tus cuponeras y saldo disponible.

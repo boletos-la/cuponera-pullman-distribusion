@@ -14,7 +14,7 @@ interface NavbarProps {
 export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }: NavbarProps) {
   const navItems = [
     { id: 'catalogo', label: 'Catálogo Cuponeras', icon: ShoppingCart },
-    { id: 'dashboard', label: 'Mi Dashboard', icon: LayoutDashboard },
+    { id: 'dashboard', label: 'Mis cuponeras', icon: LayoutDashboard },
     { id: 'anulacion', label: 'Anular Pasaje', icon: RotateCcw },
   ];
 
