@@ -28,7 +28,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
 
   const [searchCuponeras, setSearchCuponeras] = useState('');
 
-  const [activeDashboardTab, setActiveDashboardTab] = useState<'cuponeras' | 'historial' | 'perfil'>('cuponeras');
+  const [activeDashboardTab, setActiveDashboardTab] = useState<'cuponeras' | 'historial'>('cuponeras');
   
   const authUser = getAuthUser();
 
@@ -231,14 +231,6 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
                 >
                   Historial
                 </button>
-                {authUser && (
-                  <button
-                    onClick={() => setActiveDashboardTab('perfil')}
-                    className={`px-5 py-2.5 text-sm font-bold rounded-full transition-all ${activeDashboardTab === 'perfil' ? 'bg-[#023caf] text-white shadow-md' : 'text-slate-600 hover:text-[#023caf] hover:bg-white'}`}
-                  >
-                    Mis Datos
-                  </button>
-                )}
               </div>
               <div className="flex items-center gap-3">
                 <span className="text-xs font-mono font-bold bg-blue-50 text-[#023caf] px-4 py-2 rounded-full border border-blue-200 shadow-xs">
@@ -394,10 +386,6 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
             
             {activeDashboardTab === 'historial' && (
               <HistoryTab compras={historialCompras} canjes={historialCanjes} />
-            )}
-
-            {activeDashboardTab === 'perfil' && authUser && (
-              <ProfileTab />
             )}
           </div>
         </div>

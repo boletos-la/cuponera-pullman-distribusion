@@ -6,6 +6,7 @@ import Navbar from '@/components/Navbar';
 import HeroBanner from '@/components/HeroBanner';
 import CatalogView from '@/components/CatalogView';
 import DashboardView from '@/components/DashboardView';
+import ProfileTab from '@/components/ProfileTab';
 import { RedemptionFlow } from '@/components/redemption/RedemptionFlow';
 import TicketCancellationView from '@/components/TicketCancellationView';
 import AdminMaintainer from '@/components/AdminMaintainer';
@@ -107,6 +108,19 @@ function HomeContent() {
           )}
 
           {activeTab === 'anulacion' && <TicketCancellationView />}
+
+          {activeTab === 'perfil' && (
+            <div className="max-w-3xl mx-auto">
+              <div className="bg-white rounded-[2rem] p-6 sm:p-10 shadow-xl border border-slate-100 relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-2 bg-[#fa5e00]" />
+                <h2 className="text-2xl font-black text-slate-900 mb-2">Mis Datos de Perfil</h2>
+                <p className="text-sm text-slate-500 font-medium mb-8">
+                  Gestiona la seguridad y el correo asociado a tu cuenta.
+                </p>
+                <ProfileTab />
+              </div>
+            </div>
+          )}
         </div>
       </main>
 

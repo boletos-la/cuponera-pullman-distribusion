@@ -88,14 +88,24 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
             })}
             
             {user ? (
-              <div className="flex items-center gap-3 ml-2">
-                <div className="flex flex-col items-end">
-                  <span className="text-xs font-bold text-foreground">{user.nombre || 'Usuario'}</span>
-                  <span className="text-[10px] text-muted-foreground font-medium">{user.rut}</span>
-                </div>
+              <div className="flex items-center gap-1 ml-2 bg-slate-50 border border-slate-200 rounded-full p-1 pl-3 shadow-sm">
+                <button
+                  onClick={() => setActiveTab('perfil')}
+                  className="flex items-center gap-2 text-left hover:opacity-80 transition-opacity"
+                  title="Ir a Mis Datos"
+                >
+                  <div className="flex flex-col items-end">
+                    <span className="text-xs font-bold text-slate-800">{user.nombre || 'Usuario'}</span>
+                    <span className="text-[10px] text-slate-500 font-medium">{user.rut}</span>
+                  </div>
+                  <div className="w-8 h-8 rounded-full bg-[#023caf] text-white flex items-center justify-center shrink-0 shadow-inner">
+                    <User className="w-4 h-4" />
+                  </div>
+                </button>
+                <div className="w-px h-6 bg-slate-200 mx-1"></div>
                 <button
                   onClick={handleLogout}
-                  className="p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-full transition-colors"
+                  className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors"
                   title="Cerrar Sesión"
                 >
                   <LogOut className="w-4 h-4" />
