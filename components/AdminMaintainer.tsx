@@ -411,8 +411,8 @@ export default function AdminMaintainer() {
                     <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('cuponera.nombre')}>
                       <div className="inline-flex items-center gap-1">Cuponera {getSortIcon('cuponera.nombre')}</div>
                     </th>
-                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('rut_usuario')}>
-                      <div className="inline-flex items-center gap-1">RUT Usuario {getSortIcon('rut_usuario')}</div>
+                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('nombre_usuario')}>
+                      <div className="inline-flex items-center gap-1">Usuario {getSortIcon('nombre_usuario')}</div>
                     </th>
                     <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('monto')}>
                       <div className="inline-flex items-center gap-1">Monto {getSortIcon('monto')}</div>
@@ -435,7 +435,10 @@ export default function AdminMaintainer() {
                         {t.orden_compra ? t.orden_compra : <span className="text-[10px] bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded font-bold">PRE-WEBPAY</span>}
                       </td>
                       <td className="p-3 font-bold text-slate-900">{t.CuponeraCatalogo?.nombre || t.UsuarioCuponera?.Cuponera?.nombre || '-'}</td>
-                      <td className="p-3 font-mono text-[#023caf]">{t.rut_usuario}</td>
+                      <td className="p-3">
+                        <div className="font-semibold text-slate-900">{t.nombre_usuario || '-'}</div>
+                        <div className="font-mono text-[10px] text-[#023caf]">{t.rut_usuario}</div>
+                      </td>
                       <td className="p-3 font-bold">${Number(t.monto).toLocaleString('es-CL')}</td>
                       <td className="p-3">
                         <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${t.estado === 'APROBADO' ? 'bg-emerald-100 text-emerald-800' : t.estado === 'RECHAZADO' || t.estado === 'FALLIDO' ? 'bg-rose-100 text-rose-800' : 'bg-amber-100 text-amber-800'}`}>
@@ -454,6 +457,27 @@ export default function AdminMaintainer() {
 
         {activeTab === 'compras' && (
           <div className="space-y-4 animate-fade-in">
+            {(() => {
+              const total = filteredCompras.length;
+              const activas = filteredCompras.filter(c => c.activa).length;
+              const inactivas = total - activas;
+              return (
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col items-center justify-center">
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Total Cuponeras</span>
+                    <span className="text-2xl font-black text-slate-800">{total}</span>
+                  </div>
+                  <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-4 flex flex-col items-center justify-center">
+                    <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider mb-1">Activas</span>
+                    <span className="text-2xl font-black text-emerald-700">{activas}</span>
+                  </div>
+                  <div className="bg-rose-50 border border-rose-100 rounded-xl p-4 flex flex-col items-center justify-center">
+                    <span className="text-[10px] font-bold text-rose-600 uppercase tracking-wider mb-1">Inactivas / Vencidas</span>
+                    <span className="text-2xl font-black text-rose-700">{inactivas}</span>
+                  </div>
+                </div>
+              );
+            })()}
             <div className="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-200">
               <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
                 <Search className="w-4 h-4 text-slate-400" />
@@ -483,18 +507,33 @@ export default function AdminMaintainer() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {filteredCompras.map(c => (
-                    <tr key={c.id} className="hover:bg-slate-50">
-                      <td className="p-3">
-                        <div className="font-bold text-slate-800">{c.Cuponera?.nombre || 'Cuponera N/A'}</div>
-                        <div className="text-[10px] text-slate-400 font-mono">ID: #{c.id_cuponera}</div>
-                      </td>
-                      <td className="p-3 font-mono text-[#023caf]">{c.rut_usuario}</td>
-                      <td className="p-3 font-bold text-[#fa5e00]">{c.usos_restantes}</td>
-                      <td className="p-3"><span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${c.activa ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-600'}`}>{c.activa ? 'Activa' : 'Inactiva'}</span></td>
-                      <td className="p-3 text-slate-500">{new Date(c.fecha_expiracion).toLocaleDateString('es-CL')}</td>
-                    </tr>
-                  ))}
+                  {filteredCompras.map(c => {
+                    const diffTime = new Date(c.fecha_expiracion).getTime() - new Date().getTime();
+                    const daysLeft = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    const isVencida = daysLeft < 0;
+                    
+                    return (
+                      <tr key={c.id} className="hover:bg-slate-50">
+                        <td className="p-3">
+                          <div className="font-bold text-slate-800">{c.Cuponera?.nombre || 'Cuponera N/A'}</div>
+                          <div className="text-[10px] text-slate-400 font-mono">ID: #{c.id_cuponera}</div>
+                        </td>
+                        <td className="p-3 font-mono text-[#023caf]">{c.rut_usuario}</td>
+                        <td className="p-3 font-bold text-[#fa5e00]">{c.usos_restantes}</td>
+                        <td className="p-3"><span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${c.activa ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-600'}`}>{c.activa ? 'Activa' : 'Inactiva'}</span></td>
+                        <td className="p-3 text-slate-500">
+                          <div className="flex flex-col items-start gap-0.5">
+                            <span>{new Date(c.fecha_expiracion).toLocaleDateString('es-CL')}</span>
+                            {!isVencida ? (
+                               <span className="text-[10px] font-bold text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded-sm">Quedan {daysLeft} días</span>
+                            ) : (
+                               <span className="text-[10px] font-bold text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded-sm">Vencida</span>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -565,36 +604,75 @@ export default function AdminMaintainer() {
 
         {activeTab === 'auditoria' && (
           <div className="space-y-4 animate-fade-in">
-             <div className="space-y-2">
-              {sortedAuditoria.length === 0 ? (
-                <div className="text-center py-8 text-slate-400 text-xs">No hay registros de trazabilidad y auditoría.</div>
-              ) : (
-                sortedAuditoria.map((log) => {
-                  let badgeColor = 'bg-blue-600 text-white';
-                  if (log.accion === 'CANJE_CUPON') badgeColor = 'bg-emerald-600 text-white';
-                  else if (log.accion === 'ANULACION_PASAJE') badgeColor = 'bg-rose-600 text-white';
-                  else if (log.accion === 'COMPRA_CUPONERA') badgeColor = 'bg-[#023caf] text-white';
-                  else if (log.accion === 'OTP_VALIDADO') badgeColor = 'bg-teal-600 text-white';
-                  else if (log.accion === 'OTP_GENERADO') badgeColor = 'bg-amber-600 text-white';
-                  else if (log.accion === 'CREACION_CUPONERA' || log.accion === 'EDICION_CUPONERA') badgeColor = 'bg-orange-600 text-white';
+             <div className="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-200">
+              <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
+                <Search className="w-4 h-4 text-slate-400" />
+                Registros de Trazabilidad y Auditoría
+              </div>
+            </div>
+             <div className="border border-slate-200 rounded-2xl">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-[120px] z-20">
+                  <tr>
+                    <th className="p-3">Acción</th>
+                    <th className="p-3">Usuario</th>
+                    <th className="p-3">Fecha</th>
+                    <th className="p-3">Detalles y Payload (SAC)</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {sortedAuditoria.length === 0 ? (
+                    <tr>
+                      <td colSpan={4} className="p-8 text-center text-slate-400">No hay registros de trazabilidad y auditoría.</td>
+                    </tr>
+                  ) : (
+                    sortedAuditoria.map(log => {
+                      let badgeColor = 'bg-blue-100 text-blue-800';
+                      if (log.accion === 'CANJE_CUPON') badgeColor = 'bg-emerald-100 text-emerald-800';
+                      else if (log.accion === 'ANULACION_PASAJE') badgeColor = 'bg-rose-100 text-rose-800';
+                      else if (log.accion === 'COMPRA_CUPONERA') badgeColor = 'bg-[#023caf]/10 text-[#023caf]';
+                      else if (log.accion === 'OTP_VALIDADO') badgeColor = 'bg-teal-100 text-teal-800';
+                      else if (log.accion === 'OTP_GENERADO') badgeColor = 'bg-amber-100 text-amber-800';
+                      else if (log.accion === 'CREACION_CUPONERA' || log.accion === 'EDICION_CUPONERA') badgeColor = 'bg-orange-100 text-orange-800';
+                      else if (log.accion?.startsWith('ERROR')) badgeColor = 'bg-red-100 text-red-800';
+                      
+                      let detallesText = log.detalles;
+                      let isJson = false;
+                      if (typeof log.detalles === 'string' && (log.detalles.trim().startsWith('{') || log.detalles.trim().startsWith('['))) {
+                         try {
+                           detallesText = JSON.stringify(JSON.parse(log.detalles), null, 2);
+                           isJson = true;
+                         } catch (e) {}
+                      } else if (typeof log.detalles === 'object') {
+                         detallesText = JSON.stringify(log.detalles, null, 2);
+                         isJson = true;
+                      }
 
-                  return (
-                    <div key={log.id} className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs space-y-1">
-                      <div className="flex justify-between items-center">
-                        <span className={`font-mono text-[10px] font-bold px-2 py-0.5 rounded ${badgeColor}`}>{log.accion}</span>
-                        <span className="text-slate-400 text-[11px]">{new Date(log.fechaHora).toLocaleString('es-CL')}</span>
-                      </div>
-                      <p className="text-slate-800 font-medium">{log.detalles}</p>
-                      {(log.rutUsuario || log.nombreUsuario) && (
-                        <p className="text-[10px] text-slate-500">
-                          Usuario: <span className="font-semibold text-slate-700">{log.nombreUsuario || ''}</span>
-                          {log.rutUsuario ? ` (${log.rutUsuario})` : ''}
-                        </p>
-                      )}
-                    </div>
-                  );
-                })
-              )}
+                      return (
+                        <tr key={log.id} className="hover:bg-slate-50 align-top">
+                          <td className="p-3">
+                             <span className={`font-mono text-[10px] font-bold px-2 py-0.5 rounded whitespace-nowrap ${badgeColor}`}>{log.accion}</span>
+                          </td>
+                          <td className="p-3">
+                             <div className="font-semibold text-slate-800 whitespace-nowrap">{log.nombreUsuario || '-'}</div>
+                             <div className="font-mono text-[10px] text-slate-500">{log.rutUsuario || '-'}</div>
+                          </td>
+                          <td className="p-3 text-slate-500 whitespace-nowrap">{new Date(log.fechaHora).toLocaleString('es-CL')}</td>
+                          <td className="p-3 w-full max-w-xl">
+                             {isJson ? (
+                               <div className="bg-slate-800 text-emerald-400 p-2 rounded-lg text-[10px] font-mono overflow-auto max-h-32 shadow-inner">
+                                 <pre>{detallesText}</pre>
+                               </div>
+                             ) : (
+                               <p className="text-slate-700">{log.detalles}</p>
+                             )}
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
+                </tbody>
+              </table>
             </div>
           </div>
         )}
