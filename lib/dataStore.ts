@@ -131,8 +131,9 @@ export interface AuditoriaLog {
   fechaHora: string;
   rutUsuario?: string;
   nombreUsuario?: string;
-  accion: 'COMPRA_CUPONERA' | 'CANJE_CUPON' | 'OTP_GENERADO' | 'OTP_VALIDADO' | 'ANULACION_PASAJE' | 'CREACION_CUPONERA' | 'EDICION_CUPONERA';
-  detalles: string;
+  accion: 'COMPRA_CUPONERA' | 'CANJE_CUPON' | 'OTP_GENERADO' | 'OTP_VALIDADO' | 'ANULACION_PASAJE' | 'CREACION_CUPONERA' | 'EDICION_CUPONERA' | string;
+  detalles: any;
+  payload?: any;
   ip?: string;
 }
 

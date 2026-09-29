@@ -617,7 +617,7 @@ export default function AdminMaintainer() {
                     <th className="p-3">Acción</th>
                     <th className="p-3">Usuario</th>
                     <th className="p-3">Fecha</th>
-                    <th className="p-3">Detalles y Payload (SAC)</th>
+                    <th className="p-3">Detalles y Payload</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
@@ -637,15 +637,25 @@ export default function AdminMaintainer() {
                       else if (log.accion?.startsWith('ERROR')) badgeColor = 'bg-red-100 text-red-800';
                       
                       let detallesText = log.detalles;
-                      let isJson = false;
+                      let isJsonDetalles = false;
                       if (typeof log.detalles === 'string' && (log.detalles.trim().startsWith('{') || log.detalles.trim().startsWith('['))) {
                          try {
                            detallesText = JSON.stringify(JSON.parse(log.detalles), null, 2);
-                           isJson = true;
+                           isJsonDetalles = true;
                          } catch (e) {}
                       } else if (typeof log.detalles === 'object') {
                          detallesText = JSON.stringify(log.detalles, null, 2);
-                         isJson = true;
+                         isJsonDetalles = true;
+                      }
+
+                      let payloadVisual = log.payload;
+                      let hasPayload = log.payload !== undefined && log.payload !== null;
+                      if (hasPayload) {
+                        if (typeof log.payload === 'string' && (log.payload.trim().startsWith('{') || log.payload.trim().startsWith('['))) {
+                           try { payloadVisual = JSON.stringify(JSON.parse(log.payload), null, 2); } catch(e) {}
+                        } else if (typeof log.payload === 'object') {
+                           payloadVisual = JSON.stringify(log.payload, null, 2);
+                        }
                       }
 
                       return (
@@ -659,12 +669,16 @@ export default function AdminMaintainer() {
                           </td>
                           <td className="p-3 text-slate-500 whitespace-nowrap">{new Date(log.fechaHora).toLocaleString('es-CL')}</td>
                           <td className="p-3 w-full max-w-xl">
-                             {isJson ? (
+                             {!isJsonDetalles && <p className="text-slate-700 mb-2">{log.detalles}</p>}
+                             {isJsonDetalles && !hasPayload && (
                                <div className="bg-slate-800 text-emerald-400 p-2 rounded-lg text-[10px] font-mono overflow-auto max-h-32 shadow-inner">
                                  <pre>{detallesText}</pre>
                                </div>
-                             ) : (
-                               <p className="text-slate-700">{log.detalles}</p>
+                             )}
+                             {hasPayload && (
+                               <div className="bg-slate-800 text-emerald-400 p-2 rounded-lg text-[10px] font-mono overflow-auto max-h-32 shadow-inner mt-2 border-t-2 border-slate-600 pt-2">
+                                 <pre>{payloadVisual}</pre>
+                               </div>
                              )}
                           </td>
                         </tr>
