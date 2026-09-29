@@ -236,15 +236,17 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
                 <span className="text-xs font-mono font-bold bg-blue-50 text-[#023caf] px-4 py-2 rounded-full border border-blue-200 shadow-xs">
                   Titular: {rutFormateado}
                 </span>
-                <button
-                  type="button"
-                  onClick={handleResetSearch}
-                  className="text-xs font-bold text-[#fa5e00] hover:text-white bg-orange-50 hover:bg-[#fa5e00] px-4 py-2 rounded-full border border-orange-200 hover:border-[#fa5e00] transition-all cursor-pointer flex items-center gap-1.5 shadow-xs"
-                  title="Consultar otro RUT"
-                >
-                  <Search className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">Nueva Consulta</span>
-                </button>
+                {!authUser && (
+                  <button
+                    type="button"
+                    onClick={handleResetSearch}
+                    className="text-xs font-bold text-[#fa5e00] hover:text-white bg-orange-50 hover:bg-[#fa5e00] px-4 py-2 rounded-full border border-orange-200 hover:border-[#fa5e00] transition-all cursor-pointer flex items-center gap-1.5 shadow-xs"
+                    title="Consultar otro RUT"
+                  >
+                    <Search className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">Nueva Consulta</span>
+                  </button>
+                )}
               </div>
             </div>
 
