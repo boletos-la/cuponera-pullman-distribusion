@@ -6,7 +6,7 @@ import { Cuponera, Compra, Cupon } from '@/lib/dataStore';
 import { couponService } from '@/lib/services/couponService';
 import { paymentService } from '@/lib/services/paymentService';
 import { validateRut, formatRut, cleanRut } from '@/lib/rutValidator';
-import { ShoppingCart, Check, AlertCircle, ShieldCheck, Ticket, Sparkles, Filter, CreditCard, ArrowRight, X, CheckCircle, XCircle, KeyRound, Mail, LayoutGrid, List, Bus, RotateCcw } from 'lucide-react';
+import { ShoppingCart, Check, AlertCircle, ShieldCheck, Ticket, Sparkles, Filter, CreditCard, ArrowRight, X, CheckCircle, XCircle, KeyRound, Mail, LayoutGrid, List, Bus, RotateCcw, Star, MapPin, Target } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { authService } from '@/lib/services/authService';
 import { getAuthUser } from '@/lib/apiClient';
@@ -466,76 +466,61 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
           </table>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-4">
           {displayCuponeras.map((item) => (
             <div
               key={item.id}
-              className="bg-white rounded-2xl border border-slate-200 hover:border-[#023caf] shadow-sm hover:shadow-md transition-all flex flex-col justify-between overflow-hidden group"
+              className="relative bg-white rounded-3xl shadow-lg hover:shadow-xl transition-shadow border border-slate-100 flex flex-col mt-4"
             >
-              {/* Encabezado Tarjeta */}
-              <div className="p-6 space-y-3">
-                <div className="flex justify-between items-start">
-                  <span className="bg-[#FFF7ED] text-[#fa5e00] border border-[#FFEDD5] text-[11px] font-bold px-2.5 py-1 rounded-lg">
-                    Item #{item.id} • {item.cantidadCupones} Cupones
-                  </span>
-                  {item.badge && (
-                    <span className="bg-[#fa5e00] text-white text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">
-                      {item.badge}
-                    </span>
-                  )}
+              {/* Badge "Mejor precio" u otro */}
+              {item.badge && (
+                <div className="absolute -top-3 right-4 bg-[#FFE8E0] text-[#fa5e00] font-bold text-xs px-3 py-1 rounded-full shadow-sm border border-white z-10">
+                  {item.badge}
+                </div>
+              )}
+
+              {/* Card Content */}
+              <div className="p-6 pb-5 flex-1 flex flex-col">
+                {/* Logo textual */}
+                <div className="text-[#fa5e00] font-black text-2xl tracking-tighter mb-4">
+                  pullmanbus
                 </div>
 
-                <div>
-                  <h3 className="text-lg font-black text-slate-900 group-hover:text-[#fa5e00] transition-colors leading-snug">
-                    {item.nombre}
-                  </h3>
-                  <p className="text-xs text-slate-500 mt-1 line-clamp-2">{item.descripcion}</p>
+                {/* Subtitle / Category */}
+                <div className="flex items-center gap-2 text-slate-700 font-extrabold text-sm mb-4">
+                  <Star className="w-4 h-4 text-[#fa5e00] fill-current" />
+                  <span>{item.categoria === 'Todos' ? '4 Pullman Costa' : `4 ${item.categoria}`}</span>
                 </div>
 
-                {/* Tramos Habilitados */}
-                <div className="space-y-1.5 pt-2">
-                  <span className="text-[11px] font-bold text-slate-700 uppercase tracking-wider">
-                    Tramos Habilitados ({item.tramos.length}):
-                  </span>
-                  <div className="flex flex-wrap gap-1">
-                    {item.tramos.map((t, idx) => (
-                      <span
-                        key={idx}
-                        className="bg-slate-100 text-slate-700 text-[10px] font-medium px-2 py-0.5 rounded-md border border-slate-200"
-                      >
-                        {t}
-                      </span>
-                    ))}
+                {/* Route details */}
+                <div className="space-y-3 mb-8">
+                  <div className="flex items-center gap-3 text-slate-600">
+                    <Target className="w-4 h-4 text-slate-400" />
+                    <span className="text-sm font-medium">{item.tramos[0]?.split(' - ')[0]?.trim() || 'Santiago'}</span>
                   </div>
+                  <div className="flex items-center gap-3 text-slate-600">
+                    <MapPin className="w-4 h-4 text-slate-400" />
+                    <span className="text-sm font-medium">{item.tramos[0]?.split(' - ')[1]?.trim() || item.tramos[0] || 'Destino'}</span>
+                  </div>
+                </div>
+
+                <div className="mt-auto"></div>
+
+                {/* Quantity and Unit Price */}
+                <div className="flex justify-between items-end text-slate-800">
+                  <span className="font-extrabold text-sm">{item.cantidadCupones} x pasajes</span>
+                  <span className="font-extrabold text-base">${(item.valorUnitario || 0).toLocaleString('es-CL')}</span>
                 </div>
               </div>
 
-              {/* Pie de Tarjeta con Precio y Botón */}
-              <div className="p-6 pt-0 border-t border-slate-100 mt-4 space-y-4">
-                <div className="flex justify-between items-end pt-3">
-                  <div>
-                    <span className="text-[11px] text-slate-400 block font-medium">Valor Unitario</span>
-                    <span className="text-lg font-extrabold text-slate-800">
-                      ${(item.valorUnitario || 0).toLocaleString('es-CL')} <span className="text-xs font-normal text-slate-500">/ viaje</span>
-                    </span>
-                  </div>
-
-                  <div className="text-right">
-                    <span className="text-[11px] text-slate-400 block font-medium">Precio Total Paquete</span>
-                    <span className="text-2xl font-black text-[#fa5e00]">
-                      ${(item.precioTotal || 0).toLocaleString('es-CL')}
-                    </span>
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => handleOpenCheckout(item)}
-                  className="w-full bg-[#fa5e00] hover:bg-[#e55400] text-white font-extrabold py-3.5 px-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-sm cursor-pointer transform hover:-translate-y-0.5"
-                >
-                  <ShoppingCart className="w-4 h-4" />
-                  <span>Comprar Cuponera</span>
-                </button>
-              </div>
+              {/* Footer Button */}
+              <button
+                onClick={() => handleOpenCheckout(item)}
+                className="bg-[#fa5e00] text-white w-full rounded-b-3xl px-6 py-4 flex justify-between items-center font-black text-sm hover:bg-[#e55400] transition-colors cursor-pointer"
+              >
+                <span>TOTAL</span>
+                <span>CLP {(item.precioTotal || 0).toLocaleString('es-CL')}</span>
+              </button>
             </div>
           ))}
         </div>
