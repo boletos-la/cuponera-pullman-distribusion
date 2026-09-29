@@ -17,3 +17,6 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 ## 2. Verificación de Compilación (Build)
 - **Build previo obligatorio**: Ejecutar y verificar `npm run build` **siempre antes** de hacer cualquier `git commit` o `git push`.
 - Si el build falla con errores de TypeScript o compilación, deben resolverse antes de proceder.
+
+## 3. Configuración de Entorno (API)
+- **URL del Backend**: El front **siempre** debe apuntar a la URL del backend de producción (`https://cuponera.dev-wit.com/api`) en el archivo `.env.local` (o donde corresponda), ya que cambiarlo a localhost u otras URLs genera problemas recurrentes.

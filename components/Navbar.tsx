@@ -111,10 +111,14 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
               </button>
             )}
 
-            {/* Separador y Logo WIT SPA */}
-            <div className="w-px h-6 bg-border mx-2"></div>
-            <div className="flex items-center h-full">
-              <img src="/logo-wit-dark.png" alt="WIT Logo" className="h-5 opacity-90 object-contain ml-2" />
+            {/* Separador y Logo WIT */}
+            <div className="w-px h-7 bg-border mx-2"></div>
+            <div className="flex items-center">
+              <img
+                src="/logo-wit-dark.png"
+                alt="WIT Logo"
+                className="h-8 md:h-9 w-auto object-contain opacity-85 hover:opacity-100 transition-opacity duration-300 ml-1"
+              />
             </div>
           </nav>
         </div>
