@@ -142,21 +142,21 @@ export function StepConfirmation({ bookingData, onFinish }: StepConfirmationProp
               <span>Tipo: {busTypeStr}</span>
             </div>
           </div>
-          
+
           {/* QR Code */}
           {bookingData.gdsData?.qrCodeUrl && (
             <div className="flex flex-col items-center justify-center pt-2 pb-2">
               <span className="text-[10px] font-bold text-slate-400 mb-2 uppercase tracking-widest">Presenta este código al abordar</span>
               <div className="p-2 bg-white rounded-xl border border-slate-200 shadow-sm print:shadow-none print:border-slate-300">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img 
+                <img
                   src={
-                    bookingData.gdsData.qrCodeUrl.startsWith("http") || bookingData.gdsData.qrCodeUrl.startsWith("data:") 
-                      ? bookingData.gdsData.qrCodeUrl 
+                    bookingData.gdsData.qrCodeUrl.startsWith("http") || bookingData.gdsData.qrCodeUrl.startsWith("data:")
+                      ? bookingData.gdsData.qrCodeUrl
                       : `data:image/png;base64,${bookingData.gdsData.qrCodeUrl}`
-                  } 
-                  alt="Código QR del Pasaje" 
-                  className="w-32 h-32 object-contain print:w-40 print:h-40" 
+                  }
+                  alt="Código QR del Pasaje"
+                  className="w-32 h-32 object-contain print:w-40 print:h-40"
                 />
               </div>
             </div>
@@ -171,7 +171,7 @@ export function StepConfirmation({ bookingData, onFinish }: StepConfirmationProp
         </Button>
         <Button onClick={onFinish} className="w-full sm:w-auto">
           <LayoutDashboard className="mr-2 h-4 w-4" />
-          Volver al Dashboard
+          Volver a Mis cuponeras
         </Button>
       </div>
     </div>

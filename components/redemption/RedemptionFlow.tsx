@@ -34,7 +34,7 @@ export function RedemptionFlow({ initialCuponCode = '', initialRut = '', onFinis
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
   const [loadingInitial, setLoadingInitial] = useState(true);
-  
+
   const [bookingData, setBookingData] = useState<BookingData>({
     validationType: null,
     rut: initialRut,
@@ -87,7 +87,7 @@ export function RedemptionFlow({ initialCuponCode = '', initialRut = '', onFinis
     } else {
       setLoadingInitial(false);
     }
-    
+
     return () => {
       clearCuponInfo();
       clearAllReservations();
@@ -120,7 +120,7 @@ export function RedemptionFlow({ initialCuponCode = '', initialRut = '', onFinis
         const pnr = departureBooking.pnrNumbers[0];
         const seat = departureBooking.selectedSeats[0];
         // En Next.js / fetch con keepalive true es lo ideal, pero un fetch normal fire-and-forget suele funcionar en Chrome moderno
-        couponService.releaseSeat(pnr, seat).catch(() => {});
+        couponService.releaseSeat(pnr, seat).catch(() => { });
       }
     };
 
@@ -167,7 +167,7 @@ export function RedemptionFlow({ initialCuponCode = '', initialRut = '', onFinis
             className="bg-[#fa5e00] hover:bg-[#e55400] text-white font-semibold text-xs px-5 py-2 rounded-xl"
             onClick={() => onBack ? onBack() : router.push('/')}
           >
-            Volver al Dashboard
+            Volver a Mis cuponeras
           </Button>
         </div>
       </div>
@@ -179,7 +179,7 @@ export function RedemptionFlow({ initialCuponCode = '', initialRut = '', onFinis
       {/* Header del flujo de canje */}
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 sm:p-5 sticky top-2 z-30 backdrop-blur-md bg-white/95">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          
+
           {/* Lado izquierdo: Botón volver + Información del cupón */}
           <div className="flex items-center gap-3.5">
             {onBack && (
@@ -223,22 +223,20 @@ export function RedemptionFlow({ initialCuponCode = '', initialRut = '', onFinis
                 return (
                   <React.Fragment key={step.id}>
                     <div
-                      className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
-                        isActive
+                      className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${isActive
                           ? "bg-[#fa5e00] text-white shadow-md shadow-orange-500/20"
                           : isCompleted
-                          ? "bg-orange-50 text-[#fa5e00] border border-orange-100"
-                          : "text-slate-400 bg-slate-50 border border-slate-100"
-                      }`}
+                            ? "bg-orange-50 text-[#fa5e00] border border-orange-100"
+                            : "text-slate-400 bg-slate-50 border border-slate-100"
+                        }`}
                     >
                       <div
-                        className={`flex items-center justify-center w-5 h-5 rounded-full ${
-                          isActive
+                        className={`flex items-center justify-center w-5 h-5 rounded-full ${isActive
                             ? "bg-white/25 text-white"
                             : isCompleted
-                            ? "bg-[#fa5e00]/10 text-[#fa5e00]"
-                            : "bg-slate-200/70 text-slate-400"
-                        }`}
+                              ? "bg-[#fa5e00]/10 text-[#fa5e00]"
+                              : "bg-slate-200/70 text-slate-400"
+                          }`}
                       >
                         <Icon className="w-3 h-3" />
                       </div>
