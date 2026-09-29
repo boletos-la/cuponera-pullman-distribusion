@@ -35,6 +35,7 @@ export default function AdminMaintainer() {
   const [searchTx, setSearchTx] = useState('');
   const [searchCanjes, setSearchCanjes] = useState('');
   const [searchCompras, setSearchCompras] = useState('');
+  const [searchAuditoria, setSearchAuditoria] = useState('');
   const [expandedUserCompras, setExpandedUserCompras] = useState<string | null>(null);
 
   const [loading, setLoading] = useState(true);
@@ -259,7 +260,13 @@ export default function AdminMaintainer() {
     (c.nombre_usuario && c.nombre_usuario.toLowerCase().includes(searchCompras.toLowerCase())) ||
     String(c.id_cuponera).includes(searchCompras)
   ));
-  const sortedAuditoria = sortData(auditoria);
+  const filteredAuditoria = sortData(auditoria.filter(a => 
+    (a.rutUsuario && a.rutUsuario.includes(searchAuditoria)) || 
+    (a.nombreUsuario && a.nombreUsuario.toLowerCase().includes(searchAuditoria.toLowerCase())) ||
+    (a.accion && a.accion.toLowerCase().includes(searchAuditoria.toLowerCase())) ||
+    (a.endpoint && a.endpoint.toLowerCase().includes(searchAuditoria.toLowerCase())) ||
+    (a.id && a.id.toLowerCase().includes(searchAuditoria.toLowerCase()))
+  ));
 
   return (
     <div className="space-y-6">
@@ -685,6 +692,7 @@ export default function AdminMaintainer() {
                 <Search className="w-4 h-4 text-slate-400" />
                 Registros de Trazabilidad y Auditoría
               </div>
+              <input type="text" placeholder="ID, Acción, Usuario o Endpoint..." value={searchAuditoria} onChange={e => setSearchAuditoria(e.target.value)} className="text-xs px-3 py-1.5 rounded-lg border border-slate-300 w-64 focus:outline-none" />
             </div>
              <div className="border border-slate-200 rounded-2xl">
               <table className="w-full text-left text-xs">
@@ -698,12 +706,12 @@ export default function AdminMaintainer() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {sortedAuditoria.length === 0 ? (
+                  {filteredAuditoria.length === 0 ? (
                     <tr>
-                      <td colSpan={4} className="p-8 text-center text-slate-400">No hay registros de trazabilidad y auditoría.</td>
+                      <td colSpan={5} className="p-8 text-center text-slate-400">No hay registros de trazabilidad y auditoría.</td>
                     </tr>
                   ) : (
-                    sortedAuditoria.map(log => {
+                    filteredAuditoria.map(log => {
                       let badgeColor = 'bg-blue-100 text-blue-800';
                       if (log.accion === 'CANJE_CUPON') badgeColor = 'bg-emerald-100 text-emerald-800';
                       else if (log.accion === 'ANULACION_PASAJE') badgeColor = 'bg-rose-100 text-rose-800';
