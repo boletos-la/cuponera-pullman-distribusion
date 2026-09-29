@@ -469,10 +469,9 @@ export default function AdminMaintainer() {
               filteredCompras.forEach(c => {
                 const rut = c.rut_usuario;
                 if (!userMap.has(rut)) {
-                  const localUser = usuarios.find(u => u.rut === rut);
                   userMap.set(rut, {
                     rut,
-                    nombre: c.Usuario?.nombre || c.nombre_usuario || localUser?.nombre || 'Sin nombre registrado',
+                    nombre: c.Usuario?.nombre || c.nombre_usuario || 'Sin nombre registrado',
                     total: 0,
                     activas: 0,
                     inactivas: 0,
@@ -572,7 +571,7 @@ export default function AdminMaintainer() {
                                               <div className="text-[10px] text-slate-400 font-mono">ID Registro: #{c.id_cuponera}</div>
                                             </div>
                                             <div className="text-center">
-                                              <div className="text-[10px] text-slate-500 uppercase font-bold">Usos</div>
+                                              <div className="text-[10px] text-slate-500 uppercase font-bold">Saldo</div>
                                               <div className="font-black text-[#fa5e00]">{c.usos_restantes}</div>
                                             </div>
                                             <div className="text-center">
