@@ -1,5 +1,69 @@
 [
   {
+    "id": "AUD-CANJE-31",
+    "fechaHora": "2026-09-29T20:05:28.000Z",
+    "rutUsuario": "21.051.782-0",
+    "nombreUsuario": "Diego Farias Albornoz",
+    "accion": "CANJE_CUPON",
+    "detalles": "Canje de cupón exitoso en GDS Kupos. Boleto PNR: TS260929170039017IWLD, Tramo: Santiago ➔ Puerto Montt, Asiento: 39."
+  },
+  {
+    "id": "AUD-OTP-VAL-68",
+    "fechaHora": "2026-09-29T20:05:27.000Z",
+    "rutUsuario": "21.051.782-0",
+    "nombreUsuario": "Diego Farias Albornoz",
+    "accion": "OTP_VALIDADO",
+    "detalles": "Verificación 2FA completada con éxito (REDEEM_COUPON). Acceso autorizado."
+  },
+  {
+    "id": "AUD-OTP-VAL-67",
+    "fechaHora": "2026-09-29T20:04:58.000Z",
+    "rutUsuario": "21.051.782-0",
+    "nombreUsuario": "Diego Farias Albornoz",
+    "accion": "OTP_VALIDADO",
+    "detalles": "Verificación 2FA completada con éxito (REDEEM_COUPON). Acceso autorizado."
+  },
+  {
+    "id": "AUD-OTP-VAL-66",
+    "fechaHora": "2026-09-29T19:20:12.000Z",
+    "rutUsuario": "19.742.822-8",
+    "nombreUsuario": "Juan Test",
+    "accion": "OTP_VALIDADO",
+    "detalles": "Verificación 2FA completada con éxito (LOGIN). Acceso autorizado."
+  },
+  {
+    "id": "AUD-OTP-VAL-65",
+    "fechaHora": "2026-09-29T17:50:48.000Z",
+    "rutUsuario": "21.051.782-0",
+    "nombreUsuario": "Diego Farias Albornoz",
+    "accion": "OTP_VALIDADO",
+    "detalles": "Verificación 2FA completada con éxito (LOGIN). Acceso autorizado."
+  },
+  {
+    "id": "AUD-CANJE-30",
+    "fechaHora": "2026-09-29T17:00:42.000Z",
+    "rutUsuario": "21.051.782-0",
+    "nombreUsuario": "Diego Farias Albornoz",
+    "accion": "CANJE_CUPON",
+    "detalles": "Canje de cupón exitoso en GDS Kupos. Boleto PNR: TS260929134319359LHXW, Tramo: Santiago ➔ Puerto Montt, Asiento: 5."
+  },
+  {
+    "id": "AUD-OTP-VAL-64",
+    "fechaHora": "2026-09-29T17:00:32.000Z",
+    "rutUsuario": "21.051.782-0",
+    "nombreUsuario": "Diego Farias Albornoz",
+    "accion": "OTP_VALIDADO",
+    "detalles": "Verificación 2FA completada con éxito (REDEEM_COUPON). Acceso autorizado."
+  },
+  {
+    "id": "AUD-TX-41",
+    "fechaHora": "2026-09-29T16:28:34.000Z",
+    "rutUsuario": "22.322.322-2",
+    "nombreUsuario": "Usuario Test Perez",
+    "accion": "COMPRA_CUPONERA",
+    "detalles": "Transacción Webpay Plus APROBADO por $49.000 [Orden: CUPONERA_3_1790699314071] (Cod. Aut: 1213)."
+  },
+  {
     "id": "AUD-TX-38",
     "fechaHora": "2026-09-28T16:35:59.000Z",
     "rutUsuario": "21.051.782-0",
