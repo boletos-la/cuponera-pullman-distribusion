@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { validateRut, formatRut, cleanRut } from '@/lib/rutValidator';
-import { RotateCcw, AlertTriangle, CheckCircle2, ShieldAlert, ArrowLeft, KeyRound, Search } from 'lucide-react';
+import { RotateCcw, AlertTriangle, CheckCircle2, ShieldAlert, KeyRound, Search, ArrowRight, ShieldCheck } from 'lucide-react';
 import { couponService } from '@/lib/services/couponService';
 
 export default function TicketCancellationView() {
@@ -87,167 +87,206 @@ export default function TicketCancellationView() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
-      <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200 space-y-6">
-        <div>
-          <span className="bg-amber-50 text-amber-700 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">
-            Proceso E • Regla Legal de 4 Horas
-          </span>
-          <h2 className="text-2xl font-black text-slate-900 flex items-center gap-2 mt-1">
-            <RotateCcw className="w-6 h-6 text-[#fa5e00]" />
-            Anulación de Viaje y Reintegro de Cupón
+    <div className="relative max-w-3xl mx-auto space-y-6 pt-4 pb-12">
+      {/* Fondos y decoraciones ambientales */}
+      <div className="absolute top-0 inset-x-0 h-[400px] bg-gradient-to-b from-[#023caf]/5 via-[#fa5e00]/5 to-transparent rounded-[3rem] -z-10" />
+      <div className="absolute top-12 -left-20 w-64 h-64 bg-blue-400/10 blur-[80px] rounded-full pointer-events-none -z-10" />
+      <div className="absolute top-32 -right-20 w-72 h-72 bg-orange-400/10 blur-[100px] rounded-full pointer-events-none -z-10" />
+
+      {/* Tarjeta Principal */}
+      <div className="relative bg-white/80 backdrop-blur-2xl rounded-[2rem] p-6 sm:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/60 space-y-8 animate-fade-in-up">
+        
+        {/* Cabecera */}
+        <div className="text-center space-y-3">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-100/50 text-orange-700 text-[10px] font-black uppercase tracking-widest shadow-sm">
+            <ShieldCheck className="w-3.5 h-3.5" />
+            <span>Proceso Protegido • Regla Legal de 4 Horas</span>
+          </div>
+          <h2 className="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#023caf] to-[#01256e] tracking-tight flex items-center justify-center gap-3">
+            Anulación de Viaje
           </h2>
-          <p className="text-xs text-slate-500 font-medium mt-1">
-            Si tus planes cambiaron, puedes anular tu viaje con al menos 4 horas de anticipación a la salida del bus. Tu cupón será reintegrado a estado <span className="font-bold text-emerald-600">Activo</span> en tu saldo.
+          <p className="text-sm text-slate-500 font-medium max-w-lg mx-auto leading-relaxed">
+            Si tus planes cambiaron, puedes anular tu pasaje con al menos <strong className="text-slate-800">4 horas de anticipación</strong>. Tu cupón será devuelto a estado <span className="inline-flex items-center gap-1 font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md"><CheckCircle2 className="w-3.5 h-3.5" /> Activo</span> en tu saldo.
           </p>
         </div>
 
-        {/* Banner Normativo Legal */}
-        <div className="bg-amber-50/80 border border-amber-200 rounded-2xl p-4 flex items-start gap-3">
-          <ShieldAlert className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-          <div className="text-xs text-amber-900 space-y-1">
-            <span className="font-bold block">Normativa de Transporte Terrestre:</span>
-            <p>
-              La anulación de pasajes sólo se autoriza si faltan <span className="font-extrabold text-[#fa5e00]">4 horas o más</span> para la salida del servicio. Transcurrido ese plazo, el sistema bloquea automáticamente la anulación por ley.
+        {/* Banner Normativo Legal (Glassmorphism) */}
+        <div className="relative overflow-hidden bg-gradient-to-br from-amber-50/80 to-orange-50/50 backdrop-blur-sm border border-amber-200/60 rounded-2xl p-5 flex items-start gap-4 group hover:shadow-md transition-shadow duration-300">
+          <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-amber-400 to-orange-500" />
+          <div className="bg-white/60 p-2 rounded-xl shadow-sm border border-white">
+            <ShieldAlert className="w-6 h-6 text-orange-500" />
+          </div>
+          <div className="text-xs sm:text-sm text-amber-900/90 space-y-1.5 pt-1">
+            <span className="font-extrabold text-amber-950 block tracking-wide">Normativa de Transporte Terrestre</span>
+            <p className="leading-relaxed">
+              La anulación de pasajes sólo se autoriza si faltan <span className="font-black text-orange-600 bg-orange-100/50 px-1.5 py-0.5 rounded">4 horas o más</span> para la salida del servicio. Transcurrido ese plazo, el sistema bloquea automáticamente la anulación por ley.
             </p>
           </div>
         </div>
 
-        {step === 'form' && (
-          <form onSubmit={handleRequestOtp} className="space-y-4">
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">RUT del Comprador *</label>
-              <div className="relative">
-                <input
-                  type="text"
-                  required
-                  placeholder="ej: 12.345.678-K"
-                  value={rutInput}
-                  onChange={(e) => {
-                    setRutInput(formatRut(e.target.value));
-                    setErrorMsg('');
-                  }}
-                  className="w-full text-sm font-semibold bg-white border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#fa5e00] text-[#0F172A]"
-                />
-                <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-              </div>
+        {/* Modal / Card de Anulación Exitosa */}
+        {resultadoExitosa && step === 'form' && (
+          <div className="relative overflow-hidden bg-gradient-to-br from-emerald-50 to-green-50 border border-emerald-200/60 rounded-2xl p-8 text-center space-y-4 animate-fade-in shadow-sm">
+            <div className="absolute -top-10 -right-10 w-40 h-40 bg-emerald-400/10 rounded-full blur-3xl" />
+            <div className="w-16 h-16 rounded-full bg-white text-emerald-500 flex items-center justify-center mx-auto shadow-sm border border-emerald-100 ring-4 ring-emerald-50">
+              <CheckCircle2 className="w-8 h-8" />
+            </div>
+            <div className="space-y-1 relative z-10">
+              <h3 className="text-xl font-black text-emerald-950 tracking-tight">¡Anulación Completada con Éxito!</h3>
+              <p className="text-sm font-medium text-emerald-800/80">{resultadoExitosa.mensaje}</p>
             </div>
 
+            <div className="inline-block bg-white border border-emerald-100 px-5 py-3 rounded-xl shadow-sm relative z-10 mt-2">
+              <span className="block text-[10px] font-bold text-emerald-600/70 uppercase tracking-widest mb-1">Comprobante de Reintegro</span>
+              <span className="text-sm font-mono font-black text-[#023caf]">
+                1 uso reintegrado (Cupón: {resultadoExitosa.cuponCodigoReintegrado})
+              </span>
+            </div>
+          </div>
+        )}
 
+        {/* Formulario Principal */}
+        {step === 'form' && (
+          <form onSubmit={handleRequestOtp} className="space-y-5 relative z-10">
+            <div className="bg-slate-50/50 rounded-2xl p-5 sm:p-6 border border-slate-100 space-y-5">
+              <div className="space-y-1.5">
+                <label className="block text-xs font-bold text-slate-600 ml-1">RUT del Comprador <span className="text-orange-500">*</span></label>
+                <div className="relative group">
+                  <input
+                    type="text"
+                    required
+                    placeholder="ej: 12.345.678-K"
+                    value={rutInput}
+                    onChange={(e) => {
+                      setRutInput(formatRut(e.target.value));
+                      setErrorMsg('');
+                    }}
+                    className="w-full text-sm font-semibold bg-white border-2 border-slate-200/80 rounded-xl pl-11 pr-4 py-3.5 transition-all duration-300 focus:outline-none focus:border-[#023caf] focus:ring-4 focus:ring-[#023caf]/10 text-slate-800 placeholder:text-slate-400 group-hover:border-slate-300 shadow-sm"
+                  />
+                  <Search className="w-5 h-5 text-slate-400 absolute left-4 top-3.5 transition-colors group-focus-within:text-[#023caf]" />
+                </div>
+              </div>
 
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Código del Pasaje (PNR) a Anular *</label>
-              <input
-                type="text"
-                required
-                placeholder="ej. ASD1234 o Boleto"
-                value={pasajeCodigo}
-                onChange={(e) => setPasajeCodigo(e.target.value.toUpperCase())}
-                className="w-full text-sm font-mono font-bold bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#fa5e00]"
-              />
+              <div className="space-y-1.5">
+                <label className="block text-xs font-bold text-slate-600 ml-1">Código del Pasaje (PNR) a Anular <span className="text-orange-500">*</span></label>
+                <div className="relative group">
+                  <input
+                    type="text"
+                    required
+                    placeholder="ej. ASD1234 o Boleto"
+                    value={pasajeCodigo}
+                    onChange={(e) => setPasajeCodigo(e.target.value.toUpperCase())}
+                    className="w-full text-sm font-mono font-bold bg-white border-2 border-slate-200/80 rounded-xl pl-4 pr-11 py-3.5 transition-all duration-300 focus:outline-none focus:border-[#fa5e00] focus:ring-4 focus:ring-[#fa5e00]/10 text-slate-800 placeholder:text-slate-400 group-hover:border-slate-300 shadow-sm uppercase tracking-wider"
+                  />
+                  <div className="absolute right-4 top-3.5 p-1 bg-slate-100 rounded-md">
+                    <RotateCcw className="w-3 h-3 text-slate-400" />
+                  </div>
+                </div>
+              </div>
             </div>
 
             {errorMsg && (
-              <div className="p-4 bg-red-50 border border-red-200 rounded-2xl text-xs text-red-700 font-medium space-y-1">
-                <div className="flex items-center gap-2 font-bold text-red-900">
+              <div className="p-4 bg-red-50/80 backdrop-blur-sm border border-red-200 rounded-xl text-xs sm:text-sm text-red-800 font-medium space-y-1.5 animate-in fade-in slide-in-from-top-2">
+                <div className="flex items-center gap-2 font-black text-red-900 tracking-tight">
                   <AlertTriangle className="w-4 h-4 text-red-600 shrink-0" />
-                  <span>Anulación Bloqueada o No Permitida:</span>
+                  <span>Anulación Bloqueada o No Permitida</span>
                 </div>
-                <p className="pl-6">{errorMsg}</p>
+                <p className="pl-6 text-red-700/90">{errorMsg}</p>
               </div>
             )}
 
-            <button
-              type="submit"
-              disabled={loading || !pasajeCodigo || !rutInput}
-              className="w-full bg-[#fa5e00] hover:bg-[#e55400] text-white font-extrabold py-3.5 px-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-base cursor-pointer disabled:opacity-50"
-            >
-              {loading ? (
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              ) : (
-                <>
-                  <RotateCcw className="w-5 h-5 text-white" />
-                  <span>Solicitar Código 2FA</span>
-                </>
-              )}
-            </button>
+            <div className="pt-2">
+              <button
+                type="submit"
+                disabled={loading || !pasajeCodigo || !rutInput}
+                className="group relative w-full overflow-hidden bg-gradient-to-r from-[#fa5e00] to-orange-500 hover:from-orange-600 hover:to-orange-500 text-white font-black py-4 px-6 rounded-xl shadow-[0_4px_14px_0_rgba(250,94,0,0.39)] hover:shadow-[0_6px_20px_rgba(250,94,0,0.23)] transition-all duration-300 flex items-center justify-center gap-2 text-base cursor-pointer disabled:opacity-50 disabled:hover:shadow-none active:scale-[0.98]"
+              >
+                {loading ? (
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                ) : (
+                  <>
+                    <span className="relative z-10 flex items-center gap-2">
+                      <ShieldCheck className="w-5 h-5 text-orange-100" />
+                      Solicitar Código de Seguridad (2FA)
+                      <ArrowRight className="w-4 h-4 opacity-70 group-hover:translate-x-1 transition-transform" />
+                    </span>
+                  </>
+                )}
+              </button>
+            </div>
           </form>
         )}
 
+        {/* Paso OTP */}
         {step === 'otp' && (
-          <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-[#FFE4D6] space-y-6">
-            <div className="text-center space-y-2">
-              <div className="w-16 h-16 rounded-full bg-[#FFF5F0] text-[#fa5e00] flex items-center justify-center mx-auto shadow-md">
-                <KeyRound className="w-8 h-8 stroke-[2.5]" />
+          <div className="bg-gradient-to-b from-white to-slate-50/50 rounded-3xl p-8 shadow-sm border border-slate-200/60 space-y-8 animate-in slide-in-from-right-8 duration-500">
+            <div className="text-center space-y-3 relative">
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-orange-400/10 rounded-full blur-2xl pointer-events-none" />
+              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-orange-50 to-orange-100 text-[#fa5e00] flex items-center justify-center mx-auto shadow-inner border border-orange-200/50 relative z-10 rotate-3 hover:rotate-0 transition-transform duration-300">
+                <KeyRound className="w-10 h-10 stroke-[2]" />
               </div>
-              <h3 className="text-2xl font-black text-slate-900">Validación para Anular</h3>
-              <p className="text-xs text-slate-500">
-                Hemos enviado un código de 6 dígitos a tu <span className="font-semibold text-slate-700">correo registrado</span>.
-              </p>
+              <div className="space-y-1 relative z-10">
+                <h3 className="text-2xl font-black text-slate-900 tracking-tight">Validación 2FA</h3>
+                <p className="text-sm text-slate-500 font-medium">
+                  Ingresa el código de 6 dígitos enviado a tu <span className="font-bold text-slate-700">correo registrado</span>.
+                </p>
+              </div>
             </div>
 
-            <form onSubmit={handleVerifyOtpAndCancel} className="space-y-4">
-              <div className="space-y-1.5 text-center">
-                <label className="block text-xs font-extrabold text-[#0F172A] uppercase tracking-wider">
-                  Código OTP
+            <form onSubmit={handleVerifyOtpAndCancel} className="space-y-6 max-w-sm mx-auto relative z-10">
+              <div className="space-y-2 text-center">
+                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                  Código OTP de Seguridad
                 </label>
                 <input
                   type="text"
                   required
                   maxLength={6}
                   value={otpCode}
-                  onChange={(e) => setOtpCode(e.target.value)}
-                  className="w-48 mx-auto text-center text-2xl tracking-widest font-black bg-white border border-slate-300 rounded-xl py-3 focus:outline-none focus:ring-2 focus:ring-[#fa5e00]"
+                  onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))}
+                  className="w-full text-center text-4xl tracking-[0.2em] font-black bg-white border-2 border-slate-200 rounded-2xl py-4 transition-all duration-300 focus:outline-none focus:border-[#fa5e00] focus:ring-4 focus:ring-[#fa5e00]/10 text-slate-800 placeholder:text-slate-200 shadow-sm"
+                  placeholder="------"
                 />
               </div>
               
               {errorMsg && (
-                <div className="p-4 bg-red-50 border border-red-200 rounded-2xl text-xs text-red-700 font-medium space-y-1 text-left">
-                  <div className="flex items-center gap-2 font-bold text-red-900">
+                <div className="p-4 bg-red-50 border border-red-200/60 rounded-xl text-xs text-red-700 font-medium space-y-1.5 text-left shadow-sm">
+                  <div className="flex items-center gap-2 font-black text-red-900">
                     <AlertTriangle className="w-4 h-4 text-red-600 shrink-0" />
-                    <span>Error al anular:</span>
+                    <span>Error de validación</span>
                   </div>
-                  <p className="pl-6">{errorMsg}</p>
+                  <p className="pl-6 text-red-800/80">{errorMsg}</p>
                 </div>
               )}
               
-              <button
-                type="submit"
-                disabled={loading || otpCode.length < 6}
-                className="w-full bg-[#fa5e00] hover:bg-orange-600 text-white font-extrabold py-3.5 px-6 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-sm cursor-pointer disabled:opacity-50"
-              >
-                {loading ? (
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                ) : (
-                  <>
-                    <RotateCcw className="w-4 h-4" />
-                    <span>Confirmar Anulación</span>
-                  </>
-                )}
-              </button>
-              <button
-                type="button"
-                onClick={() => setStep('form')}
-                className="w-full text-slate-500 hover:text-slate-700 font-semibold text-xs py-2 cursor-pointer"
-              >
-                Volver
-              </button>
+              <div className="space-y-3 pt-2">
+                <button
+                  type="submit"
+                  disabled={loading || otpCode.length < 6}
+                  className="w-full bg-gradient-to-r from-[#023caf] to-[#01256e] hover:from-[#01256e] hover:to-[#011a4d] text-white font-black py-4 px-6 rounded-xl shadow-[0_4px_14px_0_rgba(2,60,175,0.39)] hover:shadow-[0_6px_20px_rgba(2,60,175,0.23)] transition-all duration-300 flex items-center justify-center gap-2 text-base cursor-pointer disabled:opacity-50 active:scale-[0.98]"
+                >
+                  {loading ? (
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <>
+                      <RotateCcw className="w-5 h-5 text-blue-200" />
+                      <span>Confirmar y Anular Pasaje</span>
+                    </>
+                  )}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setStep('form');
+                    setOtpCode('');
+                    setErrorMsg('');
+                  }}
+                  className="w-full text-slate-500 hover:text-slate-800 font-bold text-sm py-3 cursor-pointer transition-colors hover:bg-slate-100 rounded-xl"
+                >
+                  Cancelar y Volver
+                </button>
+              </div>
             </form>
-          </div>
-        )}
-
-        {/* Modal / Card de Anulación Exitosa */}
-        {resultadoExitosa && step === 'form' && (
-          <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-6 text-center space-y-3 animate-fade-in">
-            <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
-              <CheckCircle2 className="w-6 h-6" />
-            </div>
-            <h3 className="text-lg font-black text-emerald-900">¡Anulación Completada con Éxito!</h3>
-            <p className="text-xs text-emerald-800">{resultadoExitosa.mensaje}</p>
-
-            <div className="inline-block bg-white border border-emerald-200 px-4 py-2 rounded-xl text-xs font-mono font-bold text-[#023caf]">
-              1 uso reintegrado a su cuponera (Cupón devuelto: {resultadoExitosa.cuponCodigoReintegrado})
-            </div>
           </div>
         )}
       </div>
