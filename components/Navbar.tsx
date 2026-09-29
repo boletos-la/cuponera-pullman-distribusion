@@ -87,8 +87,6 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
               );
             })}
             
-            <div className="w-px h-6 bg-border mx-2"></div>
-            
             {user ? (
               <div className="flex items-center gap-3 ml-2">
                 <div className="flex flex-col items-end">
@@ -115,10 +113,8 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
 
             {/* Separador y Logo WIT SPA */}
             <div className="w-px h-6 bg-border mx-2"></div>
-            <div className="flex items-center">
-              <span className="text-[11px] font-black tracking-widest text-[#023caf] bg-blue-50/50 px-3 py-1.5 rounded-md border border-blue-100">
-                WIT
-              </span>
+            <div className="flex items-center h-full">
+              <img src="/logo-wit-dark.png" alt="WIT Logo" className="h-5 opacity-90 object-contain ml-2" />
             </div>
           </nav>
         </div>
