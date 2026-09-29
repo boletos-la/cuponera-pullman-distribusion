@@ -246,7 +246,11 @@ export default function AdminMaintainer() {
 
   const filteredUsuarios = sortData(usuarios.filter(u => u.rut.includes(searchUsuario) || u.nombre.toLowerCase().includes(searchUsuario.toLowerCase())));
   const filteredTx = sortData(transacciones.filter(t => t.rut_usuario.includes(searchTx) || (t.orden_compra && t.orden_compra.includes(searchTx))));
-  const filteredCanjes = sortData(canjes.filter(c => (c.rut_usuario && c.rut_usuario.includes(searchCanjes)) || c.pnr_kupos.includes(searchCanjes)));
+  const filteredCanjes = sortData(canjes.filter(c => 
+    (c.rut_usuario && c.rut_usuario.includes(searchCanjes)) || 
+    (c.nombre_usuario && c.nombre_usuario.toLowerCase().includes(searchCanjes.toLowerCase())) ||
+    (c.pnr_kupos && c.pnr_kupos.includes(searchCanjes))
+  ));
   const sortedCuponeras = sortData(cuponeras);
   const filteredCompras = sortData(compras.filter(c => 
     (c.rut_usuario && c.rut_usuario.includes(searchCompras)) || 
@@ -615,7 +619,7 @@ export default function AdminMaintainer() {
                 <Search className="w-4 h-4 text-slate-400" />
                 Buscar Canje:
               </div>
-              <input type="text" placeholder="PNR o RUT..." value={searchCanjes} onChange={e => setSearchCanjes(e.target.value)} className="text-xs px-3 py-1.5 rounded-lg border border-slate-300 w-64 focus:outline-none" />
+              <input type="text" placeholder="PNR, RUT o Nombre..." value={searchCanjes} onChange={e => setSearchCanjes(e.target.value)} className="text-xs px-3 py-1.5 rounded-lg border border-slate-300 w-64 focus:outline-none" />
             </div>
              <div className="border border-slate-200 rounded-2xl">
               <table className="w-full text-left text-xs">
@@ -632,6 +636,9 @@ export default function AdminMaintainer() {
                     </th>
                     <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('rut_usuario')}>
                       <div className="inline-flex items-center gap-1">RUT Pasajero {getSortIcon('rut_usuario')}</div>
+                    </th>
+                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('nombre_usuario')}>
+                      <div className="inline-flex items-center gap-1">Nombre Pasajero {getSortIcon('nombre_usuario')}</div>
                     </th>
                     <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('origen')}>
                       <div className="inline-flex items-center gap-1">Ruta {getSortIcon('origen')}</div>
@@ -654,6 +661,7 @@ export default function AdminMaintainer() {
                       <td className="p-3 font-mono font-bold text-[#fa5e00] bg-[#FFEDD5] px-2 py-1 rounded inline-block m-2 border border-[#FED7AA]">{c.Cupon?.codigo || '-'}</td>
                       <td className="p-3 font-semibold text-slate-800">{c.Cupon?.UsuarioCuponera?.Cuponera?.nombre || 'Cuponera N/A'}</td>
                       <td className="p-3 font-mono">{c.rut_usuario}</td>
+                      <td className="p-3 font-semibold text-slate-700">{c.nombre_usuario || '-'}</td>
                       <td className="p-3 font-semibold">{c.origen} - {c.destino}</td>
                       <td className="p-3 font-mono">{c.asiento}</td>
                       <td className="p-3">
