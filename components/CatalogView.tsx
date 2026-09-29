@@ -493,7 +493,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                 </div>
 
                 {/* Route details */}
-                <div className="space-y-3 mb-8">
+                <div className="space-y-3 mb-6">
                   <div className="flex items-center gap-3 text-slate-600">
                     <Target className="w-4 h-4 text-slate-400" />
                     <span className="text-sm font-medium">{item.tramos[0]?.split(' - ')[0]?.trim() || 'Santiago'}</span>
@@ -501,6 +501,14 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                   <div className="flex items-center gap-3 text-slate-600">
                     <MapPin className="w-4 h-4 text-slate-400" />
                     <span className="text-sm font-medium">{item.tramos[0]?.split(' - ')[1]?.trim() || item.tramos[0] || 'Destino'}</span>
+                  </div>
+                  
+                  {/* Validez */}
+                  <div className="flex items-center gap-3 mt-4 pt-4 border-t border-slate-50">
+                    <div className="bg-emerald-50 text-emerald-600 text-xs font-bold px-3 py-1.5 rounded-lg border border-emerald-100 inline-flex items-center gap-2">
+                      <CheckCircle className="w-3.5 h-3.5" />
+                      Válido por 90 días
+                    </div>
                   </div>
                 </div>
 

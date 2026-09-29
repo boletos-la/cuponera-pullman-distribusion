@@ -107,8 +107,7 @@ export default function Home() {
 
       {/* Pie de Página Footer */}
       <footer className="bg-[#023caf] text-white py-12 mt-12 relative overflow-hidden">
-        {/* Elemento de diseño de fondo */}
-        <div className="absolute top-0 left-0 w-full h-1 bg-[#fa5e00]" />
+        {/* Elementos de diseño de fondo */}
         <div className="absolute -top-24 -right-24 w-96 h-96 bg-white/5 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-white/5 rounded-full blur-3xl pointer-events-none" />
 
