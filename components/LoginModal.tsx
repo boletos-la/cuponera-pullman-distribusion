@@ -16,6 +16,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
   const [mode, setMode] = useState<Mode>('login');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [guestHint, setGuestHint] = useState('');
 
   // Form Fields
@@ -167,17 +168,27 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
         return;
       }
 
-      // 3. Auto Login tras registro exitoso
-      const loginRes = await authService.login({ rut: formatRut(rut), password });
-      if (loginRes.success && loginRes.token) {
-        setAuthToken(loginRes.token);
-        onLoginSuccess();
-        onClose();
-      } else {
-        setMode('login'); // Fallback a manual login
-      }
+      // 3. Ya no autologueamos, volvemos a la pantalla de login con mensaje de exito
+      setSuccessMessage('¡Cuenta creada exitosamente! Por favor inicia sesión con tu contraseña.');
+      setPassword(''); // Limpiamos la contraseña ingresada
+      setMode('login');
     } catch (err: any) {
       setError(err.message || 'Error procesando la solicitud.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResendOTP = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const res = await authService.sendOtp({ rut: formatRut(rut), email, nombre, isRegister: true });
+      if (!res.success) {
+        setError(res.message || 'Error al reenviar código.');
+      }
+    } catch (err: any) {
+      setError(err.message || 'Error de conexión.');
     } finally {
       setLoading(false);
     }
@@ -220,6 +231,12 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
                 Accede a tu cuenta para gestionar tus cuponeras oficiales.
               </p>
             </div>
+
+            {successMessage && (
+              <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-xl text-xs text-green-700 font-medium text-center shadow-sm">
+                {successMessage}
+              </div>
+            )}
 
             <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-1.5">
@@ -471,6 +488,17 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
                       <span>Verificar y Crear Cuenta</span>
                     </>
                   )}
+                </button>
+              </div>
+
+              <div className="pt-2 text-center">
+                <button
+                  type="button"
+                  onClick={handleResendOTP}
+                  disabled={loading}
+                  className="text-xs font-bold text-[#023caf] hover:text-[#01256e] transition-colors"
+                >
+                  ¿No recibiste el código? Reenviar
                 </button>
               </div>
             </form>
