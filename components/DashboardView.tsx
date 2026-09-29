@@ -26,6 +26,8 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
   const [historialCompras, setHistorialCompras] = useState<any[]>([]);
   const [historialCanjes, setHistorialCanjes] = useState<any[]>([]);
 
+  const [searchCuponeras, setSearchCuponeras] = useState('');
+
   const [activeDashboardTab, setActiveDashboardTab] = useState<'cuponeras' | 'historial' | 'perfil'>('cuponeras');
   
   const authUser = getAuthUser();
@@ -258,14 +260,35 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
             </div>
 
             {activeDashboardTab === 'cuponeras' && (
-              cuponeras.length === 0 ? (
-                <div className="p-12 text-center text-slate-500 text-xs space-y-2">
-                  <AlertCircle className="w-8 h-8 text-amber-500 mx-auto" />
-                  <p className="font-bold text-slate-700">No se encontraron cuponeras registradas.</p>
+              <>
+                <div className="mb-4">
+                  <div className="relative w-full max-w-sm">
+                    <input
+                      type="text"
+                      placeholder="Buscar por nombre o tramo..."
+                      value={searchCuponeras}
+                      onChange={(e) => setSearchCuponeras(e.target.value)}
+                      className="w-full text-sm font-medium bg-white border border-slate-200 rounded-full pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#fa5e00] text-[#0F172A]"
+                    />
+                    <Search className="w-4 h-4 text-slate-400 absolute left-4 top-3" />
+                  </div>
                 </div>
-              ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-                  {cuponeras.map((c) => {
+                {cuponeras.filter(c => 
+                  c.nombreCuponera?.toLowerCase().includes(searchCuponeras.toLowerCase()) || 
+                  c.codigo?.toLowerCase().includes(searchCuponeras.toLowerCase()) ||
+                  c.tramosPermitidos?.join(' ').toLowerCase().includes(searchCuponeras.toLowerCase())
+                ).length === 0 ? (
+                  <div className="p-12 text-center text-slate-500 text-xs space-y-2">
+                    <AlertCircle className="w-8 h-8 text-amber-500 mx-auto" />
+                    <p className="font-bold text-slate-700">No se encontraron cuponeras registradas.</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                    {cuponeras.filter(c => 
+                      c.nombreCuponera?.toLowerCase().includes(searchCuponeras.toLowerCase()) || 
+                      c.codigo?.toLowerCase().includes(searchCuponeras.toLowerCase()) ||
+                      c.tramosPermitidos?.join(' ').toLowerCase().includes(searchCuponeras.toLowerCase())
+                    ).map((c) => {
                     const totalC = c.totalCupones || 10;
                     const saldoC = c.saldoDisponible || 0;
                     const daysLeft = getDaysLeft(c.fechaVencimiento);
@@ -367,8 +390,9 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
                       </div>
                     );
                   })}
-                </div>
-              )
+                  </div>
+                )}
+              </>
             )}
             
             {activeDashboardTab === 'historial' && (
