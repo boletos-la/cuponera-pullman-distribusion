@@ -611,8 +611,8 @@ export function ServiceDetailDialog({
             cost: freshService.cost,
             boardingAt: boardingPoint,
             dropoffAt: dropoffPoint,
-            passengerName: passengerData.passenger?.name || cuponInfo?.nombreCliente || "Titular de Cuponera",
-            passengerEmail: passengerData.passenger?.email || cuponInfo?.emailCliente || "correo@reservas.cl",
+            passengerName: passengerData.passenger?.name || cuponInfo?.nombreCliente || cuponInfo?.nombreUsuario || "Titular de Cuponera",
+            passengerEmail: passengerData.passenger?.email || cuponInfo?.emailCliente || cuponInfo?.emailUsuario || "correo@reservas.cl",
             passengerRut: passengerData.passenger?.rut || cuponInfo?.rutUsuario || "11111111-1",
           }),
         });

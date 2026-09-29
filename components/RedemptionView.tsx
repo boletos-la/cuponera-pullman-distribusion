@@ -163,7 +163,9 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
               fechaVencimiento: found.fechaVencimiento,
               totalCupones: found.totalCupones,
               cuponesUsados: found.cuponesUsados,
-              saldoDisponible: found.saldoDisponible
+              saldoDisponible: found.saldoDisponible,
+              nombreCliente: found.nombreCliente,
+              emailCliente: found.emailCliente
             });
             if (found.tramosPermitidos && found.tramosPermitidos.length > 0) {
               setSelectedTramo(found.tramosPermitidos[0]);
