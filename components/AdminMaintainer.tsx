@@ -617,6 +617,7 @@ export default function AdminMaintainer() {
                     <th className="p-3">Acción</th>
                     <th className="p-3">Usuario</th>
                     <th className="p-3">Fecha</th>
+                    <th className="p-3">Endpoint</th>
                     <th className="p-3">Detalles y Payload</th>
                   </tr>
                 </thead>
@@ -668,6 +669,7 @@ export default function AdminMaintainer() {
                              <div className="font-mono text-[10px] text-slate-500">{log.rutUsuario || '-'}</div>
                           </td>
                           <td className="p-3 text-slate-500 whitespace-nowrap">{new Date(log.fechaHora).toLocaleString('es-CL')}</td>
+                          <td className="p-3 font-mono text-[10px] text-slate-600">{log.endpoint || '-'}</td>
                           <td className="p-3 w-full max-w-xl">
                              {!isJsonDetalles && <p className="text-slate-700 mb-2">{log.detalles}</p>}
                              {isJsonDetalles && !hasPayload && (

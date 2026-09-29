@@ -134,6 +134,7 @@ export interface AuditoriaLog {
   accion: 'COMPRA_CUPONERA' | 'CANJE_CUPON' | 'OTP_GENERADO' | 'OTP_VALIDADO' | 'ANULACION_PASAJE' | 'CREACION_CUPONERA' | 'EDICION_CUPONERA' | string;
   detalles: any;
   payload?: any;
+  endpoint?: string;
   ip?: string;
 }
 
