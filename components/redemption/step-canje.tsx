@@ -226,14 +226,14 @@ export function StepCanje({
             <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
               <Bus className="w-32 h-32" />
             </div>
-            
+
             <h4 className="font-bold text-slate-800 flex items-center gap-2 mb-6 text-lg border-b border-slate-200 pb-3">
               <div className="bg-blue-100 p-1.5 rounded-md">
                 <Bus className="w-5 h-5 text-blue-600" />
               </div>
               Detalle del Viaje
             </h4>
-            
+
             <div className="space-y-5 relative z-10">
               <div className="flex items-center justify-between">
                 <div>
@@ -289,7 +289,7 @@ export function StepCanje({
               </div>
             </div>
           </div>
-          
+
           {/* Tarjeta Pasajero */}
           <div className="bg-slate-50 rounded-2xl p-6 border border-slate-100 shadow-sm relative overflow-hidden">
             <h4 className="font-bold text-slate-800 flex items-center gap-2 mb-6 text-lg border-b border-slate-200 pb-3">
@@ -298,18 +298,18 @@ export function StepCanje({
               </div>
               Datos del Pasajero
             </h4>
-            
+
             <div className="space-y-4">
               <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex flex-col gap-1">
                 <span className="text-slate-400 font-semibold text-xs uppercase tracking-wider">Nombre Completo</span>
                 <span className="font-bold text-slate-800 text-base">{bookingData.passengerName}</span>
               </div>
-              
+
               <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex flex-col gap-1">
                 <span className="text-slate-400 font-semibold text-xs uppercase tracking-wider">RUT Titular</span>
                 <span className="font-mono font-bold text-slate-800 text-base">{userRut}</span>
               </div>
-              
+
               <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex flex-col gap-1">
                 <span className="text-slate-400 font-semibold text-xs uppercase tracking-wider">Email para E-Ticket</span>
                 <span className="font-medium text-slate-800 text-base">{bookingData.passengerEmail}</span>
@@ -330,23 +330,23 @@ export function StepCanje({
       )}
 
       <div className="flex flex-col-reverse sm:flex-row justify-between items-center gap-4 pt-4 border-t border-slate-200">
-        <Button 
-          variant="outline" 
-          onClick={onBack} 
-          disabled={isProcessing} 
+        <Button
+          variant="outline"
+          onClick={onBack}
+          disabled={isProcessing}
           className="w-full sm:w-auto px-8 py-6 text-base font-semibold text-slate-600 hover:text-slate-900 border-2 rounded-xl transition-all"
         >
           Regresar
         </Button>
-        <Button 
-          onClick={handleInitiateCanje} 
-          disabled={isProcessing || !displaySelectedSeats.length} 
+        <Button
+          onClick={handleInitiateCanje}
+          disabled={isProcessing || !displaySelectedSeats.length}
           className="w-full sm:w-auto px-10 py-6 text-base font-bold text-white bg-primary hover:bg-primary/90 shadow-lg hover:shadow-xl rounded-xl transition-all min-w-[240px]"
         >
           {isProcessing ? (
             <><Loader2 className="mr-3 h-5 w-5 animate-spin" /> Enviando código 2FA...</>
           ) : (
-            <><ShieldCheck className="mr-3 h-5 w-5" /> Validar con OTP y Canjear</>
+            <><ShieldCheck className="mr-3 h-5 w-5" /> Validar y Canjear</>
           )}
         </Button>
       </div>
