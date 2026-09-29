@@ -54,7 +54,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
     const cleaned = cleanRut(rut);
     if (cleaned.length >= 8 && validateRut(cleaned)) {
       try {
-        const res = await authService.checkRut(cleaned);
+        const res = await authService.checkRut(formatRut(cleaned));
         if (res.success && res.exists && res.isGuest) {
           if (res.nombre && !nombre) setNombre(res.nombre);
           if (res.correo_ofuscado) {
@@ -80,7 +80,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
 
     setLoading(true);
     try {
-      const res = await authService.login({ rut: cleanRut(rut), password });
+      const res = await authService.login({ rut: formatRut(rut), password });
       if (res.success && res.token) {
         setAuthToken(res.token);
         onLoginSuccess();
@@ -120,7 +120,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
     setLoading(true);
     try {
       // Send OTP to the email provided for MFA validation
-      const res = await authService.sendOtp({ rut: cleanRut(rut), email, nombre, isRegister: true });
+      const res = await authService.sendOtp({ rut: formatRut(rut), email, nombre, isRegister: true });
       if (res.success) {
         setMode('mfa');
       } else {
@@ -145,7 +145,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
     setLoading(true);
     try {
       // 1. Verificar OTP
-      const otpRes = await authService.verifyOtp({ rut: cleanRut(rut), otpCode });
+      const otpRes = await authService.verifyOtp({ rut: formatRut(rut), otpCode });
       if (!otpRes.success) {
         setError(otpRes.message || 'Código inválido o expirado.');
         setLoading(false);
@@ -154,7 +154,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
 
       // 2. Si el OTP es válido, procedemos a registrar
       const regRes = await authService.register({
-        rut: cleanRut(rut),
+        rut: formatRut(rut),
         nombre,
         correo: email,
         telefono,
@@ -168,7 +168,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
       }
 
       // 3. Auto Login tras registro exitoso
-      const loginRes = await authService.login({ rut: cleanRut(rut), password });
+      const loginRes = await authService.login({ rut: formatRut(rut), password });
       if (loginRes.success && loginRes.token) {
         setAuthToken(loginRes.token);
         onLoginSuccess();
