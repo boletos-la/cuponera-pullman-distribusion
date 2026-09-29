@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { getAuthToken, getAuthUser, removeAuthToken, setAuthToken, apiClient } from '@/lib/apiClient';
-import { KeyRound, Mail, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { KeyRound, Mail, AlertCircle, CheckCircle2, Loader2 } from 'lucide-react';
 
 export default function ProfileTab() {
   const user = getAuthUser();
@@ -87,8 +87,9 @@ export default function ProfileTab() {
           <button
             type="submit"
             disabled={loading || email === user.correo}
-            className="bg-[#023caf] hover:bg-[#083b82] text-white font-bold py-2.5 px-6 rounded-xl transition-all disabled:opacity-50"
+            className="flex items-center gap-2 justify-center bg-[#023caf] hover:bg-[#083b82] text-white font-bold py-2.5 px-6 rounded-xl transition-all disabled:opacity-50"
           >
+            {loading && <Loader2 className="w-4 h-4 animate-spin" />}
             Guardar Correo
           </button>
         </form>
@@ -135,8 +136,9 @@ export default function ProfileTab() {
           <button
             type="submit"
             disabled={loading || !actualPassword || !newPassword}
-            className="bg-[#fa5e00] hover:bg-[#e55400] text-white font-bold py-2.5 px-6 rounded-xl transition-all disabled:opacity-50"
+            className="flex items-center gap-2 justify-center bg-[#fa5e00] hover:bg-[#e55400] text-white font-bold py-2.5 px-6 rounded-xl transition-all disabled:opacity-50"
           >
+            {loading && <Loader2 className="w-4 h-4 animate-spin" />}
             Actualizar Contraseña
           </button>
         </form>

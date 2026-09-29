@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { X, LogIn, AlertCircle, UserPlus, KeyRound, ArrowRight, ArrowLeft, Mail, Phone, Lock, User, ShieldCheck } from 'lucide-react';
+import { X, LogIn, AlertCircle, UserPlus, KeyRound, ArrowRight, ArrowLeft, Mail, Phone, Lock, User, ShieldCheck, Loader2 } from 'lucide-react';
 import { authService } from '@/lib/services/authService';
 import { setAuthToken } from '@/lib/apiClient';
 import { validateRut, formatRut, cleanRut } from '@/lib/rutValidator';
@@ -283,7 +283,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
                   className="w-full bg-gradient-to-r from-[#fa5e00] to-orange-500 hover:from-orange-600 hover:to-orange-500 text-white font-black py-3.5 px-4 rounded-xl shadow-[0_4px_14px_0_rgba(250,94,0,0.39)] hover:shadow-[0_6px_20px_rgba(250,94,0,0.23)] transition-all flex items-center justify-center gap-2 text-sm disabled:opacity-50 active:scale-[0.98]"
                 >
                   {loading ? (
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <Loader2 className="w-5 h-5 animate-spin" />
                   ) : (
                     <span>Entrar a mi Cuenta</span>
                   )}
@@ -422,7 +422,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
                   className="w-full bg-gradient-to-r from-[#023caf] to-[#01256e] hover:from-[#01256e] hover:to-[#011a4d] text-white font-black py-3.5 px-4 rounded-xl shadow-[0_4px_14px_0_rgba(2,60,175,0.39)] hover:shadow-[0_6px_20px_rgba(2,60,175,0.23)] transition-all flex items-center justify-center gap-2 text-sm disabled:opacity-50 active:scale-[0.98]"
                 >
                   {loading ? (
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <Loader2 className="w-5 h-5 animate-spin" />
                   ) : (
                     <>
                       <span>Siguiente: Validar Correo</span>
@@ -481,7 +481,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
                   className="w-full bg-gradient-to-r from-[#fa5e00] to-orange-500 hover:from-orange-600 hover:to-orange-500 text-white font-black py-3.5 px-4 rounded-xl shadow-[0_4px_14px_0_rgba(250,94,0,0.39)] hover:shadow-[0_6px_20px_rgba(250,94,0,0.23)] transition-all flex items-center justify-center gap-2 text-sm disabled:opacity-50 active:scale-[0.98]"
                 >
                   {loading ? (
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <Loader2 className="w-5 h-5 animate-spin" />
                   ) : (
                     <>
                       <KeyRound className="w-4 h-4" />

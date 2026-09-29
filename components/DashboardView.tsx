@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { validateRut, formatRut, cleanRut } from '@/lib/rutValidator';
-import { Search, LayoutDashboard, Ticket, Clock, CheckCircle, Mail, ArrowRight, AlertCircle, Ban, ShieldCheck, KeyRound, Star, MapPin, Target, ShoppingCart } from 'lucide-react';
+import { Search, LayoutDashboard, Ticket, Clock, CheckCircle, Mail, ArrowRight, AlertCircle, Ban, ShieldCheck, KeyRound, Star, MapPin, Target, ShoppingCart, Loader2 } from 'lucide-react';
 import { couponService } from '@/lib/services/couponService';
 import { getAuthUser } from '@/lib/apiClient';
 import ProfileTab from './ProfileTab';
@@ -168,7 +168,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
               className="w-full bg-[#fa5e00] hover:bg-[#e55400] text-white font-extrabold py-4 px-6 rounded-full shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 text-sm cursor-pointer disabled:opacity-50 disabled:hover:translate-y-0"
             >
               {loading ? (
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                <Loader2 className="w-5 h-5 animate-spin" />
               ) : (
                 <>
                   <Search className="w-5 h-5" />

@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { validateRut, formatRut, cleanRut } from '@/lib/rutValidator';
-import { RotateCcw, AlertTriangle, CheckCircle2, ShieldAlert, KeyRound, Search, ArrowRight, ShieldCheck } from 'lucide-react';
+import { RotateCcw, AlertTriangle, CheckCircle2, ShieldAlert, KeyRound, Search, ArrowRight, ShieldCheck, Loader2 } from 'lucide-react';
 import { couponService } from '@/lib/services/couponService';
 
 export default function TicketCancellationView() {
@@ -202,7 +202,7 @@ export default function TicketCancellationView() {
                 className="group relative w-full overflow-hidden bg-gradient-to-r from-[#fa5e00] to-orange-500 hover:from-orange-600 hover:to-orange-500 text-white font-black py-4 px-6 rounded-xl shadow-[0_4px_14px_0_rgba(250,94,0,0.39)] hover:shadow-[0_6px_20px_rgba(250,94,0,0.23)] transition-all duration-300 flex items-center justify-center gap-2 text-base cursor-pointer disabled:opacity-50 disabled:hover:shadow-none active:scale-[0.98]"
               >
                 {loading ? (
-                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  <Loader2 className="w-5 h-5 animate-spin" />
                 ) : (
                   <>
                     <span className="relative z-10 flex items-center gap-2">
@@ -265,7 +265,7 @@ export default function TicketCancellationView() {
                   className="w-full bg-gradient-to-r from-[#023caf] to-[#01256e] hover:from-[#01256e] hover:to-[#011a4d] text-white font-black py-4 px-6 rounded-xl shadow-[0_4px_14px_0_rgba(2,60,175,0.39)] hover:shadow-[0_6px_20px_rgba(2,60,175,0.23)] transition-all duration-300 flex items-center justify-center gap-2 text-base cursor-pointer disabled:opacity-50 active:scale-[0.98]"
                 >
                   {loading ? (
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <Loader2 className="w-5 h-5 animate-spin" />
                   ) : (
                     <>
                       <RotateCcw className="w-5 h-5 text-blue-200" />
