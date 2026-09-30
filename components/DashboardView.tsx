@@ -387,7 +387,12 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
             )}
             
             {activeDashboardTab === 'historial' && (
-              <HistoryTab compras={historialCompras} canjes={historialCanjes} />
+              <HistoryTab 
+                compras={historialCompras} 
+                canjes={historialCanjes} 
+                isGuest={!authUser}
+                onLoginRequest={() => setStep('login')}
+              />
             )}
           </div>
         </div>
