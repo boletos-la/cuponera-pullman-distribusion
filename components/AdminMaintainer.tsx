@@ -849,19 +849,19 @@ export default function AdminMaintainer() {
                               <button
                                 type="button"
                                 onClick={() => setTramosItems(prev => [...prev, { origen: '', destino: '' }])}
-                                className="focus:outline-none transition-transform hover:scale-110 cursor-pointer"
+                                className="focus:outline-none transition-transform hover:scale-110 active:scale-95 cursor-pointer"
                                 title="Agregar combinación"
                               >
-                                <Plus className="w-6 h-6 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full p-1 stroke-[2.5] shadow-xs transition-colors" />
+                                <Plus className="w-6 h-6 bg-green-600 hover:bg-green-700 text-white rounded-full p-1 stroke-[3] shadow-sm transition-colors" />
                               </button>
                               <button
                                 type="button"
                                 onClick={() => { if (tramosItems.length > 1) setTramosItems(prev => prev.filter((_, idx) => idx !== index)) }}
-                                className={`focus:outline-none transition-transform hover:scale-110 cursor-pointer ${tramosItems.length <= 1 ? 'opacity-40 cursor-not-allowed hover:scale-100' : ''}`}
+                                className={`focus:outline-none transition-transform hover:scale-110 active:scale-95 cursor-pointer ${tramosItems.length <= 1 ? 'opacity-35 cursor-not-allowed hover:scale-100' : ''}`}
                                 disabled={tramosItems.length <= 1}
                                 title="Eliminar combinación"
                               >
-                                <Minus className="w-6 h-6 bg-rose-500 hover:bg-rose-600 text-white rounded-full p-1 stroke-[2.5] shadow-xs transition-colors" />
+                                <Minus className="w-6 h-6 bg-red-600 hover:bg-red-700 text-white rounded-full p-1 stroke-[3] shadow-sm transition-colors" />
                               </button>
                             </div>
                           </div>
