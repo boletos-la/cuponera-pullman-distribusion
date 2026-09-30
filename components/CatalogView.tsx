@@ -34,6 +34,11 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
   const [rutError, setRutError] = useState('');
   const [submitError, setSubmitError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [quiereRegistrarse, setQuiereRegistrarse] = useState(false);
+  const [password, setPassword] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
+  const [showOtpCheckout, setShowOtpCheckout] = useState(false);
+  const [otpCodeCheckout, setOtpCodeCheckout] = useState('');
 
   // Resultado de Compra Aprobada
   const [compraExitosa, setCompraExitosa] = useState<{
@@ -167,6 +172,11 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
     setSelectedCuponera(c);
     setSubmitError('');
     setRutError('');
+    setQuiereRegistrarse(false);
+    setPassword('');
+    setPasswordConfirm('');
+    setShowOtpCheckout(false);
+    setOtpCodeCheckout('');
 
     // Pre-cargar datos del usuario si está autenticado
     const authUser = getAuthUser();
@@ -200,8 +210,54 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
       return;
     }
 
+    if (quiereRegistrarse) {
+      if (password.length < 8) {
+        setSubmitError('La contraseña debe tener al menos 8 caracteres.');
+        return;
+      }
+      if (!/(?=.*[A-Z])(?=.*[0-9])/.test(password)) {
+        setSubmitError('La contraseña debe contener al menos una mayúscula y un número.');
+        return;
+      }
+      if (password !== passwordConfirm) {
+        setSubmitError('Las contraseñas no coinciden.');
+        return;
+      }
+
+      if (!showOtpCheckout) {
+        setSubmitting(true);
+        try {
+          const res = await authService.sendOtp({ rut: formatRut(rut), email, nombre, isRegister: true });
+          if (res.success) {
+            setShowOtpCheckout(true);
+          } else {
+            setSubmitError(res.message || 'Error al enviar código OTP.');
+          }
+        } catch (err: any) {
+          setSubmitError(err.message || 'Error de conexión al solicitar OTP.');
+        } finally {
+          setSubmitting(false);
+        }
+        return; // Detenemos aquí, esperamos que el usuario ponga el OTP y vuelva a enviar
+      } else {
+        if (otpCodeCheckout.length < 6) {
+          setSubmitError('Ingrese el código completo de 6 dígitos.');
+          return;
+        }
+      }
+    }
+
     setSubmitting(true);
     try {
+      if (quiereRegistrarse && showOtpCheckout) {
+        // Registrar usuario con OTP
+        const regRes = await authService.register({ rut, nombre, correo: email, telefono, password, otpCode: otpCodeCheckout });
+        if (!regRes.success) {
+          setSubmitError(regRes.message || 'Error al registrar la cuenta.');
+          setSubmitting(false);
+          return;
+        }
+      }
 
       if (selectedCuponera) {
         try {
@@ -589,6 +645,72 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                     />
                   </div>
                 </div>
+              </div>
+
+              <div className="bg-[#FFF7ED] border border-[#FFEDD5] rounded-2xl p-4 space-y-2">
+                <div className="flex items-start gap-2">
+                  <input
+                    type="checkbox"
+                    id="quiereRegistrarse"
+                    checked={quiereRegistrarse}
+                    onChange={(e) => setQuiereRegistrarse(e.target.checked)}
+                    disabled={showOtpCheckout}
+                    className="mt-0.5 rounded text-[#fa5e00] focus:ring-[#fa5e00]"
+                  />
+                  <label htmlFor="quiereRegistrarse" className="text-xs text-slate-700 font-bold leading-tight">
+                    ¿No tienes una cuenta? Regístrate para gestionar tus cuponeras fácilmente
+                  </label>
+                </div>
+                {quiereRegistrarse && !showOtpCheckout && (
+                  <div className="pt-2 pl-6 space-y-3">
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-700 mb-1">Contraseña</label>
+                      <input
+                        type="password"
+                        required={quiereRegistrarse}
+                        placeholder="Mínimo 8 caracteres, 1 mayúscula y 1 número"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-700 mb-1">Repetir Contraseña</label>
+                      <input
+                        type="password"
+                        required={quiereRegistrarse}
+                        placeholder="Repite tu contraseña"
+                        value={passwordConfirm}
+                        onChange={(e) => setPasswordConfirm(e.target.value)}
+                        className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
+                      />
+                    </div>
+                  </div>
+                )}
+                {quiereRegistrarse && showOtpCheckout && (
+                  <div className="pt-2 pl-6 space-y-3">
+                    <div className="p-3 bg-white border border-[#fa5e00] rounded-xl shadow-sm">
+                      <p className="text-xs text-slate-600 mb-2">
+                        Te hemos enviado un código de 6 dígitos a <b>{email}</b>. Ingrésalo para verificar tu cuenta y continuar con el pago.
+                      </p>
+                      <input
+                        type="text"
+                        maxLength={6}
+                        placeholder="000000"
+                        value={otpCodeCheckout}
+                        onChange={(e) => setOtpCodeCheckout(e.target.value.replace(/\D/g, ''))}
+                        className="w-full text-center tracking-[0.5em] font-mono text-lg bg-slate-50 border border-[#fa5e00] rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#fa5e00]"
+                      />
+                      <button 
+                        type="button" 
+                        onClick={() => setShowOtpCheckout(false)} 
+                        className="text-[11px] text-slate-500 font-medium underline mt-2 w-full text-center hover:text-slate-700 cursor-pointer"
+                      >
+                        Cambiar contraseña o volver atrás
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Paso 4: Condiciones de Compra */}
