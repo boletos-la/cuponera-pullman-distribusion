@@ -1,5 +1,21 @@
 [
   {
+    "id": "AUD-TX-45",
+    "fechaHora": "2026-09-30T15:27:11.000Z",
+    "rutUsuario": "21.272.086-0",
+    "nombreUsuario": "ISABELLA CALDERÃN OYARCE",
+    "accion": "COMPRA_CUPONERA",
+    "detalles": "Transacción Webpay Plus PENDIENTE por $50.000 [Orden: CUPONERA_15_1790782030534]."
+  },
+  {
+    "id": "AUD-OTP-VAL-72",
+    "fechaHora": "2026-09-30T15:24:54.000Z",
+    "rutUsuario": "21.272.086-0",
+    "nombreUsuario": "ISABELLA CALDERÃN OYARCE",
+    "accion": "OTP_VALIDADO",
+    "detalles": "Verificación 2FA completada con éxito (LOGIN). Acceso autorizado."
+  },
+  {
     "id": "AUD-OTP-GEN-71",
     "fechaHora": "2026-09-30T15:02:43.000Z",
     "rutUsuario": "21.051.782-0",

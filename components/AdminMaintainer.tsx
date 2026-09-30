@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import { Cuponera, AuditoriaLog } from '@/lib/dataStore';
 import { getApiUrl, apiClient } from '@/lib/apiClient';
 import { Settings, Plus, Edit2, History, Check, X, ShieldAlert, Trash2, ArrowLeftRight, Users, CreditCard, Ticket, ShoppingBag, Search, ChevronUp, ChevronDown, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
@@ -20,6 +21,11 @@ const FREQUENT_CITIES = [
 ];
 
 export default function AdminMaintainer() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const [activeTab, setActiveTab] = useState<'catalogo' | 'usuarios' | 'transacciones' | 'canjes' | 'compras' | 'auditoria'>('catalogo');
   const [cuponeras, setCuponeras] = useState<Cuponera[]>([]);
   const [auditoria, setAuditoria] = useState<AuditoriaLog[]>([]);
@@ -790,37 +796,37 @@ export default function AdminMaintainer() {
       </div>
 
       {/* Modal Formulario Edición/Creación */}
-      {showModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white rounded-lg max-w-5xl w-full max-h-[95vh] overflow-y-auto p-8 shadow-2xl border border-slate-100 relative">
-            <button onClick={() => setShowModal(false)} className="absolute top-6 right-6 text-slate-400 hover:text-slate-600 cursor-pointer">
-              <X className="w-5 h-5 stroke-1" />
+      {mounted && showModal && createPortal(
+        <div className="fixed inset-0 w-screen h-screen z-[9999] flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white rounded-3xl max-w-5xl w-full max-h-full overflow-y-auto p-6 sm:p-8 shadow-2xl border border-slate-100 relative">
+            <button onClick={() => setShowModal(false)} className="absolute top-6 right-6 text-slate-400 hover:text-slate-600 cursor-pointer bg-slate-100 hover:bg-slate-200 p-1.5 rounded-full transition-colors">
+              <X className="w-5 h-5 stroke-[2.5]" />
             </button>
-            <form onSubmit={handleSave} className="space-y-6 text-[13px] text-slate-700 font-medium">
+            <form onSubmit={handleSave} className="space-y-6 text-sm text-slate-700 font-medium mt-2">
               <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-x-12 gap-y-6">
                 
                 {/* Columna Izquierda */}
-                <div className="space-y-4">
-                  <div className="grid grid-cols-[180px_1fr] items-center gap-4">
-                    <label className="text-right">Nombre de la zona<span className="text-red-500">*</span></label>
-                    <input type="text" required value={nombre} onChange={(e) => setNombre(e.target.value)} className="w-full bg-white border border-slate-100 rounded px-3 py-2 focus:outline-none focus:border-slate-300" placeholder="CUPONERA LOS ANDES (10)" />
+                <div className="space-y-5">
+                  <div className="grid grid-cols-[200px_1fr] items-center gap-4">
+                    <label className="text-right font-bold text-slate-700">Nombre de la zona <span className="text-red-500">*</span></label>
+                    <input type="text" required value={nombre} onChange={(e) => setNombre(e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]" placeholder="ej. CUPONERA LOS ANDES (10)" />
                   </div>
                   
-                  <div className="grid grid-cols-[180px_1fr] items-start gap-4">
-                    <label className="text-right mt-2">Combinación de ciudades</label>
+                  <div className="grid grid-cols-[200px_1fr] items-start gap-4">
+                    <label className="text-right font-bold text-slate-700 mt-3">Combinación de ciudades</label>
                     <div className="space-y-3">
                       {tramosItems.map((tramo, index) => (
-                        <div key={index} className="flex items-center gap-3">
-                          <span className="text-slate-600">Origen</span>
-                          <div className="w-32"><ComboBox items={cityItems} value={tramo.origen} onChange={(val) => setTramosItems(prev => prev.map((item, idx) => idx === index ? { ...item, origen: val } : item))} placeholder="" /></div>
-                          <span className="text-slate-600">Destination</span>
-                          <div className="w-32"><ComboBox items={cityItems} value={tramo.destino} onChange={(val) => setTramosItems(prev => prev.map((item, idx) => idx === index ? { ...item, destino: val } : item))} placeholder="" /></div>
-                          <div className="flex items-center gap-1.5 ml-2">
-                            <button type="button" onClick={() => setTramosItems(prev => [...prev, { origen: '', destino: '' }])} className="text-[#65A30D] hover:text-[#4d7c0a] focus:outline-none">
-                              <Plus className="w-5 h-5 bg-[#d9f99d] rounded-full p-0.5" />
+                        <div key={index} className="flex items-center gap-3 bg-slate-50 border border-slate-200 p-2 rounded-2xl">
+                          <span className="text-slate-600 text-xs font-bold ml-2">Origen</span>
+                          <div className="w-[140px]"><ComboBox items={cityItems} value={tramo.origen} onChange={(val) => setTramosItems(prev => prev.map((item, idx) => idx === index ? { ...item, origen: val } : item))} placeholder="" /></div>
+                          <span className="text-slate-600 text-xs font-bold">Destino</span>
+                          <div className="w-[140px]"><ComboBox items={cityItems} value={tramo.destino} onChange={(val) => setTramosItems(prev => prev.map((item, idx) => idx === index ? { ...item, destino: val } : item))} placeholder="" /></div>
+                          <div className="flex items-center gap-1.5 ml-1">
+                            <button type="button" onClick={() => setTramosItems(prev => [...prev, { origen: '', destino: '' }])} className="text-[#65A30D] hover:text-[#4d7c0a] focus:outline-none transition-transform hover:scale-110 cursor-pointer">
+                              <Plus className="w-6 h-6 bg-[#d9f99d] rounded-full p-1" />
                             </button>
-                            <button type="button" onClick={() => { if(tramosItems.length > 1) setTramosItems(prev => prev.filter((_, idx) => idx !== index)) }} className="text-[#65A30D] hover:text-[#4d7c0a] focus:outline-none">
-                              <div className="w-5 h-5 bg-[#d9f99d] rounded-full flex items-center justify-center font-bold text-lg leading-none p-0 pb-0.5">-</div>
+                            <button type="button" onClick={() => { if(tramosItems.length > 1) setTramosItems(prev => prev.filter((_, idx) => idx !== index)) }} className="text-[#65A30D] hover:text-[#4d7c0a] focus:outline-none transition-transform hover:scale-110 cursor-pointer">
+                              <div className="w-6 h-6 bg-[#d9f99d] rounded-full flex items-center justify-center font-bold text-xl leading-none p-0 pb-0.5">-</div>
                             </button>
                           </div>
                         </div>
@@ -828,69 +834,69 @@ export default function AdminMaintainer() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-[180px_1fr] items-center gap-4 pt-1">
-                    <label className="text-right">Monto del cupón</label>
-                    <input type="number" required min="1" value={valorUnitario} onChange={(e) => setValorUnitario(e.target.value === '' ? '' : Number(e.target.value))} className="w-full bg-white border border-slate-100 rounded px-3 py-2 focus:outline-none focus:border-slate-300" />
+                  <div className="grid grid-cols-[200px_1fr] items-center gap-4">
+                    <label className="text-right font-bold text-slate-700">Monto del cupón</label>
+                    <input type="number" required min="1" value={valorUnitario} onChange={(e) => setValorUnitario(e.target.value === '' ? '' : Number(e.target.value))} className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]" />
                   </div>
 
-                  <div className="grid grid-cols-[180px_1fr] items-center gap-4">
-                    <label className="text-right uppercase">NUMERO DE CUPONES</label>
-                    <input type="number" required min="1" value={cantidadCupones} onChange={(e) => setCantidadCupones(e.target.value === '' ? '' : Number(e.target.value))} className="w-full bg-white border border-slate-100 rounded px-3 py-2 focus:outline-none focus:border-slate-300" />
+                  <div className="grid grid-cols-[200px_1fr] items-center gap-4">
+                    <label className="text-right font-bold text-slate-700 uppercase">NÚMERO DE CUPONES</label>
+                    <input type="number" required min="1" value={cantidadCupones} onChange={(e) => setCantidadCupones(e.target.value === '' ? '' : Number(e.target.value))} className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]" />
                   </div>
 
-                  <div className="grid grid-cols-[180px_1fr] items-center gap-4">
-                    <label className="text-right">Monto del descuento</label>
-                    <input type="text" value={descuento} onChange={(e) => setDescuento(e.target.value)} className="w-full bg-white border border-slate-100 rounded px-3 py-2 focus:outline-none focus:border-slate-300" />
+                  <div className="grid grid-cols-[200px_1fr] items-center gap-4">
+                    <label className="text-right font-bold text-slate-700">Monto del descuento</label>
+                    <input type="text" value={descuento} onChange={(e) => setDescuento(e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]" />
                   </div>
 
-                  <div className="grid grid-cols-[180px_1fr] items-center gap-4">
-                    <label className="text-right text-[11px] leading-tight">Enviar la información de la zona en la API para agentes de OTA</label>
-                    <div className="flex items-center gap-4">
-                      <label className="flex items-center gap-1.5 cursor-pointer">
-                        <input type="radio" name="enviarOta" checked={enviarOta === 'Si'} onChange={() => setEnviarOta('Si')} className="accent-[#fa5e00] w-4 h-4" />
-                        <span>Si</span>
+                  <div className="grid grid-cols-[200px_1fr] items-center gap-4">
+                    <label className="text-right text-xs font-bold text-slate-700 leading-tight">Enviar información de la zona en API para agentes OTA</label>
+                    <div className="flex items-center gap-6">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" name="enviarOta" checked={enviarOta === 'Si'} onChange={() => setEnviarOta('Si')} className="accent-[#fa5e00] w-4 h-4 cursor-pointer" />
+                        <span className={enviarOta === 'Si' ? 'font-bold text-slate-900' : 'text-slate-500'}>Si</span>
                       </label>
-                      <label className="flex items-center gap-1.5 cursor-pointer">
-                        <input type="radio" name="enviarOta" checked={enviarOta === 'N°'} onChange={() => setEnviarOta('N°')} className="accent-[#fa5e00] w-4 h-4" />
-                        <span>N°</span>
-                      </label>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-[180px_1fr] items-center gap-4">
-                    <label className="text-right">Estado</label>
-                    <div className="flex items-center gap-4">
-                      <label className="flex items-center gap-1.5 cursor-pointer">
-                        <input type="radio" name="estado" checked={estadoActivo === 'Activo'} onChange={() => { setEstadoActivo('Activo'); setActiva(true); }} className="accent-[#fa5e00] w-4 h-4" />
-                        <span>Activo</span>
-                      </label>
-                      <label className="flex items-center gap-1.5 cursor-pointer">
-                        <input type="radio" name="estado" checked={estadoActivo === 'Inactivo'} onChange={() => { setEstadoActivo('Inactivo'); setActiva(false); }} className="accent-[#fa5e00] w-4 h-4" />
-                        <span>Inactivo</span>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" name="enviarOta" checked={enviarOta === 'N°'} onChange={() => setEnviarOta('N°')} className="accent-[#fa5e00] w-4 h-4 cursor-pointer" />
+                        <span className={enviarOta === 'N°' ? 'font-bold text-slate-900' : 'text-slate-500'}>N°</span>
                       </label>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-[180px_1fr] items-center gap-4">
-                    <label className="text-right">Nominativo</label>
-                    <div className="flex items-center gap-4">
-                      <label className="flex items-center gap-1.5 cursor-pointer">
-                        <input type="radio" name="nominativo" checked={nominativo === 'Si'} onChange={() => setNominativo('Si')} className="accent-[#fa5e00] w-4 h-4" />
-                        <span>Si</span>
+                  <div className="grid grid-cols-[200px_1fr] items-center gap-4">
+                    <label className="text-right font-bold text-slate-700">Estado</label>
+                    <div className="flex items-center gap-6">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" name="estado" checked={estadoActivo === 'Activo'} onChange={() => { setEstadoActivo('Activo'); setActiva(true); }} className="accent-[#fa5e00] w-4 h-4 cursor-pointer" />
+                        <span className={estadoActivo === 'Activo' ? 'font-bold text-slate-900' : 'text-slate-500'}>Activo</span>
                       </label>
-                      <label className="flex items-center gap-1.5 cursor-pointer">
-                        <input type="radio" name="nominativo" checked={nominativo === 'N°'} onChange={() => setNominativo('N°')} className="accent-[#fa5e00] w-4 h-4" />
-                        <span>N°</span>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" name="estado" checked={estadoActivo === 'Inactivo'} onChange={() => { setEstadoActivo('Inactivo'); setActiva(false); }} className="accent-[#fa5e00] w-4 h-4 cursor-pointer" />
+                        <span className={estadoActivo === 'Inactivo' ? 'font-bold text-slate-900' : 'text-slate-500'}>Inactivo</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-[200px_1fr] items-center gap-4">
+                    <label className="text-right font-bold text-slate-700">Nominativo</label>
+                    <div className="flex items-center gap-6">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" name="nominativo" checked={nominativo === 'Si'} onChange={() => setNominativo('Si')} className="accent-[#fa5e00] w-4 h-4 cursor-pointer" />
+                        <span className={nominativo === 'Si' ? 'font-bold text-slate-900' : 'text-slate-500'}>Si</span>
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" name="nominativo" checked={nominativo === 'N°'} onChange={() => setNominativo('N°')} className="accent-[#fa5e00] w-4 h-4 cursor-pointer" />
+                        <span className={nominativo === 'N°' ? 'font-bold text-slate-900' : 'text-slate-500'}>N°</span>
                       </label>
                     </div>
                   </div>
                 </div>
 
                 {/* Columna Derecha */}
-                <div className="space-y-6 lg:pt-[100px] lg:pl-4">
+                <div className="space-y-6 lg:pt-[76px] lg:pl-4">
                   <div className="flex items-center gap-4">
-                    <label className="w-32 text-right">Tipo de asiento</label>
-                    <select value={tipoAsiento} onChange={(e) => setTipoAsiento(e.target.value)} className="flex-1 bg-white border border-slate-100 rounded px-3 py-2 focus:outline-none focus:border-slate-300">
+                    <label className="w-36 text-right font-bold text-slate-700">Tipo de asiento</label>
+                    <select value={tipoAsiento} onChange={(e) => setTipoAsiento(e.target.value)} className="flex-1 bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf] cursor-pointer appearance-none">
                       <option value="Todos">Todos</option>
                       <option value="Semi Cama">Semi Cama</option>
                       <option value="Salon Cama">Salon Cama</option>
@@ -898,38 +904,39 @@ export default function AdminMaintainer() {
                   </div>
                   
                   <div className="flex items-center gap-4">
-                    <label className="w-32 text-right">Boleto adicional</label>
-                    <div className="flex items-center gap-3">
-                      <button type="button" onClick={() => setBoletoAdicional(Math.max(0, boletoAdicional - 1))} className="text-white bg-[#fa5e00] hover:bg-[#e55400] w-[18px] h-[18px] rounded-full flex items-center justify-center font-bold text-sm leading-none p-0 pb-[3px] focus:outline-none">-</button>
-                      <span className="font-semibold w-3 text-center">{boletoAdicional}</span>
-                      <button type="button" onClick={() => setBoletoAdicional(boletoAdicional + 1)} className="text-white bg-[#fa5e00] hover:bg-[#e55400] w-[18px] h-[18px] rounded-full flex items-center justify-center font-bold text-sm leading-none p-0 pb-[1px] focus:outline-none">+</button>
+                    <label className="w-36 text-right font-bold text-slate-700">Boleto adicional</label>
+                    <div className="flex items-center gap-4 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 w-fit">
+                      <button type="button" onClick={() => setBoletoAdicional(Math.max(0, boletoAdicional - 1))} className="text-white bg-[#fa5e00] hover:bg-[#e55400] w-6 h-6 rounded-full flex items-center justify-center font-bold text-lg leading-none p-0 pb-[2px] focus:outline-none transition-transform hover:scale-110 cursor-pointer shadow-sm">-</button>
+                      <span className="font-black text-lg w-4 text-center">{boletoAdicional}</span>
+                      <button type="button" onClick={() => setBoletoAdicional(boletoAdicional + 1)} className="text-white bg-[#fa5e00] hover:bg-[#e55400] w-6 h-6 rounded-full flex items-center justify-center font-bold text-lg leading-none p-0 pb-[1px] focus:outline-none transition-transform hover:scale-110 cursor-pointer shadow-sm">+</button>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-4">
-                    <label className="w-32 text-right">Enable on Branch</label>
-                    <input type="checkbox" checked={enableBranch} onChange={(e) => setEnableBranch(e.target.checked)} className="rounded text-[#fa5e00] w-3.5 h-3.5 accent-[#fa5e00] border-slate-300" />
+                  <div className="flex items-center gap-4 pt-2">
+                    <label className="w-36 text-right font-bold text-slate-700 cursor-pointer" htmlFor="enableBranch">Enable on Branch</label>
+                    <input type="checkbox" id="enableBranch" checked={enableBranch} onChange={(e) => setEnableBranch(e.target.checked)} className="rounded text-[#fa5e00] w-5 h-5 accent-[#fa5e00] cursor-pointer" />
                   </div>
 
                   <div className="flex items-center gap-4">
-                    <label className="w-32 text-right">Enable on Website</label>
-                    <input type="checkbox" checked={enableWebsite} onChange={(e) => setEnableWebsite(e.target.checked)} className="rounded text-[#fa5e00] w-3.5 h-3.5 accent-[#fa5e00] border-slate-300" />
+                    <label className="w-36 text-right font-bold text-slate-700 cursor-pointer" htmlFor="enableWebsite">Enable on Website</label>
+                    <input type="checkbox" id="enableWebsite" checked={enableWebsite} onChange={(e) => setEnableWebsite(e.target.checked)} className="rounded text-[#fa5e00] w-5 h-5 accent-[#fa5e00] cursor-pointer" />
                   </div>
                 </div>
               </div>
 
               {/* Botones */}
-              <div className="flex justify-center items-center gap-5 pt-10 pb-4">
-                <button type="submit" disabled={saving} className="bg-[#fa5e00] hover:bg-[#e55400] text-white py-2 px-6 rounded shadow-sm transition-colors text-[13px] focus:outline-none">
+              <div className="flex justify-center items-center gap-6 pt-10 pb-4">
+                <button type="submit" disabled={saving} className="bg-[#fa5e00] hover:bg-[#e55400] text-white font-bold py-3 px-10 rounded-xl shadow-md transition-all text-sm focus:outline-none cursor-pointer disabled:opacity-50">
                   {saving ? 'Guardando...' : 'Actualizar'}
                 </button>
-                <button type="button" onClick={() => setShowModal(false)} className="text-[#a53b3b] hover:text-red-700 text-[13px] focus:outline-none">
+                <button type="button" onClick={() => setShowModal(false)} className="text-red-500 hover:text-red-700 font-bold text-sm focus:outline-none transition-colors cursor-pointer">
                   Cancelar
                 </button>
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
