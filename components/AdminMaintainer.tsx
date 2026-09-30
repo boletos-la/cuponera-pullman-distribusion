@@ -207,7 +207,7 @@ export default function AdminMaintainer() {
   const handleOpenNew = () => {
     setEditingId(null); setNombre(''); setDescripcion('');
     setTramosItems([{ origen: 'Santiago', destino: 'Viña Del Mar' }]);
-    setValorUnitario(4900); setCantidadCupones(20); setCategoria(''); setBadge(''); setActiva(true);
+    setValorUnitario(4900); setCantidadCupones(20); setCategoria(''); setBadge(''); setActiva(true); setEstadoActivo('Activo');
     setShowModal(true);
   };
 
@@ -228,7 +228,7 @@ export default function AdminMaintainer() {
     });
     const parsed = Array.from(parsedTramosMap.values());
     setTramosItems(parsed.length > 0 ? parsed : [{ origen: '', destino: '' }]);
-    setValorUnitario(c.valorUnitario); setCantidadCupones(c.cantidadCupones); setCategoria(c.categoria || ''); setBadge(c.badge || ''); setActiva(c.activa);
+    setValorUnitario(c.valorUnitario); setCantidadCupones(c.cantidadCupones); setCategoria(c.categoria || ''); setBadge(c.badge || ''); setActiva(c.activa); setEstadoActivo(c.activa ? 'Activo' : 'Inactivo');
     setShowModal(true);
   };
 
@@ -935,7 +935,11 @@ export default function AdminMaintainer() {
                     <select value={tipoAsiento} onChange={(e) => setTipoAsiento(e.target.value)} className="flex-1 bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf] cursor-pointer appearance-none">
                       <option value="Todos">Todos</option>
                       <option value="Semi Cama">Semi Cama</option>
-                      <option value="Salon Cama">Salon Cama</option>
+                      <option value="Salon Cama">Salón Cama</option>
+                      <option value="Premium">Premium</option>
+                      <option value="Clasico">Clásico</option>
+                      <option value="Ejecutivo">Ejecutivo</option>
+                      <option value="Cama Suite">Cama Suite</option>
                     </select>
                   </div>
 

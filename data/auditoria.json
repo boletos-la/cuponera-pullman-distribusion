@@ -1,5 +1,21 @@
 [
   {
+    "id": "AUD-TX-47",
+    "fechaHora": "2026-09-30T15:37:42.000Z",
+    "rutUsuario": "26.333.625-9",
+    "nombreUsuario": "Paulette Egas Idrovo",
+    "accion": "COMPRA_CUPONERA",
+    "detalles": "Transacción Webpay Plus PENDIENTE por $50.000 [Orden: CUPONERA_15_1790782661900]."
+  },
+  {
+    "id": "AUD-TX-46",
+    "fechaHora": "2026-09-30T15:31:01.000Z",
+    "rutUsuario": "21.272.086-0",
+    "nombreUsuario": "ISABELLA CALDERÃN OYARCE",
+    "accion": "COMPRA_CUPONERA",
+    "detalles": "Transacción Webpay Plus RECHAZADO por $50.000 [Orden: CUPONERA_15_1790782260321]."
+  },
+  {
     "id": "AUD-TX-45",
     "fechaHora": "2026-09-30T15:27:11.000Z",
     "rutUsuario": "21.272.086-0",
