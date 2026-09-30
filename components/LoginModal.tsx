@@ -146,21 +146,14 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
 
     setLoading(true);
     try {
-      // 1. Verificar OTP
-      const otpRes = await authService.verifyOtp({ rut: formatRut(rut), otpCode });
-      if (!otpRes.success) {
-        setError(otpRes.message || 'Código inválido o expirado.');
-        setLoading(false);
-        return;
-      }
-
-      // 2. Si el OTP es válido, procedemos a registrar
+      // 1. Procedemos a registrar y el backend validará el OTP internamente
       const regRes = await authService.register({
         rut: formatRut(rut),
         nombre,
         correo: email,
         telefono,
-        password
+        password,
+        otpCode
       });
 
       if (!regRes.success) {
@@ -169,7 +162,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
         return;
       }
 
-      // 3. Ya no autologueamos, volvemos a la pantalla de login con mensaje de exito
+      // 2. Ya no autologueamos, volvemos a la pantalla de login con mensaje de exito
       setSuccessMessage('¡Cuenta creada exitosamente! Por favor inicia sesión con tu contraseña.');
       setPassword(''); // Limpiamos la contraseña ingresada
       setMode('login');
