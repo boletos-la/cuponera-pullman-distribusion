@@ -9,7 +9,7 @@ import { validateRut, formatRut, cleanRut } from '@/lib/rutValidator';
 import { ShoppingCart, Check, AlertCircle, ShieldCheck, Ticket, Sparkles, Filter, CreditCard, ArrowRight, X, CheckCircle, XCircle, KeyRound, Mail, LayoutGrid, List, Bus, RotateCcw, Star, MapPin, Target } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { authService } from '@/lib/services/authService';
-import { getAuthUser } from '@/lib/apiClient';
+import { getAuthUser, setAuthToken } from '@/lib/apiClient';
 
 interface CatalogViewProps {
   onGoToDashboardWithRut: (rut: string) => void;
@@ -256,6 +256,9 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
           setSubmitError(regRes.message || 'Error al registrar la cuenta.');
           setSubmitting(false);
           return;
+        }
+        if (regRes.token) {
+          setAuthToken(regRes.token, true);
         }
       }
 
@@ -647,7 +650,8 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                 </div>
               </div>
 
-              <div className="bg-[#FFF7ED] border border-[#FFEDD5] rounded-2xl p-4 space-y-2">
+              {!getAuthUser() && (
+                <div className="bg-[#FFF7ED] border border-[#FFEDD5] rounded-2xl p-4 space-y-2">
                 <div className="flex items-start gap-2">
                   <input
                     type="checkbox"
@@ -712,6 +716,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                   </div>
                 )}
               </div>
+              )}
 
               {/* Paso 4: Condiciones de Compra */}
               <div className="bg-[#FFF7ED] border border-[#FFEDD5] rounded-2xl p-4 space-y-2">
@@ -746,6 +751,11 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                   <>
                     <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                     <span>Validando y conectando...</span>
+                  </>
+                ) : showOtpCheckout ? (
+                  <>
+                    <ShieldCheck className="w-5 h-5" />
+                    <span>Confirmar código y Proceder al Pago</span>
                   </>
                 ) : (
                   <>
