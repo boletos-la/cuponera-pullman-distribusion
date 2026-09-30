@@ -29,7 +29,7 @@ export default function AdminMaintainer() {
   const [activeTab, setActiveTab] = useState<'catalogo' | 'usuarios' | 'transacciones' | 'canjes' | 'compras' | 'auditoria'>('catalogo');
   const [cuponeras, setCuponeras] = useState<Cuponera[]>([]);
   const [auditoria, setAuditoria] = useState<AuditoriaLog[]>([]);
-  
+
   // Nuevos estados para las otras tablas
   const [usuarios, setUsuarios] = useState<any[]>([]);
   const [transacciones, setTransacciones] = useState<any[]>([]);
@@ -107,7 +107,7 @@ export default function AdminMaintainer() {
     return [...data].sort((a, b) => {
       let aVal = a[sortConfig.key];
       let bVal = b[sortConfig.key];
-      
+
       // Handle nested values
       if (sortConfig.key === 'cuponera.nombre') {
         aVal = a.CuponeraCatalogo?.nombre || a.UsuarioCuponera?.Cuponera?.nombre || a.Cuponera?.nombre || '';
@@ -263,21 +263,21 @@ export default function AdminMaintainer() {
 
   const filteredUsuarios = sortData(usuarios.filter(u => u.rut.includes(searchUsuario) || u.nombre.toLowerCase().includes(searchUsuario.toLowerCase())));
   const filteredTx = sortData(transacciones.filter(t => t.rut_usuario.includes(searchTx) || (t.orden_compra && t.orden_compra.includes(searchTx))));
-  const filteredCanjes = sortData(canjes.filter(c => 
-    (c.rut_usuario && c.rut_usuario.includes(searchCanjes)) || 
+  const filteredCanjes = sortData(canjes.filter(c =>
+    (c.rut_usuario && c.rut_usuario.includes(searchCanjes)) ||
     (c.nombre_usuario && c.nombre_usuario.toLowerCase().includes(searchCanjes.toLowerCase())) ||
     (c.pnr_kupos && c.pnr_kupos.includes(searchCanjes))
   ));
   const sortedCuponeras = sortData(cuponeras);
-  const filteredCompras = sortData(compras.filter(c => 
-    (c.rut_usuario && c.rut_usuario.includes(searchCompras)) || 
-    (c.Cuponera?.nombre && c.Cuponera.nombre.toLowerCase().includes(searchCompras.toLowerCase())) || 
+  const filteredCompras = sortData(compras.filter(c =>
+    (c.rut_usuario && c.rut_usuario.includes(searchCompras)) ||
+    (c.Cuponera?.nombre && c.Cuponera.nombre.toLowerCase().includes(searchCompras.toLowerCase())) ||
     (c.Usuario?.nombre && c.Usuario.nombre.toLowerCase().includes(searchCompras.toLowerCase())) ||
     (c.nombre_usuario && c.nombre_usuario.toLowerCase().includes(searchCompras.toLowerCase())) ||
     String(c.id_cuponera).includes(searchCompras)
   ));
-  const filteredAuditoria = sortData(auditoria.filter(a => 
-    (a.rutUsuario && a.rutUsuario.includes(searchAuditoria)) || 
+  const filteredAuditoria = sortData(auditoria.filter(a =>
+    (a.rutUsuario && a.rutUsuario.includes(searchAuditoria)) ||
     (a.nombreUsuario && a.nombreUsuario.toLowerCase().includes(searchAuditoria.toLowerCase())) ||
     (a.accion && a.accion.toLowerCase().includes(searchAuditoria.toLowerCase())) ||
     (a.endpoint && a.endpoint.toLowerCase().includes(searchAuditoria.toLowerCase())) ||
@@ -320,7 +320,7 @@ export default function AdminMaintainer() {
             <div className="flex justify-between items-center">
               <p className="text-xs text-slate-500">Crea y edita paquetes de cuponeras.</p>
               <button onClick={handleOpenNew} className="bg-[#fa5e00] text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-2">
-                <Plus className="w-4 h-4" /> Crear Nueva
+                <Plus className="w-4 h-4" /> Crear Nueva Cuponera
               </button>
             </div>
             {msg && <p className="text-xs text-emerald-600 font-bold">{msg}</p>}
@@ -361,8 +361,8 @@ export default function AdminMaintainer() {
                       <td className="p-3 font-black text-[#fa5e00]">${c.precioTotal.toLocaleString('es-CL')}</td>
                       <td className="p-3"><span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${c.activa ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-600'}`}>{c.activa ? 'Activa' : 'Inactiva'}</span></td>
                       <td className="p-3 text-right w-28">
-                        <button 
-                          onClick={() => handleOpenEdit(c)} 
+                        <button
+                          onClick={() => handleOpenEdit(c)}
                           className="opacity-0 group-hover:opacity-100 transition-all duration-200 transform translate-x-1 group-hover:translate-x-0 p-1.5 bg-blue-50 text-[#023caf] hover:bg-[#023caf] hover:text-white rounded-lg font-bold inline-flex items-center gap-1.5 shadow-xs cursor-pointer"
                         >
                           <Edit2 className="w-3.5 h-3.5" /> Editar
@@ -507,10 +507,10 @@ export default function AdminMaintainer() {
                 }
                 const user = userMap.get(rut);
                 user.total += 1;
-                
+
                 const diffTime = new Date(c.fecha_expiracion).getTime() - new Date().getTime();
                 const isVencida = diffTime < 0;
-                
+
                 if (c.activa && !isVencida) {
                   user.activas += 1;
                 } else {
@@ -518,7 +518,7 @@ export default function AdminMaintainer() {
                 }
                 user.cuponeras.push(c);
               });
-              
+
               const groupedUsers = Array.from(userMap.values());
               const totalCuponeras = filteredCompras.length;
               const totalActivas = groupedUsers.reduce((sum, u) => sum + u.activas, 0);
@@ -540,7 +540,7 @@ export default function AdminMaintainer() {
                       <span className="text-2xl font-black text-rose-700">{totalInactivas}</span>
                     </div>
                   </div>
-                  
+
                   <div className="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-200">
                     <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
                       <Search className="w-4 h-4 text-slate-400" />
@@ -548,7 +548,7 @@ export default function AdminMaintainer() {
                     </div>
                     <input type="text" placeholder="Nombre o RUT..." value={searchCompras} onChange={e => setSearchCompras(e.target.value)} className="text-xs px-3 py-1.5 rounded-lg border border-slate-300 w-64 focus:outline-none" />
                   </div>
-                  
+
                   <div className="border border-slate-200 rounded-2xl overflow-hidden">
                     <table className="w-full text-left text-xs">
                       <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
@@ -590,7 +590,7 @@ export default function AdminMaintainer() {
                                         const cDiff = new Date(c.fecha_expiracion).getTime() - new Date().getTime();
                                         const cDays = Math.ceil(cDiff / (1000 * 60 * 60 * 24));
                                         const cVencida = cDays < 0;
-                                        
+
                                         return (
                                           <div key={c.id} className="bg-white border border-slate-200 rounded-lg p-3 flex justify-between items-center shadow-xs">
                                             <div>
@@ -637,14 +637,14 @@ export default function AdminMaintainer() {
 
         {activeTab === 'canjes' && (
           <div className="space-y-4 animate-fade-in">
-             <div className="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-200">
+            <div className="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-200">
               <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
                 <Search className="w-4 h-4 text-slate-400" />
                 Buscar Canje:
               </div>
               <input type="text" placeholder="PNR, RUT o Nombre..." value={searchCanjes} onChange={e => setSearchCanjes(e.target.value)} className="text-xs px-3 py-1.5 rounded-lg border border-slate-300 w-64 focus:outline-none" />
             </div>
-             <div className="border border-slate-200 rounded-2xl">
+            <div className="border border-slate-200 rounded-2xl">
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-[120px] z-20">
                   <tr>
@@ -703,14 +703,14 @@ export default function AdminMaintainer() {
 
         {activeTab === 'auditoria' && (
           <div className="space-y-4 animate-fade-in">
-             <div className="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-200">
+            <div className="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-200">
               <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
                 <Search className="w-4 h-4 text-slate-400" />
                 Registros de Trazabilidad y Auditoría
               </div>
               <input type="text" placeholder="ID, Acción, Usuario o Endpoint..." value={searchAuditoria} onChange={e => setSearchAuditoria(e.target.value)} className="text-xs px-3 py-1.5 rounded-lg border border-slate-300 w-64 focus:outline-none" />
             </div>
-             <div className="border border-slate-200 rounded-2xl">
+            <div className="border border-slate-200 rounded-2xl">
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-[120px] z-20">
                   <tr>
@@ -736,52 +736,52 @@ export default function AdminMaintainer() {
                       else if (log.accion === 'OTP_GENERADO') badgeColor = 'bg-amber-100 text-amber-800';
                       else if (log.accion === 'CREACION_CUPONERA' || log.accion === 'EDICION_CUPONERA') badgeColor = 'bg-orange-100 text-orange-800';
                       else if (log.accion?.startsWith('ERROR')) badgeColor = 'bg-red-100 text-red-800';
-                      
+
                       let detallesText = log.detalles;
                       let isJsonDetalles = false;
                       if (typeof log.detalles === 'string' && (log.detalles.trim().startsWith('{') || log.detalles.trim().startsWith('['))) {
-                         try {
-                           detallesText = JSON.stringify(JSON.parse(log.detalles), null, 2);
-                           isJsonDetalles = true;
-                         } catch (e) {}
+                        try {
+                          detallesText = JSON.stringify(JSON.parse(log.detalles), null, 2);
+                          isJsonDetalles = true;
+                        } catch (e) { }
                       } else if (typeof log.detalles === 'object') {
-                         detallesText = JSON.stringify(log.detalles, null, 2);
-                         isJsonDetalles = true;
+                        detallesText = JSON.stringify(log.detalles, null, 2);
+                        isJsonDetalles = true;
                       }
 
                       let payloadVisual = log.payload;
                       let hasPayload = log.payload !== undefined && log.payload !== null;
                       if (hasPayload) {
                         if (typeof log.payload === 'string' && (log.payload.trim().startsWith('{') || log.payload.trim().startsWith('['))) {
-                           try { payloadVisual = JSON.stringify(JSON.parse(log.payload), null, 2); } catch(e) {}
+                          try { payloadVisual = JSON.stringify(JSON.parse(log.payload), null, 2); } catch (e) { }
                         } else if (typeof log.payload === 'object') {
-                           payloadVisual = JSON.stringify(log.payload, null, 2);
+                          payloadVisual = JSON.stringify(log.payload, null, 2);
                         }
                       }
 
                       return (
                         <tr key={log.id} className="hover:bg-slate-50 align-top">
                           <td className="p-3">
-                             <span className={`font-mono text-[10px] font-bold px-2 py-0.5 rounded whitespace-nowrap ${badgeColor}`}>{log.accion}</span>
+                            <span className={`font-mono text-[10px] font-bold px-2 py-0.5 rounded whitespace-nowrap ${badgeColor}`}>{log.accion}</span>
                           </td>
                           <td className="p-3">
-                             <div className="font-semibold text-slate-800 whitespace-nowrap">{log.nombreUsuario || '-'}</div>
-                             <div className="font-mono text-[10px] text-slate-500">{log.rutUsuario || '-'}</div>
+                            <div className="font-semibold text-slate-800 whitespace-nowrap">{log.nombreUsuario || '-'}</div>
+                            <div className="font-mono text-[10px] text-slate-500">{log.rutUsuario || '-'}</div>
                           </td>
                           <td className="p-3 text-slate-500 whitespace-nowrap">{new Date(log.fechaHora).toLocaleString('es-CL')}</td>
                           <td className="p-3 font-mono text-[10px] text-slate-600">{log.endpoint || '-'}</td>
                           <td className="p-3 w-full max-w-xl">
-                             {!isJsonDetalles && <p className="text-slate-700 mb-2">{log.detalles}</p>}
-                             {isJsonDetalles && !hasPayload && (
-                               <div className="bg-slate-800 text-emerald-400 p-2 rounded-lg text-[10px] font-mono overflow-auto max-h-32 shadow-inner">
-                                 <pre>{detallesText}</pre>
-                               </div>
-                             )}
-                             {hasPayload && (
-                               <div className="bg-slate-800 text-emerald-400 p-2 rounded-lg text-[10px] font-mono overflow-auto max-h-32 shadow-inner mt-2 border-t-2 border-slate-600 pt-2">
-                                 <pre>{payloadVisual}</pre>
-                               </div>
-                             )}
+                            {!isJsonDetalles && <p className="text-slate-700 mb-2">{log.detalles}</p>}
+                            {isJsonDetalles && !hasPayload && (
+                              <div className="bg-slate-800 text-emerald-400 p-2 rounded-lg text-[10px] font-mono overflow-auto max-h-32 shadow-inner">
+                                <pre>{detallesText}</pre>
+                              </div>
+                            )}
+                            {hasPayload && (
+                              <div className="bg-slate-800 text-emerald-400 p-2 rounded-lg text-[10px] font-mono overflow-auto max-h-32 shadow-inner mt-2 border-t-2 border-slate-600 pt-2">
+                                <pre>{payloadVisual}</pre>
+                              </div>
+                            )}
                           </td>
                         </tr>
                       );
@@ -807,14 +807,14 @@ export default function AdminMaintainer() {
             </h3>
             <form onSubmit={handleSave} className="space-y-6 text-sm text-slate-700 font-medium mt-2">
               <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-x-12 gap-y-6">
-                
+
                 {/* Columna Izquierda */}
                 <div className="space-y-5">
                   <div className="grid grid-cols-1 sm:grid-cols-[200px_1fr] items-center gap-2 sm:gap-4">
                     <label className="sm:text-right font-bold text-slate-700">Nombre de la zona <span className="text-red-500">*</span></label>
                     <input type="text" required value={nombre} onChange={(e) => setNombre(e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]" placeholder="ej. CUPONERA LOS ANDES (10)" />
                   </div>
-                  
+
                   <div className="grid grid-cols-1 sm:grid-cols-[200px_1fr] items-start gap-2 sm:gap-4">
                     <label className="sm:text-right font-bold text-slate-700 sm:mt-3">Combinación de ciudades</label>
                     <div className="space-y-3">
@@ -828,7 +828,7 @@ export default function AdminMaintainer() {
                             <button type="button" onClick={() => setTramosItems(prev => [...prev, { origen: '', destino: '' }])} className="text-[#65A30D] hover:text-[#4d7c0a] focus:outline-none transition-transform hover:scale-110 cursor-pointer">
                               <Plus className="w-6 h-6 bg-[#d9f99d] rounded-full p-1" />
                             </button>
-                            <button type="button" onClick={() => { if(tramosItems.length > 1) setTramosItems(prev => prev.filter((_, idx) => idx !== index)) }} className="text-[#65A30D] hover:text-[#4d7c0a] focus:outline-none transition-transform hover:scale-110 cursor-pointer">
+                            <button type="button" onClick={() => { if (tramosItems.length > 1) setTramosItems(prev => prev.filter((_, idx) => idx !== index)) }} className="text-[#65A30D] hover:text-[#4d7c0a] focus:outline-none transition-transform hover:scale-110 cursor-pointer">
                               <div className="w-6 h-6 bg-[#d9f99d] rounded-full flex items-center justify-center font-bold text-xl leading-none p-0 pb-0.5">-</div>
                             </button>
                           </div>
@@ -905,7 +905,7 @@ export default function AdminMaintainer() {
                       <option value="Salon Cama">Salon Cama</option>
                     </select>
                   </div>
-                  
+
                   <div className="flex items-center gap-4">
                     <label className="w-40 sm:w-36 sm:text-right font-bold text-slate-700">Boleto adicional</label>
                     <div className="flex items-center gap-4 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 w-fit">
