@@ -802,26 +802,29 @@ export default function AdminMaintainer() {
             <button onClick={() => setShowModal(false)} className="absolute top-6 right-6 text-slate-400 hover:text-slate-600 cursor-pointer bg-slate-100 hover:bg-slate-200 p-1.5 rounded-full transition-colors">
               <X className="w-5 h-5 stroke-[2.5]" />
             </button>
+            <h3 className="text-xl font-black text-slate-900 mb-6 border-b border-slate-100 pb-4 pr-12">
+              {editingId ? `Editar Cuponera #${editingId}` : 'Crear Nueva Cuponera'}
+            </h3>
             <form onSubmit={handleSave} className="space-y-6 text-sm text-slate-700 font-medium mt-2">
               <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-x-12 gap-y-6">
                 
                 {/* Columna Izquierda */}
                 <div className="space-y-5">
-                  <div className="grid grid-cols-[200px_1fr] items-center gap-4">
-                    <label className="text-right font-bold text-slate-700">Nombre de la zona <span className="text-red-500">*</span></label>
+                  <div className="grid grid-cols-1 sm:grid-cols-[200px_1fr] items-center gap-2 sm:gap-4">
+                    <label className="sm:text-right font-bold text-slate-700">Nombre de la zona <span className="text-red-500">*</span></label>
                     <input type="text" required value={nombre} onChange={(e) => setNombre(e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]" placeholder="ej. CUPONERA LOS ANDES (10)" />
                   </div>
                   
-                  <div className="grid grid-cols-[200px_1fr] items-start gap-4">
-                    <label className="text-right font-bold text-slate-700 mt-3">Combinación de ciudades</label>
+                  <div className="grid grid-cols-1 sm:grid-cols-[200px_1fr] items-start gap-2 sm:gap-4">
+                    <label className="sm:text-right font-bold text-slate-700 sm:mt-3">Combinación de ciudades</label>
                     <div className="space-y-3">
                       {tramosItems.map((tramo, index) => (
-                        <div key={index} className="flex items-center gap-3 bg-slate-50 border border-slate-200 p-2 rounded-2xl">
+                        <div key={index} className="flex flex-wrap items-center gap-3 bg-slate-50 border border-slate-200 p-2 sm:p-3 rounded-2xl">
                           <span className="text-slate-600 text-xs font-bold ml-2">Origen</span>
-                          <div className="w-[140px]"><ComboBox items={cityItems} value={tramo.origen} onChange={(val) => setTramosItems(prev => prev.map((item, idx) => idx === index ? { ...item, origen: val } : item))} placeholder="" /></div>
+                          <div className="w-[130px] sm:w-[140px]"><ComboBox items={cityItems} value={tramo.origen} onChange={(val) => setTramosItems(prev => prev.map((item, idx) => idx === index ? { ...item, origen: val } : item))} placeholder="" /></div>
                           <span className="text-slate-600 text-xs font-bold">Destino</span>
-                          <div className="w-[140px]"><ComboBox items={cityItems} value={tramo.destino} onChange={(val) => setTramosItems(prev => prev.map((item, idx) => idx === index ? { ...item, destino: val } : item))} placeholder="" /></div>
-                          <div className="flex items-center gap-1.5 ml-1">
+                          <div className="w-[130px] sm:w-[140px]"><ComboBox items={cityItems} value={tramo.destino} onChange={(val) => setTramosItems(prev => prev.map((item, idx) => idx === index ? { ...item, destino: val } : item))} placeholder="" /></div>
+                          <div className="flex items-center gap-1.5 ml-1 mt-2 sm:mt-0">
                             <button type="button" onClick={() => setTramosItems(prev => [...prev, { origen: '', destino: '' }])} className="text-[#65A30D] hover:text-[#4d7c0a] focus:outline-none transition-transform hover:scale-110 cursor-pointer">
                               <Plus className="w-6 h-6 bg-[#d9f99d] rounded-full p-1" />
                             </button>
@@ -834,23 +837,23 @@ export default function AdminMaintainer() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-[200px_1fr] items-center gap-4">
-                    <label className="text-right font-bold text-slate-700">Monto del cupón</label>
+                  <div className="grid grid-cols-1 sm:grid-cols-[200px_1fr] items-center gap-2 sm:gap-4">
+                    <label className="sm:text-right font-bold text-slate-700">Monto del cupón</label>
                     <input type="number" required min="1" value={valorUnitario} onChange={(e) => setValorUnitario(e.target.value === '' ? '' : Number(e.target.value))} className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]" />
                   </div>
 
-                  <div className="grid grid-cols-[200px_1fr] items-center gap-4">
-                    <label className="text-right font-bold text-slate-700 uppercase">NÚMERO DE CUPONES</label>
+                  <div className="grid grid-cols-1 sm:grid-cols-[200px_1fr] items-center gap-2 sm:gap-4">
+                    <label className="sm:text-right font-bold text-slate-700 uppercase">NÚMERO DE CUPONES</label>
                     <input type="number" required min="1" value={cantidadCupones} onChange={(e) => setCantidadCupones(e.target.value === '' ? '' : Number(e.target.value))} className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]" />
                   </div>
 
-                  <div className="grid grid-cols-[200px_1fr] items-center gap-4">
-                    <label className="text-right font-bold text-slate-700">Monto del descuento</label>
+                  <div className="grid grid-cols-1 sm:grid-cols-[200px_1fr] items-center gap-2 sm:gap-4">
+                    <label className="sm:text-right font-bold text-slate-700">Monto del descuento</label>
                     <input type="text" value={descuento} onChange={(e) => setDescuento(e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]" />
                   </div>
 
-                  <div className="grid grid-cols-[200px_1fr] items-center gap-4">
-                    <label className="text-right text-xs font-bold text-slate-700 leading-tight">Enviar información de la zona en API para agentes OTA</label>
+                  <div className="grid grid-cols-1 sm:grid-cols-[200px_1fr] items-center gap-2 sm:gap-4">
+                    <label className="sm:text-right text-xs font-bold text-slate-700 leading-tight">Enviar información de la zona en API para agentes OTA</label>
                     <div className="flex items-center gap-6">
                       <label className="flex items-center gap-2 cursor-pointer">
                         <input type="radio" name="enviarOta" checked={enviarOta === 'Si'} onChange={() => setEnviarOta('Si')} className="accent-[#fa5e00] w-4 h-4 cursor-pointer" />
@@ -863,8 +866,8 @@ export default function AdminMaintainer() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-[200px_1fr] items-center gap-4">
-                    <label className="text-right font-bold text-slate-700">Estado</label>
+                  <div className="grid grid-cols-1 sm:grid-cols-[200px_1fr] items-center gap-2 sm:gap-4">
+                    <label className="sm:text-right font-bold text-slate-700">Estado</label>
                     <div className="flex items-center gap-6">
                       <label className="flex items-center gap-2 cursor-pointer">
                         <input type="radio" name="estado" checked={estadoActivo === 'Activo'} onChange={() => { setEstadoActivo('Activo'); setActiva(true); }} className="accent-[#fa5e00] w-4 h-4 cursor-pointer" />
@@ -877,8 +880,8 @@ export default function AdminMaintainer() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-[200px_1fr] items-center gap-4">
-                    <label className="text-right font-bold text-slate-700">Nominativo</label>
+                  <div className="grid grid-cols-1 sm:grid-cols-[200px_1fr] items-center gap-2 sm:gap-4">
+                    <label className="sm:text-right font-bold text-slate-700">Nominativo</label>
                     <div className="flex items-center gap-6">
                       <label className="flex items-center gap-2 cursor-pointer">
                         <input type="radio" name="nominativo" checked={nominativo === 'Si'} onChange={() => setNominativo('Si')} className="accent-[#fa5e00] w-4 h-4 cursor-pointer" />
@@ -895,7 +898,7 @@ export default function AdminMaintainer() {
                 {/* Columna Derecha */}
                 <div className="space-y-6 lg:pt-[76px] lg:pl-4">
                   <div className="flex items-center gap-4">
-                    <label className="w-36 text-right font-bold text-slate-700">Tipo de asiento</label>
+                    <label className="w-40 sm:w-36 sm:text-right font-bold text-slate-700">Tipo de asiento</label>
                     <select value={tipoAsiento} onChange={(e) => setTipoAsiento(e.target.value)} className="flex-1 bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf] cursor-pointer appearance-none">
                       <option value="Todos">Todos</option>
                       <option value="Semi Cama">Semi Cama</option>
@@ -904,7 +907,7 @@ export default function AdminMaintainer() {
                   </div>
                   
                   <div className="flex items-center gap-4">
-                    <label className="w-36 text-right font-bold text-slate-700">Boleto adicional</label>
+                    <label className="w-40 sm:w-36 sm:text-right font-bold text-slate-700">Boleto adicional</label>
                     <div className="flex items-center gap-4 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 w-fit">
                       <button type="button" onClick={() => setBoletoAdicional(Math.max(0, boletoAdicional - 1))} className="text-white bg-[#fa5e00] hover:bg-[#e55400] w-6 h-6 rounded-full flex items-center justify-center font-bold text-lg leading-none p-0 pb-[2px] focus:outline-none transition-transform hover:scale-110 cursor-pointer shadow-sm">-</button>
                       <span className="font-black text-lg w-4 text-center">{boletoAdicional}</span>
@@ -913,12 +916,12 @@ export default function AdminMaintainer() {
                   </div>
 
                   <div className="flex items-center gap-4 pt-2">
-                    <label className="w-36 text-right font-bold text-slate-700 cursor-pointer" htmlFor="enableBranch">Enable on Branch</label>
+                    <label className="w-40 sm:w-36 sm:text-right font-bold text-slate-700 cursor-pointer" htmlFor="enableBranch">Habilitar en Sucursal</label>
                     <input type="checkbox" id="enableBranch" checked={enableBranch} onChange={(e) => setEnableBranch(e.target.checked)} className="rounded text-[#fa5e00] w-5 h-5 accent-[#fa5e00] cursor-pointer" />
                   </div>
 
                   <div className="flex items-center gap-4">
-                    <label className="w-36 text-right font-bold text-slate-700 cursor-pointer" htmlFor="enableWebsite">Enable on Website</label>
+                    <label className="w-40 sm:w-36 sm:text-right font-bold text-slate-700 cursor-pointer" htmlFor="enableWebsite">Habilitar en Sitio Web</label>
                     <input type="checkbox" id="enableWebsite" checked={enableWebsite} onChange={(e) => setEnableWebsite(e.target.checked)} className="rounded text-[#fa5e00] w-5 h-5 accent-[#fa5e00] cursor-pointer" />
                   </div>
                 </div>
