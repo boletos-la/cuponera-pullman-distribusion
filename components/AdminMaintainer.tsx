@@ -819,18 +819,51 @@ export default function AdminMaintainer() {
                     <label className="sm:text-right font-bold text-slate-700 sm:mt-3">Combinación de ciudades</label>
                     <div className="space-y-3">
                       {tramosItems.map((tramo, index) => (
-                        <div key={index} className="flex flex-wrap items-center gap-3 bg-slate-50 border border-slate-200 p-2 sm:p-3 rounded-2xl">
-                          <span className="text-slate-600 text-xs font-bold ml-2">Origen</span>
-                          <div className="w-[130px] sm:w-[140px]"><ComboBox items={cityItems} value={tramo.origen} onChange={(val) => setTramosItems(prev => prev.map((item, idx) => idx === index ? { ...item, origen: val } : item))} placeholder="" /></div>
-                          <span className="text-slate-600 text-xs font-bold">Destino</span>
-                          <div className="w-[130px] sm:w-[140px]"><ComboBox items={cityItems} value={tramo.destino} onChange={(val) => setTramosItems(prev => prev.map((item, idx) => idx === index ? { ...item, destino: val } : item))} placeholder="" /></div>
-                          <div className="flex items-center gap-1.5 ml-1 mt-2 sm:mt-0">
-                            <button type="button" onClick={() => setTramosItems(prev => [...prev, { origen: '', destino: '' }])} className="text-[#65A30D] hover:text-[#4d7c0a] focus:outline-none transition-transform hover:scale-110 cursor-pointer">
-                              <Plus className="w-6 h-6 bg-[#d9f99d] rounded-full p-1" />
-                            </button>
-                            <button type="button" onClick={() => { if (tramosItems.length > 1) setTramosItems(prev => prev.filter((_, idx) => idx !== index)) }} className="text-[#65A30D] hover:text-[#4d7c0a] focus:outline-none transition-transform hover:scale-110 cursor-pointer">
-                              <div className="w-6 h-6 bg-[#d9f99d] rounded-full flex items-center justify-center font-bold text-xl leading-none p-0 pb-0.5">-</div>
-                            </button>
+                        <div key={index} className="bg-slate-50 border border-slate-200 p-2.5 sm:p-3 rounded-2xl space-y-2.5">
+                          {/* Fila Origen */}
+                          <div className="flex items-center gap-2 sm:gap-3">
+                            <span className="text-slate-600 text-xs font-bold w-14 shrink-0 pl-1">Origen</span>
+                            <div className="flex-1 min-w-0">
+                              <ComboBox
+                                items={cityItems}
+                                value={tramo.origen}
+                                onChange={(val) => setTramosItems(prev => prev.map((item, idx) => idx === index ? { ...item, origen: val } : item))}
+                                placeholder="Selecciona origen"
+                              />
+                            </div>
+                            <div className="w-[54px] shrink-0 invisible" aria-hidden="true" />
+                          </div>
+
+                          {/* Fila Destino */}
+                          <div className="flex items-center gap-2 sm:gap-3">
+                            <span className="text-slate-600 text-xs font-bold w-14 shrink-0 pl-1">Destino</span>
+                            <div className="flex-1 min-w-0">
+                              <ComboBox
+                                items={cityItems}
+                                value={tramo.destino}
+                                onChange={(val) => setTramosItems(prev => prev.map((item, idx) => idx === index ? { ...item, destino: val } : item))}
+                                placeholder="Selecciona destino"
+                              />
+                            </div>
+                            <div className="flex items-center gap-1.5 shrink-0 ml-1">
+                              <button
+                                type="button"
+                                onClick={() => setTramosItems(prev => [...prev, { origen: '', destino: '' }])}
+                                className="text-[#65A30D] hover:text-[#4d7c0a] focus:outline-none transition-transform hover:scale-110 cursor-pointer"
+                                title="Agregar combinación"
+                              >
+                                <Plus className="w-6 h-6 bg-[#d9f99d] rounded-full p-1" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => { if (tramosItems.length > 1) setTramosItems(prev => prev.filter((_, idx) => idx !== index)) }}
+                                className={`text-[#65A30D] hover:text-[#4d7c0a] focus:outline-none transition-transform hover:scale-110 cursor-pointer ${tramosItems.length <= 1 ? 'opacity-40 cursor-not-allowed' : ''}`}
+                                disabled={tramosItems.length <= 1}
+                                title="Eliminar combinación"
+                              >
+                                <div className="w-6 h-6 bg-[#d9f99d] rounded-full flex items-center justify-center font-bold text-xl leading-none p-0 pb-0.5">-</div>
+                              </button>
+                            </div>
                           </div>
                         </div>
                       ))}
