@@ -53,6 +53,16 @@ export default function AdminMaintainer() {
   const [badge, setBadge] = useState('');
   const [activa, setActiva] = useState(true);
 
+  // Nuevos estados para el diseño
+  const [descuento, setDescuento] = useState('');
+  const [enviarOta, setEnviarOta] = useState('Si');
+  const [estadoActivo, setEstadoActivo] = useState('Activo');
+  const [nominativo, setNominativo] = useState('Si');
+  const [tipoAsiento, setTipoAsiento] = useState('Todos');
+  const [boletoAdicional, setBoletoAdicional] = useState(0);
+  const [enableBranch, setEnableBranch] = useState(false);
+  const [enableWebsite, setEnableWebsite] = useState(false);
+
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState('');
 
@@ -781,76 +791,142 @@ export default function AdminMaintainer() {
 
       {/* Modal Formulario Edición/Creación */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white rounded-3xl max-w-xl w-full max-h-[92vh] overflow-y-auto p-6 sm:p-8 shadow-2xl border border-slate-100 space-y-6">
-            <div className="flex justify-between items-start border-b border-slate-100 pb-4">
-              <h3 className="text-xl font-black text-slate-900">
-                {editingId ? `Editar Cuponera #${editingId}` : 'Crear Nueva Cuponera'}
-              </h3>
-              <button onClick={() => setShowModal(false)} className="text-slate-400 hover:text-slate-600 cursor-pointer">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            <form onSubmit={handleSave} className="space-y-4 text-xs">
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">Nombre Cuponera *</label>
-                <input type="text" required placeholder="ej. CUPONERA VIÑA DEL MAR" value={nombre} onChange={(e) => setNombre(e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 focus:outline-none" />
-              </div>
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">Descripción *</label>
-                <textarea required rows={2} placeholder="Descripción..." value={descripcion} onChange={(e) => setDescripcion(e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 focus:outline-none" />
-              </div>
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">Categoría *</label>
-                <input type="text" required placeholder="ej. Viña del Mar, Litoral" value={categoria} onChange={(e) => setCategoria(e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 focus:outline-none" />
-              </div>
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">Badge (Opcional)</label>
-                <input type="text" placeholder="ej. Más Vendida" value={badge} onChange={(e) => setBadge(e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 focus:outline-none" />
-              </div>
-              <div>
-                <div className="flex items-center justify-between mb-1.5">
-                  <label className="block font-bold text-slate-700">Tramos Autorizados (GDS) *</label>
-                  {loadingCities && <span className="text-[10px] text-blue-600 animate-pulse font-medium">Sincronizando GDS...</span>}
-                </div>
-                <div className="space-y-3 max-h-64 overflow-y-auto pr-1">
-                  {tramosItems.map((tramo, index) => (
-                    <div key={index} className="bg-slate-50 border border-slate-200 rounded-2xl p-3 space-y-2">
-                      <div className="flex items-center justify-between text-[11px] text-slate-500 font-semibold">
-                        <span className="flex items-center gap-1.5"><span className="w-4 h-4 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-[10px] font-bold">{index + 1}</span>Tramo</span>
-                        {tramosItems.length > 1 && <button type="button" onClick={() => { setTramosItems(prev => prev.filter((_, idx) => idx !== index)) }} className="text-red-500 hover:text-red-700 flex items-center gap-1 font-normal cursor-pointer"><Trash2 className="w-3.5 h-3.5" /> Eliminar</button>}
-                      </div>
-                      <div className="grid grid-cols-[1fr_auto_1fr] gap-2 items-center">
-                        <div>
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Origen</label>
-                          <ComboBox items={cityItems} value={tramo.origen} onChange={(val) => setTramosItems(prev => prev.map((item, idx) => idx === index ? { ...item, origen: val } : item))} placeholder="Origen..." />
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white rounded-lg max-w-5xl w-full max-h-[95vh] overflow-y-auto p-8 shadow-2xl border border-slate-100 relative">
+            <button onClick={() => setShowModal(false)} className="absolute top-6 right-6 text-slate-400 hover:text-slate-600 cursor-pointer">
+              <X className="w-5 h-5 stroke-1" />
+            </button>
+            <form onSubmit={handleSave} className="space-y-6 text-[13px] text-slate-700 font-medium">
+              <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-x-12 gap-y-6">
+                
+                {/* Columna Izquierda */}
+                <div className="space-y-4">
+                  <div className="grid grid-cols-[180px_1fr] items-center gap-4">
+                    <label className="text-right">Nombre de la zona<span className="text-red-500">*</span></label>
+                    <input type="text" required value={nombre} onChange={(e) => setNombre(e.target.value)} className="w-full bg-white border border-slate-100 rounded px-3 py-2 focus:outline-none focus:border-slate-300" placeholder="CUPONERA LOS ANDES (10)" />
+                  </div>
+                  
+                  <div className="grid grid-cols-[180px_1fr] items-start gap-4">
+                    <label className="text-right mt-2">Combinación de ciudades</label>
+                    <div className="space-y-3">
+                      {tramosItems.map((tramo, index) => (
+                        <div key={index} className="flex items-center gap-3">
+                          <span className="text-slate-600">Origen</span>
+                          <div className="w-32"><ComboBox items={cityItems} value={tramo.origen} onChange={(val) => setTramosItems(prev => prev.map((item, idx) => idx === index ? { ...item, origen: val } : item))} placeholder="" /></div>
+                          <span className="text-slate-600">Destination</span>
+                          <div className="w-32"><ComboBox items={cityItems} value={tramo.destino} onChange={(val) => setTramosItems(prev => prev.map((item, idx) => idx === index ? { ...item, destino: val } : item))} placeholder="" /></div>
+                          <div className="flex items-center gap-1.5 ml-2">
+                            <button type="button" onClick={() => setTramosItems(prev => [...prev, { origen: '', destino: '' }])} className="text-[#65A30D] hover:text-[#4d7c0a] focus:outline-none">
+                              <Plus className="w-5 h-5 bg-[#d9f99d] rounded-full p-0.5" />
+                            </button>
+                            <button type="button" onClick={() => { if(tramosItems.length > 1) setTramosItems(prev => prev.filter((_, idx) => idx !== index)) }} className="text-[#65A30D] hover:text-[#4d7c0a] focus:outline-none">
+                              <div className="w-5 h-5 bg-[#d9f99d] rounded-full flex items-center justify-center font-bold text-lg leading-none p-0 pb-0.5">-</div>
+                            </button>
+                          </div>
                         </div>
-                        <div className="flex flex-col items-center justify-center pt-4"><ArrowLeftRight className="w-4 h-4 text-slate-300" /></div>
-                        <div>
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Destino</label>
-                          <ComboBox items={cityItems} value={tramo.destino} onChange={(val) => setTramosItems(prev => prev.map((item, idx) => idx === index ? { ...item, destino: val } : item))} placeholder="Destino..." />
-                        </div>
-                      </div>
+                      ))}
                     </div>
-                  ))}
+                  </div>
+
+                  <div className="grid grid-cols-[180px_1fr] items-center gap-4 pt-1">
+                    <label className="text-right">Monto del cupón</label>
+                    <input type="number" required min="1" value={valorUnitario} onChange={(e) => setValorUnitario(e.target.value === '' ? '' : Number(e.target.value))} className="w-full bg-white border border-slate-100 rounded px-3 py-2 focus:outline-none focus:border-slate-300" />
+                  </div>
+
+                  <div className="grid grid-cols-[180px_1fr] items-center gap-4">
+                    <label className="text-right uppercase">NUMERO DE CUPONES</label>
+                    <input type="number" required min="1" value={cantidadCupones} onChange={(e) => setCantidadCupones(e.target.value === '' ? '' : Number(e.target.value))} className="w-full bg-white border border-slate-100 rounded px-3 py-2 focus:outline-none focus:border-slate-300" />
+                  </div>
+
+                  <div className="grid grid-cols-[180px_1fr] items-center gap-4">
+                    <label className="text-right">Monto del descuento</label>
+                    <input type="text" value={descuento} onChange={(e) => setDescuento(e.target.value)} className="w-full bg-white border border-slate-100 rounded px-3 py-2 focus:outline-none focus:border-slate-300" />
+                  </div>
+
+                  <div className="grid grid-cols-[180px_1fr] items-center gap-4">
+                    <label className="text-right text-[11px] leading-tight">Enviar la información de la zona en la API para agentes de OTA</label>
+                    <div className="flex items-center gap-4">
+                      <label className="flex items-center gap-1.5 cursor-pointer">
+                        <input type="radio" name="enviarOta" checked={enviarOta === 'Si'} onChange={() => setEnviarOta('Si')} className="accent-[#fa5e00] w-4 h-4" />
+                        <span>Si</span>
+                      </label>
+                      <label className="flex items-center gap-1.5 cursor-pointer">
+                        <input type="radio" name="enviarOta" checked={enviarOta === 'N°'} onChange={() => setEnviarOta('N°')} className="accent-[#fa5e00] w-4 h-4" />
+                        <span>N°</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-[180px_1fr] items-center gap-4">
+                    <label className="text-right">Estado</label>
+                    <div className="flex items-center gap-4">
+                      <label className="flex items-center gap-1.5 cursor-pointer">
+                        <input type="radio" name="estado" checked={estadoActivo === 'Activo'} onChange={() => { setEstadoActivo('Activo'); setActiva(true); }} className="accent-[#fa5e00] w-4 h-4" />
+                        <span>Activo</span>
+                      </label>
+                      <label className="flex items-center gap-1.5 cursor-pointer">
+                        <input type="radio" name="estado" checked={estadoActivo === 'Inactivo'} onChange={() => { setEstadoActivo('Inactivo'); setActiva(false); }} className="accent-[#fa5e00] w-4 h-4" />
+                        <span>Inactivo</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-[180px_1fr] items-center gap-4">
+                    <label className="text-right">Nominativo</label>
+                    <div className="flex items-center gap-4">
+                      <label className="flex items-center gap-1.5 cursor-pointer">
+                        <input type="radio" name="nominativo" checked={nominativo === 'Si'} onChange={() => setNominativo('Si')} className="accent-[#fa5e00] w-4 h-4" />
+                        <span>Si</span>
+                      </label>
+                      <label className="flex items-center gap-1.5 cursor-pointer">
+                        <input type="radio" name="nominativo" checked={nominativo === 'N°'} onChange={() => setNominativo('N°')} className="accent-[#fa5e00] w-4 h-4" />
+                        <span>N°</span>
+                      </label>
+                    </div>
+                  </div>
                 </div>
-                <button type="button" onClick={() => setTramosItems(prev => [...prev, { origen: '', destino: '' }])} className="text-xs font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1.5 mt-2 cursor-pointer"><Plus className="w-4 h-4" /> Agregar otro tramo</button>
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">Valor Unitario (CLP) *</label>
-                  <input type="number" required min="1" value={valorUnitario} onChange={(e) => setValorUnitario(e.target.value === '' ? '' : Number(e.target.value))} className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 focus:outline-none" />
+
+                {/* Columna Derecha */}
+                <div className="space-y-6 lg:pt-[100px] lg:pl-4">
+                  <div className="flex items-center gap-4">
+                    <label className="w-32 text-right">Tipo de asiento</label>
+                    <select value={tipoAsiento} onChange={(e) => setTipoAsiento(e.target.value)} className="flex-1 bg-white border border-slate-100 rounded px-3 py-2 focus:outline-none focus:border-slate-300">
+                      <option value="Todos">Todos</option>
+                      <option value="Semi Cama">Semi Cama</option>
+                      <option value="Salon Cama">Salon Cama</option>
+                    </select>
+                  </div>
+                  
+                  <div className="flex items-center gap-4">
+                    <label className="w-32 text-right">Boleto adicional</label>
+                    <div className="flex items-center gap-3">
+                      <button type="button" onClick={() => setBoletoAdicional(Math.max(0, boletoAdicional - 1))} className="text-white bg-[#fa5e00] hover:bg-[#e55400] w-[18px] h-[18px] rounded-full flex items-center justify-center font-bold text-sm leading-none p-0 pb-[3px] focus:outline-none">-</button>
+                      <span className="font-semibold w-3 text-center">{boletoAdicional}</span>
+                      <button type="button" onClick={() => setBoletoAdicional(boletoAdicional + 1)} className="text-white bg-[#fa5e00] hover:bg-[#e55400] w-[18px] h-[18px] rounded-full flex items-center justify-center font-bold text-sm leading-none p-0 pb-[1px] focus:outline-none">+</button>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-4">
+                    <label className="w-32 text-right">Enable on Branch</label>
+                    <input type="checkbox" checked={enableBranch} onChange={(e) => setEnableBranch(e.target.checked)} className="rounded text-[#fa5e00] w-3.5 h-3.5 accent-[#fa5e00] border-slate-300" />
+                  </div>
+
+                  <div className="flex items-center gap-4">
+                    <label className="w-32 text-right">Enable on Website</label>
+                    <input type="checkbox" checked={enableWebsite} onChange={(e) => setEnableWebsite(e.target.checked)} className="rounded text-[#fa5e00] w-3.5 h-3.5 accent-[#fa5e00] border-slate-300" />
+                  </div>
                 </div>
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">N° de Cupones *</label>
-                  <input type="number" required min="1" value={cantidadCupones} onChange={(e) => setCantidadCupones(e.target.value === '' ? '' : Number(e.target.value))} className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 focus:outline-none" />
-                </div>
               </div>
-              <div className="flex items-center gap-2 pt-2">
-                <input type="checkbox" id="activaToggle" checked={activa} onChange={(e) => setActiva(e.target.checked)} className="rounded text-[#023caf]" />
-                <label htmlFor="activaToggle" className="font-bold text-slate-700 cursor-pointer">Publicar y Activar Cuponera en el Catálogo</label>
+
+              {/* Botones */}
+              <div className="flex justify-center items-center gap-5 pt-10 pb-4">
+                <button type="submit" disabled={saving} className="bg-[#fa5e00] hover:bg-[#e55400] text-white py-2 px-6 rounded shadow-sm transition-colors text-[13px] focus:outline-none">
+                  {saving ? 'Guardando...' : 'Actualizar'}
+                </button>
+                <button type="button" onClick={() => setShowModal(false)} className="text-[#a53b3b] hover:text-red-700 text-[13px] focus:outline-none">
+                  Cancelar
+                </button>
               </div>
-              <button type="submit" disabled={saving} className="w-full bg-[#fa5e00] hover:bg-[#e55400] text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all text-sm cursor-pointer">{saving ? 'Guardando...' : 'Guardar Cuponera'}</button>
             </form>
           </div>
         </div>
