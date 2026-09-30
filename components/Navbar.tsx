@@ -105,13 +105,13 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
-                  className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all hover:scale-105 cursor-pointer border ${
+                  className={`flex items-center gap-2 px-6 py-2.5 rounded-full text-sm transition-all hover:scale-105 cursor-pointer ${
                     isActive
-                      ? 'bg-primary text-primary-foreground border-primary shadow-sm'
-                      : 'text-foreground/80 hover:text-foreground hover:bg-muted border-slate-200'
+                      ? 'bg-[#fa5e00] text-white hover:bg-[#fa5e00]/90 shadow-sm'
+                      : 'border border-primary text-primary hover:bg-primary/10 hover:text-primary'
                   }`}
                 >
-                  <Icon className={`w-4 h-4 ${isActive ? 'text-primary-foreground' : 'text-muted-foreground'}`} />
+                  <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-primary'}`} />
                   <span>{item.label}</span>
                 </button>
               );
@@ -144,7 +144,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
             ) : (
               <button
                 onClick={() => setShowLoginModal(true)}
-                className="flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-semibold transition-transform hover:scale-105 cursor-pointer bg-[#fa5e00] text-white hover:bg-[#fa5e00]/90 shadow-sm ml-2"
+                className="flex items-center gap-2 px-6 py-2.5 rounded-full text-sm transition-all hover:scale-105 cursor-pointer bg-[#fa5e00] text-white hover:bg-[#fa5e00]/90 shadow-sm ml-2"
               >
                 <LogIn className="w-4 h-4" />
                 <span>Iniciar Sesión</span>
@@ -173,11 +173,13 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
-              className={`flex-1 min-w-[100px] flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-full font-medium whitespace-nowrap transition-colors ${
-                isActive ? 'bg-primary text-primary-foreground font-semibold' : 'text-foreground/80 bg-background border border-border'
+              className={`flex-1 min-w-[100px] flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-full text-sm transition-all hover:scale-105 cursor-pointer ${
+                isActive 
+                  ? 'bg-[#fa5e00] text-white hover:bg-[#fa5e00]/90 shadow-sm' 
+                  : 'border border-primary text-primary hover:bg-primary/10 hover:text-primary'
               }`}
             >
-              <Icon className="w-3.5 h-3.5" />
+              <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-primary'}`} />
               <span>{item.label}</span>
             </button>
           );
