@@ -107,11 +107,11 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
                   onClick={() => setActiveTab(item.id)}
                   className={`flex items-center gap-2 px-6 py-2.5 rounded-full text-sm transition-all hover:scale-105 cursor-pointer ${
                     isActive
-                      ? 'bg-[#fa5e00] text-white hover:bg-[#fa5e00]/90 shadow-sm'
-                      : 'border border-primary text-primary hover:bg-primary/10 hover:text-primary'
+                      ? 'bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-sm'
+                      : 'border border-secondary text-secondary hover:bg-secondary/10 hover:text-secondary'
                   }`}
                 >
-                  <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-primary'}`} />
+                  <Icon className={`w-4 h-4 ${isActive ? 'text-secondary-foreground' : 'text-secondary'}`} />
                   <span>{item.label}</span>
                 </button>
               );
@@ -175,11 +175,11 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
               onClick={() => setActiveTab(item.id)}
               className={`flex-1 min-w-[100px] flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-full text-sm transition-all hover:scale-105 cursor-pointer ${
                 isActive 
-                  ? 'bg-[#fa5e00] text-white hover:bg-[#fa5e00]/90 shadow-sm' 
-                  : 'border border-primary text-primary hover:bg-primary/10 hover:text-primary'
+                  ? 'bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-sm' 
+                  : 'border border-secondary text-secondary hover:bg-secondary/10 hover:text-secondary'
               }`}
             >
-              <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-primary'}`} />
+              <Icon className={`w-4 h-4 ${isActive ? 'text-secondary-foreground' : 'text-secondary'}`} />
               <span>{item.label}</span>
             </button>
           );
