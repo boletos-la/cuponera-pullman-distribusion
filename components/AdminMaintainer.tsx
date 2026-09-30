@@ -4,7 +4,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { Cuponera, AuditoriaLog } from '@/lib/dataStore';
 import { getApiUrl, apiClient } from '@/lib/apiClient';
-import { Settings, Plus, Edit2, History, Check, X, ShieldAlert, Trash2, ArrowLeftRight, Users, CreditCard, Ticket, ShoppingBag, Search, ChevronUp, ChevronDown, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { Settings, Plus, Minus, Edit2, History, Check, X, ShieldAlert, Trash2, ArrowLeftRight, Users, CreditCard, Ticket, ShoppingBag, Search, ChevronUp, ChevronDown, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 import { ComboBox } from '@/components/ui/combobox';
 
 interface TramoItem {
@@ -849,19 +849,19 @@ export default function AdminMaintainer() {
                               <button
                                 type="button"
                                 onClick={() => setTramosItems(prev => [...prev, { origen: '', destino: '' }])}
-                                className="text-[#65A30D] hover:text-[#4d7c0a] focus:outline-none transition-transform hover:scale-110 cursor-pointer"
+                                className="focus:outline-none transition-transform hover:scale-110 cursor-pointer"
                                 title="Agregar combinación"
                               >
-                                <Plus className="w-6 h-6 bg-[#d9f99d] rounded-full p-1" />
+                                <Plus className="w-6 h-6 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full p-1 stroke-[2.5] shadow-xs transition-colors" />
                               </button>
                               <button
                                 type="button"
                                 onClick={() => { if (tramosItems.length > 1) setTramosItems(prev => prev.filter((_, idx) => idx !== index)) }}
-                                className={`text-[#65A30D] hover:text-[#4d7c0a] focus:outline-none transition-transform hover:scale-110 cursor-pointer ${tramosItems.length <= 1 ? 'opacity-40 cursor-not-allowed' : ''}`}
+                                className={`focus:outline-none transition-transform hover:scale-110 cursor-pointer ${tramosItems.length <= 1 ? 'opacity-40 cursor-not-allowed hover:scale-100' : ''}`}
                                 disabled={tramosItems.length <= 1}
                                 title="Eliminar combinación"
                               >
-                                <div className="w-6 h-6 bg-[#d9f99d] rounded-full flex items-center justify-center font-bold text-xl leading-none p-0 pb-0.5">-</div>
+                                <Minus className="w-6 h-6 bg-rose-500 hover:bg-rose-600 text-white rounded-full p-1 stroke-[2.5] shadow-xs transition-colors" />
                               </button>
                             </div>
                           </div>
