@@ -177,6 +177,31 @@ export default function AdminMaintainer() {
     setSavingConfig(false);
   };
 
+  const removeBanner = async () => {
+    setSavingConfig(true);
+    try {
+      const formData = new FormData();
+      formData.append('bannerUrl', '');
+      
+      const res = await fetch('/api/admin/config', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+      
+      if (data.success) {
+        setMsg('Banner eliminado exitosamente');
+        setBannerUrl('');
+        setBannerFile(null);
+      } else {
+        setMsg('Error al eliminar banner: ' + (data.error || ''));
+      }
+    } catch (e) {
+      setMsg('Error al eliminar banner');
+    }
+    setSavingConfig(false);
+  };
+
   useEffect(() => {
     fetchAdminData();
     fetchExtraData();
@@ -857,6 +882,7 @@ export default function AdminMaintainer() {
                   <div className="flex-1">
                     <span className="text-xs font-bold text-slate-600 block mb-1">Subir Imagen:</span>
                     <input 
+                      key={bannerFile ? 'has-file' : 'no-file'}
                       type="file" 
                       accept="image/*"
                       onChange={e => e.target.files && e.target.files.length > 0 ? setBannerFile(e.target.files[0]) : setBannerFile(null)} 
@@ -888,7 +914,7 @@ export default function AdminMaintainer() {
                 </div>
               )}
               
-              <div className="pt-4">
+              <div className="pt-4 flex gap-4">
                 <button 
                   onClick={saveConfig} 
                   disabled={savingConfig}
@@ -896,6 +922,15 @@ export default function AdminMaintainer() {
                 >
                   {savingConfig ? 'Guardando...' : 'Guardar Configuración'}
                 </button>
+                {(bannerUrl || bannerFile) && (
+                  <button 
+                    onClick={removeBanner} 
+                    disabled={savingConfig}
+                    className="bg-white hover:bg-slate-50 text-red-600 border border-red-200 font-bold py-3 px-8 rounded-xl shadow-sm transition-all text-sm disabled:opacity-50"
+                  >
+                    Eliminar Banner
+                  </button>
+                )}
               </div>
             </div>
           </div>
