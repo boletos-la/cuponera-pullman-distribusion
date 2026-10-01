@@ -171,7 +171,7 @@ export function StepConfirmation({ bookingData, onFinish }: StepConfirmationProp
         </Button>
         <Button onClick={onFinish} className="w-full sm:w-auto">
           <LayoutDashboard className="mr-2 h-4 w-4" />
-          Volver a Mis cuponeras
+          Volver a Mis Cuponeras
         </Button>
       </div>
     </div>

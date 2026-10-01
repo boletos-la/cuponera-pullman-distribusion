@@ -15,7 +15,7 @@ interface NavbarProps {
 export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }: NavbarProps) {
   const navItems = [
     { id: 'catalogo', label: 'Catálogo Cuponeras', icon: ShoppingCart },
-    { id: 'dashboard', label: 'Mis cuponeras', icon: LayoutDashboard },
+    { id: 'dashboard', label: 'Mis Cuponeras', icon: LayoutDashboard },
     { id: 'anulacion', label: 'Anular Pasaje', icon: RotateCcw },
   ];
 
@@ -96,7 +96,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
           </div>
 
           {/* Enlaces de Navegación */}
-          <nav className="hidden lg:flex items-center space-x-3">
+          <nav className="hidden lg:flex items-center gap-4">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
@@ -104,7 +104,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
-                  className={`flex items-center justify-center h-10 px-6 py-2 rounded-full text-sm transition-all hover:scale-105 cursor-pointer ${
+                  className={`inline-flex items-center justify-center h-9 px-6 rounded-full text-sm font-medium transition-all hover:scale-105 cursor-pointer ${
                     isActive
                       ? 'bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-sm'
                       : 'border border-secondary text-secondary hover:bg-secondary/10 hover:text-secondary'
@@ -142,7 +142,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
             ) : (
               <button
                 onClick={() => setShowLoginModal(true)}
-                className="flex items-center gap-2 h-10 px-6 py-2 rounded-full text-sm transition-all hover:scale-105 cursor-pointer bg-[#fa5e00] text-white hover:bg-[#fa5e00]/90 shadow-sm ml-2"
+                className="inline-flex items-center gap-2 h-9 px-6 rounded-full text-sm font-medium transition-transform hover:scale-105 cursor-pointer bg-[#fa5e00] text-white hover:bg-[#fa5e00]/90 shadow-sm ml-2"
               >
                 <LogIn className="w-4 h-4" />
                 <span>Iniciar Sesión</span>
@@ -150,12 +150,13 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
             )}
 
             {/* Separador y Logo WIT */}
-            <div className="w-px h-7 bg-border mx-2"></div>
-            <div className="flex items-center">
+            <div className="border-l border-border pl-6 ml-2">
               <img
                 src="/logo-wit-dark.png"
                 alt="WIT Logo"
-                className="h-8 md:h-9 w-auto object-contain opacity-85 hover:opacity-100 transition-opacity duration-300 ml-1"
+                width={45}
+                height={45}
+                className="object-contain opacity-80 hover:opacity-100 transition-opacity duration-300"
               />
             </div>
           </nav>

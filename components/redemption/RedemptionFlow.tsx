@@ -167,7 +167,7 @@ export function RedemptionFlow({ initialCuponCode = '', initialRut = '', onFinis
             className="bg-[#fa5e00] hover:bg-[#e55400] text-white font-semibold text-xs px-5 py-2 rounded-xl"
             onClick={() => onBack ? onBack() : router.push('/')}
           >
-            Volver a Mis cuponeras
+            Volver a Mis Cuponeras
           </Button>
         </div>
       </div>
