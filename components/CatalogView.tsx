@@ -544,20 +544,20 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                     >
                       <button 
                         onClick={() => setInfoOpen(infoOpen === item.id ? null : item.id)}
-                        className="flex items-center justify-center w-6 h-6 rounded-full bg-slate-100 text-slate-500 hover:bg-[#023caf] hover:text-white transition-all shadow-sm border border-slate-200 cursor-pointer focus:outline-none"
+                        className="flex items-center justify-center w-6 h-6 rounded-full bg-slate-500/10 text-slate-400 hover:bg-[#023caf] hover:text-white transition-all cursor-pointer focus:outline-none"
                         aria-label="Más información sobre los tramos"
                       >
                         <Info className="w-3.5 h-3.5" />
                       </button>
                       
-                      <div className={`absolute bottom-full right-0 mb-2 w-48 bg-[#023caf]/90 backdrop-blur-md text-white text-[10px] p-2.5 rounded-lg shadow-xl z-50 border border-white/20 transition-all duration-200 ${infoOpen === item.id ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0'}`}>
+                      <div className={`absolute bottom-full right-0 mb-2 w-48 bg-[#023caf]/75 backdrop-blur-md text-white text-[10px] p-2.5 rounded-lg shadow-xl z-50 border border-white/10 transition-all duration-200 ${infoOpen === item.id ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0'}`}>
                         <div className="font-bold mb-1 text-blue-100 uppercase tracking-wider">Tramos Habilitados:</div>
                         <ul className="list-disc pl-3 space-y-0.5 font-medium">
                           {item.tramos.map((t, i) => (
                             <li key={i}>{t}</li>
                           ))}
                         </ul>
-                        <div className="absolute -bottom-1 right-3 w-2 h-2 bg-[#023caf]/90 rotate-45 border-b border-r border-white/20"></div>
+                        <div className="absolute -bottom-1 right-3 w-2 h-2 bg-[#023caf]/75 rotate-45 border-b border-r border-white/20"></div>
                       </div>
                     </div>
                   </div>
