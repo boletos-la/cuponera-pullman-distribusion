@@ -513,26 +513,42 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                 </div>
 
                 {/* Nombre de la Cuponera */}
-                <h3 className="text-base font-black text-slate-900 leading-snug mb-4">
+                <h3 className="text-base font-black text-slate-900 leading-snug mb-2">
                   {item.nombre}
                 </h3>
 
                 {/* Route details */}
-                <div className="space-y-3 mb-5">
+                <div className="space-y-2 mb-4">
                   <div className="flex items-center gap-3 text-slate-600">
                     <Target className="w-4 h-4 text-slate-400 shrink-0" />
-                    <span className="text-xs font-medium">{item.tramos[0]?.split(' - ')[0]?.trim() || 'Santiago'}</span>
+                    <span className="text-xs font-medium">{item.tramos[0]?.split(/\s*-\s*/)[0]?.trim() || 'Santiago'}</span>
                   </div>
                   <div className="flex items-center gap-3 text-slate-600">
                     <MapPin className="w-4 h-4 text-slate-400 shrink-0" />
-                    <span className="text-xs font-medium">{item.tramos[0]?.split(' - ')[1]?.trim() || item.tramos[0] || 'Destino'}</span>
+                    <span className="text-xs font-medium">{item.tramos[0]?.split(/\s*-\s*/)[1]?.trim() || item.tramos[0]?.split(/\s*-\s*/)[0]?.trim() || 'Destino'}</span>
                   </div>
 
                   {/* Validez */}
-                  <div className="flex items-center gap-3 mt-4 pt-4 border-t border-slate-50">
+                  <div className="flex items-center justify-between mt-3 pt-3 border-t border-slate-50">
                     <div className="bg-emerald-50 text-emerald-600 text-xs font-bold px-3 py-1.5 rounded-lg border border-emerald-100 inline-flex items-center gap-2">
                       <CheckCircle className="w-3.5 h-3.5" />
                       Válido por 90 días
+                    </div>
+                    
+                    {/* Info Tooltip */}
+                    <div className="relative group flex items-center">
+                      <button className="text-slate-400 hover:text-slate-600 transition-colors p-1 cursor-help">
+                        <AlertCircle className="w-4 h-4" />
+                      </button>
+                      <div className="absolute bottom-full right-0 mb-2 hidden group-hover:block w-48 bg-slate-800 text-white text-[10px] p-2.5 rounded-lg shadow-xl z-50">
+                        <div className="font-bold mb-1 text-slate-300 uppercase">Tramos Habilitados:</div>
+                        <ul className="list-disc pl-3 space-y-0.5">
+                          {item.tramos.map((t, i) => (
+                            <li key={i}>{t}</li>
+                          ))}
+                        </ul>
+                        <div className="absolute -bottom-1 right-2 w-2 h-2 bg-slate-800 rotate-45"></div>
+                      </div>
                     </div>
                   </div>
                 </div>

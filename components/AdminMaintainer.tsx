@@ -881,13 +881,18 @@ export default function AdminMaintainer() {
                 <div className="flex flex-col gap-4">
                   <div className="flex-1">
                     <span className="text-xs font-bold text-slate-600 block mb-1">Subir Imagen:</span>
-                    <input 
-                      key={bannerFile ? 'has-file' : 'no-file'}
-                      type="file" 
-                      accept="image/*"
-                      onChange={e => e.target.files && e.target.files.length > 0 ? setBannerFile(e.target.files[0]) : setBannerFile(null)} 
-                      className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf] text-sm"
-                    />
+                    <label className="flex items-center justify-center w-full bg-slate-50 border-2 border-slate-300 border-dashed rounded-xl px-4 py-4 cursor-pointer hover:bg-slate-100 transition-colors text-center">
+                      <span className="text-sm font-medium text-slate-500">
+                        {bannerFile ? `Archivo seleccionado: ${bannerFile.name}` : 'Haz clic para seleccionar una imagen'}
+                      </span>
+                      <input 
+                        key={bannerFile ? 'has-file' : 'no-file'}
+                        type="file" 
+                        accept="image/*"
+                        onChange={e => e.target.files && e.target.files.length > 0 ? setBannerFile(e.target.files[0]) : setBannerFile(null)} 
+                        className="hidden"
+                      />
+                    </label>
                   </div>
                   <div className="flex-1">
                     <span className="text-xs font-bold text-slate-600 block mb-1">O ingresar URL:</span>
