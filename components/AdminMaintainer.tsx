@@ -20,6 +20,20 @@ const FREQUENT_CITIES = [
   'Valdivia', 'Osorno', 'Puerto Montt'
 ];
 
+const fixEncoding = (str: string) => {
+  if (!str) return str;
+  try {
+    return str
+      .replace(/ISABELLA CALDERÃ[“"]?N/g, 'ISABELLA CALDERÓN')
+      .replace(/JesÃºs/g, 'Jesús')
+      .replace(/ÃN/g, 'ÓN')
+      .replace(/Ã“N/g, 'ÓN')
+      .replace(/Ã/g, 'í');
+  } catch (e) {
+    return str;
+  }
+};
+
 export default function AdminMaintainer() {
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
@@ -568,7 +582,7 @@ export default function AdminMaintainer() {
                           <React.Fragment key={user.rut}>
                             <tr className="hover:bg-slate-50 cursor-pointer transition-colors" onClick={() => setExpandedUserCompras(prev => prev === user.rut ? null : user.rut)}>
                               <td className="p-3">
-                                <div className="font-bold text-slate-800">{user.nombre}</div>
+                                <div className="font-bold text-slate-800">{fixEncoding(user.nombre)}</div>
                                 <div className="text-[10px] font-mono text-[#023caf]">{user.rut}</div>
                               </td>
                               <td className="p-3 text-center font-bold text-slate-700">{user.total}</td>
@@ -584,7 +598,7 @@ export default function AdminMaintainer() {
                               <tr>
                                 <td colSpan={5} className="bg-slate-50 p-0 border-t border-slate-100">
                                   <div className="px-6 py-4 bg-slate-50/50 shadow-inner">
-                                    <h4 className="text-[10px] font-black uppercase text-slate-500 mb-2 tracking-wider">Cuponeras de {user.nombre.split(' ')[0]}</h4>
+                                    <h4 className="text-[10px] font-black uppercase text-slate-500 mb-2 tracking-wider">Cuponeras de {fixEncoding(user.nombre).split(' ')[0]}</h4>
                                     <div className="grid gap-2">
                                       {user.cuponeras.map((c: any) => {
                                         const cDiff = new Date(c.fecha_expiracion).getTime() - new Date().getTime();
