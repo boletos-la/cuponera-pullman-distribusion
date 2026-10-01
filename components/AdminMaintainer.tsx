@@ -6,6 +6,7 @@ import { Cuponera, AuditoriaLog } from '@/lib/dataStore';
 import { getApiUrl, apiClient } from '@/lib/apiClient';
 import { Settings, Plus, Minus, Edit2, History, Check, X, ShieldAlert, Trash2, ArrowLeftRight, Users, CreditCard, Ticket, ShoppingBag, Search, ChevronUp, ChevronDown, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 import { ComboBox } from '@/components/ui/combobox';
+import { fixEncoding } from '@/lib/utils';
 
 interface TramoItem {
   origen: string;
@@ -19,20 +20,6 @@ const FREQUENT_CITIES = [
   'Coquimbo', 'Curicó', 'Talca', 'Chillán', 'Concepción', 'Los Ángeles', 'Temuco',
   'Valdivia', 'Osorno', 'Puerto Montt'
 ];
-
-const fixEncoding = (str: string) => {
-  if (!str) return str;
-  try {
-    return str
-      .replace(/ISABELLA.*/g, 'ISABELLA CALDERÓN OYARCE')
-      .replace(/JesÃºs.*/g, 'Jesús Salazar')
-      .replace(/ÃN/g, 'ÓN')
-      .replace(/Ã“N/g, 'ÓN')
-      .replace(/Ã/g, 'í');
-  } catch (e) {
-    return str;
-  }
-};
 
 export default function AdminMaintainer() {
   const [mounted, setMounted] = useState(false);

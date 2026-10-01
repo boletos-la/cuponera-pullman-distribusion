@@ -3,6 +3,7 @@
 import React from 'react';
 import { ShoppingCart, LayoutDashboard, RotateCcw, ShieldAlert, Trash2, User, LogOut, LogIn } from 'lucide-react';
 import { getAuthToken, removeAuthToken, getAuthUser } from '@/lib/apiClient';
+import { fixEncoding } from '@/lib/utils';
 import LoginModal from './LoginModal';
 
 interface NavbarProps {
@@ -123,7 +124,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
                   title="Ir a Mis Datos"
                 >
                   <div className="flex flex-col items-end">
-                    <span className="text-xs font-bold text-slate-800">{user.nombre || 'Usuario'}</span>
+                    <span className="text-xs font-bold text-slate-800">{fixEncoding(user.nombre) || 'Usuario'}</span>
                     <span className="text-[10px] text-slate-500 font-medium">{user.rut}</span>
                   </div>
                   <div className="w-8 h-8 rounded-full bg-[#023caf] text-white flex items-center justify-center shrink-0 shadow-inner">
