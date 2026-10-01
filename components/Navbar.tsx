@@ -104,13 +104,12 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
-                  className={`flex items-center gap-2 h-10 px-6 py-2 rounded-full text-sm transition-all hover:scale-105 cursor-pointer ${
+                  className={`flex items-center justify-center h-10 px-6 py-2 rounded-full text-sm font-bold transition-all hover:scale-105 cursor-pointer ${
                     isActive
                       ? 'bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-sm'
                       : 'border border-secondary text-secondary hover:bg-secondary/10 hover:text-secondary'
                   }`}
                 >
-                  <Icon className={`w-4 h-4 ${isActive ? 'text-secondary-foreground' : 'text-secondary'}`} />
                   <span>{item.label}</span>
                 </button>
               );

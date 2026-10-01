@@ -14,7 +14,7 @@ export default function HeroBanner({ onGoToCatalog, onGoToDashboard }: HeroBanne
   useEffect(() => {
     const fetchConfig = async () => {
       try {
-        const res = await fetch('/api/admin/config');
+        const res = await fetch(`/api/admin/config?t=${Date.now()}`, { cache: 'no-store' });
         const data = await res.json();
         if (data.success && data.data.bannerUrl) {
           setBannerUrl(data.data.bannerUrl);

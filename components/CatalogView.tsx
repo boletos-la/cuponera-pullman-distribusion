@@ -540,14 +540,14 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                       <button className="text-slate-400 hover:text-slate-600 transition-colors p-1 cursor-help">
                         <AlertCircle className="w-4 h-4" />
                       </button>
-                      <div className="absolute bottom-full right-0 mb-2 hidden group-hover:block w-48 bg-slate-800 text-white text-[10px] p-2.5 rounded-lg shadow-xl z-50">
-                        <div className="font-bold mb-1 text-slate-300 uppercase">Tramos Habilitados:</div>
-                        <ul className="list-disc pl-3 space-y-0.5">
+                      <div className="absolute bottom-full right-0 mb-2 hidden group-hover:block w-48 bg-[#023caf]/90 backdrop-blur-sm text-white text-[10px] p-2.5 rounded-lg shadow-xl z-50 border border-white/20">
+                        <div className="font-bold mb-1 text-blue-100 uppercase tracking-wider">Tramos Habilitados:</div>
+                        <ul className="list-disc pl-3 space-y-0.5 font-medium">
                           {item.tramos.map((t, i) => (
                             <li key={i}>{t}</li>
                           ))}
                         </ul>
-                        <div className="absolute -bottom-1 right-2 w-2 h-2 bg-slate-800 rotate-45"></div>
+                        <div className="absolute -bottom-1 right-2 w-2 h-2 bg-[#023caf]/90 rotate-45 border-b border-r border-white/20"></div>
                       </div>
                     </div>
                   </div>

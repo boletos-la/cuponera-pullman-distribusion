@@ -4,6 +4,8 @@ import path from 'path';
 
 const DATA_FILE = path.join(process.cwd(), 'data', 'config.json');
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     if (!fs.existsSync(DATA_FILE)) {
