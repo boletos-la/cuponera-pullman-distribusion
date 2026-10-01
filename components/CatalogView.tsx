@@ -493,20 +493,20 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
             >
               {/* Badge "Mejor precio" u otro */}
               {item.badge && (
-                <div className="absolute -top-3 right-4 bg-[#FFE8E0] text-[#fa5e00] font-bold text-xs px-2.5 py-1 rounded-full shadow-sm border border-white z-10">
+                <div className="absolute -top-3 right-4 bg-[#FFE8E0] text-[#fa5e00] font-semibold text-xs px-2.5 py-1 rounded-full shadow-sm border border-white z-10">
                   {item.badge}
                 </div>
               )}
 
               {/* Card Content */}
               <div className="p-4 pb-3 flex-1 flex flex-col">
-                {/* Logo textual */}
-                <div className="text-[#fa5e00] font-black text-xl tracking-tighter mb-1">
-                  pullmanbus
+                {/* Logo textual -> Logo Imagen */}
+                <div className="mb-2">
+                  <img src="/logo-pullman.png" alt="Pullmanbus" className="h-3 object-contain" />
                 </div>
 
                 {/* Nombre de la Cuponera */}
-                <h3 className="text-base font-black text-slate-900 leading-snug mb-1.5">
+                <h3 className="text-base font-semibold text-slate-900 leading-snug mb-1.5 capitalize">
                   {item.nombre}
                 </h3>
 
@@ -521,14 +521,8 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                     <span className="text-xs font-medium">Concón</span>
                   </div>
 
-                  {/* Validez */}
-                  <div className="flex items-center justify-between mt-2 pt-2 border-t border-slate-50 relative">
-                    <div className="bg-emerald-50 text-emerald-600 text-xs font-bold px-3 py-1.5 rounded-lg border border-emerald-100 inline-flex items-center gap-2">
-                      <CheckCircle className="w-3.5 h-3.5" />
-                      Válido por 90 días
-                    </div>
-
-                    {/* Info Tooltip */}
+                  {/* Validez & Info Tooltip */}
+                  <div className="flex items-center justify-end mt-2 pt-2 border-t border-slate-50 relative">
                     <div className="relative group flex items-center">
                       <div
                         className="flex items-center justify-center w-6 h-6 rounded-full bg-slate-200/50 text-slate-500 hover:bg-slate-300/80 hover:text-slate-800 transition-all cursor-help focus:outline-none"
@@ -537,8 +531,12 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                         <Info className="w-3.5 h-3.5" />
                       </div>
 
-                      <div className="absolute bottom-full right-0 mb-2 w-48 bg-slate-100/70 backdrop-blur-md text-slate-800 text-[10px] p-2.5 rounded-xl shadow-xl z-50 border border-slate-200 transition-all duration-200 opacity-0 invisible translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 pointer-events-none group-hover:pointer-events-auto">
-                        <div className="font-bold mb-1 text-slate-700 uppercase tracking-wider">Tramos Habilitados:</div>
+                      <div className="absolute bottom-full right-0 mb-2 w-56 bg-slate-100/70 backdrop-blur-md text-slate-800 text-[10px] p-3 rounded-xl shadow-xl z-50 border border-slate-200 transition-all duration-200 opacity-0 invisible translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 pointer-events-none group-hover:pointer-events-auto">
+                        <div className="bg-emerald-50 text-emerald-600 text-xs font-semibold px-3 py-1.5 rounded-lg border border-emerald-100 flex items-center gap-2 mb-3 w-fit">
+                          <CheckCircle className="w-3.5 h-3.5" />
+                          Válido por 90 días
+                        </div>
+                        <div className="font-semibold mb-1 text-slate-700 uppercase tracking-wider">Tramos Habilitados:</div>
                         <ul className="list-disc pl-3 space-y-0.5 font-medium text-slate-600">
                           {item.tramos.map((t, i) => (
                             <li key={i}>{t}</li>
@@ -554,22 +552,22 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
 
                 {/* Quantity and Unit Price */}
                 <div className="flex justify-between items-end text-slate-800">
-                  <span className="font-extrabold text-sm">{item.cantidadCupones} x pasajes</span>
-                  <span className="font-extrabold text-base">${(item.valorUnitario || 0).toLocaleString('es-CL')}</span>
+                  <span className="font-semibold text-sm">{item.cantidadCupones} x pasajes</span>
+                  <span className="font-semibold text-base">${(item.valorUnitario || 0).toLocaleString('es-CL')}</span>
                 </div>
               </div>
 
               {/* Footer Button con Llamado a la Acción (CTA) */}
               <button
                 onClick={() => handleOpenCheckout(item)}
-                className="bg-[#fa5e00] text-white w-full rounded-b-2xl px-5 py-3 flex justify-between items-center font-black text-xs hover:bg-[#e55400] transition-all group cursor-pointer shadow-inner"
+                className="bg-[#fa5e00] text-white w-full rounded-b-2xl px-5 py-3 flex justify-between items-center font-semibold text-xs hover:bg-[#e55400] transition-all group cursor-pointer shadow-inner"
               >
                 <div className="flex flex-col text-left">
-                  <span className="text-[10px] font-extrabold text-white/80 uppercase tracking-wider">TOTAL</span>
-                  <span className="text-base font-black leading-tight">CLP ${(item.precioTotal || 0).toLocaleString('es-CL')}</span>
+                  <span className="text-[10px] font-semibold text-white/80 capitalize tracking-wider">Total</span>
+                  <span className="text-base font-semibold leading-tight">CLP ${(item.precioTotal || 0).toLocaleString('es-CL')}</span>
                 </div>
 
-                <div className="flex items-center gap-1.5 bg-white text-[#fa5e00] group-hover:bg-orange-50 px-4 py-2 rounded-full text-xs font-black shadow-sm group-hover:scale-105 transition-all">
+                <div className="flex items-center gap-1.5 bg-white text-[#fa5e00] group-hover:bg-orange-50 px-4 py-2 rounded-full text-xs font-semibold shadow-sm group-hover:scale-105 transition-all">
                   <ShoppingCart className="w-3.5 h-3.5" />
                   <span>Comprar</span>
                   <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
