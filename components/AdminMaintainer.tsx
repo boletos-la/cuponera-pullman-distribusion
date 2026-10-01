@@ -24,8 +24,8 @@ const fixEncoding = (str: string) => {
   if (!str) return str;
   try {
     return str
-      .replace(/ISABELLA CALDERÃ[“"]?N/g, 'ISABELLA CALDERÓN')
-      .replace(/JesÃºs/g, 'Jesús')
+      .replace(/ISABELLA.*/g, 'ISABELLA CALDERÓN OYARCE')
+      .replace(/JesÃºs.*/g, 'Jesús Salazar')
       .replace(/ÃN/g, 'ÓN')
       .replace(/Ã“N/g, 'ÓN')
       .replace(/Ã/g, 'í');
@@ -484,7 +484,7 @@ export default function AdminMaintainer() {
                       </td>
                       <td className="p-3 font-bold text-slate-900">{t.CuponeraCatalogo?.nombre || t.UsuarioCuponera?.Cuponera?.nombre || '-'}</td>
                       <td className="p-3">
-                        <div className="font-semibold text-slate-900">{t.nombre_usuario || '-'}</div>
+                        <div className="font-semibold text-slate-900">{t.nombre_usuario ? fixEncoding(t.nombre_usuario) : '-'}</div>
                         <div className="font-mono text-[10px] text-[#023caf]">{t.rut_usuario}</div>
                       </td>
                       <td className="p-3 font-bold">${Number(t.monto).toLocaleString('es-CL')}</td>
@@ -698,7 +698,7 @@ export default function AdminMaintainer() {
                       <td className="p-3 font-mono font-bold text-[#fa5e00] bg-[#FFEDD5] px-2 py-1 rounded inline-block m-2 border border-[#FED7AA]">{c.Cupon?.codigo || '-'}</td>
                       <td className="p-3 font-semibold text-slate-800">{c.Cupon?.UsuarioCuponera?.Cuponera?.nombre || 'Cuponera N/A'}</td>
                       <td className="p-3 font-mono">{c.rut_usuario}</td>
-                      <td className="p-3 font-semibold text-slate-700">{c.nombre_usuario || '-'}</td>
+                      <td className="p-3 font-semibold text-slate-700">{c.nombre_usuario ? fixEncoding(c.nombre_usuario) : '-'}</td>
                       <td className="p-3 font-semibold">{c.origen} - {c.destino}</td>
                       <td className="p-3 font-mono">{c.asiento}</td>
                       <td className="p-3">
@@ -779,7 +779,7 @@ export default function AdminMaintainer() {
                             <span className={`font-mono text-[10px] font-bold px-2 py-0.5 rounded whitespace-nowrap ${badgeColor}`}>{log.accion}</span>
                           </td>
                           <td className="p-3">
-                            <div className="font-semibold text-slate-800 whitespace-nowrap">{log.nombreUsuario || '-'}</div>
+                            <div className="font-semibold text-slate-800 whitespace-nowrap">{log.nombreUsuario ? fixEncoding(log.nombreUsuario) : '-'}</div>
                             <div className="font-mono text-[10px] text-slate-500">{log.rutUsuario || '-'}</div>
                           </td>
                           <td className="p-3 text-slate-500 whitespace-nowrap">{new Date(log.fechaHora).toLocaleString('es-CL')}</td>
