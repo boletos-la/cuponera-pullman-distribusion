@@ -83,17 +83,15 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
           {/* Logo Oficial Pullmanbus Cuponeras */}
           <div
             onClick={() => setActiveTab('catalogo')}
-            className="flex items-center gap-2 cursor-pointer group"
+            className="flex items-center cursor-pointer group"
           >
-            <div className="flex flex-col">
-              <div className="flex items-baseline gap-0.5">
-                <span className="font-black text-2xl tracking-tighter text-[#fa5e00]">pullman</span>
-                <span className="font-black text-2xl tracking-tighter text-[#fa5e00]">bus</span>
-              </div>
-              <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-none -mt-1">
-                Cuponeras Digitales
-              </span>
-            </div>
+            <img
+              src="/logo-pullman.png"
+              alt="Pullman Cuponeras"
+              width={180}
+              height={60}
+              className="object-contain hover:scale-105 transition-transform"
+            />
           </div>
 
           {/* Enlaces de Navegación */}
@@ -105,7 +103,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
-                  className={`flex items-center gap-2 px-6 py-2.5 rounded-full text-sm transition-all hover:scale-105 cursor-pointer ${
+                  className={`flex items-center gap-2 h-10 px-6 py-2 rounded-full text-sm transition-all hover:scale-105 cursor-pointer ${
                     isActive
                       ? 'bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-sm'
                       : 'border border-secondary text-secondary hover:bg-secondary/10 hover:text-secondary'
@@ -144,7 +142,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
             ) : (
               <button
                 onClick={() => setShowLoginModal(true)}
-                className="flex items-center gap-2 px-6 py-2.5 rounded-full text-sm transition-all hover:scale-105 cursor-pointer bg-[#fa5e00] text-white hover:bg-[#fa5e00]/90 shadow-sm ml-2"
+                className="flex items-center gap-2 h-10 px-6 py-2 rounded-full text-sm transition-all hover:scale-105 cursor-pointer bg-[#fa5e00] text-white hover:bg-[#fa5e00]/90 shadow-sm ml-2"
               >
                 <LogIn className="w-4 h-4" />
                 <span>Iniciar Sesión</span>

@@ -492,46 +492,40 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
           </table>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 pt-4">
           {displayCuponeras.map((item) => (
             <div
               key={item.id}
-              className="relative bg-white rounded-3xl shadow-lg hover:shadow-xl transition-shadow border border-slate-100 flex flex-col mt-4"
+              className="relative bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow border border-slate-100 flex flex-col mt-4"
             >
               {/* Badge "Mejor precio" u otro */}
               {item.badge && (
-                <div className="absolute -top-3 right-4 bg-[#FFE8E0] text-[#fa5e00] font-bold text-xs px-3 py-1 rounded-full shadow-sm border border-white z-10">
+                <div className="absolute -top-3 right-4 bg-[#FFE8E0] text-[#fa5e00] font-bold text-xs px-2.5 py-1 rounded-full shadow-sm border border-white z-10">
                   {item.badge}
                 </div>
               )}
 
               {/* Card Content */}
-              <div className="p-6 pb-5 flex-1 flex flex-col">
+              <div className="p-5 pb-4 flex-1 flex flex-col">
                 {/* Logo textual */}
-                <div className="text-[#fa5e00] font-black text-2xl tracking-tighter mb-2">
+                <div className="text-[#fa5e00] font-black text-xl tracking-tighter mb-1.5">
                   pullmanbus
                 </div>
 
                 {/* Nombre de la Cuponera */}
-                <h3 className="text-lg font-black text-slate-900 leading-snug mb-3">
+                <h3 className="text-base font-black text-slate-900 leading-snug mb-4">
                   {item.nombre}
                 </h3>
 
-                {/* Subtitle / Category */}
-                <div className="flex items-center gap-2 text-slate-700 font-extrabold text-sm mb-4">
-                  <Star className="w-4 h-4 text-[#fa5e00] fill-current" />
-                  <span>{item.categoria === 'Todos' ? '4 Pullman Costa' : `4 ${item.categoria}`}</span>
-                </div>
-
                 {/* Route details */}
-                <div className="space-y-3 mb-6">
+                <div className="space-y-3 mb-5">
                   <div className="flex items-center gap-3 text-slate-600">
-                    <Target className="w-4 h-4 text-slate-400" />
-                    <span className="text-sm font-medium">{item.tramos[0]?.split(' - ')[0]?.trim() || 'Santiago'}</span>
+                    <Target className="w-4 h-4 text-slate-400 shrink-0" />
+                    <span className="text-xs font-medium">{item.tramos[0]?.split(' - ')[0]?.trim() || 'Santiago'}</span>
                   </div>
                   <div className="flex items-center gap-3 text-slate-600">
-                    <MapPin className="w-4 h-4 text-slate-400" />
-                    <span className="text-sm font-medium">{item.tramos[0]?.split(' - ')[1]?.trim() || item.tramos[0] || 'Destino'}</span>
+                    <MapPin className="w-4 h-4 text-slate-400 shrink-0" />
+                    <span className="text-xs font-medium">{item.tramos[0]?.split(' - ')[1]?.trim() || item.tramos[0] || 'Destino'}</span>
                   </div>
 
                   {/* Validez */}
@@ -555,7 +549,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
               {/* Footer Button con Llamado a la Acción (CTA) */}
               <button
                 onClick={() => handleOpenCheckout(item)}
-                className="bg-[#fa5e00] text-white w-full rounded-b-3xl px-6 py-3.5 flex justify-between items-center font-black text-sm hover:bg-[#e55400] transition-all group cursor-pointer shadow-inner"
+                className="bg-[#fa5e00] text-white w-full rounded-b-2xl px-5 py-3 flex justify-between items-center font-black text-xs hover:bg-[#e55400] transition-all group cursor-pointer shadow-inner"
               >
                 <div className="flex flex-col text-left">
                   <span className="text-[10px] font-extrabold text-white/80 uppercase tracking-wider">TOTAL</span>

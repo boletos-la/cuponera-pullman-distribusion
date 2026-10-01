@@ -16,6 +16,10 @@ const montserrat = Montserrat({
 export const metadata: Metadata = {
   title: "Cuponera Pullman Bus | Beneficios y Descuentos",
   description: "Portal oficial de Cuponeras Pullman Bus. Accede a descuentos exclusivos.",
+  robots: {
+    index: false,
+    follow: false,
+  }
 };
 
 export const viewport: Viewport = {

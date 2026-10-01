@@ -61,3 +61,10 @@ La aplicación estará disponible en [http://localhost:3000](http://localhost:30
 npm run build
 npm run start
 ```
+
+---
+
+## ⚠️ Notas de Despliegue (SEO)
+
+**IMPORTANTE:** Actualmente el sitio web está configurado para **NO** ser indexado por los motores de búsqueda (Google, Bing, etc.) mediante las etiquetas `noindex` en `layout.tsx` y el archivo `robots.txt`.
+*Cuando el sitio pase a estar oficialmente en producción y abierto al público real, se DEBE recordar quitar estas directivas para habilitar el SEO nuevamente.*
