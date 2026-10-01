@@ -502,12 +502,12 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
               <div className="p-4 pb-3 flex-1 flex flex-col">
                 {/* Logo textual -> Logo Imagen */}
                 <div className="mb-2">
-                  <img src="/logo-pullman.png" alt="Pullmanbus" className="h-3 object-contain" />
+                  <img src="https://kuposclientlogos.s3.us-east-1.amazonaws.com/IMG_3089.png" alt="Pullmanbus" className="h-4 object-contain" />
                 </div>
 
                 {/* Nombre de la Cuponera */}
                 <h3 className="text-base font-semibold text-slate-900 leading-snug mb-1.5 capitalize">
-                  {item.nombre}
+                  {item.nombre?.toLowerCase()}
                 </h3>
 
                 {/* Route details */}
@@ -516,13 +516,13 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                     <Target className="w-4 h-4 text-slate-400 shrink-0" />
                     <span className="text-xs font-medium">Santiago</span>
                   </div>
-                  <div className="flex items-center gap-3 text-slate-600">
-                    <MapPin className="w-4 h-4 text-slate-400 shrink-0" />
-                    <span className="text-xs font-medium">Concón</span>
-                  </div>
+                  <div className="flex items-center justify-between text-slate-600">
+                    <div className="flex items-center gap-3">
+                      <MapPin className="w-4 h-4 text-slate-400 shrink-0" />
+                      <span className="text-xs font-medium">Concón</span>
+                    </div>
 
-                  {/* Validez & Info Tooltip */}
-                  <div className="flex items-center justify-end mt-2 pt-2 border-t border-slate-50 relative">
+                    {/* Info Tooltip */}
                     <div className="relative group flex items-center">
                       <div
                         className="flex items-center justify-center w-6 h-6 rounded-full bg-slate-200/50 text-slate-500 hover:bg-slate-300/80 hover:text-slate-800 transition-all cursor-help focus:outline-none"
