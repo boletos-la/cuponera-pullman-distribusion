@@ -141,13 +141,15 @@ function HomeContent() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-8">
           <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-8 border-b border-white/20 pb-8">
             <div className="flex flex-col">
-              <div className="flex items-baseline gap-0.5">
-                <span className="font-black text-3xl tracking-tighter text-white">pullman</span>
-                <span className="font-black text-3xl tracking-tighter text-white">bus</span>
+              <div className="flex items-center">
+                <img 
+                  src="/logo-pullman-beneficios-blanco.png" 
+                  alt="Pullmanbus Cuponeras" 
+                  width={200} 
+                  height={60} 
+                  className="object-contain"
+                />
               </div>
-              <span className="text-xs text-white/80 font-bold uppercase tracking-widest leading-none mt-1">
-                Cuponeras Digitales
-              </span>
               <div className="flex items-center gap-2 mt-4">
                 <span className="text-[10px] font-bold uppercase tracking-wider bg-white/10 text-white px-2.5 py-1 rounded-full border border-white/20">
                   Desarrollado por WIT SPA

@@ -87,7 +87,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
             className="flex items-center cursor-pointer group"
           >
             <img
-              src="/logo-pullman.png"
+              src="/logo-pullman-beneficios.png"
               alt="Pullman Cuponeras"
               width={180}
               height={60}
