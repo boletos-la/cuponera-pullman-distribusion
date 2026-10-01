@@ -455,16 +455,11 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                   </td>
                   <td className="px-4 py-4 min-w-[200px]">
                     <div className="flex flex-wrap gap-1">
-                      {item.tramos.slice(0, 3).map((t, idx) => (
-                        <span key={idx} className="bg-slate-100 text-slate-700 text-[10px] font-medium px-2 py-0.5 rounded border border-slate-200 truncate max-w-[120px]">
+                      {item.tramos.map((t, idx) => (
+                        <span key={idx} className="bg-slate-100 text-slate-700 text-[10px] font-medium px-2 py-0.5 rounded border border-slate-200">
                           {t}
                         </span>
                       ))}
-                      {item.tramos.length > 3 && (
-                        <span className="bg-slate-100 text-slate-500 text-[10px] font-bold px-2 py-0.5 rounded border border-slate-200">
-                          +{item.tramos.length - 3}
-                        </span>
-                      )}
                     </div>
                   </td>
                   <td className="px-4 py-4 text-center">
@@ -537,27 +532,22 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                     </div>
                     
                     {/* Info Tooltip */}
-                    <div 
-                      className="relative group flex items-center"
-                      onMouseEnter={() => setInfoOpen(item.id)}
-                      onMouseLeave={() => setInfoOpen(null)}
-                    >
-                      <button 
-                        onClick={() => setInfoOpen(infoOpen === item.id ? null : item.id)}
-                        className="flex items-center justify-center w-6 h-6 rounded-full bg-slate-500/10 text-slate-400 hover:bg-[#023caf] hover:text-white transition-all cursor-pointer focus:outline-none"
+                    <div className="relative group flex items-center">
+                      <div 
+                        className="flex items-center justify-center w-6 h-6 rounded-full bg-slate-200/50 text-slate-500 hover:bg-slate-300/80 hover:text-slate-800 transition-all cursor-help focus:outline-none"
                         aria-label="Más información sobre los tramos"
                       >
                         <Info className="w-3.5 h-3.5" />
-                      </button>
+                      </div>
                       
-                      <div className={`absolute bottom-full right-0 mb-2 w-48 bg-[#023caf]/75 backdrop-blur-md text-white text-[10px] p-2.5 rounded-lg shadow-xl z-50 border border-white/10 transition-all duration-200 ${infoOpen === item.id ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0'}`}>
-                        <div className="font-bold mb-1 text-blue-100 uppercase tracking-wider">Tramos Habilitados:</div>
-                        <ul className="list-disc pl-3 space-y-0.5 font-medium">
+                      <div className="absolute bottom-full right-0 mb-2 w-48 bg-slate-100/95 backdrop-blur-md text-slate-800 text-[10px] p-2.5 rounded-xl shadow-xl z-50 border border-slate-200 transition-all duration-200 opacity-0 invisible translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 pointer-events-none group-hover:pointer-events-auto">
+                        <div className="font-bold mb-1 text-slate-700 uppercase tracking-wider">Tramos Habilitados:</div>
+                        <ul className="list-disc pl-3 space-y-0.5 font-medium text-slate-600">
                           {item.tramos.map((t, i) => (
                             <li key={i}>{t}</li>
                           ))}
                         </ul>
-                        <div className="absolute -bottom-1 right-3 w-2 h-2 bg-[#023caf]/75 rotate-45 border-b border-r border-white/20"></div>
+                        <div className="absolute -bottom-1 right-3 w-2 h-2 bg-slate-100/95 rotate-45 border-b border-r border-slate-200"></div>
                       </div>
                     </div>
                   </div>

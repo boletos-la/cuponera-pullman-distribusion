@@ -151,11 +151,6 @@ function HomeContent() {
                   className="object-contain"
                 />
               </div>
-              <div className="flex items-center gap-2 mt-4">
-                <span className="text-[10px] font-bold uppercase tracking-wider bg-white/10 text-white px-2.5 py-1 rounded-full border border-white/20">
-                  Desarrollado por WIT SPA
-                </span>
-              </div>
             </div>
 
             <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">

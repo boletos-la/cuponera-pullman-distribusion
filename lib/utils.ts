@@ -13,8 +13,6 @@ export const fixEncoding = (str: string) => {
     }
     
     return str
-      .replace(/ISABELLA.*/g, 'ISABELLA CALDERÓN OYARCE')
-      .replace(/JesÃºs.*/g, 'Jesús Salazar')
       .replace(/Ã¡/g, 'á')
       .replace(/Ã©/g, 'é')
       .replace(/Ã­/g, 'í')
