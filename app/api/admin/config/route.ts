@@ -18,12 +18,50 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
+    const contentType = req.headers.get('content-type') || '';
+    
+    let newData: any = {};
     const currentData = fs.existsSync(DATA_FILE) ? JSON.parse(fs.readFileSync(DATA_FILE, 'utf8')) : {};
-    const newData = { ...currentData, ...body };
+    
+    if (contentType.includes('multipart/form-data')) {
+      const formData = await req.formData();
+      const file = formData.get('bannerFile') as File | null;
+      let bannerUrl = currentData.bannerUrl || '';
+      
+      if (file && file.size > 0) {
+        const bytes = await file.arrayBuffer();
+        const buffer = Buffer.from(bytes);
+        
+        // Save the file to public/uploads
+        const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
+        if (!fs.existsSync(uploadsDir)) {
+          fs.mkdirSync(uploadsDir, { recursive: true });
+        }
+        
+        // Create unique filename based on current time
+        const ext = file.name.split('.').pop() || 'jpg';
+        const filename = `banner-${Date.now()}.${ext}`;
+        const filePath = path.join(uploadsDir, filename);
+        
+        fs.writeFileSync(filePath, buffer);
+        bannerUrl = `/uploads/${filename}`;
+      }
+      
+      const formBannerUrl = formData.get('bannerUrl') as string | null;
+      if (formBannerUrl !== null) {
+        bannerUrl = formBannerUrl; // If user submitted a text URL, it overrides
+      }
+      
+      newData = { ...currentData, bannerUrl };
+    } else {
+      const body = await req.json();
+      newData = { ...currentData, ...body };
+    }
+
     fs.writeFileSync(DATA_FILE, JSON.stringify(newData, null, 2));
     return NextResponse.json({ success: true, data: newData });
   } catch (error: any) {
+    console.error('Error saving config:', error);
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
 }

@@ -136,6 +136,7 @@ export default function AdminMaintainer() {
   };
 
   const [bannerUrl, setBannerUrl] = useState('');
+  const [bannerFile, setBannerFile] = useState<File | null>(null);
   const [savingConfig, setSavingConfig] = useState(false);
 
   const fetchConfig = async () => {
@@ -151,12 +152,25 @@ export default function AdminMaintainer() {
   const saveConfig = async () => {
     setSavingConfig(true);
     try {
-      await fetch('/api/admin/config', {
+      const formData = new FormData();
+      formData.append('bannerUrl', bannerUrl);
+      if (bannerFile) {
+        formData.append('bannerFile', bannerFile);
+      }
+      
+      const res = await fetch('/api/admin/config', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ bannerUrl })
+        body: formData
       });
-      setMsg('Configuración guardada exitosamente');
+      const data = await res.json();
+      
+      if (data.success) {
+        setMsg('Configuración guardada exitosamente');
+        if (data.data.bannerUrl) setBannerUrl(data.data.bannerUrl);
+        setBannerFile(null); // Clear file input
+      } else {
+        setMsg('Error al guardar configuración: ' + (data.error || ''));
+      }
     } catch (e) {
       setMsg('Error al guardar configuración');
     }
@@ -837,21 +851,40 @@ export default function AdminMaintainer() {
             
             <div className="space-y-6 max-w-2xl">
               <div>
-                <label className="block text-sm font-bold text-slate-700 mb-2">URL del Banner Principal (Hero)</label>
-                <p className="text-xs text-slate-500 mb-3">Esta imagen reemplazará el cuadro azul informativo en la página principal del catálogo.</p>
-                <input 
-                  type="text" 
-                  value={bannerUrl} 
-                  onChange={e => setBannerUrl(e.target.value)} 
-                  placeholder="https://ejemplo.com/banner.jpg"
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
-                />
+                <label className="block text-sm font-bold text-slate-700 mb-2">Imagen del Banner Principal (Hero)</label>
+                <p className="text-xs text-slate-500 mb-3">Sube una imagen desde tu disco o ingresa una URL (la imagen subida tendrá prioridad).</p>
+                <div className="flex flex-col gap-4">
+                  <div className="flex-1">
+                    <span className="text-xs font-bold text-slate-600 block mb-1">Subir Imagen:</span>
+                    <input 
+                      type="file" 
+                      accept="image/*"
+                      onChange={e => e.target.files && e.target.files.length > 0 ? setBannerFile(e.target.files[0]) : setBannerFile(null)} 
+                      className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf] text-sm"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <span className="text-xs font-bold text-slate-600 block mb-1">O ingresar URL:</span>
+                    <input 
+                      type="text" 
+                      value={bannerUrl} 
+                      onChange={e => setBannerUrl(e.target.value)} 
+                      placeholder="https://ejemplo.com/banner.jpg"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
+                    />
+                  </div>
+                </div>
               </div>
               
-              {bannerUrl && (
+              {(bannerUrl || bannerFile) && (
                 <div className="mt-4 border border-slate-200 rounded-xl overflow-hidden bg-slate-100">
                   <p className="text-xs font-bold text-slate-500 p-2 text-center border-b border-slate-200 bg-white">Vista Previa</p>
-                  <img src={bannerUrl} alt="Banner Preview" className="w-full h-auto max-h-[300px] object-cover" onError={(e) => { (e.target as HTMLImageElement).src = 'https://via.placeholder.com/800x300?text=Error+al+cargar+imagen'; }} />
+                  <img 
+                    src={bannerFile ? URL.createObjectURL(bannerFile) : bannerUrl} 
+                    alt="Banner Preview" 
+                    className="w-full h-auto max-h-[300px] object-cover" 
+                    onError={(e) => { (e.target as HTMLImageElement).src = 'https://via.placeholder.com/800x300?text=Error+al+cargar+imagen'; }} 
+                  />
                 </div>
               )}
               
