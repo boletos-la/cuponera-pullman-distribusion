@@ -26,12 +26,14 @@ export default function HeroBanner({ onGoToCatalog, onGoToDashboard }: HeroBanne
 
   if (bannerUrl) {
     return (
-      <div className="w-full bg-slate-100">
+      <div className="w-full bg-slate-100 relative">
         <img 
           src={bannerUrl} 
           alt="Portal de Cuponeras" 
           className="w-full h-auto max-h-[600px] object-cover object-center block"
         />
+        {/* Transición de Fade hacia el contenido inferior */}
+        <div className="absolute bottom-0 left-0 w-full h-24 md:h-48 bg-gradient-to-t from-background to-transparent pointer-events-none" />
       </div>
     );
   }
