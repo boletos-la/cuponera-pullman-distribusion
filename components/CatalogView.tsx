@@ -348,11 +348,8 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
           <div>
             <h2 className="text-xl font-black text-slate-900 flex items-center gap-2">
               <ShoppingCart className="w-5 h-5 text-[#023caf]" />
-              Catálogo Oficial de Cuponeras (19 Opciones)
+              Catálogo Oficial de Cuponeras ({cuponeras.length} Opciones)
             </h2>
-            <p className="text-xs text-slate-500 font-medium">
-              Fase 1: Pasos 1 al 7 del Flujo End-to-End. Selecciona tu paquete y congela tus tarifas 90 días.
-            </p>
           </div>
 
           <div className="w-full sm:w-auto flex flex-col sm:flex-row gap-3">
@@ -540,14 +537,14 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                         <Info className="w-3.5 h-3.5" />
                       </div>
                       
-                      <div className="absolute bottom-full right-0 mb-2 w-48 bg-slate-100/95 backdrop-blur-md text-slate-800 text-[10px] p-2.5 rounded-xl shadow-xl z-50 border border-slate-200 transition-all duration-200 opacity-0 invisible translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 pointer-events-none group-hover:pointer-events-auto">
+                      <div className="absolute bottom-full right-0 mb-2 w-48 bg-slate-100/70 backdrop-blur-md text-slate-800 text-[10px] p-2.5 rounded-xl shadow-xl z-50 border border-slate-200 transition-all duration-200 opacity-0 invisible translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 pointer-events-none group-hover:pointer-events-auto">
                         <div className="font-bold mb-1 text-slate-700 uppercase tracking-wider">Tramos Habilitados:</div>
                         <ul className="list-disc pl-3 space-y-0.5 font-medium text-slate-600">
                           {item.tramos.map((t, i) => (
                             <li key={i}>{t}</li>
                           ))}
                         </ul>
-                        <div className="absolute -bottom-1 right-3 w-2 h-2 bg-slate-100/95 rotate-45 border-b border-r border-slate-200"></div>
+                        <div className="absolute -bottom-1 right-3 w-2 h-2 bg-slate-100/70 rotate-45 border-b border-r border-slate-200"></div>
                       </div>
                     </div>
                   </div>
