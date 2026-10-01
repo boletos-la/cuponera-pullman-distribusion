@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Ticket, ShieldCheck, Clock, CheckCircle2, ArrowRight } from 'lucide-react';
 
 interface HeroBannerProps {
@@ -9,13 +9,36 @@ interface HeroBannerProps {
 }
 
 export default function HeroBanner({ onGoToCatalog, onGoToDashboard }: HeroBannerProps) {
+  const [bannerUrl, setBannerUrl] = useState('');
+
+  useEffect(() => {
+    const fetchConfig = async () => {
+      try {
+        const res = await fetch('/api/admin/config');
+        const data = await res.json();
+        if (data.success && data.data.bannerUrl) {
+          setBannerUrl(data.data.bannerUrl);
+        }
+      } catch (e) {}
+    };
+    fetchConfig();
+  }, []);
+
   return (
-    <div className="relative bg-[#023caf] rounded-3xl p-8 sm:p-10 mb-8 shadow-2xl overflow-hidden border-0">
-      <div className="absolute inset-0 overflow-hidden bg-[#023caf] rounded-3xl">
-        <span className="wave-span wave-1" />
-        <span className="wave-span wave-2" />
-        <span className="wave-span wave-3" />
-      </div>
+    <div 
+      className="relative bg-[#023caf] rounded-3xl p-8 sm:p-10 mb-8 shadow-2xl overflow-hidden border-0 bg-cover bg-center"
+      style={bannerUrl ? { backgroundImage: `url(${bannerUrl})` } : {}}
+    >
+      {!bannerUrl && (
+        <div className="absolute inset-0 overflow-hidden bg-[#023caf] rounded-3xl">
+          <span className="wave-span wave-1" />
+          <span className="wave-span wave-2" />
+          <span className="wave-span wave-3" />
+        </div>
+      )}
+      
+      {/* Overlay Oscuro para el Banner */}
+      {bannerUrl && <div className="absolute inset-0 bg-black/40 rounded-3xl pointer-events-none" />}
 
       {/* Indicadores de Flujo del Portal (Pasos 1-4) */}
       <div className="relative z-10 flex justify-center items-center gap-2 sm:gap-6 mb-8 text-[11px] font-bold text-white/60 overflow-x-auto pb-2">

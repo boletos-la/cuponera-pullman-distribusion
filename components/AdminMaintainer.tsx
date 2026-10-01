@@ -27,7 +27,7 @@ export default function AdminMaintainer() {
     setMounted(true);
   }, []);
 
-  const [activeTab, setActiveTab] = useState<'catalogo' | 'usuarios' | 'transacciones' | 'canjes' | 'compras' | 'auditoria'>('catalogo');
+  const [activeTab, setActiveTab] = useState<'catalogo' | 'usuarios' | 'transacciones' | 'canjes' | 'compras' | 'auditoria' | 'configuracion'>('catalogo');
   const [cuponeras, setCuponeras] = useState<Cuponera[]>([]);
   const [auditoria, setAuditoria] = useState<AuditoriaLog[]>([]);
 
@@ -135,10 +135,39 @@ export default function AdminMaintainer() {
     });
   };
 
+  const [bannerUrl, setBannerUrl] = useState('');
+  const [savingConfig, setSavingConfig] = useState(false);
+
+  const fetchConfig = async () => {
+    try {
+      const res = await fetch('/api/admin/config');
+      const data = await res.json();
+      if (data.success && data.data.bannerUrl) {
+        setBannerUrl(data.data.bannerUrl);
+      }
+    } catch (e) {}
+  };
+
+  const saveConfig = async () => {
+    setSavingConfig(true);
+    try {
+      await fetch('/api/admin/config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bannerUrl })
+      });
+      setMsg('Configuración guardada exitosamente');
+    } catch (e) {
+      setMsg('Error al guardar configuración');
+    }
+    setSavingConfig(false);
+  };
+
   useEffect(() => {
     fetchAdminData();
     fetchExtraData();
     loadCities();
+    fetchConfig();
   }, []);
 
   const loadCities = async () => {
@@ -247,7 +276,7 @@ export default function AdminMaintainer() {
     try {
       const res = await fetch('/api/admin/cuponeras', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: editingId, nombre, descripcion, tramos: formattedTramos, valorUnitario: Number(valorUnitario) || 0, cantidadCupones: Number(cantidadCupones) || 1, categoria, badge, activa })
+        body: JSON.stringify({ id: editingId, nombre, descripcion, tramos: formattedTramos, valorUnitario: Number(valorUnitario) || 0, cantidadCupones: (Number(cantidadCupones) || 1) + (Number(boletoAdicional) || 0), categoria, badge, activa })
       });
       const data = await res.json();
       if (data.success) {
@@ -312,6 +341,9 @@ export default function AdminMaintainer() {
           </button>
           <button onClick={() => setActiveTab('auditoria')} className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${activeTab === 'auditoria' ? 'bg-slate-800 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
             <History className="w-4 h-4" /> Auditoría
+          </button>
+          <button onClick={() => setActiveTab('configuracion')} className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${activeTab === 'configuracion' ? 'bg-rose-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
+            <Settings className="w-4 h-4" /> Configuración
           </button>
         </div>
 
@@ -796,6 +828,47 @@ export default function AdminMaintainer() {
 
       </div>
 
+      {activeTab === 'configuracion' && (
+        <div className="space-y-4 animate-fade-in">
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+            <h2 className="text-lg font-black text-slate-800 mb-6 flex items-center gap-2">
+              <Settings className="w-5 h-5 text-[#fa5e00]" /> Configuración General
+            </h2>
+            
+            <div className="space-y-6 max-w-2xl">
+              <div>
+                <label className="block text-sm font-bold text-slate-700 mb-2">URL del Banner Principal (Hero)</label>
+                <p className="text-xs text-slate-500 mb-3">Esta imagen reemplazará el cuadro azul informativo en la página principal del catálogo.</p>
+                <input 
+                  type="text" 
+                  value={bannerUrl} 
+                  onChange={e => setBannerUrl(e.target.value)} 
+                  placeholder="https://ejemplo.com/banner.jpg"
+                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
+                />
+              </div>
+              
+              {bannerUrl && (
+                <div className="mt-4 border border-slate-200 rounded-xl overflow-hidden bg-slate-100">
+                  <p className="text-xs font-bold text-slate-500 p-2 text-center border-b border-slate-200 bg-white">Vista Previa</p>
+                  <img src={bannerUrl} alt="Banner Preview" className="w-full h-auto max-h-[300px] object-cover" onError={(e) => { (e.target as HTMLImageElement).src = 'https://via.placeholder.com/800x300?text=Error+al+cargar+imagen'; }} />
+                </div>
+              )}
+              
+              <div className="pt-4">
+                <button 
+                  onClick={saveConfig} 
+                  disabled={savingConfig}
+                  className="bg-[#fa5e00] hover:bg-[#e55400] text-white font-bold py-3 px-8 rounded-xl shadow-md transition-all text-sm disabled:opacity-50"
+                >
+                  {savingConfig ? 'Guardando...' : 'Guardar Configuración'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Modal Formulario Edición/Creación */}
       {mounted && showModal && createPortal(
         <div className="fixed inset-0 w-screen h-screen z-[9999] flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
@@ -882,25 +955,6 @@ export default function AdminMaintainer() {
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-[200px_1fr] items-center gap-2 sm:gap-4">
-                    <label className="sm:text-right font-bold text-slate-700">Monto del descuento</label>
-                    <input type="text" value={descuento} onChange={(e) => setDescuento(e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]" />
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-[200px_1fr] items-center gap-2 sm:gap-4">
-                    <label className="sm:text-right text-xs font-bold text-slate-700 leading-tight">Enviar información de la zona en API para agentes OTA</label>
-                    <div className="flex items-center gap-6">
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input type="radio" name="enviarOta" checked={enviarOta === 'Si'} onChange={() => setEnviarOta('Si')} className="accent-[#fa5e00] w-4 h-4 cursor-pointer" />
-                        <span className={enviarOta === 'Si' ? 'font-bold text-slate-900' : 'text-slate-500'}>Si</span>
-                      </label>
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input type="radio" name="enviarOta" checked={enviarOta === 'N°'} onChange={() => setEnviarOta('N°')} className="accent-[#fa5e00] w-4 h-4 cursor-pointer" />
-                        <span className={enviarOta === 'N°' ? 'font-bold text-slate-900' : 'text-slate-500'}>N°</span>
-                      </label>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-[200px_1fr] items-center gap-2 sm:gap-4">
                     <label className="sm:text-right font-bold text-slate-700">Estado</label>
                     <div className="flex items-center gap-6">
                       <label className="flex items-center gap-2 cursor-pointer">
@@ -910,20 +964,6 @@ export default function AdminMaintainer() {
                       <label className="flex items-center gap-2 cursor-pointer">
                         <input type="radio" name="estado" checked={estadoActivo === 'Inactivo'} onChange={() => { setEstadoActivo('Inactivo'); setActiva(false); }} className="accent-[#fa5e00] w-4 h-4 cursor-pointer" />
                         <span className={estadoActivo === 'Inactivo' ? 'font-bold text-slate-900' : 'text-slate-500'}>Inactivo</span>
-                      </label>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-[200px_1fr] items-center gap-2 sm:gap-4">
-                    <label className="sm:text-right font-bold text-slate-700">Nominativo</label>
-                    <div className="flex items-center gap-6">
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input type="radio" name="nominativo" checked={nominativo === 'Si'} onChange={() => setNominativo('Si')} className="accent-[#fa5e00] w-4 h-4 cursor-pointer" />
-                        <span className={nominativo === 'Si' ? 'font-bold text-slate-900' : 'text-slate-500'}>Si</span>
-                      </label>
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input type="radio" name="nominativo" checked={nominativo === 'N°'} onChange={() => setNominativo('N°')} className="accent-[#fa5e00] w-4 h-4 cursor-pointer" />
-                        <span className={nominativo === 'N°' ? 'font-bold text-slate-900' : 'text-slate-500'}>N°</span>
                       </label>
                     </div>
                   </div>
@@ -951,16 +991,6 @@ export default function AdminMaintainer() {
                       <span className="font-black text-lg w-4 text-center">{boletoAdicional}</span>
                       <button type="button" onClick={() => setBoletoAdicional(boletoAdicional + 1)} className="text-white bg-[#fa5e00] hover:bg-[#e55400] w-6 h-6 rounded-full flex items-center justify-center font-bold text-lg leading-none p-0 pb-[1px] focus:outline-none transition-transform hover:scale-110 cursor-pointer shadow-sm">+</button>
                     </div>
-                  </div>
-
-                  <div className="flex items-center gap-4 pt-2">
-                    <label className="w-40 sm:w-36 sm:text-right font-bold text-slate-700 cursor-pointer" htmlFor="enableBranch">Habilitar en Sucursal</label>
-                    <input type="checkbox" id="enableBranch" checked={enableBranch} onChange={(e) => setEnableBranch(e.target.checked)} className="rounded text-[#fa5e00] w-5 h-5 accent-[#fa5e00] cursor-pointer" />
-                  </div>
-
-                  <div className="flex items-center gap-4">
-                    <label className="w-40 sm:w-36 sm:text-right font-bold text-slate-700 cursor-pointer" htmlFor="enableWebsite">Habilitar en Sitio Web</label>
-                    <input type="checkbox" id="enableWebsite" checked={enableWebsite} onChange={(e) => setEnableWebsite(e.target.checked)} className="rounded text-[#fa5e00] w-5 h-5 accent-[#fa5e00] cursor-pointer" />
                   </div>
                 </div>
               </div>
