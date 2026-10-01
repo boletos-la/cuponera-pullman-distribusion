@@ -24,22 +24,47 @@ export default function HeroBanner({ onGoToCatalog, onGoToDashboard }: HeroBanne
     fetchConfig();
   }, []);
 
-  return (
-    <div 
-      className="relative bg-[#023caf] rounded-3xl p-8 sm:p-10 mb-8 shadow-2xl overflow-hidden border-0 bg-cover bg-center"
-      style={bannerUrl ? { backgroundImage: `url(${bannerUrl})` } : {}}
-    >
-      {!bannerUrl && (
-        <div className="absolute inset-0 overflow-hidden bg-[#023caf] rounded-3xl">
-          <span className="wave-span wave-1" />
-          <span className="wave-span wave-2" />
-          <span className="wave-span wave-3" />
+  if (bannerUrl) {
+    return (
+      <div className="mb-8 space-y-4">
+        {/* Solo la imagen del banner */}
+        <div className="w-full rounded-3xl overflow-hidden shadow-2xl border border-slate-100">
+          <img 
+            src={bannerUrl} 
+            alt="Portal de Cuponeras" 
+            className="w-full h-auto max-h-[500px] object-cover object-center block"
+          />
         </div>
-      )}
-      
-      {/* Overlay Oscuro para el Banner */}
-      {bannerUrl && <div className="absolute inset-0 bg-black/40 rounded-3xl pointer-events-none" />}
+        
+        {/* Botones de acción debajo del banner */}
+        <div className="flex flex-wrap justify-center gap-4 pt-2">
+          <button
+            onClick={onGoToCatalog}
+            className="bg-[#fa5e00] hover:bg-[#fa5e00]/90 text-white font-bold px-6 py-3.5 rounded-full shadow-lg transition-transform flex items-center gap-2 text-sm sm:text-base cursor-pointer transform hover:scale-105"
+          >
+            <span>Ver Catálogo de Cuponeras</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
 
+          <button
+            onClick={onGoToDashboard}
+            className="bg-white hover:bg-slate-50 text-[#023caf] font-bold px-6 py-3.5 rounded-full border border-slate-200 shadow-md transition-transform flex items-center gap-2 text-sm sm:text-base cursor-pointer transform hover:scale-105"
+          >
+            <span>Consultar mi Saldo por RUT</span>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative bg-[#023caf] rounded-3xl p-8 sm:p-10 mb-8 shadow-2xl overflow-hidden border-0 bg-cover bg-center">
+      <div className="absolute inset-0 overflow-hidden bg-[#023caf] rounded-3xl">
+        <span className="wave-span wave-1" />
+        <span className="wave-span wave-2" />
+        <span className="wave-span wave-3" />
+      </div>
+      
       {/* Indicadores de Flujo del Portal (Pasos 1-4) */}
       <div className="relative z-10 flex justify-center items-center gap-2 sm:gap-6 mb-8 text-[11px] font-bold text-white/60 overflow-x-auto pb-2">
         <div className="flex items-center gap-2">

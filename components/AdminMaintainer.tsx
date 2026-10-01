@@ -383,7 +383,7 @@ export default function AdminMaintainer() {
             <History className="w-4 h-4" /> Auditoría
           </button>
           <button onClick={() => setActiveTab('configuracion')} className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${activeTab === 'configuracion' ? 'bg-rose-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
-            <Settings className="w-4 h-4" /> Configuración
+            <Settings className="w-4 h-4" /> Banner
           </button>
         </div>
 
@@ -872,8 +872,9 @@ export default function AdminMaintainer() {
         <div className="space-y-4 animate-fade-in">
           <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
             <h2 className="text-lg font-black text-slate-800 mb-6 flex items-center gap-2">
-              <Settings className="w-5 h-5 text-[#fa5e00]" /> Configuración General
+              <Settings className="w-5 h-5 text-[#fa5e00]" /> Configuración del Banner
             </h2>
+            {msg && <div className="mb-4 p-3 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg text-sm font-bold">{msg}</div>}
             
             <div className="space-y-6 max-w-2xl">
               <div>
@@ -891,7 +892,7 @@ export default function AdminMaintainer() {
                         type="file" 
                         accept="image/*"
                         onChange={e => e.target.files && e.target.files.length > 0 ? setBannerFile(e.target.files[0]) : setBannerFile(null)} 
-                        className="hidden"
+                        style={{ display: 'none' }}
                       />
                     </label>
                   </div>
