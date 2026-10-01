@@ -502,11 +502,11 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
               <div className="p-4 pb-3 flex-1 flex flex-col">
                 {/* Logo textual -> Logo Imagen */}
                 <div className="mb-2">
-                  <img src="https://kuposclientlogos.s3.us-east-1.amazonaws.com/IMG_3089.png" alt="Pullmanbus" className="h-4 object-contain" />
+                  <img src="https://kuposclientlogos.s3.us-east-1.amazonaws.com/IMG_3089.png" alt="Pullmanbus" className="h-5 object-contain" />
                 </div>
 
                 {/* Nombre de la Cuponera */}
-                <h3 className="text-base font-semibold text-slate-900 leading-snug mb-1.5 capitalize">
+                <h3 className="text-base font-semibold text-slate-900 leading-snug mb-1.5 capitalize min-h-[44px] line-clamp-2">
                   {item.nombre?.toLowerCase()}
                 </h3>
 
