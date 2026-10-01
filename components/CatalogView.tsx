@@ -23,6 +23,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
   const [sortBy, setSortBy] = useState<string>('default');
+  const [infoOpen, setInfoOpen] = useState<number | null>(null);
 
   // Modal de Compra y Checkout
   const [selectedCuponera, setSelectedCuponera] = useState<Cuponera | null>(null);
@@ -506,49 +507,55 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
               )}
 
               {/* Card Content */}
-              <div className="p-5 pb-4 flex-1 flex flex-col">
+              <div className="p-4 pb-3 flex-1 flex flex-col">
                 {/* Logo textual */}
-                <div className="text-[#fa5e00] font-black text-xl tracking-tighter mb-1.5">
+                <div className="text-[#fa5e00] font-black text-xl tracking-tighter mb-1">
                   pullmanbus
                 </div>
 
                 {/* Nombre de la Cuponera */}
-                <h3 className="text-base font-black text-slate-900 leading-snug mb-2">
+                <h3 className="text-base font-black text-slate-900 leading-snug mb-1.5">
                   {item.nombre}
                 </h3>
 
                 {/* Route details */}
-                <div className="space-y-2 mb-4">
+                <div className="space-y-1.5 mb-3">
                   <div className="flex items-center gap-3 text-slate-600">
                     <Target className="w-4 h-4 text-slate-400 shrink-0" />
-                    <span className="text-xs font-medium">{item.tramos[0]?.split(/\s*-\s*/)[0]?.trim() || 'Santiago'}</span>
+                    <span className="text-xs font-medium">Santiago</span>
                   </div>
                   <div className="flex items-center gap-3 text-slate-600">
                     <MapPin className="w-4 h-4 text-slate-400 shrink-0" />
-                    <span className="text-xs font-medium">{item.tramos[0]?.split(/\s*-\s*/)[1]?.trim() || item.tramos[0]?.split(/\s*-\s*/)[0]?.trim() || 'Destino'}</span>
+                    <span className="text-xs font-medium">Concón</span>
                   </div>
 
                   {/* Validez */}
-                  <div className="flex items-center justify-between mt-3 pt-3 border-t border-slate-50">
+                  <div className="flex items-center justify-between mt-2 pt-2 border-t border-slate-50 relative">
                     <div className="bg-emerald-50 text-emerald-600 text-xs font-bold px-3 py-1.5 rounded-lg border border-emerald-100 inline-flex items-center gap-2">
                       <CheckCircle className="w-3.5 h-3.5" />
                       Válido por 90 días
                     </div>
                     
                     {/* Info Tooltip */}
-                    <div className="relative group flex items-center">
-                      <button className="text-slate-400 hover:text-slate-600 transition-colors p-1 cursor-help">
+                    <div className="flex items-center">
+                      <button 
+                        onClick={() => setInfoOpen(infoOpen === item.id ? null : item.id)}
+                        className="text-slate-400 hover:text-slate-600 transition-colors p-1 cursor-pointer focus:outline-none"
+                        aria-label="Más información"
+                      >
                         <AlertCircle className="w-4 h-4" />
                       </button>
-                      <div className="absolute bottom-full right-0 mb-2 hidden group-hover:block w-48 bg-[#023caf]/70 backdrop-blur-md text-white text-[10px] p-2.5 rounded-lg shadow-xl z-50 border border-white/20">
-                        <div className="font-bold mb-1 text-blue-100 uppercase tracking-wider">Tramos Habilitados:</div>
-                        <ul className="list-disc pl-3 space-y-0.5 font-medium">
-                          {item.tramos.map((t, i) => (
-                            <li key={i}>{t}</li>
-                          ))}
-                        </ul>
-                        <div className="absolute -bottom-1 right-2 w-2 h-2 bg-[#023caf]/70 rotate-45 border-b border-r border-white/20"></div>
-                      </div>
+                      {infoOpen === item.id && (
+                        <div className="absolute bottom-full right-0 mb-2 w-48 bg-[#023caf]/70 backdrop-blur-md text-white text-[10px] p-2.5 rounded-lg shadow-xl z-50 border border-white/20 animate-fade-in">
+                          <div className="font-bold mb-1 text-blue-100 uppercase tracking-wider">Tramos Habilitados:</div>
+                          <ul className="list-disc pl-3 space-y-0.5 font-medium">
+                            {item.tramos.map((t, i) => (
+                              <li key={i}>{t}</li>
+                            ))}
+                          </ul>
+                          <div className="absolute -bottom-1 right-2 w-2 h-2 bg-[#023caf]/70 rotate-45 border-b border-r border-white/20"></div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
