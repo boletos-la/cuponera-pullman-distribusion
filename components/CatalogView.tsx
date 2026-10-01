@@ -502,7 +502,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
               <div className="p-4 pb-3 flex-1 flex flex-col">
                 {/* Logo textual -> Logo Imagen */}
                 <div className="mb-2">
-                  <img src="https://kuposclientlogos.s3.us-east-1.amazonaws.com/IMG_3089.png" alt="Pullmanbus" className="h-7 object-contain" />
+                  <img src="https://kuposclientlogos.s3.us-east-1.amazonaws.com/IMG_3089.png" alt="Pullmanbus" className="h-8 object-contain" />
                 </div>
 
                 {/* Nombre de la Cuponera */}
