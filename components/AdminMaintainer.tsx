@@ -153,9 +153,10 @@ export default function AdminMaintainer() {
     setSavingConfig(true);
     try {
       const formData = new FormData();
-      formData.append('bannerUrl', bannerUrl);
       if (bannerFile) {
         formData.append('bannerFile', bannerFile);
+      } else {
+        formData.append('bannerUrl', bannerUrl);
       }
       
       const res = await fetch('/api/admin/config', {
