@@ -7,7 +7,7 @@ import { getApiUrl, apiClient } from '@/lib/apiClient';
 import { Settings, Plus, Minus, Edit2, History, Check, X, ShieldAlert, Trash2, ArrowLeftRight, Users, CreditCard, Ticket, ShoppingBag, Search, ChevronUp, ChevronDown, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 import { ComboBox } from '@/components/ui/combobox';
 import { fixEncoding } from '@/lib/utils';
-
+import toast, { Toaster } from 'react-hot-toast';
 interface TramoItem {
   origen: string;
   destino: string;
@@ -71,7 +71,7 @@ export default function AdminMaintainer() {
   const [enableWebsite, setEnableWebsite] = useState(false);
 
   const [saving, setSaving] = useState(false);
-  const [msg, setMsg] = useState('');
+  const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null);
 
   const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'asc' | 'desc' } | null>(null);
 
@@ -166,14 +166,14 @@ export default function AdminMaintainer() {
       const data = await res.json();
       
       if (data.success) {
-        setMsg('Configuración guardada exitosamente');
+        toast.success('Configuración guardada exitosamente');
         if (data.data.bannerUrl) setBannerUrl(data.data.bannerUrl);
         setBannerFile(null); // Clear file input
       } else {
-        setMsg('Error al guardar configuración: ' + (data.error || ''));
+        toast.error('Error al guardar configuración: ' + (data.error || ''));
       }
     } catch (e) {
-      setMsg('Error al guardar configuración');
+      toast.error('Error al guardar configuración');
     }
     setSavingConfig(false);
   };
@@ -191,14 +191,14 @@ export default function AdminMaintainer() {
       const data = await res.json();
       
       if (data.success) {
-        setMsg('Banner eliminado exitosamente');
+        toast.success('Banner eliminado exitosamente');
         setBannerUrl('');
         setBannerFile(null);
       } else {
-        setMsg('Error al eliminar banner: ' + (data.error || ''));
+        toast.error('Error al eliminar banner: ' + (data.error || ''));
       }
     } catch (e) {
-      setMsg('Error al eliminar banner');
+      toast.error('Error al eliminar banner');
     }
     setSavingConfig(false);
   };
@@ -305,12 +305,11 @@ export default function AdminMaintainer() {
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
-    setMsg('');
     const formattedTramos = Array.from(new Set(
       tramosItems.filter(t => t.origen.trim() && t.destino.trim()).flatMap(t => [`${t.origen.trim()}-${t.destino.trim()}`, `${t.destino.trim()}-${t.origen.trim()}`])
     ));
     if (formattedTramos.length === 0) {
-      setMsg('Debes configurar al menos un tramo con origen y destino válidos.');
+      toast.error('Debes configurar al menos un tramo con origen y destino válidos.');
       setSaving(false); return;
     }
     try {
@@ -320,14 +319,34 @@ export default function AdminMaintainer() {
       });
       const data = await res.json();
       if (data.success) {
-        setMsg(data.mensaje); setShowModal(false); fetchAdminData();
+        toast.success(data.mensaje || 'Guardado exitosamente'); 
+        setShowModal(false); 
+        fetchAdminData();
       } else {
-        setMsg(data.error || 'Error al guardar.');
+        toast.error(data.error || 'Error al guardar.');
       }
     } catch (err) {
-      setMsg('Error de servidor.');
+      toast.error('Error de servidor al guardar la cuponera.');
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleDeleteCuponera = async () => {
+    if (!deleteConfirmId) return;
+    try {
+      const res = await fetch(`/api/admin/cuponeras?id=${deleteConfirmId}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (data.success) {
+        toast.success(data.mensaje || 'Cuponera eliminada con éxito');
+        fetchAdminData();
+      } else {
+        toast.error(data.error || 'Error al eliminar la cuponera. Puede que tenga compras asociadas.');
+      }
+    } catch (e) {
+      toast.error('Error de red al intentar eliminar la cuponera.');
+    } finally {
+      setDeleteConfirmId(null);
     }
   };
 
@@ -356,6 +375,10 @@ export default function AdminMaintainer() {
 
   return (
     <div className="space-y-6">
+      {mounted && typeof document !== 'undefined' && createPortal(
+        <Toaster position="top-right" toastOptions={{ style: { zIndex: 999999 } }} />,
+        document.body
+      )}
       <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
         <h2 className="text-2xl font-black text-slate-900 flex items-center gap-2 mb-6">
           <Settings className="w-6 h-6 text-[#fa5e00]" />
@@ -396,7 +419,7 @@ export default function AdminMaintainer() {
                 <Plus className="w-4 h-4" /> Crear Nueva Cuponera
               </button>
             </div>
-            {msg && <p className="text-xs text-emerald-600 font-bold">{msg}</p>}
+            
             <div className="border border-slate-200 rounded-2xl">
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-[120px] z-20">
@@ -434,12 +457,22 @@ export default function AdminMaintainer() {
                       <td className="p-3 font-black text-[#fa5e00]">${c.precioTotal.toLocaleString('es-CL')}</td>
                       <td className="p-3"><span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${c.activa ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-600'}`}>{c.activa ? 'Activa' : 'Inactiva'}</span></td>
                       <td className="p-3 text-right w-28">
-                        <button
-                          onClick={() => handleOpenEdit(c)}
-                          className="opacity-0 group-hover:opacity-100 transition-all duration-200 transform translate-x-1 group-hover:translate-x-0 p-1.5 bg-blue-50 text-[#023caf] hover:bg-[#023caf] hover:text-white rounded-lg font-bold inline-flex items-center gap-1.5 shadow-xs cursor-pointer"
-                        >
-                          <Edit2 className="w-3.5 h-3.5" /> Editar
-                        </button>
+                        <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all duration-200 transform translate-x-1 group-hover:translate-x-0">
+                          <button
+                            onClick={() => handleOpenEdit(c)}
+                            title="Editar"
+                            className="p-1.5 bg-blue-50 text-[#023caf] hover:bg-[#023caf] hover:text-white rounded-lg font-bold inline-flex items-center shadow-xs cursor-pointer"
+                          >
+                            <Edit2 className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            onClick={() => setDeleteConfirmId(c.id)}
+                            title="Eliminar"
+                            className="p-1.5 bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white rounded-lg font-bold inline-flex items-center shadow-xs cursor-pointer"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -874,7 +907,7 @@ export default function AdminMaintainer() {
             <h2 className="text-lg font-black text-slate-800 mb-6 flex items-center gap-2">
               <Settings className="w-5 h-5 text-[#fa5e00]" /> Configuración del Banner
             </h2>
-            {msg && <div className="mb-4 p-3 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg text-sm font-bold">{msg}</div>}
+            
             
             <div className="space-y-6 max-w-2xl">
               <div>
@@ -1080,6 +1113,34 @@ export default function AdminMaintainer() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>,
+        document.body
+      )}
+
+      {/* Modal de Confirmación de Eliminación */}
+      {mounted && deleteConfirmId && typeof document !== 'undefined' && createPortal(
+        <div className="fixed inset-0 w-screen h-screen z-[99999] flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 w-full max-w-md shadow-2xl relative overflow-hidden flex flex-col items-center text-center">
+            <div className="w-16 h-16 bg-rose-100 rounded-full flex items-center justify-center mb-4">
+              <Trash2 className="w-8 h-8 text-rose-600" />
+            </div>
+            <h3 className="text-xl font-black text-slate-800 mb-2">¿Eliminar Cuponera?</h3>
+            <p className="text-sm text-slate-600 mb-8">Esta acción no se puede deshacer. ¿Estás seguro de que deseas eliminar permanentemente esta cuponera del sistema?</p>
+            <div className="flex gap-3 w-full">
+              <button
+                onClick={() => setDeleteConfirmId(null)}
+                className="flex-1 py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition-colors cursor-pointer"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleDeleteCuponera}
+                className="flex-1 py-3 px-4 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl shadow-lg shadow-rose-200 transition-colors cursor-pointer"
+              >
+                Sí, eliminar
+              </button>
+            </div>
           </div>
         </div>,
         document.body

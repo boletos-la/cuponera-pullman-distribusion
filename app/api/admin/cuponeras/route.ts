@@ -14,15 +14,35 @@ async function getAdminToken() {
 
 export async function GET() {
   try {
-    const catalogRes = await fetch(`${BACKEND_URL}/coupons/catalog`, { cache: 'no-store' });
+    const token = await getAdminToken();
+    const catalogRes = await fetch(`${BACKEND_URL}/admin/cuponeras`, { 
+      headers: { 'Authorization': `Bearer ${token}` },
+      cache: 'no-store' 
+    });
     const catalogData = await catalogRes.json();
     
     const auditRes = await fetch(`${BACKEND_URL}/admin/audit-logs`, { cache: 'no-store' });
     const auditData = await auditRes.json();
 
+    const mappedCuponeras = (catalogData.success ? catalogData.data : []).map((c: any) => {
+      const tramos = c.RutaServicios?.map((r: any) => `${r.origen}-${r.destino}`) || [];
+      return {
+        id: c.id,
+        nombre: c.nombre,
+        descripcion: c.descripcion,
+        precioTotal: c.precio_actual,
+        cantidadCupones: c.maximo_usos,
+        valorUnitario: Math.round(c.precio_actual / c.maximo_usos),
+        tramos,
+        activa: c.activa,
+        categoria: c.categoria,
+        badge: c.badge
+      };
+    });
+
     return NextResponse.json({
       success: true,
-      cuponeras: catalogData.success ? catalogData.data : [],
+      cuponeras: mappedCuponeras,
       auditoria: auditData.success ? auditData.data : []
     });
   } catch (error) {
@@ -86,6 +106,29 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true, mensaje: 'Cuponera guardada exitosamente en la base de datos' });
   } catch (error) {
     console.error('Error saving cuponera:', error);
+    return NextResponse.json({ success: false, error: 'Internal Server Error' }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const url = new URL(request.url);
+    const id = url.searchParams.get('id');
+    if (!id) {
+      return NextResponse.json({ success: false, error: 'ID requerido' }, { status: 400 });
+    }
+    const token = await getAdminToken();
+    const res = await fetch(`${BACKEND_URL}/admin/cuponeras/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await res.json();
+    if (!data.success) {
+      return NextResponse.json({ success: false, error: data.message || 'Error al eliminar' }, { status: 400 });
+    }
+    return NextResponse.json({ success: true, mensaje: 'Cuponera eliminada exitosamente' });
+  } catch (error) {
+    console.error('Error deleting cuponera:', error);
     return NextResponse.json({ success: false, error: 'Internal Server Error' }, { status: 500 });
   }
 }

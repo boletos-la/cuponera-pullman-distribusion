@@ -135,7 +135,7 @@ export function ComboBox({
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent className="w-[--radix-popover-trigger-width] min-w-[240px] p-0" align="start">
+      <PopoverContent className="w-[--radix-popover-trigger-width] min-w-[240px] p-0 z-[99999]" align="start">
         <Command ref={commandRef} filter={() => 1}>
           <CommandInput
             placeholder="Buscar ciudad..."
