@@ -76,6 +76,12 @@ export async function POST(request: Request) {
       badge: badge || undefined
     };
 
+    const rutas = parsedTramos.map((t: string) => {
+      const parts = t.split('-');
+      return { origen: parts[0]?.trim() || '', destino: parts[1]?.trim() || '' };
+    });
+    payload.rutas = rutas;
+
     let res;
     if (id) {
       // Editar
@@ -86,11 +92,6 @@ export async function POST(request: Request) {
       });
     } else {
       // Crear
-      const rutas = parsedTramos.map((t: string) => {
-        const parts = t.split('-');
-        return { origen: parts[0]?.trim() || '', destino: parts[1]?.trim() || '' };
-      });
-      payload.rutas = rutas;
       res = await fetch(`${BACKEND_URL}/admin/cuponeras`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
