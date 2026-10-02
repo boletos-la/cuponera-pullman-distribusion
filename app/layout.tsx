@@ -30,8 +30,8 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" className="h-full antialiased">
-      <body className={`min-h-full flex flex-col antialiased ${inter.className} ${montserrat.variable}`}>
+    <html lang="es" className="h-full antialiased" suppressHydrationWarning>
+      <body suppressHydrationWarning className={`min-h-full flex flex-col antialiased ${inter.className} ${montserrat.variable}`}>
         {children}
       </body>
     </html>
