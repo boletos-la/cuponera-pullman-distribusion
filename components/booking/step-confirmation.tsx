@@ -1,12 +1,11 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { CheckCircle, Printer, Download, Bus, ArrowRight, LayoutDashboard } from "lucide-react";
+import React from "react";
+import { Printer, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { BookingData } from "@/types/booking";
 import { useCuponStore } from "@/lib/cupon-store";
 import { format } from "date-fns";
-import { es } from "date-fns/locale";
 
 import { useReservationStore } from "@/lib/reservation-store";
 
@@ -29,147 +28,118 @@ export function StepConfirmation({ bookingData, onFinish }: StepConfirmationProp
   const asiento = bookingData.selectedSeats?.[0] || departureBooking?.selectedSeats?.[0] || "N/A";
   const dateObj = bookingData.date || (departureBooking?.date ? new Date(departureBooking.date) : null);
   const timeStr = bookingData.departureTime || departureBooking?.dep_time || "N/A";
-  const formatBusType = (busType: string | null | undefined): string => {
-    if (!busType) return "Estándar";
-    const parts = busType.split(",").map((p) => p.trim());
-    const ignore = ["2+2", "2+1", "AC", "Video", "WiFi", "Baño"];
-    const main = parts.find((p) => !ignore.includes(p));
-    return main || parts[0];
+
+  const renderQr = () => {
+    if (!bookingData.gdsData?.qrCodeUrl) return null;
+    const src = bookingData.gdsData.qrCodeUrl.startsWith("http") || bookingData.gdsData.qrCodeUrl.startsWith("data:")
+      ? bookingData.gdsData.qrCodeUrl
+      : `data:image/png;base64,${bookingData.gdsData.qrCodeUrl}`;
+    return (
+      <div className="flex flex-col items-center border border-slate-300 p-3 w-40 h-48 bg-white">
+        <span className="text-[10px] font-bold text-slate-500 mb-1">CÓDIGO QR</span>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={src} alt="Código QR" className="w-full h-full object-contain" />
+      </div>
+    );
   };
 
-  const busTypeStr = bookingData.busType ? formatBusType(bookingData.busType) : (departureBooking?.bus_type ? formatBusType(departureBooking.bus_type) : "N/A");
-
   return (
-    <div className="max-w-3xl mx-auto space-y-8 animate-fade-in print:max-w-full">
-      <div className="text-center space-y-4 print:hidden">
-        <div className="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-4">
-          <CheckCircle className="w-10 h-10 text-green-600" />
-        </div>
-        <h2 className="text-3xl md:text-4xl font-bold text-slate-900">
-          ¡Canje Exitoso!
-        </h2>
-        <p className="text-slate-500 max-w-lg mx-auto">
-          Tu pasaje ha sido emitido correctamente usando el cupón <span className="font-bold text-primary">{cuponInfo?.codigo}</span>.
-        </p>
+    <div className="max-w-[700px] mx-auto animate-fade-in print:max-w-full print:p-0 font-sans text-slate-800">
+      
+      {/* Mensaje superior (Oculto al imprimir) */}
+      <div className="text-center space-y-3 mb-6 print:hidden">
+        <h2 className="text-3xl font-bold text-green-600">¡Canje Exitoso!</h2>
+        <p className="text-slate-600">Tu boleto ha sido emitido. Puedes imprimirlo o descargarlo.</p>
       </div>
 
-      {/* Boleto (Mismo estilo de TicketModal pero integrado) */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-100 space-y-6 mx-auto print:shadow-none print:border-none">
-        {/* Encabezado Boleto */}
-        <div className="text-center space-y-2 border-b border-dashed border-slate-200 pb-4">
-          <div className="inline-flex items-center gap-1.5 bg-primary text-primary-foreground px-3 py-1 rounded-full text-xs font-bold uppercase shadow-sm">
-            <Bus className="w-3.5 h-3.5" />
-            <span>Pullmanbus Cuponeras</span>
+      {/* TICKET CONTAINER - Estilo similar al PDF */}
+      <div className="bg-white border border-slate-300 shadow-md p-8 print:shadow-none print:border-none mx-auto w-full relative">
+        
+        {/* Header */}
+        <div className="flex justify-between items-start mb-6 border-b border-slate-200 pb-4">
+          <div>
+            <h4 className="text-xs text-slate-500 tracking-wider font-semibold">BOLETO ELECTRÓNICO DE VIAJE</h4>
+            <div className="mt-2 text-[10px] text-slate-500 space-y-1">
+              <p>Este documento es válido como pasaje.</p>
+              <p>Presente este boleto junto a su cédula de identidad al abordar.</p>
+            </div>
           </div>
-
-          <h3 className="text-xl font-bold text-slate-900">Boleto Electrónico de Viaje</h3>
-          <div className="flex justify-center gap-4 text-xs font-mono font-bold text-primary">
-            <span>PNR: {pnr}</span>
-            {bookingData.gdsData?.operatorPnr && <span>OP: {bookingData.gdsData.operatorPnr}</span>}
+          <div className="w-48 text-right">
+             <img src="/logo_pullman.png" alt="Pullman Bus Logo" className="w-full h-auto opacity-90 object-contain" />
           </div>
         </div>
 
-        {/* Cuerpo del Pasaje */}
-        <div className="space-y-4 text-sm">
-          <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2">
-            <div className="flex justify-between items-center border-b border-slate-200 pb-2">
-              <span className="text-slate-500 font-medium">Pasajero</span>
-              <span className="font-bold text-slate-900">{bookingData.passengerName}</span>
+        {/* Sección Datos del Pasajero & QR */}
+        <div className="flex flex-col sm:flex-row gap-6 mb-6">
+          <div className="flex-1 space-y-4">
+            
+            <div>
+              <h5 className="text-[#ff6600] font-bold text-sm mb-2 border-b border-slate-200 pb-1">DATOS DEL PASAJERO</h5>
+              <div className="border border-slate-400 p-4 space-y-2 text-xs">
+                <div className="flex"><span className="w-32 font-bold">Nombre:</span> <span>{bookingData.passengerName}</span></div>
+                <div className="flex"><span className="w-32 font-bold">RUT:</span> <span>{bookingData.passengerRut}</span></div>
+                <div className="flex"><span className="w-32 font-bold">N° Boleto (PNR):</span> <span className="font-bold">{pnr}</span></div>
+                <div className="flex"><span className="w-32 font-bold">Empresa:</span> <span>Pullman Bus</span></div>
+                <div className="flex"><span className="w-32 font-bold">Convenio:</span> <span>Cuponera Digital</span></div>
+              </div>
             </div>
-            <div className="flex justify-between items-center border-b border-slate-200 pb-2">
-              <span className="text-slate-500 font-medium">RUT Titular</span>
-              <span className="font-mono font-bold text-slate-900">{bookingData.passengerRut}</span>
+
+            <div>
+              <h5 className="text-[#ff6600] font-bold text-sm mb-2 border-b border-slate-200 pb-1">DATOS DEL SERVICIO</h5>
+              <div className="border border-slate-400 p-4 space-y-2 text-xs">
+                <div className="flex"><span className="w-32 font-bold">Origen:</span> <span>{origen}</span></div>
+                <div className="flex"><span className="w-32 font-bold">Destino:</span> <span>{destino}</span></div>
+                <div className="flex"><span className="w-32 font-bold">Fecha de Viaje:</span> <span>{dateObj && format(dateObj, "dd/MM/yyyy")}</span></div>
+                <div className="flex"><span className="w-32 font-bold">Hora Salida:</span> <span>{timeStr}</span></div>
+                <div className="flex"><span className="w-32 font-bold">N° Asiento:</span> <span className="font-bold text-sm">{asiento}</span></div>
+              </div>
             </div>
-            <div className="flex justify-between items-center pb-1">
-              <span className="text-slate-500 font-medium">Cupón Canjeado</span>
-              <span className="font-mono font-bold text-primary">{cuponInfo?.codigo}</span>
-            </div>
+
           </div>
-
-          {/* Detalles del Itinerario */}
-          <div className="bg-blue-50/50 p-4 rounded-2xl border border-blue-100 space-y-4">
-            <div className="flex justify-between items-center">
-              <div>
-                <span className="text-[10px] text-slate-400 font-bold uppercase block">Origen</span>
-                <span className="text-base font-bold text-slate-900">{origen}</span>
-              </div>
-              <ArrowRight className="w-5 h-5 text-primary" />
-              <div className="text-right">
-                <span className="text-[10px] text-slate-400 font-bold uppercase block">Destino</span>
-                <span className="text-base font-bold text-slate-900">{destino}</span>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-blue-100">
-              <div>
-                <span className="text-[10px] text-slate-400 font-bold uppercase block">Embarque</span>
-                <span className="text-sm font-medium text-slate-800">{bookingData.gdsData?.boardingAt || origen}</span>
-                {bookingData.gdsData?.boardingAddress && (
-                  <span className="text-[11px] text-slate-500 block leading-tight mt-0.5">{bookingData.gdsData.boardingAddress}</span>
-                )}
-                <span className="text-xs text-slate-500 block mt-1">
-                  Salida: <span className="font-bold text-primary">{bookingData.gdsData?.boardingTime || timeStr}</span>
-                </span>
-              </div>
-              <div className="text-right">
-                <span className="text-[10px] text-slate-400 font-bold uppercase block">Desembarque</span>
-                <span className="text-sm font-medium text-slate-800">{bookingData.gdsData?.dropOffAt || destino}</span>
-                {bookingData.gdsData?.dropOffAddress && (
-                  <span className="text-[11px] text-slate-500 block leading-tight mt-0.5">{bookingData.gdsData.dropOffAddress}</span>
-                )}
-                {bookingData.gdsData?.arrivalTime && (
-                  <span className="text-xs text-slate-500 block mt-1">
-                    Llegada: <span className="font-bold text-slate-600">{bookingData.gdsData.arrivalTime}</span>
-                  </span>
-                )}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-blue-100">
-              <div>
-                <span className="text-xs text-slate-500 block">Fecha del Viaje</span>
-                <span className="font-bold">
-                  {dateObj && format(dateObj, "dd MMM yyyy", { locale: es })}
-                </span>
-              </div>
-              <div className="text-right">
-                <span className="text-xs text-slate-500 block">Asiento N°</span>
-                <span className="font-extrabold text-lg text-primary">#{asiento}</span>
-              </div>
-            </div>
-
-            <div className="flex justify-between items-center text-xs pt-2 text-slate-600">
-              <span>Tipo: {busTypeStr}</span>
-            </div>
+          
+          <div className="shrink-0 flex items-center justify-center pt-8">
+            {renderQr()}
           </div>
+        </div>
 
-          {/* QR Code */}
-          {bookingData.gdsData?.qrCodeUrl && (
-            <div className="flex flex-col items-center justify-center pt-2 pb-2">
-              <span className="text-[10px] font-bold text-slate-400 mb-2 uppercase tracking-widest">Presenta este código al abordar</span>
-              <div className="p-2 bg-white rounded-xl border border-slate-200 shadow-sm print:shadow-none print:border-slate-300">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={
-                    bookingData.gdsData.qrCodeUrl.startsWith("http") || bookingData.gdsData.qrCodeUrl.startsWith("data:")
-                      ? bookingData.gdsData.qrCodeUrl
-                      : `data:image/png;base64,${bookingData.gdsData.qrCodeUrl}`
-                  }
-                  alt="Código QR del Pasaje"
-                  className="w-32 h-32 object-contain print:w-40 print:h-40"
-                />
-              </div>
-            </div>
-          )}
+        {/* Información de Pago */}
+        <div className="mb-6 flex justify-between items-center border-t border-b border-slate-300 py-3">
+          <div>
+            <h5 className="text-[#ff6600] font-bold text-sm">INFORMACIÓN DE PAGO</h5>
+            <p className="text-xs text-slate-600 mt-1">Canje mediante cupón: <span className="font-bold">{cuponInfo?.codigo}</span></p>
+          </div>
+          <div className="text-right">
+            <span className="text-sm font-bold mr-4">Total Pagado:</span>
+            <span className="text-xl font-black">$0</span>
+          </div>
+        </div>
+
+        {/* Disclaimer Legal */}
+        <div className="text-[10px] text-slate-500 text-justify leading-relaxed bg-slate-50 p-4 border border-slate-200">
+          <ul className="space-y-2 list-none pl-4 relative">
+            <li className="before:content-['•'] before:absolute before:-left-4 before:text-[#ff6600] before:font-bold">
+              Cada pasajero tendrá derecho a treinta kilogramos (30 kg) de equipaje, sólo si su volumen no excede los 180 decímetros cúbicos (Art. 68). En caso del equipaje exceda 5 UTM, es responsabilidad del pasajero declararlo en las sucursales de ventas, a lo menos con 1 hora de antelación de la salida del bus.
+            </li>
+            <li className="before:content-['•'] before:absolute before:-left-4 before:text-[#ff6600] before:font-bold">
+              En viajes de más de dos (2) horas, el pasajero debe entregar la información necesaria para evitar un sumario sanitario, según lo indica la Resolución Exenta 644/2021 del Ministerio de Salud.
+            </li>
+            <li className="before:content-['•'] before:absolute before:-left-4 before:text-[#ff6600] before:font-bold">
+              Es responsabilidad del pasajero contar con la documentación necesaria estipulada por el Gobierno de Chile.
+            </li>
+            <li className="before:content-['•'] before:absolute before:-left-4 before:text-[#ff6600] before:font-bold">
+              Para viajes internacionales los itinerarios están sujetos a cambios sin previo aviso o suspensión por condición climática adversa o restricciones sanitarias.
+            </li>
+          </ul>
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row justify-center gap-4 print:hidden">
-        <Button onClick={handlePrint} variant="outline" className="w-full sm:w-auto">
+      {/* Botones de Acción (Ocultos al imprimir) */}
+      <div className="flex flex-col sm:flex-row justify-center gap-4 mt-8 print:hidden">
+        <Button onClick={handlePrint} variant="outline" className="w-full sm:w-auto font-bold border-slate-300">
           <Printer className="mr-2 h-4 w-4" />
           Imprimir Pasaje
         </Button>
-        <Button onClick={onFinish} className="w-full sm:w-auto">
+        <Button onClick={onFinish} className="w-full sm:w-auto font-bold bg-[#fa5e00] hover:bg-[#fa5e00]/90 text-white">
           <LayoutDashboard className="mr-2 h-4 w-4" />
           Volver a Mis Cuponeras
         </Button>
