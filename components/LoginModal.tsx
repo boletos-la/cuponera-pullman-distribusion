@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { X, LogIn, AlertCircle, UserPlus, KeyRound, ArrowRight, ArrowLeft, Mail, Phone, Lock, User, ShieldCheck, Loader2 } from 'lucide-react';
+import { X, LogIn, AlertCircle, UserPlus, KeyRound, ArrowRight, ArrowLeft, Mail, Phone, Lock, User, ShieldCheck, Loader2, CheckCircle2 } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { authService } from '@/lib/services/authService';
 import { setAuthToken } from '@/lib/apiClient';
 import { validateRut, formatRut, cleanRut } from '@/lib/rutValidator';
@@ -15,6 +16,7 @@ type Mode = 'login' | 'register' | 'mfa';
 export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps) {
   const [mode, setMode] = useState<Mode>('login');
   const [loading, setLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [guestHint, setGuestHint] = useState('');
@@ -85,8 +87,15 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
       const res = await authService.login({ rut: formatRut(rut), password });
       if (res.success && res.token) {
         setAuthToken(res.token, rememberMe);
-        onLoginSuccess();
-        onClose();
+        setIsSuccess(true);
+        const nombreUsuario = res.usuario?.nombre ? `, ${res.usuario.nombre}` : '';
+        const msg = `¡Inicio de sesión exitoso! Bienvenido${nombreUsuario}.`;
+        setSuccessMessage(msg);
+        toast.success(msg);
+        setTimeout(() => {
+          onLoginSuccess();
+          onClose();
+        }, 1000);
       } else {
         setError(res.message || 'Error al iniciar sesión.');
       }
@@ -227,8 +236,9 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
             </div>
 
             {successMessage && (
-              <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-xl text-xs text-green-700 font-medium text-center shadow-sm">
-                {successMessage}
+              <div className="mb-4 p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl text-xs sm:text-sm text-emerald-800 font-semibold flex items-center justify-center gap-2 shadow-sm animate-fade-in text-center">
+                <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+                <span>{successMessage}</span>
               </div>
             )}
 
@@ -286,10 +296,19 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
               <div className="pt-2">
                 <button
                   type="submit"
-                  disabled={loading || !!rutError || !rut || !password}
-                  className="w-full bg-gradient-to-r from-[#fa5e00] to-orange-500 hover:from-orange-600 hover:to-orange-500 text-white font-black py-3.5 px-4 rounded-xl shadow-[0_4px_14px_0_rgba(250,94,0,0.39)] hover:shadow-[0_6px_20px_rgba(250,94,0,0.23)] transition-all flex items-center justify-center gap-2 text-sm disabled:opacity-50 active:scale-[0.98]"
+                  disabled={loading || isSuccess || !!rutError || !rut || !password}
+                  className={`w-full font-black py-3.5 px-4 rounded-xl transition-all flex items-center justify-center gap-2 text-sm disabled:opacity-75 ${
+                    isSuccess
+                      ? 'bg-emerald-600 text-white shadow-[0_4px_14px_0_rgba(16,185,129,0.39)]'
+                      : 'bg-gradient-to-r from-[#fa5e00] to-orange-500 hover:from-orange-600 hover:to-orange-500 text-white shadow-[0_4px_14px_0_rgba(250,94,0,0.39)] hover:shadow-[0_6px_20px_rgba(250,94,0,0.23)] active:scale-[0.98]'
+                  }`}
                 >
-                  {loading ? (
+                  {isSuccess ? (
+                    <>
+                      <CheckCircle2 className="w-5 h-5 animate-bounce" />
+                      <span>¡Sesión Iniciada con Éxito!</span>
+                    </>
+                  ) : loading ? (
                     <Loader2 className="w-5 h-5 animate-spin" />
                   ) : (
                     <span>Entrar a mi Cuenta</span>
@@ -303,7 +322,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
                 ¿No tienes cuenta?{' '}
                 <button
                   type="button"
-                  onClick={() => { setMode('register'); setError(''); }}
+                  onClick={() => { setMode('register'); setError(''); setIsSuccess(false); setSuccessMessage(''); }}
                   className="text-[#023caf] font-bold hover:underline"
                 >
                   Regístrate aquí

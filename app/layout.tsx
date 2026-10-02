@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Montserrat } from "next/font/google";
 import "./globals.css";
+import ToasterClient from "@/components/ToasterClient";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -32,6 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="es" className="h-full antialiased" suppressHydrationWarning>
       <body suppressHydrationWarning className={`min-h-full flex flex-col antialiased ${inter.className} ${montserrat.variable}`}>
+        <ToasterClient />
         {children}
       </body>
     </html>

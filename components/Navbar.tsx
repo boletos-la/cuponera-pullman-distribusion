@@ -4,6 +4,7 @@ import React from 'react';
 import { ShoppingCart, LayoutDashboard, RotateCcw, ShieldAlert, Trash2, User, LogOut, LogIn } from 'lucide-react';
 import { getAuthToken, removeAuthToken, getAuthUser } from '@/lib/apiClient';
 import { fixEncoding } from '@/lib/utils';
+import toast from 'react-hot-toast';
 import LoginModal from './LoginModal';
 
 interface NavbarProps {
@@ -36,6 +37,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
     removeAuthToken();
     setActiveTab('catalogo');
     setShowLogoutConfirm(false);
+    toast.success('Sesión cerrada con éxito');
   };
 
   return (
