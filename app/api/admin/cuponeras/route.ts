@@ -32,6 +32,7 @@ export async function GET() {
         descripcion: c.descripcion,
         precioTotal: c.precio_actual,
         cantidadCupones: c.maximo_usos,
+        boletosAdicionales: c.boletos_adicionales || 0,
         valorUnitario: Math.round(c.precio_actual / c.maximo_usos),
         tramos,
         activa: c.activa,
@@ -54,7 +55,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { id, nombre, descripcion, tramos, valorUnitario, cantidadCupones, categoria, activa, badge } = body;
+    const { id, nombre, descripcion, tramos, valorUnitario, cantidadCupones, boletosAdicionales, categoria, activa, badge } = body;
 
     const token = await getAdminToken();
 
@@ -70,6 +71,7 @@ export async function POST(request: Request) {
       descripcion,
       tipo: 'ESTANDAR',
       maximo_usos,
+      boletos_adicionales: Number(boletosAdicionales) || 0,
       precio_actual,
       activa,
       categoria: categoria || 'Todos',

@@ -298,7 +298,7 @@ export default function AdminMaintainer() {
     });
     const parsed = Array.from(parsedTramosMap.values());
     setTramosItems(parsed.length > 0 ? parsed : [{ origen: '', destino: '' }]);
-    setValorUnitario(c.valorUnitario); setCantidadCupones(c.cantidadCupones); setCategoria(c.categoria || ''); setBadge(c.badge || ''); setActiva(c.activa); setEstadoActivo(c.activa ? 'Activo' : 'Inactivo');
+    setValorUnitario(c.valorUnitario); setCantidadCupones(c.cantidadCupones); setBoletoAdicional(c.boletosAdicionales || 0); setCategoria(c.categoria || ''); setBadge(c.badge || ''); setActiva(c.activa); setEstadoActivo(c.activa ? 'Activo' : 'Inactivo');
     setShowModal(true);
   };
 
@@ -315,7 +315,7 @@ export default function AdminMaintainer() {
     try {
       const res = await fetch('/api/admin/cuponeras', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: editingId, nombre, descripcion, tramos: formattedTramos, valorUnitario: Number(valorUnitario) || 0, cantidadCupones: (Number(cantidadCupones) || 1) + (Number(boletoAdicional) || 0), categoria, badge, activa })
+        body: JSON.stringify({ id: editingId, nombre, descripcion, tramos: formattedTramos, valorUnitario: Number(valorUnitario) || 0, cantidadCupones: Number(cantidadCupones) || 1, boletosAdicionales: Number(boletoAdicional) || 0, categoria, badge, activa })
       });
       const data = await res.json();
       if (data.success) {

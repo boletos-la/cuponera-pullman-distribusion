@@ -45,6 +45,7 @@ export interface Cuponera {
   activa: boolean;
   categoria: string;
   badge?: string;
+  boletosAdicionales?: number;
 }
 
 export interface Compra {
