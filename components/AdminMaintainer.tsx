@@ -1114,7 +1114,7 @@ export default function AdminMaintainer() {
               {/* Botones */}
               <div className="flex justify-center items-center gap-6 pt-10 pb-4">
                 <button type="submit" disabled={saving} className="bg-[#fa5e00] hover:bg-[#e55400] text-white font-bold py-3 px-10 rounded-xl shadow-md transition-all text-sm focus:outline-none cursor-pointer disabled:opacity-50">
-                  {saving ? 'Guardando...' : 'Actualizar'}
+                  {saving ? 'Guardando...' : editingId ? 'Actualizar' : 'Crear'}
                 </button>
                 <button type="button" onClick={() => setShowModal(false)} className="text-red-500 hover:text-red-700 font-bold text-sm focus:outline-none transition-colors cursor-pointer">
                   Cancelar

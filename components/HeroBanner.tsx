@@ -10,6 +10,7 @@ interface HeroBannerProps {
 
 export default function HeroBanner({ onGoToCatalog, onGoToDashboard }: HeroBannerProps) {
   const [bannerUrl, setBannerUrl] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchConfig = async () => {
@@ -19,10 +20,21 @@ export default function HeroBanner({ onGoToCatalog, onGoToDashboard }: HeroBanne
         if (data.success && data.data.bannerUrl) {
           setBannerUrl(data.data.bannerUrl);
         }
-      } catch (e) {}
+      } catch (e) {
+      } finally {
+        setLoading(false);
+      }
     };
     fetchConfig();
   }, []);
+
+  if (loading) {
+    return (
+      <div className="w-full flex justify-center items-center py-24 bg-slate-50 min-h-[300px]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#fa5e00]"></div>
+      </div>
+    );
+  }
 
   if (bannerUrl) {
     return (
