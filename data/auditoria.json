@@ -1,5 +1,63 @@
 [
   {
+    "id": "AUD-ADMIN-1790945876420-307",
+    "fechaHora": "2026-10-02T12:57:56.420Z",
+    "accion": "EDICION_CUPONERA",
+    "detalles": "Se editó la cuponera #2 (CUPONERA VIÑA DEL MAR). Precio unitario: $4.900, Cupones: 20, Estado: Activa.",
+    "nombreUsuario": "Admin"
+  },
+  {
+    "id": "AUD-OTP-VAL-83",
+    "fechaHora": "2026-10-02T12:56:00.000Z",
+    "rutUsuario": "20.204.400-K",
+    "nombreUsuario": "Valentina Paz Muñoz Muñoz",
+    "accion": "OTP_VALIDADO",
+    "detalles": "Verificación 2FA completada con éxito (CANCEL_COUPON). Acceso autorizado."
+  },
+  {
+    "id": "AUD-CANJE-ANUL-35",
+    "fechaHora": "2026-10-02T12:51:45.000Z",
+    "rutUsuario": "20.204.400-K",
+    "nombreUsuario": "Valentina Paz Muñoz Muñoz",
+    "accion": "ANULACION_PASAJE",
+    "detalles": "Pasaje PNR TS261002095114213ACCA (Santiago ➔ Puerto Montt, Asiento 28) fue anulado. Cupón restituido al saldo del usuario."
+  },
+  {
+    "id": "AUD-OTP-VAL-82",
+    "fechaHora": "2026-10-02T12:51:43.000Z",
+    "rutUsuario": "20.204.400-K",
+    "nombreUsuario": "Valentina Paz Muñoz Muñoz",
+    "accion": "OTP_VALIDADO",
+    "detalles": "Verificación 2FA completada con éxito (REDEEM_COUPON). Acceso autorizado."
+  },
+  {
+    "id": "AUD-OTP-VAL-81",
+    "fechaHora": "2026-10-02T12:50:31.000Z",
+    "rutUsuario": "20.204.400-K",
+    "nombreUsuario": "Valentina Paz Muñoz Muñoz",
+    "accion": "OTP_VALIDADO",
+    "detalles": "Verificación 2FA completada con éxito (CANCEL_COUPON). Acceso autorizado."
+  },
+  {
+    "id": "AUD-ADMIN-5",
+    "fechaHora": "2026-10-02T12:50:31.000Z",
+    "rutUsuario": "20.204.400-K",
+    "nombreUsuario": "Sistema/Usuario",
+    "accion": "ERROR_ANULACION_GDS",
+    "detalles": "Error o excepción capturada en el sistema",
+    "payload": {
+      "error": "El cupón ya expiró y no puede ser anulado.",
+      "cupon_codigo": "CUP-C40FECCD"
+    }
+  },
+  {
+    "id": "AUD-ADMIN-1790888178898-93",
+    "fechaHora": "2026-10-01T20:56:18.898Z",
+    "accion": "EDICION_CUPONERA",
+    "detalles": "Se editó la cuponera #1 (CUPONERA CONCON). Precio unitario: $5.500, Cupones: 10, Estado: Activa.",
+    "nombreUsuario": "Admin"
+  },
+  {
     "id": "AUD-TX-52",
     "fechaHora": "2026-09-30T22:55:49.000Z",
     "rutUsuario": "27.000.993-K",

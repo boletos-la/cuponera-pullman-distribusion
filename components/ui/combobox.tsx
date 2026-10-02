@@ -9,6 +9,7 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
+  CommandList,
 } from "@/components/ui/command";
 import {
   Popover,
@@ -143,7 +144,7 @@ export function ComboBox({
             onValueChange={setSearchQuery}
           />
           {totalMatches === 0 && <CommandEmpty>No encontrada.</CommandEmpty>}
-          <div 
+          <CommandList 
             className="max-h-64 overflow-y-auto"
             onScroll={handleScroll}
           >
@@ -176,7 +177,7 @@ export function ComboBox({
                 Cargando más ciudades al scrollear... ({displayItems.length} de {totalMatches})
               </div>
             )}
-          </div>
+          </CommandList>
           {totalMatches > PAGE_SIZE && (
             <div className="py-1 px-3 text-[10px] text-slate-400 bg-slate-50 border-t border-slate-100 text-center font-medium">
               Mostrando {displayItems.length} de {totalMatches} ciudades

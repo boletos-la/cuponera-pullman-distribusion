@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { validateRut, formatRut, cleanRut } from '@/lib/rutValidator';
-import { Search, LayoutDashboard, Ticket, Clock, CheckCircle, Mail, ArrowRight, AlertCircle, Ban, ShieldCheck, KeyRound, Star, MapPin, Target, ShoppingCart, Loader2 } from 'lucide-react';
+import { Search, LayoutDashboard, Ticket, Clock, CheckCircle, Mail, ArrowRight, AlertCircle, Ban, ShieldCheck, KeyRound, Star, MapPin, Target, ShoppingCart, Loader2, Info } from 'lucide-react';
 import { couponService } from '@/lib/services/couponService';
 import { getAuthUser } from '@/lib/apiClient';
 import ProfileTab from './ProfileTab';
@@ -299,31 +299,44 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
 
                           {/* Card Content */}
                           <div className="p-6 pb-5 flex-1 flex flex-col">
-                            {/* Logo textual */}
-                            <div className="text-[#fa5e00] font-black text-2xl tracking-tighter mb-2">
-                              pullmanbus
+                            {/* Info Tooltip (Absolute Top Right) */}
+                            <div className="absolute top-4 right-4 z-20">
+                              <div className="relative group flex items-center">
+                                <div className="flex items-center justify-center w-6 h-6 rounded-full border border-slate-200 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-all cursor-help focus:outline-none">
+                                  <Info className="w-3.5 h-3.5" />
+                                </div>
+                                <div className="absolute right-0 top-full mt-2 w-56 bg-slate-100/90 backdrop-blur-md text-slate-800 text-[10px] p-3 rounded-xl shadow-xl z-50 border border-slate-200 transition-all duration-200 opacity-0 invisible -translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 pointer-events-none group-hover:pointer-events-auto">
+                                  <div className="font-semibold mb-1 text-slate-700 uppercase tracking-wider">Tramos Habilitados:</div>
+                                  <ul className="list-disc pl-3 space-y-0.5 font-medium text-slate-600">
+                                    {c.tramosPermitidos?.map((t: string, i: number) => (
+                                      <li key={i}>{t}</li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Header con Logo */}
+                            <div className="mb-2">
+                              <img src="https://kuposclientlogos.s3.us-east-1.amazonaws.com/IMG_3089.png" alt="Pullmanbus" className="h-8 object-contain" />
                             </div>
 
                             {/* Nombre de la Cuponera */}
-                            <h3 className="text-lg font-black text-slate-900 leading-snug mb-3">
-                              {c.nombreCuponera}
+                            <h3 className="text-base font-semibold text-slate-900 leading-snug mb-1.5 capitalize min-h-[44px] line-clamp-2">
+                              {c.nombreCuponera?.toLowerCase()}
                             </h3>
 
-                            {/* Subtitle / Category */}
-                            <div className="flex items-center gap-2 text-slate-700 font-extrabold text-sm mb-4">
-                              <Star className="w-4 h-4 text-[#fa5e00] fill-current" />
-                              <span>4 {c.categoria || 'Pullman Costa'}</span>
-                            </div>
-
                             {/* Route details */}
-                            <div className="space-y-3 mb-6">
+                            <div className="space-y-1.5 mb-3">
                               <div className="flex items-center gap-3 text-slate-600">
-                                <Target className="w-4 h-4 text-slate-400" />
-                                <span className="text-sm font-medium">{c.tramosPermitidos?.[0]?.split(' - ')[0]?.trim() || 'Santiago'}</span>
+                                <Target className="w-4 h-4 text-slate-400 shrink-0" />
+                                <span className="text-xs font-medium">{c.tramosPermitidos && c.tramosPermitidos.length > 0 ? c.tramosPermitidos[0].split('-')[0].trim() : 'Origen'}</span>
                               </div>
-                              <div className="flex items-center gap-3 text-slate-600">
-                                <MapPin className="w-4 h-4 text-slate-400" />
-                                <span className="text-sm font-medium">{c.tramosPermitidos?.[0]?.split(' - ')[1]?.trim() || c.tramosPermitidos?.[0] || 'Destino'}</span>
+                              <div className="flex items-center justify-between text-slate-600">
+                                <div className="flex items-center gap-3">
+                                  <MapPin className="w-4 h-4 text-slate-400 shrink-0" />
+                                  <span className="text-xs font-medium">{c.tramosPermitidos && c.tramosPermitidos.length > 0 ? c.tramosPermitidos[0].split('-')[1]?.trim() || 'Destino' : 'Destino'}</span>
+                                </div>
                               </div>
 
                               {/* Días Restantes */}

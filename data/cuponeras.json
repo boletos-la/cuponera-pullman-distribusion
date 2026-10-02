@@ -1,7 +1,7 @@
 [
   {
     "id": 1,
-    "nombre": "CUPONERA CONCON (10 CUPONES)",
+    "nombre": "CUPONERA CONCON",
     "descripcion": "Paquete preferencial de 10 viajes",
     "tramos": [
       "Santiago-Concón",
@@ -16,7 +16,7 @@
   },
   {
     "id": 2,
-    "nombre": "CUPONERA VIÑA DEL MAR (20 CUPONES)",
+    "nombre": "CUPONERA VIÑA DEL MAR",
     "descripcion": "20 viajes a tarifa congelada para trayecto directo Santiago - Viña del Mar.",
     "tramos": [
       "Santiago-Viña Del Mar",

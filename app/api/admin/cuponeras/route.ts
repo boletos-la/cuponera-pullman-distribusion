@@ -1,53 +1,29 @@
 import { NextResponse } from 'next/server';
-import { readJsonFile, writeJsonFile, Cuponera, AuditoriaLog, INITIAL_CUPONERAS } from '@/lib/dataStore';
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || 'https://cuponera.dev-wit.com/api';
 
-/**
- * Consulta los logs de auditoría y trazabilidad centralizados en el backend
- */
-async function fetchBackendAuditLogs(): Promise<AuditoriaLog[]> {
-  try {
-    const res = await fetch(`${BACKEND_URL}/admin/audit-logs`, {
-      headers: { 'Accept': 'application/json' },
-      cache: 'no-store'
-    });
-    if (res.ok) {
-      const json = await res.json();
-      if (json.success && Array.isArray(json.data)) {
-        return json.data;
-      }
-    }
-  } catch (error) {
-    // Si el backend aún no tiene el endpoint desplegado en dev-wit, continúa con la caché local
-  }
-  return [];
+async function getAdminToken() {
+  const loginRes = await fetch(`${BACKEND_URL}/admin/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: 'admin', password: 'pullman2026' })
+  });
+  const data = await loginRes.json();
+  return data.token;
 }
 
 export async function GET() {
   try {
-    const cuponeras = readJsonFile<Cuponera[]>('cuponeras.json', INITIAL_CUPONERAS);
-    const fileLogs = readJsonFile<AuditoriaLog[]>('auditoria.json', []);
-
-    // Consultar logs del backend centralizado
-    const backendLogs = await fetchBackendAuditLogs();
-
-    // Combinar logs del backend con logs locales del mantenedor sin duplicados
-    const backendIds = new Set(backendLogs.map(l => l.id));
-    const localOnlyLogs = fileLogs.filter(l => !backendIds.has(l.id));
-    const mergedAuditoria = [...backendLogs, ...localOnlyLogs].sort(
-      (a, b) => new Date(b.fechaHora).getTime() - new Date(a.fechaHora).getTime()
-    );
-
-    // Persistir copia local en auditoria.json si hubo respuesta remota
-    if (backendLogs.length > 0) {
-      writeJsonFile('auditoria.json', mergedAuditoria);
-    }
+    const catalogRes = await fetch(`${BACKEND_URL}/coupons/catalog`, { cache: 'no-store' });
+    const catalogData = await catalogRes.json();
+    
+    const auditRes = await fetch(`${BACKEND_URL}/admin/audit-logs`, { cache: 'no-store' });
+    const auditData = await auditRes.json();
 
     return NextResponse.json({
       success: true,
-      cuponeras,
-      auditoria: mergedAuditoria
+      cuponeras: catalogData.success ? catalogData.data : [],
+      auditoria: auditData.success ? auditData.data : []
     });
   } catch (error) {
     console.error('Error fetching admin data:', error);
@@ -60,75 +36,54 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { id, nombre, descripcion, tramos, valorUnitario, cantidadCupones, categoria, activa, badge } = body;
 
-    const cuponeras = readJsonFile<Cuponera[]>('cuponeras.json', INITIAL_CUPONERAS);
-    const auditoria = readJsonFile<AuditoriaLog[]>('auditoria.json', []);
+    const token = await getAdminToken();
 
-    // Procesar tramos (separados por coma)
     const parsedTramos = typeof tramos === 'string' 
       ? tramos.split(',').map(t => t.trim()).filter(t => t) 
       : tramos;
 
-    const precioTotal = valorUnitario * cantidadCupones;
+    const maximo_usos = Number(cantidadCupones) || 1;
+    const precio_actual = (Number(valorUnitario) || 0) * maximo_usos;
 
+    const payload: any = {
+      nombre,
+      descripcion,
+      tipo: 'ESTANDAR',
+      maximo_usos,
+      precio_actual,
+      activa,
+      categoria: categoria || 'Todos',
+      badge: badge || undefined
+    };
+
+    let res;
     if (id) {
-      // Editar existente
-      const index = cuponeras.findIndex(c => c.id === id);
-      if (index !== -1) {
-        cuponeras[index] = {
-          ...cuponeras[index],
-          nombre,
-          descripcion,
-          tramos: parsedTramos,
-          valorUnitario,
-          cantidadCupones,
-          precioTotal,
-          categoria,
-          activa,
-          badge
-        };
-
-        // Agregar log de auditoría
-        auditoria.unshift({
-          id: `AUD-ADMIN-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-          fechaHora: new Date().toISOString(),
-          accion: 'EDICION_CUPONERA',
-          detalles: `Se editó la cuponera #${id} (${nombre}). Precio unitario: $${valorUnitario.toLocaleString('es-CL')}, Cupones: ${cantidadCupones}, Estado: ${activa ? 'Activa' : 'Inactiva'}.`,
-          nombreUsuario: 'Admin'
-        });
-      } else {
-        return NextResponse.json({ success: false, error: 'Cuponera no encontrada' }, { status: 404 });
-      }
+      // Editar
+      res = await fetch(`${BACKEND_URL}/admin/cuponeras/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify(payload)
+      });
     } else {
-      // Crear nueva
-      const newId = cuponeras.length > 0 ? Math.max(...cuponeras.map(c => c.id)) + 1 : 1;
-      const newCuponera: Cuponera = {
-        id: newId,
-        nombre,
-        descripcion,
-        tramos: parsedTramos,
-        valorUnitario,
-        cantidadCupones,
-        precioTotal,
-        categoria,
-        activa,
-        badge
-      };
-      cuponeras.push(newCuponera);
-
-      // Agregar log de auditoría
-      auditoria.unshift({
-        id: `AUD-ADMIN-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-        fechaHora: new Date().toISOString(),
-        accion: 'CREACION_CUPONERA',
-        detalles: `Se creó la cuponera #${newId} (${nombre}) con ${cantidadCupones} cupones a $${valorUnitario.toLocaleString('es-CL')} c/u.`,
-        nombreUsuario: 'Admin'
+      // Crear
+      const rutas = parsedTramos.map((t: string) => {
+        const parts = t.split('-');
+        return { origen: parts[0]?.trim() || '', destino: parts[1]?.trim() || '' };
+      });
+      payload.rutas = rutas;
+      res = await fetch(`${BACKEND_URL}/admin/cuponeras`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify(payload)
       });
     }
 
-    writeJsonFile('cuponeras.json', cuponeras);
-    writeJsonFile('auditoria.json', auditoria);
+    const data = await res.json();
+    if (!data.success) {
+      return NextResponse.json({ success: false, error: data.message || data.error?.message || 'Error en backend' }, { status: 400 });
+    }
 
-    return NextResponse.json({ success: true, mensaje: 'Cuponera guardada exitosamente' });
+    return NextResponse.json({ success: true, mensaje: 'Cuponera guardada exitosamente en la base de datos' });
   } catch (error) {
     console.error('Error saving cuponera:', error);
     return NextResponse.json({ success: false, error: 'Internal Server Error' }, { status: 500 });
