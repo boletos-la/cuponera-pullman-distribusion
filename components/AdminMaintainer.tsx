@@ -451,7 +451,15 @@ export default function AdminMaintainer() {
                     <tr key={c.id} className="hover:bg-blue-50/40 transition-colors group">
                       <td className="p-3 font-mono font-bold text-slate-400">#{c.id}</td>
                       <td className="p-3 font-bold text-slate-900">{c.nombre}</td>
-                      <td className="p-3 max-w-xs truncate text-slate-600">{c.tramos.join(', ')}</td>
+                      <td className="p-3 min-w-[200px]">
+                        <div className="flex flex-wrap gap-1">
+                          {c.tramos.map((t: string, idx: number) => (
+                            <span key={idx} className="bg-slate-100 text-slate-700 text-[10px] font-medium px-2 py-0.5 rounded border border-slate-200">
+                              {t}
+                            </span>
+                          ))}
+                        </div>
+                      </td>
                       <td className="p-3 font-semibold">${c.valorUnitario.toLocaleString('es-CL')}</td>
                       <td className="p-3 font-bold text-[#fa5e00]">{c.cantidadCupones}</td>
                       <td className="p-3 font-black text-[#fa5e00]">${c.precioTotal.toLocaleString('es-CL')}</td>
