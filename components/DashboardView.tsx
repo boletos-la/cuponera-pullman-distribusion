@@ -27,6 +27,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
   const [historialCanjes, setHistorialCanjes] = useState<any[]>([]);
 
   const [searchCuponeras, setSearchCuponeras] = useState('');
+  const [nowTimestamp, setNowTimestamp] = useState<number | null>(null);
 
   const [activeDashboardTab, setActiveDashboardTab] = useState<'cuponeras' | 'historial'>('cuponeras');
 
@@ -51,6 +52,10 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
       }
     }
   }, [initialRut]);
+
+  useEffect(() => {
+    setNowTimestamp(Date.now());
+  }, []);
 
   const handleResetSearch = () => {
     setStep('login');
@@ -112,9 +117,9 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
 
   const getDaysLeft = (fechaVencimiento: string) => {
     if (!fechaVencimiento) return 90;
+    if (nowTimestamp === null) return 90;
     const exp = new Date(fechaVencimiento).getTime();
-    const now = new Date().getTime();
-    const diffDays = Math.ceil((exp - now) / (1000 * 60 * 60 * 24));
+    const diffDays = Math.ceil((exp - nowTimestamp) / (1000 * 60 * 60 * 24));
     return diffDays > 0 ? diffDays : 0;
   };
 
