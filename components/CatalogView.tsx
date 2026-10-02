@@ -58,7 +58,7 @@ const CuponeraCardGroup = ({ group, onOpenCheckout }: { group: any, onOpenChecko
 
         {/* Header con Logo */}
         <div className="mb-2">
-          <img src="https://kuposclientlogos.s3.us-east-1.amazonaws.com/IMG_3089.png" alt="Pullmanbus" className="h-8 object-contain" />
+          <img src="/logo-pullman-beneficios-tarjeta.png" alt="Pullmanbus" className="h-5 object-contain" />
         </div>
 
         {/* Nombre de la Cuponera */}
