@@ -75,6 +75,77 @@ export default function AdminMaintainer() {
 
   const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'asc' | 'desc' } | null>(null);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 20;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeTab, searchUsuario, searchTx, searchCanjes, searchCompras, searchAuditoria, sortConfig]);
+
+  const paginate = (data: any[]) => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return data.slice(startIndex, startIndex + itemsPerPage);
+  };
+
+  const renderPagination = (totalItems: number) => {
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    if (totalPages <= 1) return null;
+
+    let pagesToShow = [];
+    if (totalPages <= 5) {
+      pagesToShow = Array.from({ length: totalPages }, (_, i) => i + 1);
+    } else {
+      if (currentPage <= 3) {
+        pagesToShow = [1, 2, 3, 4, 5];
+      } else if (currentPage >= totalPages - 2) {
+        pagesToShow = [totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+      } else {
+        pagesToShow = [currentPage - 2, currentPage - 1, currentPage, currentPage + 1, currentPage + 2];
+      }
+    }
+
+    return (
+      <div className="flex justify-between items-center bg-slate-50 border border-slate-200 p-3 rounded-xl mb-4 shadow-sm animate-fade-in">
+        <span className="text-xs font-bold text-slate-500 ml-2">
+          Mostrando {Math.min((currentPage - 1) * itemsPerPage + 1, totalItems)} - {Math.min(currentPage * itemsPerPage, totalItems)} de {totalItems}
+        </span>
+        <div className="flex items-center gap-1.5 mr-2">
+          <button 
+            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+            disabled={currentPage === 1}
+            className="px-2.5 py-1.5 bg-white border border-slate-200 text-slate-600 font-bold text-xs rounded-lg hover:bg-slate-100 disabled:opacity-50 cursor-pointer shadow-xs transition-colors"
+          >
+            Ant
+          </button>
+          
+          <div className="flex gap-1">
+            {pagesToShow.map(p => (
+              <button
+                key={p}
+                onClick={() => setCurrentPage(p)}
+                className={`w-8 h-8 flex items-center justify-center font-bold text-xs rounded-lg transition-colors cursor-pointer shadow-xs ${
+                  currentPage === p 
+                    ? 'bg-[#fa5e00] text-white border-transparent' 
+                    : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100'
+                }`}
+              >
+                {p}
+              </button>
+            ))}
+          </div>
+
+          <button 
+            onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+            disabled={currentPage === totalPages}
+            className="px-2.5 py-1.5 bg-white border border-slate-200 text-slate-600 font-bold text-xs rounded-lg hover:bg-slate-100 disabled:opacity-50 cursor-pointer shadow-xs transition-colors"
+          >
+            Sig
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   const requestSort = (key: string) => {
     let direction: 'asc' | 'desc' = 'asc';
     if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') {
@@ -420,6 +491,7 @@ export default function AdminMaintainer() {
               </button>
             </div>
             
+            {renderPagination(sortedCuponeras.length)}
             <div className="border border-slate-200 rounded-2xl">
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-[120px] z-20">
@@ -447,7 +519,7 @@ export default function AdminMaintainer() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {sortedCuponeras.map(c => (
+                  {paginate(sortedCuponeras).map(c => (
                     <tr key={c.id} className="hover:bg-blue-50/40 transition-colors group">
                       <td className="p-3 font-mono font-bold text-slate-400">#{c.id}</td>
                       <td className="p-3 font-bold text-slate-900">{c.nombre}</td>
@@ -499,6 +571,7 @@ export default function AdminMaintainer() {
               </div>
               <input type="text" placeholder="RUT o Nombre..." value={searchUsuario} onChange={e => setSearchUsuario(e.target.value)} className="text-xs px-3 py-1.5 rounded-lg border border-slate-300 w-64 focus:outline-none" />
             </div>
+            {renderPagination(filteredUsuarios.length)}
             <div className="border border-slate-200 rounded-2xl">
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-[120px] z-20">
@@ -524,7 +597,7 @@ export default function AdminMaintainer() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {filteredUsuarios.map(u => (
+                  {paginate(filteredUsuarios).map(u => (
                     <tr key={u.rut} className="hover:bg-slate-50">
                       <td className="p-3 font-mono font-bold text-[#023caf]">{u.rut}</td>
                       <td className="p-3 font-semibold">{u.nombre}</td>
@@ -549,6 +622,7 @@ export default function AdminMaintainer() {
               </div>
               <input type="text" placeholder="Orden de compra o RUT..." value={searchTx} onChange={e => setSearchTx(e.target.value)} className="text-xs px-3 py-1.5 rounded-lg border border-slate-300 w-64 focus:outline-none" />
             </div>
+            {renderPagination(filteredTx.length)}
             <div className="border border-slate-200 rounded-2xl">
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-[120px] z-20">
@@ -577,7 +651,7 @@ export default function AdminMaintainer() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {filteredTx.map(t => (
+                  {paginate(filteredTx).map(t => (
                     <tr key={t.id} className="hover:bg-slate-50">
                       <td className="p-3 font-mono font-bold text-slate-600">
                         {t.orden_compra ? t.orden_compra : <span className="text-[10px] bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded font-bold">PRE-WEBPAY</span>}
@@ -663,6 +737,7 @@ export default function AdminMaintainer() {
                     <input type="text" placeholder="Nombre o RUT..." value={searchCompras} onChange={e => setSearchCompras(e.target.value)} className="text-xs px-3 py-1.5 rounded-lg border border-slate-300 w-64 focus:outline-none" />
                   </div>
 
+                  {renderPagination(groupedUsers.length)}
                   <div className="border border-slate-200 rounded-2xl overflow-hidden">
                     <table className="w-full text-left text-xs">
                       <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
@@ -678,7 +753,7 @@ export default function AdminMaintainer() {
                         {groupedUsers.length === 0 && (
                           <tr><td colSpan={5} className="p-4 text-center text-slate-500">No hay registros encontrados.</td></tr>
                         )}
-                        {groupedUsers.map(user => (
+                        {paginate(groupedUsers).map(user => (
                           <React.Fragment key={user.rut}>
                             <tr className="hover:bg-slate-50 cursor-pointer transition-colors" onClick={() => setExpandedUserCompras(prev => prev === user.rut ? null : user.rut)}>
                               <td className="p-3">
@@ -758,6 +833,7 @@ export default function AdminMaintainer() {
               </div>
               <input type="text" placeholder="PNR, RUT o Nombre..." value={searchCanjes} onChange={e => setSearchCanjes(e.target.value)} className="text-xs px-3 py-1.5 rounded-lg border border-slate-300 w-64 focus:outline-none" />
             </div>
+            {renderPagination(filteredCanjes.length)}
             <div className="border border-slate-200 rounded-2xl">
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-[120px] z-20">
@@ -792,7 +868,7 @@ export default function AdminMaintainer() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {filteredCanjes.map(c => (
+                  {paginate(filteredCanjes).map(c => (
                     <tr key={c.id} className="hover:bg-slate-50">
                       <td className="p-3 font-mono font-bold text-slate-700">{c.pnr_kupos}</td>
                       <td className="p-3 font-mono font-bold text-[#fa5e00] bg-[#FFEDD5] px-2 py-1 rounded inline-block m-2 border border-[#FED7AA]">{c.Cupon?.codigo || '-'}</td>
@@ -824,6 +900,7 @@ export default function AdminMaintainer() {
               </div>
               <input type="text" placeholder="ID, Acción, Usuario o Endpoint..." value={searchAuditoria} onChange={e => setSearchAuditoria(e.target.value)} className="text-xs px-3 py-1.5 rounded-lg border border-slate-300 w-64 focus:outline-none" />
             </div>
+            {renderPagination(filteredAuditoria.length)}
             <div className="border border-slate-200 rounded-2xl">
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-[120px] z-20">
@@ -841,7 +918,7 @@ export default function AdminMaintainer() {
                       <td colSpan={5} className="p-8 text-center text-slate-400">No hay registros de trazabilidad y auditoría.</td>
                     </tr>
                   ) : (
-                    filteredAuditoria.map(log => {
+                    paginate(filteredAuditoria).map(log => {
                       let badgeColor = 'bg-blue-100 text-blue-800';
                       if (log.accion === 'CANJE_CUPON') badgeColor = 'bg-emerald-100 text-emerald-800';
                       else if (log.accion === 'ANULACION_PASAJE' || (log.accion?.includes('ANULACION') && !log.accion?.startsWith('ERROR'))) badgeColor = 'bg-purple-100 text-purple-800';
