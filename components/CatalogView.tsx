@@ -88,8 +88,8 @@ const CuponeraCardGroup = ({ group, onOpenCheckout }: { group: any, onOpenChecko
                 key={opt.id}
                 onClick={() => setSelectedIndex(idx)}
                 className={`flex-1 text-xs font-semibold py-1.5 rounded-full transition-all flex items-center justify-center gap-1.5
-                  ${selectedIndex === idx 
-                    ? 'bg-[#FFE8E0] text-[#fa5e00] shadow-sm ring-1 ring-[#fa5e00]/20' 
+                  ${selectedIndex === idx
+                    ? 'bg-[#FFE8E0] text-[#fa5e00] shadow-sm ring-1 ring-[#fa5e00]/20'
                     : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'}`}
               >
                 {/* Radio circle */}
@@ -488,7 +488,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
           <div>
             <h2 className="text-xl font-black text-slate-900 flex items-center gap-2">
               <ShoppingCart className="w-5 h-5 text-[#023caf]" />
-              Catálogo Oficial de Cuponeras ({cuponeras.length} Opciones)
+              Catálogo Oficial de Cuponeras
             </h2>
           </div>
 
@@ -627,10 +627,10 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
       ) : viewMode === 'grid' ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 pt-4">
           {groupedCuponeras.map((group, idx) => (
-            <CuponeraCardGroup 
-              key={`${group.baseName}-${idx}`} 
-              group={group} 
-              onOpenCheckout={handleOpenCheckout} 
+            <CuponeraCardGroup
+              key={`${group.baseName}-${idx}`}
+              group={group}
+              onOpenCheckout={handleOpenCheckout}
             />
           ))}
         </div>
