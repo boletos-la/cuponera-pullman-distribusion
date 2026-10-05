@@ -106,8 +106,10 @@ export function RedemptionFlow({ initialCuponCode = '', initialRut = '', onFinis
           departureBooking.pnrNumbers[0],
           departureBooking.selectedSeats[0]
         );
-      } catch (err) {
-        console.error("Error releasing seat", err);
+      } catch (err: any) {
+        if (!err.message?.includes("412")) {
+          console.warn("Liberación de asiento no requerida o fallida (ignorada):", err.message);
+        }
       }
     }
   };
