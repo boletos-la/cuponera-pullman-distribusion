@@ -2,7 +2,9 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 
-const DATA_FILE = path.join(process.cwd(), 'data', 'config.json');
+import os from 'os';
+
+const DATA_FILE = path.join(os.tmpdir(), 'cuponera_config.json');
 
 export const dynamic = 'force-dynamic';
 
@@ -31,22 +33,13 @@ export async function POST(req: Request) {
       let bannerUrl = currentData.bannerUrl || '';
       
       if (file && file.size > 0) {
+        // En lugar de guardar en public/uploads (que causa EROFS), guardamos la imagen como Base64 Data URI
+        // Nota: Solo se recomienda para imágenes pequeñas, o idealmente usar una URL externa
         const bytes = await file.arrayBuffer();
         const buffer = Buffer.from(bytes);
+        const mimeType = file.type || 'image/jpeg';
         
-        // Save the file to public/uploads
-        const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
-        if (!fs.existsSync(uploadsDir)) {
-          fs.mkdirSync(uploadsDir, { recursive: true });
-        }
-        
-        // Create unique filename based on current time
-        const ext = file.name.split('.').pop() || 'jpg';
-        const filename = `banner-${Date.now()}.${ext}`;
-        const filePath = path.join(uploadsDir, filename);
-        
-        fs.writeFileSync(filePath, buffer);
-        bannerUrl = `/uploads/${filename}`;
+        bannerUrl = `data:${mimeType};base64,${buffer.toString('base64')}`;
       }
       
       const formBannerUrl = formData.get('bannerUrl') as string | null;
