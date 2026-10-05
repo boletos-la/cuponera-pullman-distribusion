@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getAuthToken, getAuthUser, removeAuthToken, setAuthToken, apiClient } from '@/lib/apiClient';
-import { KeyRound, Mail, AlertCircle, CheckCircle2, Loader2 } from 'lucide-react';
+import { KeyRound, Mail, AlertCircle, CheckCircle2, Loader2, Eye, EyeOff } from 'lucide-react';
 
 export default function ProfileTab() {
   const [user, setUser] = useState<any>(null);
@@ -8,6 +8,10 @@ export default function ProfileTab() {
   const [actualPassword, setActualPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  
+  const [showActualPassword, setShowActualPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   
   const [loading, setLoading] = useState(false);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
@@ -140,24 +144,42 @@ export default function ProfileTab() {
         <form onSubmit={handleUpdatePassword} className="space-y-4 max-w-md">
           <div>
             <label className="block text-xs font-semibold text-slate-700 mb-1">Contraseña Actual</label>
-            <input
-              type="password"
-              required
-              value={actualPassword}
-              onChange={(e) => setActualPassword(e.target.value)}
-              className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
-            />
+            <div className="relative">
+              <input
+                type={showActualPassword ? "text" : "password"}
+                required
+                value={actualPassword}
+                onChange={(e) => setActualPassword(e.target.value)}
+                className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl pl-3.5 pr-10 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
+              />
+              <button
+                type="button"
+                onClick={() => setShowActualPassword(!showActualPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none"
+              >
+                {showActualPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
           </div>
           <div>
             <label className="block text-xs font-semibold text-slate-700 mb-1">Nueva Contraseña</label>
-            <input
-              type="password"
-              required
-              minLength={8}
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              className={`w-full text-sm bg-slate-50 border rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf] ${newPassword && !isPasswordValid ? 'border-red-400' : 'border-slate-300'}`}
-            />
+            <div className="relative">
+              <input
+                type={showNewPassword ? "text" : "password"}
+                required
+                minLength={8}
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                className={`w-full text-sm bg-slate-50 border rounded-xl pl-3.5 pr-10 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf] ${newPassword && !isPasswordValid ? 'border-red-400' : 'border-slate-300'}`}
+              />
+              <button
+                type="button"
+                onClick={() => setShowNewPassword(!showNewPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none"
+              >
+                {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
             {newPassword && (
               <div className="mt-2 space-y-1">
                 <p className={`text-[10px] font-semibold flex items-center gap-1 ${isPasswordLengthValid ? 'text-emerald-600' : 'text-slate-500'}`}>
@@ -171,14 +193,23 @@ export default function ProfileTab() {
           </div>
           <div>
             <label className="block text-xs font-semibold text-slate-700 mb-1">Confirmar Nueva Contraseña</label>
-            <input
-              type="password"
-              required
-              minLength={8}
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className={`w-full text-sm bg-slate-50 border rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf] ${confirmPassword && !doPasswordsMatch ? 'border-red-400' : 'border-slate-300'}`}
-            />
+            <div className="relative">
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                required
+                minLength={8}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className={`w-full text-sm bg-slate-50 border rounded-xl pl-3.5 pr-10 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf] ${confirmPassword && !doPasswordsMatch ? 'border-red-400' : 'border-slate-300'}`}
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none"
+              >
+                {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
             {confirmPassword && !doPasswordsMatch && (
               <p className="text-xs text-red-500 mt-1.5 font-medium">Las contraseñas no coinciden.</p>
             )}
