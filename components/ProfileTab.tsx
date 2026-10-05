@@ -13,6 +13,14 @@ export default function ProfileTab() {
   const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [message, setMessage] = useState({ type: '', text: '' });
 
+  // Validaciones en tiempo real
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const isEmailValid = emailRegex.test(email);
+  const isPasswordLengthValid = newPassword.length >= 8;
+  const isPasswordFormatValid = /(?=.*[A-Z])(?=.*\d)/.test(newPassword);
+  const isPasswordValid = isPasswordLengthValid && isPasswordFormatValid;
+  const doPasswordsMatch = newPassword === confirmPassword && newPassword !== '';
+
   useEffect(() => {
     const authUser = getAuthUser();
     setUser(authUser);
@@ -30,12 +38,7 @@ export default function ProfileTab() {
 
   const handleUpdateEmail = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setMessage({ type: 'error', text: 'Formato de correo electrónico inválido.' });
-      return;
-    }
+    if (!isEmailValid) return;
 
     setLoading(true);
     setMessage({ type: '', text: '' });
@@ -58,19 +61,7 @@ export default function ProfileTab() {
 
   const handleUpdatePassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (newPassword.length < 8) {
-      setMessage({ type: 'error', text: 'La contraseña debe tener al menos 8 caracteres.' });
-      return;
-    }
-    if (!/(?=.*[A-Z])(?=.*\d)/.test(newPassword)) {
-      setMessage({ type: 'error', text: 'La contraseña debe contener al menos una mayúscula y un número.' });
-      return;
-    }
-    if (newPassword !== confirmPassword) {
-      setMessage({ type: 'error', text: 'Las nuevas contraseñas no coinciden.' });
-      return;
-    }
+    if (!isPasswordValid || !doPasswordsMatch) return;
     
     setLoading(true);
     setMessage({ type: '', text: '' });
@@ -124,12 +115,15 @@ export default function ProfileTab() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
+              className={`w-full text-sm bg-slate-50 border rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf] ${email && !isEmailValid ? 'border-red-400' : 'border-slate-300'}`}
             />
+            {email && !isEmailValid && (
+              <p className="text-xs text-red-500 mt-1.5 font-medium">Formato de correo inválido.</p>
+            )}
           </div>
           <button
             type="submit"
-            disabled={loading || email === user.correo}
+            disabled={loading || email === user.correo || !isEmailValid}
             className="flex items-center gap-2 justify-center bg-[#023caf] hover:bg-[#083b82] text-white font-bold py-2.5 px-6 rounded-xl transition-all disabled:opacity-50"
           >
             {loading && <Loader2 className="w-4 h-4 animate-spin" />}
@@ -162,8 +156,18 @@ export default function ProfileTab() {
               minLength={8}
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
+              className={`w-full text-sm bg-slate-50 border rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf] ${newPassword && !isPasswordValid ? 'border-red-400' : 'border-slate-300'}`}
             />
+            {newPassword && (
+              <div className="mt-2 space-y-1">
+                <p className={`text-[10px] font-semibold flex items-center gap-1 ${isPasswordLengthValid ? 'text-emerald-600' : 'text-slate-500'}`}>
+                  <CheckCircle2 className={`w-3 h-3 ${isPasswordLengthValid ? 'text-emerald-500' : 'text-slate-300'}`} /> Mínimo 8 caracteres
+                </p>
+                <p className={`text-[10px] font-semibold flex items-center gap-1 ${isPasswordFormatValid ? 'text-emerald-600' : 'text-slate-500'}`}>
+                  <CheckCircle2 className={`w-3 h-3 ${isPasswordFormatValid ? 'text-emerald-500' : 'text-slate-300'}`} /> Al menos 1 mayúscula y 1 número
+                </p>
+              </div>
+            )}
           </div>
           <div>
             <label className="block text-xs font-semibold text-slate-700 mb-1">Confirmar Nueva Contraseña</label>
@@ -173,12 +177,15 @@ export default function ProfileTab() {
               minLength={8}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
+              className={`w-full text-sm bg-slate-50 border rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf] ${confirmPassword && !doPasswordsMatch ? 'border-red-400' : 'border-slate-300'}`}
             />
+            {confirmPassword && !doPasswordsMatch && (
+              <p className="text-xs text-red-500 mt-1.5 font-medium">Las contraseñas no coinciden.</p>
+            )}
           </div>
           <button
             type="submit"
-            disabled={loading || !actualPassword || !newPassword}
+            disabled={loading || !actualPassword || !newPassword || !isPasswordValid || !doPasswordsMatch}
             className="flex items-center gap-2 justify-center bg-[#fa5e00] hover:bg-[#e55400] text-white font-bold py-2.5 px-6 rounded-xl transition-all disabled:opacity-50"
           >
             {loading && <Loader2 className="w-4 h-4 animate-spin" />}
