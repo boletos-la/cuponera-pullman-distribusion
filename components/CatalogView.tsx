@@ -613,7 +613,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                 <tr key={item.id} className="hover:bg-slate-50/80 transition-colors group">
                   <td className="px-4 py-4 min-w-[200px]">
                     <div className="flex flex-col gap-1">
-                      <span className="font-bold text-slate-900 group-hover:text-[#fa5e00] transition-colors">{item.nombre}</span>
+                      <span className="font-bold text-slate-900 group-hover:text-[#fa5e00] transition-colors capitalize">{item.nombre.toLowerCase()}</span>
                       {item.badge && (
                         <span className="w-max bg-[#fa5e00] text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">
                           {item.badge}
