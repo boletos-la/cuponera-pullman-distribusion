@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { X, LogIn, AlertCircle, UserPlus, KeyRound, ArrowRight, ArrowLeft, Mail, Phone, Lock, User, ShieldCheck, Loader2, CheckCircle2 } from 'lucide-react';
+import { X, LogIn, AlertCircle, UserPlus, KeyRound, ArrowRight, ArrowLeft, Mail, Phone, Lock, User, ShieldCheck, Loader2, CheckCircle2, Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { authService } from '@/lib/services/authService';
 import { setAuthToken } from '@/lib/apiClient';
@@ -21,6 +21,9 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [guestHint, setGuestHint] = useState('');
+  
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
 
   // Form Fields
   const [rut, setRut] = useState('');
@@ -285,15 +288,22 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
               <div className="space-y-1.5">
                 <label className="block text-xs font-extrabold text-slate-700 ml-1">Contraseña *</label>
                 <div className="relative">
-                  <Lock className="w-4 h-4 text-slate-400 absolute left-4 top-3.5" />
+                  <Lock className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
                   <input
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     required
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full text-sm font-semibold bg-slate-50 border-2 border-slate-200 rounded-xl pl-10 pr-4 py-3 focus:outline-none focus:ring-4 focus:ring-[#023caf]/10 focus:border-[#023caf] hover:border-slate-300 transition-all"
+                    className="w-full text-sm font-semibold bg-slate-50 border-2 border-slate-200 rounded-xl pl-10 pr-10 py-3 focus:outline-none focus:ring-4 focus:ring-[#023caf]/10 focus:border-[#023caf] hover:border-slate-300 transition-all"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none"
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
                 </div>
               </div>
 
@@ -440,25 +450,43 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <label className="block text-xs font-extrabold text-slate-700 ml-1">Contraseña *</label>
-                  <input
-                    type="password"
-                    required
-                    placeholder="Mín 8, 1 mayúscula, 1 número"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full text-sm font-semibold bg-slate-50 border-2 border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-4 focus:ring-[#023caf]/10 focus:border-[#023caf] transition-all"
-                  />
+                  <div className="relative">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      required
+                      placeholder="Mín 8, 1 mayúscula, 1 número"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="w-full text-sm font-semibold bg-slate-50 border-2 border-slate-200 rounded-xl pl-4 pr-10 py-2.5 focus:outline-none focus:ring-4 focus:ring-[#023caf]/10 focus:border-[#023caf] transition-all"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none"
+                    >
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
                 </div>
                 <div className="space-y-1.5">
                   <label className="block text-xs font-extrabold text-slate-700 ml-1">Repetir Contraseña *</label>
-                  <input
-                    type="password"
-                    required
-                    placeholder="Confirma tu contraseña"
-                    value={passwordConfirm}
-                    onChange={(e) => setPasswordConfirm(e.target.value)}
-                    className="w-full text-sm font-semibold bg-slate-50 border-2 border-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-4 focus:ring-[#023caf]/10 focus:border-[#023caf] transition-all"
-                  />
+                  <div className="relative">
+                    <input
+                      type={showPasswordConfirm ? "text" : "password"}
+                      required
+                      placeholder="Confirma tu contraseña"
+                      value={passwordConfirm}
+                      onChange={(e) => setPasswordConfirm(e.target.value)}
+                      className="w-full text-sm font-semibold bg-slate-50 border-2 border-slate-200 rounded-xl pl-4 pr-10 py-2.5 focus:outline-none focus:ring-4 focus:ring-[#023caf]/10 focus:border-[#023caf] transition-all"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPasswordConfirm(!showPasswordConfirm)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none"
+                    >
+                      {showPasswordConfirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
                 </div>
               </div>
 

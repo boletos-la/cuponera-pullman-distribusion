@@ -7,7 +7,7 @@ import { couponService } from '@/lib/services/couponService';
 import { paymentService } from '@/lib/services/paymentService';
 import { validateRut, formatRut, cleanRut } from '@/lib/rutValidator';
 import { formatChileanPhone, validateChileanPhone } from '@/lib/phoneValidator';
-import { ShoppingCart, Check, AlertCircle, ShieldCheck, Ticket, Sparkles, Filter, CreditCard, ArrowRight, X, CheckCircle, XCircle, KeyRound, Mail, LayoutGrid, List, Bus, RotateCcw, Star, MapPin, Target, Info } from 'lucide-react';
+import { ShoppingCart, Check, AlertCircle, ShieldCheck, Ticket, Sparkles, Filter, CreditCard, ArrowRight, X, CheckCircle, XCircle, KeyRound, Mail, LayoutGrid, List, Bus, RotateCcw, Star, MapPin, Target, Info, Eye, EyeOff } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { authService } from '@/lib/services/authService';
 import { getAuthUser, setAuthToken } from '@/lib/apiClient';
@@ -158,6 +158,8 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
   const [quiereRegistrarse, setQuiereRegistrarse] = useState(false);
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
   const [showOtpCheckout, setShowOtpCheckout] = useState(false);
   const [otpCodeCheckout, setOtpCodeCheckout] = useState('');
 
@@ -770,25 +772,43 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                     <div className="pt-2 pl-6 space-y-3">
                       <div>
                         <label className="block text-xs font-semibold text-slate-700 mb-1">Contraseña</label>
-                        <input
-                          type="password"
-                          required={quiereRegistrarse}
-                          placeholder="Mínimo 8 caracteres, 1 mayúscula y 1 número"
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
-                        />
+                        <div className="relative">
+                          <input
+                            type={showPassword ? "text" : "password"}
+                            required={quiereRegistrarse}
+                            placeholder="Mínimo 8 caracteres, 1 mayúscula y 1 número"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="w-full text-sm bg-white border border-slate-300 rounded-xl pl-3.5 pr-10 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none"
+                          >
+                            {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                          </button>
+                        </div>
                       </div>
                       <div>
                         <label className="block text-xs font-semibold text-slate-700 mb-1">Repetir Contraseña</label>
-                        <input
-                          type="password"
-                          required={quiereRegistrarse}
-                          placeholder="Repite tu contraseña"
-                          value={passwordConfirm}
-                          onChange={(e) => setPasswordConfirm(e.target.value)}
-                          className="w-full text-sm bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
-                        />
+                        <div className="relative">
+                          <input
+                            type={showPasswordConfirm ? "text" : "password"}
+                            required={quiereRegistrarse}
+                            placeholder="Repite tu contraseña"
+                            value={passwordConfirm}
+                            onChange={(e) => setPasswordConfirm(e.target.value)}
+                            className="w-full text-sm bg-white border border-slate-300 rounded-xl pl-3.5 pr-10 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowPasswordConfirm(!showPasswordConfirm)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none"
+                          >
+                            {showPasswordConfirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                          </button>
+                        </div>
                       </div>
                     </div>
                   )}
