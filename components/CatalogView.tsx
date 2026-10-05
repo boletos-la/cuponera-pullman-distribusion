@@ -873,70 +873,70 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
 
       {/* ---------------- MODAL DE COMPROBANTE EXITOSO (PASO 7) ---------------- */}
       {mounted && compraExitosa && createPortal(
-          <div className="fixed inset-0 z-[9999] w-screen h-screen min-h-screen flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-            <div className="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 space-y-8 animate-fade-in relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-3 bg-gradient-to-r from-emerald-400 to-emerald-600" />
-              <div className="absolute -top-10 -right-10 w-40 h-40 bg-emerald-400/10 rounded-full blur-3xl" />
-              
-              <div className="text-center space-y-4 relative z-10">
-                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-emerald-100 to-emerald-50 text-emerald-600 flex items-center justify-center mx-auto shadow-inner border border-emerald-100">
-                  <Check className="w-10 h-10 stroke-[3]" />
-                </div>
-                <div className="space-y-1">
-                  <h3 className="text-3xl font-black text-slate-900 tracking-tight">¡Compra Exitosa!</h3>
-                  <p className="text-sm text-slate-500 font-medium">
-                    Se envió tu comprobante de compra al correo <br/>
-                    <span className="font-bold text-slate-800">{compraExitosa.compra.emailCliente}</span>
-                  </p>
-                </div>
+        <div className="fixed inset-0 z-[9999] w-screen h-screen min-h-screen flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 space-y-8 animate-fade-in relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-3 bg-gradient-to-r from-emerald-400 to-emerald-600" />
+            <div className="absolute -top-10 -right-10 w-40 h-40 bg-emerald-400/10 rounded-full blur-3xl" />
+
+            <div className="text-center space-y-4 relative z-10">
+              <div className="w-20 h-20 rounded-full bg-gradient-to-br from-emerald-100 to-emerald-50 text-emerald-600 flex items-center justify-center mx-auto shadow-inner border border-emerald-100">
+                <Check className="w-10 h-10 stroke-[3]" />
               </div>
-  
-              {/* Resumen de la Orden */}
-              <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-3 text-sm relative z-10">
-                <div className="flex justify-between items-center border-b border-slate-200/80 pb-2">
-                  <span className="text-slate-500 font-semibold">N° de Orden</span>
-                  <span className="font-black text-slate-900">{compraExitosa.compra.id}</span>
-                </div>
-                <div className="flex justify-between items-center border-b border-slate-200/80 pb-2">
-                  <span className="text-slate-500 font-semibold">Titular</span>
-                  <span className="font-bold text-slate-900">{compraExitosa.compra.nombreCliente} ({compraExitosa.rutFormateado})</span>
-                </div>
-                <div className="flex justify-between items-center border-b border-slate-200/80 pb-2">
-                  <span className="text-slate-500 font-semibold">Paquete</span>
-                  <span className="font-bold text-[#023caf]">{compraExitosa.compra.nombreCuponera}</span>
-                </div>
-                <div className="flex justify-between items-center border-b border-slate-200/80 pb-2">
-                  <span className="text-slate-500 font-semibold">Saldo Inicial</span>
-                  <span className="font-bold text-[#FF6B00]">
-                    {compraExitosa.compra.cantidadCupones} viajes disponibles
-                  </span>
-                </div>
-                <div className="flex justify-between items-center pt-1">
-                  <span className="text-slate-500 font-semibold">Vencimiento</span>
-                  <span className="font-bold text-red-600">
-                    {new Date(compraExitosa.compra.fechaVencimiento).toLocaleDateString('es-CL')} (90 Días)
-                  </span>
-                </div>
+              <div className="space-y-1">
+                <h3 className="text-3xl font-black text-slate-900 tracking-tight">¡Compra Exitosa!</h3>
+                <p className="text-sm text-slate-500 font-medium">
+                  Se envió tu comprobante de compra al correo <br />
+                  <span className="font-bold text-slate-800">{compraExitosa.compra.emailCliente}</span>
+                </p>
               </div>
-  
-              {/* Código de Cuponera Adquirida */}
-              <div className="space-y-3 relative z-10">
-                <div className="p-5 bg-gradient-to-br from-emerald-50 to-green-50 rounded-2xl border border-emerald-200 shadow-sm text-center">
-                  <span className="text-xs font-bold text-emerald-800 uppercase tracking-widest block mb-3">
-                    Código de Cuponera Emitida
-                  </span>
-                  {compraExitosa.cupones.map((c) => (
-                    <div key={c.codigo}>
-                      <span className="bg-white text-[#023caf] text-2xl font-mono font-black px-6 py-2 rounded-xl border-2 border-emerald-200 inline-block shadow-sm tracking-widest">
-                        {c.codigo}
-                      </span>
-                    </div>
-                  ))}
-                </div>
+            </div>
+
+            {/* Resumen de la Orden */}
+            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-3 text-sm relative z-10">
+              <div className="flex justify-between items-center border-b border-slate-200/80 pb-2">
+                <span className="text-slate-500 font-semibold">N° de Orden</span>
+                <span className="font-black text-slate-900">{compraExitosa.compra.id}</span>
               </div>
-  
-              {/* Acciones Siguientes */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 relative z-10">
+              <div className="flex justify-between items-center border-b border-slate-200/80 pb-2">
+                <span className="text-slate-500 font-semibold">Titular</span>
+                <span className="font-bold text-slate-900">{compraExitosa.compra.nombreCliente} ({compraExitosa.rutFormateado})</span>
+              </div>
+              <div className="flex justify-between items-center border-b border-slate-200/80 pb-2">
+                <span className="text-slate-500 font-semibold">Paquete</span>
+                <span className="font-bold text-[#023caf]">{compraExitosa.compra.nombreCuponera}</span>
+              </div>
+              <div className="flex justify-between items-center border-b border-slate-200/80 pb-2">
+                <span className="text-slate-500 font-semibold">Saldo Inicial</span>
+                <span className="font-bold text-[#FF6B00]">
+                  {compraExitosa.compra.cantidadCupones} viajes disponibles
+                </span>
+              </div>
+              <div className="flex justify-between items-center pt-1">
+                <span className="text-slate-500 font-semibold">Vencimiento</span>
+                <span className="font-bold text-red-600">
+                  {new Date(compraExitosa.compra.fechaVencimiento).toLocaleDateString('es-CL')} (90 Días)
+                </span>
+              </div>
+            </div>
+
+            {/* Código de Cuponera Adquirida */}
+            <div className="space-y-3 relative z-10">
+              <div className="p-5 bg-gradient-to-br from-emerald-50 to-green-50 rounded-2xl border border-emerald-200 shadow-sm text-center">
+                <span className="text-xs font-bold text-emerald-800 uppercase tracking-widest block mb-3">
+                  Código de Cuponera Emitida
+                </span>
+                {compraExitosa.cupones.map((c) => (
+                  <div key={c.codigo}>
+                    <span className="bg-white text-[#023caf] text-2xl font-mono font-black px-6 py-2 rounded-xl border-2 border-emerald-200 inline-block shadow-sm tracking-widest">
+                      {c.codigo}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Acciones Siguientes */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 relative z-10">
               <button
                 onClick={() => {
                   const rutLocal = compraExitosa.compra.rutCliente;
@@ -996,10 +996,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                 <Check className="w-8 h-8 stroke-[3]" />
               </div>
 
-              <span className="text-xs font-bold text-emerald-600 uppercase tracking-wider block">
-                Pago Aprobado y Cuponera Activada
-              </span>
-              <h3 className="text-2xl font-black text-slate-900">¡Pago Exitoso en Webpay!</h3>
+              <h3 className="text-2xl font-black text-slate-900">¡Pago Exitoso!</h3>
               <p className="text-xs text-slate-500 max-w-sm mx-auto">
                 {pendingPurchaseData?.email ? (
                   <>Se envió el comprobante y detalle de compra a <span className="font-semibold text-slate-700">{pendingPurchaseData.email}</span>.</>
