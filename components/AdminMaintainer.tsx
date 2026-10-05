@@ -233,6 +233,45 @@ export default function AdminMaintainer() {
   const [bannerFile, setBannerFile] = useState<File | null>(null);
   const [savingConfig, setSavingConfig] = useState(false);
 
+  const compressImage = (file: File): Promise<Blob> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target?.result as string;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+
+          // Resize si es muy grande (max 1920 de ancho)
+          const MAX_WIDTH = 1920;
+          if (width > MAX_WIDTH) {
+            height = Math.round((height * MAX_WIDTH) / width);
+            width = MAX_WIDTH;
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+
+          const ctx = canvas.getContext('2d');
+          if (ctx) {
+            ctx.drawImage(img, 0, 0, width, height);
+            canvas.toBlob((blob) => {
+              if (blob) resolve(blob);
+              else reject(new Error('Canvas to Blob failed'));
+            }, 'image/jpeg', 0.8); // 80% calidad jpeg reduce masivamente el peso
+          } else {
+            reject(new Error('Canvas context failed'));
+          }
+        };
+        img.onerror = (e) => reject(e);
+      };
+      reader.onerror = (e) => reject(e);
+    });
+  };
+
   const fetchConfig = async () => {
     try {
       const res = await fetch('/api/admin/config');
@@ -248,7 +287,9 @@ export default function AdminMaintainer() {
     try {
       const formData = new FormData();
       if (bannerFile) {
-        formData.append('bannerFile', bannerFile);
+        // Comprimir la imagen antes de subir para evitar 413 Content Too Large (Nginx o Vercel limit)
+        const compressedBlob = await compressImage(bannerFile);
+        formData.append('bannerFile', compressedBlob, bannerFile.name.replace(/\.[^/.]+$/, "") + ".jpg");
       } else {
         formData.append('bannerUrl', bannerUrl);
       }
@@ -264,7 +305,14 @@ export default function AdminMaintainer() {
         },
         body: formData
       });
-      const data = await res.json();
+      
+      let data;
+      try {
+        data = await res.json();
+      } catch (err) {
+        const text = await res.text();
+        throw new Error(`El servidor devolvió un error inesperado (no es JSON): ${text}`);
+      }
       
       if (data.success) {
         toast.success('Configuración guardada exitosamente');
@@ -296,7 +344,14 @@ export default function AdminMaintainer() {
         },
         body: formData
       });
-      const data = await res.json();
+      
+      let data;
+      try {
+        data = await res.json();
+      } catch (err) {
+        const text = await res.text();
+        throw new Error(`El servidor devolvió un error inesperado (no es JSON): ${text}`);
+      }
       
       if (data.success) {
         toast.success('Banner eliminado exitosamente');
