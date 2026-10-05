@@ -222,6 +222,13 @@ export default function AdminMaintainer() {
     });
   };
 
+  const getFullImageUrl = (url: string) => {
+    if (!url) return '';
+    if (url.startsWith('http') || url.startsWith('data:')) return url;
+    const baseUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://cuponera.dev-wit.com/api').replace('/api', '');
+    return `${baseUrl}${url}`;
+  };
+
   const [bannerUrl, setBannerUrl] = useState('');
   const [bannerFile, setBannerFile] = useState<File | null>(null);
   const [savingConfig, setSavingConfig] = useState(false);
@@ -1151,7 +1158,7 @@ export default function AdminMaintainer() {
                 <div className="mt-4 border border-slate-200 rounded-xl overflow-hidden bg-slate-100">
                   <p className="text-xs font-bold text-slate-500 p-2 text-center border-b border-slate-200 bg-white">Vista Previa</p>
                   <img 
-                    src={bannerFile ? URL.createObjectURL(bannerFile) : bannerUrl} 
+                    src={bannerFile ? URL.createObjectURL(bannerFile) : getFullImageUrl(bannerUrl)} 
                     alt="Banner Preview" 
                     className="w-full h-auto max-h-[300px] object-cover" 
                     onError={(e) => { (e.target as HTMLImageElement).src = 'https://via.placeholder.com/800x300?text=Error+al+cargar+imagen'; }} 

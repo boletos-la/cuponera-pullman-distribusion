@@ -9,6 +9,13 @@ interface HeroBannerProps {
 }
 
 export default function HeroBanner({ onGoToCatalog, onGoToDashboard }: HeroBannerProps) {
+  const getFullImageUrl = (url: string) => {
+    if (!url) return '';
+    if (url.startsWith('http') || url.startsWith('data:')) return url;
+    const baseUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://cuponera.dev-wit.com/api').replace('/api', '');
+    return `${baseUrl}${url}`;
+  };
+
   const [bannerUrl, setBannerUrl] = useState('');
   const [loading, setLoading] = useState(true);
 
@@ -40,7 +47,7 @@ export default function HeroBanner({ onGoToCatalog, onGoToDashboard }: HeroBanne
     return (
       <div className="w-full bg-slate-100 relative">
         <img 
-          src={bannerUrl} 
+          src={getFullImageUrl(bannerUrl)} 
           alt="Portal de Cuponeras" 
           className="w-full h-auto max-h-[600px] object-cover object-center block"
         />
