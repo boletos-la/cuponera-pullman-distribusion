@@ -311,7 +311,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
                       const saldoC = c.saldoDisponible || 0;
                       const daysLeft = getDaysLeft(c.fechaVencimiento);
 
-                      const canCanjear = saldoC > 0 && c.estado === 'Activo';
+                      const canCanjear = c.estado === 'Activo';
                       const porcentajeSaldo = Math.round((saldoC / totalC) * 100);
 
                       return (
@@ -321,7 +321,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
                         >
                           {/* Badge Activa / Sin Saldo */}
                           <div className={`absolute -top-3 right-4 font-bold text-xs px-3 py-1 rounded-full shadow-sm border border-white z-10 ${canCanjear ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-700'}`}>
-                            {canCanjear ? 'Activa' : 'Agotada'}
+                            {c.estado || 'Inactivo'}
                           </div>
 
                           {/* Card Content */}
@@ -413,7 +413,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
                               ) : (
                                 <>
                                   <Ban className="w-4 h-4" />
-                                  <span>Agotada</span>
+                                  <span>{c.estado || 'No disponible'}</span>
                                 </>
                               )}
                             </span>
