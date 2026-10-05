@@ -30,6 +30,13 @@ export default function ProfileTab() {
 
   const handleUpdateEmail = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setMessage({ type: 'error', text: 'Formato de correo electrónico inválido.' });
+      return;
+    }
+
     setLoading(true);
     setMessage({ type: '', text: '' });
     try {
@@ -51,10 +58,20 @@ export default function ProfileTab() {
 
   const handleUpdatePassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (newPassword !== confirmPassword) {
-      setMessage({ type: 'error', text: 'Las nuevas contraseñas no coinciden' });
+    
+    if (newPassword.length < 8) {
+      setMessage({ type: 'error', text: 'La contraseña debe tener al menos 8 caracteres.' });
       return;
     }
+    if (!/(?=.*[A-Z])(?=.*\d)/.test(newPassword)) {
+      setMessage({ type: 'error', text: 'La contraseña debe contener al menos una mayúscula y un número.' });
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setMessage({ type: 'error', text: 'Las nuevas contraseñas no coinciden.' });
+      return;
+    }
+    
     setLoading(true);
     setMessage({ type: '', text: '' });
     try {
@@ -142,7 +159,7 @@ export default function ProfileTab() {
             <input
               type="password"
               required
-              minLength={6}
+              minLength={8}
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
@@ -153,7 +170,7 @@ export default function ProfileTab() {
             <input
               type="password"
               required
-              minLength={6}
+              minLength={8}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
