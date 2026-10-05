@@ -208,7 +208,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
       )}
 
       {step === 'dashboard' && (
-        <div className="space-y-6 animate-fade-in">
+        <div className="space-y-6 animate-fade-in pt-4 sm:pt-6">
           {/* Tarjetas Consolidadas de Métricas */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="bg-white rounded-2xl p-5 border-l-4 border-l-emerald-500 border-t border-r border-b border-slate-100 shadow-sm flex items-center gap-4">
