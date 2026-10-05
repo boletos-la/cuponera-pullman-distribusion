@@ -4,7 +4,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { Cuponera, AuditoriaLog } from '@/lib/dataStore';
 import { getApiUrl, apiClient } from '@/lib/apiClient';
-import { Settings, Plus, Minus, Edit2, History, Check, X, ShieldAlert, Trash2, ArrowLeftRight, Users, CreditCard, Ticket, ShoppingBag, Search, ChevronUp, ChevronDown, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { Settings, Plus, Minus, Edit2, History, Check, X, ShieldAlert, Trash2, ArrowLeftRight, Users, CreditCard, Ticket, ShoppingBag, Search, ChevronUp, ChevronDown, ArrowUpDown, ArrowUp, ArrowDown, RefreshCw } from 'lucide-react';
 import { ComboBox } from '@/components/ui/combobox';
 import { fixEncoding } from '@/lib/utils';
 import toast, { Toaster } from 'react-hot-toast';
@@ -492,6 +492,20 @@ export default function AdminMaintainer() {
           </button>
           <button onClick={() => setActiveTab('configuracion')} className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${activeTab === 'configuracion' ? 'bg-rose-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
             <Settings className="w-4 h-4" /> Banner
+          </button>
+          
+          <div className="flex-1 min-w-[1rem]"></div>
+          <button 
+            onClick={() => {
+              if (activeTab === 'configuracion') fetchConfig();
+              else { fetchAdminData(); fetchExtraData(); }
+            }} 
+            disabled={loading}
+            className="px-4 py-2 flex items-center gap-2 rounded-xl bg-blue-50 text-[#023caf] hover:bg-[#023caf] hover:text-white transition-all shadow-sm disabled:opacity-50 font-bold text-xs"
+            title="Actualizar datos"
+          >
+            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+            Actualizar
           </button>
         </div>
 
