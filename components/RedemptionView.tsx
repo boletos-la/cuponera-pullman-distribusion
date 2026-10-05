@@ -359,6 +359,30 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
     }
   };
 
+  const releaseGdsSeat = async () => {
+    if (pnrNumber && selectedAsiento) {
+      try {
+        await fetch(`${getApiUrl()}/gds/cancel`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ticket_number: pnrNumber,
+            seat_numbers: selectedAsiento
+          })
+        });
+      } catch (err) {
+        console.error('Error liberando el asiento en GDS:', err);
+      } finally {
+        setPnrNumber('');
+      }
+    }
+  };
+
+  const handleCloseOtpModal = () => {
+    setShowOtpModal(false);
+    releaseGdsSeat();
+  };
+
   const handleConfirmWithOtp = async () => {
     if (!otpCode || otpCode.length < 6) {
       setOtpError('Ingresa el código de 6 dígitos.');
@@ -699,7 +723,7 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
         <div className="fixed inset-0 z-[9999] w-screen h-screen min-h-screen flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
           <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-2xl w-full max-w-sm relative animate-fade-in">
             <button
-              onClick={() => setShowOtpModal(false)}
+              onClick={handleCloseOtpModal}
               className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-colors"
             >
               <X className="w-5 h-5" />

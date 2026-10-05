@@ -619,6 +619,23 @@ export function ServiceDetailDialog({
 
         const bookData = await bookResponse.json();
 
+        // Helper para reversar reservas anteriores en caso de fallo en cadena
+        const rollbackGdsBookings = async (bookingsArr: any[]) => {
+          for (const b of bookingsArr) {
+            if (b.pnrNumber && b.seat) {
+              try {
+                await fetch(`${getApiUrl()}/gds/cancel`, {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ ticket_number: b.pnrNumber, seat_numbers: b.seat })
+                });
+              } catch (e) {
+                console.error("Rollback failed for seat", b.seat, e);
+              }
+            }
+          }
+        };
+
         if (!bookResponse.ok || !bookData.success) {
           console.error("Error booking seat:", passengerData.seat, bookData);
 
@@ -652,6 +669,7 @@ export function ServiceDetailDialog({
             if (passengersData.length > 1) {
               continue;
             } else {
+              await rollbackGdsBookings(bookings);
               setLoading(false);
               return;
             }
@@ -659,6 +677,7 @@ export function ServiceDetailDialog({
 
           // 2. Precio no coincide (MUY IMPORTANTE)
           if (isFareMismatch) {
+            await rollbackGdsBookings(bookings);
             setBookingError(
               `El precio del asiento ${passengerData.seat} cambió. Refresca los asientos e intenta nuevamente.`,
             );
@@ -683,16 +702,20 @@ export function ServiceDetailDialog({
               prev.filter((p) => p.seat !== passengerData.seat),
             );
 
+            await rollbackGdsBookings(bookings);
             setLoading(false);
             return;
           }
 
           // 4. Error genérico (fallback)
-          throw new Error(
+          await rollbackGdsBookings(bookings);
+          setBookingError(
             `Error al reservar el asiento ${passengerData.seat}: ${
               errorMsg || detailMsg || "Error desconocido"
             }`,
           );
+          setLoading(false);
+          return;
         }
 
         // Solo guardamos información de reserva (sin confirmación)

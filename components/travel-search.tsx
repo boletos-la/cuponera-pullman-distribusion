@@ -28,6 +28,7 @@ import { Badge } from "@/components/ui/badge";
 import { useCuponStore } from "@/lib/cupon-store";
 import { getApiUrl } from "@/lib/apiClient";
 import { BusRouteLoader } from "@/components/ui/custom-loaders";
+import { useReservationStore } from "@/lib/reservation-store";
 
 interface City {
   id: number;
@@ -126,14 +127,36 @@ export function TravelSearch({ onNext, onBack }: TravelSearchProps) {
     }
   };
 
+  const releaseGdsBookings = async () => {
+    try {
+      const departureBooking = useReservationStore.getState().getDepartureBooking();
+      if (departureBooking && departureBooking.bookingData) {
+        for (const b of departureBooking.bookingData) {
+          if (b.pnrNumber && b.seat) {
+            await fetch(`${getApiUrl()}/gds/cancel`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ ticket_number: b.pnrNumber, seat_numbers: b.seat })
+            });
+          }
+        }
+      }
+      useReservationStore.getState().clearAll();
+    } catch (e) {
+      console.error("Error al liberar reservas en GDS", e);
+    }
+  };
+
   const handleBack = () => {
     if (searchMode === "return") {
       setSearchMode("departure");
       setDepartureBooked(false);
       setReturnServices([]);
+      releaseGdsBookings();
       return;
     }
     if (onBack) {
+      releaseGdsBookings();
       onBack();
     }
   };
