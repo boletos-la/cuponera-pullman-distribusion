@@ -50,6 +50,20 @@ export default function AdminMaintainer() {
   const [loadingCities, setLoadingCities] = useState(false);
 
   const [showModal, setShowModal] = useState(false);
+  const [auditDrawer, setAuditDrawer] = useState<{
+    isOpen: boolean;
+    title: string;
+    type: 'payload' | 'response';
+    log: AuditoriaLog | null;
+    data: any;
+  }>({
+    isOpen: false,
+    title: '',
+    type: 'payload',
+    log: null,
+    data: null
+  });
+  const [copiedJson, setCopiedJson] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [nombre, setNombre] = useState('');
   const [descripcion, setDescripcion] = useState('');
@@ -909,13 +923,14 @@ export default function AdminMaintainer() {
                     <th className="p-3">Usuario</th>
                     <th className="p-3">Fecha</th>
                     <th className="p-3">Endpoint</th>
-                    <th className="p-3">Detalles y Payload</th>
+                    <th className="p-3">Payload</th>
+                    <th className="p-3">Response</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {filteredAuditoria.length === 0 ? (
                     <tr>
-                      <td colSpan={5} className="p-8 text-center text-slate-400">No hay registros de trazabilidad y auditoría.</td>
+                      <td colSpan={6} className="p-8 text-center text-slate-400">No hay registros de trazabilidad y auditoría.</td>
                     </tr>
                   ) : (
                     paginate(filteredAuditoria).map(log => {
@@ -928,26 +943,19 @@ export default function AdminMaintainer() {
                       else if (log.accion === 'CREACION_CUPONERA' || log.accion === 'EDICION_CUPONERA') badgeColor = 'bg-orange-100 text-orange-800';
                       else if (log.accion?.startsWith('ERROR')) badgeColor = 'bg-red-100 text-red-800';
 
-                      let detallesText = log.detalles;
-                      let isJsonDetalles = false;
-                      if (typeof log.detalles === 'string' && (log.detalles.trim().startsWith('{') || log.detalles.trim().startsWith('['))) {
-                        try {
-                          detallesText = JSON.stringify(JSON.parse(log.detalles), null, 2);
-                          isJsonDetalles = true;
-                        } catch (e) { }
-                      } else if (typeof log.detalles === 'object') {
-                        detallesText = JSON.stringify(log.detalles, null, 2);
-                        isJsonDetalles = true;
+                      const hasPayload = log.payload !== undefined && log.payload !== null && log.payload !== '';
+                      const hasResponse = log.response !== undefined && log.response !== null && log.response !== '';
+
+                      let payloadSnippet = '-';
+                      if (hasPayload) {
+                        payloadSnippet = typeof log.payload === 'object' ? JSON.stringify(log.payload) : String(log.payload);
+                      } else if (log.detalles && !hasResponse) {
+                        payloadSnippet = typeof log.detalles === 'object' ? JSON.stringify(log.detalles) : String(log.detalles);
                       }
 
-                      let payloadVisual = log.payload;
-                      let hasPayload = log.payload !== undefined && log.payload !== null;
-                      if (hasPayload) {
-                        if (typeof log.payload === 'string' && (log.payload.trim().startsWith('{') || log.payload.trim().startsWith('['))) {
-                          try { payloadVisual = JSON.stringify(JSON.parse(log.payload), null, 2); } catch (e) { }
-                        } else if (typeof log.payload === 'object') {
-                          payloadVisual = JSON.stringify(log.payload, null, 2);
-                        }
+                      let responseSnippet = '-';
+                      if (hasResponse) {
+                        responseSnippet = typeof log.response === 'object' ? JSON.stringify(log.response) : String(log.response);
                       }
 
                       return (
@@ -960,19 +968,64 @@ export default function AdminMaintainer() {
                             <div className="font-mono text-[10px] text-slate-500">{log.rutUsuario || '-'}</div>
                           </td>
                           <td className="p-3 text-slate-500 whitespace-nowrap">{new Date(log.fechaHora).toLocaleString('es-CL')}</td>
-                          <td className="p-3 font-mono text-[10px] text-slate-600">{log.endpoint || '-'}</td>
-                          <td className="p-3 w-full max-w-xl">
-                            {!isJsonDetalles && <p className="text-slate-700 mb-2">{log.detalles}</p>}
-                            {isJsonDetalles && !hasPayload && (
-                              <div className="bg-slate-800 text-emerald-400 p-2 rounded-lg text-[10px] font-mono overflow-auto max-h-32 shadow-inner">
-                                <pre>{detallesText}</pre>
-                              </div>
+                          <td className="p-3">
+                            {log.endpoint ? (
+                              <span className="font-mono text-[10px] text-slate-700 bg-slate-100 px-2 py-1 rounded max-w-[200px] truncate block" title={log.endpoint}>
+                                {log.endpoint}
+                              </span>
+                            ) : (
+                              <span className="text-slate-400 text-xs">-</span>
                             )}
-                            {hasPayload && (
-                              <div className="bg-slate-800 text-emerald-400 p-2 rounded-lg text-[10px] font-mono overflow-auto max-h-32 shadow-inner mt-2 border-t-2 border-slate-600 pt-2">
-                                <pre>{payloadVisual}</pre>
-                              </div>
-                            )}
+                          </td>
+                          <td className="p-3 max-w-xs">
+                            <div className="flex items-center gap-2">
+                              <span className="font-mono text-[10px] text-slate-600 truncate max-w-[150px] block" title={payloadSnippet}>
+                                {payloadSnippet}
+                              </span>
+                              {(hasPayload || (log.detalles && !hasResponse)) && (
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setAuditDrawer({
+                                      isOpen: true,
+                                      title: 'Payload (Datos Enviados)',
+                                      type: 'payload',
+                                      log,
+                                      data: hasPayload ? log.payload : log.detalles
+                                    });
+                                    setCopiedJson(false);
+                                  }}
+                                  className="text-[10px] font-bold text-[#023caf] hover:text-[#023caf]/80 bg-blue-50 hover:bg-blue-100 px-2.5 py-1 rounded-md transition-colors shrink-0 cursor-pointer shadow-xs border border-blue-200"
+                                >
+                                  Ver más
+                                </button>
+                              )}
+                            </div>
+                          </td>
+                          <td className="p-3 max-w-xs">
+                            <div className="flex items-center gap-2">
+                              <span className="font-mono text-[10px] text-slate-600 truncate max-w-[150px] block" title={responseSnippet}>
+                                {responseSnippet}
+                              </span>
+                              {hasResponse && (
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setAuditDrawer({
+                                      isOpen: true,
+                                      title: 'Response (Respuesta Recibida)',
+                                      type: 'response',
+                                      log,
+                                      data: log.response
+                                    });
+                                    setCopiedJson(false);
+                                  }}
+                                  className="text-[10px] font-bold text-emerald-700 hover:text-emerald-800 bg-emerald-50 hover:bg-emerald-100 px-2.5 py-1 rounded-md transition-colors shrink-0 cursor-pointer shadow-xs border border-emerald-200"
+                                >
+                                  Ver más
+                                </button>
+                              )}
+                            </div>
                           </td>
                         </tr>
                       );
@@ -1225,6 +1278,131 @@ export default function AdminMaintainer() {
               >
                 Sí, eliminar
               </button>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
+      {/* Drawer Lateral de Auditoria */}
+      {mounted && auditDrawer.isOpen && auditDrawer.log && createPortal(
+        <div className="fixed inset-0 z-[9999] overflow-hidden">
+          <div
+            className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs transition-opacity animate-fade-in"
+            onClick={() => setAuditDrawer(prev => ({ ...prev, isOpen: false }))}
+          />
+          <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
+            <div className="w-screen max-w-xl bg-white shadow-2xl flex flex-col border-l border-slate-200 transform transition-transform animate-slide-left">
+              <div className="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800">
+                      {auditDrawer.log.accion}
+                    </span>
+                    <span className="text-xs text-slate-400">
+                      {new Date(auditDrawer.log.fechaHora).toLocaleString('es-CL')}
+                    </span>
+                  </div>
+                  <h3 className="text-base font-black text-slate-800 mt-1">
+                    {auditDrawer.title}
+                  </h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setAuditDrawer(prev => ({ ...prev, isOpen: false }))}
+                  className="text-slate-400 hover:text-slate-600 p-2 rounded-xl hover:bg-slate-200/60 transition-colors cursor-pointer"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="px-6 py-2.5 bg-slate-100/70 border-b border-slate-200 flex items-center justify-between text-xs">
+                <div className="flex items-center gap-1.5 overflow-hidden">
+                  <span className="font-bold text-slate-500 shrink-0">Endpoint:</span>
+                  <span className="font-mono text-[11px] text-slate-700 truncate" title={auditDrawer.log.endpoint}>
+                    {auditDrawer.log.endpoint || 'No especificado'}
+                  </span>
+                </div>
+                <div className="flex items-center gap-1 shrink-0 ml-2">
+                  {(auditDrawer.log.payload || auditDrawer.log.detalles) && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setAuditDrawer(prev => ({
+                          ...prev,
+                          title: 'Payload (Datos Enviados)',
+                          type: 'payload',
+                          data: prev.log?.payload || prev.log?.detalles
+                        }));
+                        setCopiedJson(false);
+                      }}
+                      className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-colors cursor-pointer ${auditDrawer.type === 'payload' ? 'bg-[#023caf] text-white' : 'bg-slate-200 text-slate-600 hover:bg-slate-300'}`}
+                    >
+                      Payload
+                    </button>
+                  )}
+                  {auditDrawer.log.response && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setAuditDrawer(prev => ({
+                          ...prev,
+                          title: 'Response (Respuesta Recibida)',
+                          type: 'response',
+                          data: prev.log?.response
+                        }));
+                        setCopiedJson(false);
+                      }}
+                      className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-colors cursor-pointer ${auditDrawer.type === 'response' ? 'bg-emerald-600 text-white' : 'bg-slate-200 text-slate-600 hover:bg-slate-300'}`}
+                    >
+                      Response
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              <div className="p-6 flex-1 overflow-y-auto space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-600">
+                    Contenido JSON
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const text = typeof auditDrawer.data === 'string'
+                        ? (auditDrawer.data.trim().startsWith('{') || auditDrawer.data.trim().startsWith('[')
+                            ? JSON.stringify(JSON.parse(auditDrawer.data), null, 2)
+                            : auditDrawer.data)
+                        : JSON.stringify(auditDrawer.data, null, 2);
+                      navigator.clipboard.writeText(text);
+                      setCopiedJson(true);
+                      toast.success('JSON copiado al portapapeles');
+                      setTimeout(() => setCopiedJson(false), 2000);
+                    }}
+                    className="flex items-center gap-1.5 text-xs bg-slate-800 hover:bg-slate-900 text-white font-bold px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
+                  >
+                    <Check className={`w-3.5 h-3.5 ${copiedJson ? 'text-emerald-400' : 'hidden'}`} />
+                    <span>{copiedJson ? '¡Copiado!' : 'Copiar JSON'}</span>
+                  </button>
+                </div>
+
+                <div className="bg-slate-900 text-emerald-400 p-4 rounded-2xl text-xs font-mono overflow-auto max-h-[60vh] shadow-inner">
+                  <pre className="whitespace-pre-wrap break-all">
+                    {(() => {
+                      try {
+                        if (typeof auditDrawer.data === 'string') {
+                          if (auditDrawer.data.trim().startsWith('{') || auditDrawer.data.trim().startsWith('[')) {
+                            return JSON.stringify(JSON.parse(auditDrawer.data), null, 2);
+                          }
+                          return auditDrawer.data;
+                        }
+                        return JSON.stringify(auditDrawer.data, null, 2);
+                      } catch {
+                        return String(auditDrawer.data);
+                      }
+                    })()}
+                  </pre>
+                </div>
+              </div>
             </div>
           </div>
         </div>,

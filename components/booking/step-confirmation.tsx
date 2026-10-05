@@ -65,7 +65,7 @@ export function StepConfirmation({ bookingData, onFinish }: StepConfirmationProp
             </div>
           </div>
           <div className="w-48 text-right">
-             <img src="/logo_pullman.png" alt="Pullman Bus Logo" className="w-full h-auto opacity-90 object-contain" />
+             <img src="/logo-pullman-beneficios-tarjeta.png" alt="Pullman Bus Logo" className="w-full h-auto opacity-90 object-contain" />
           </div>
         </div>
 
