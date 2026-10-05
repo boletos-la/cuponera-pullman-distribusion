@@ -32,15 +32,16 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
   const [activeDashboardTab, setActiveDashboardTab] = useState<'cuponeras' | 'historial'>('cuponeras');
 
   const authUser = getAuthUser();
+  const [isInitialLoading, setIsInitialLoading] = useState(!!initialRut || !!authUser?.rut);
 
   useEffect(() => {
     if (initialRut) {
       setRutInput(formatRut(initialRut));
-      loadDashboard(initialRut);
+      loadDashboard(initialRut).finally(() => setIsInitialLoading(false));
     } else {
       if (authUser && authUser.rut) {
         setRutInput(formatRut(authUser.rut));
-        loadDashboard(authUser.rut);
+        loadDashboard(authUser.rut).finally(() => setIsInitialLoading(false));
       } else {
         setStep('login');
         setRutInput('');
@@ -49,6 +50,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
         setHistorialCompras([]);
         setHistorialCanjes([]);
         setRutError('');
+        setIsInitialLoading(false);
       }
     }
   }, [initialRut]);
@@ -124,9 +126,17 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
   };
 
   return (
-    <div className={`space-y-6 ${step === 'login' ? 'max-w-3xl mt-6 md:mt-8' : 'w-full'} mx-auto`}>
-      {step === 'login' && (
-        <div className="bg-white rounded-[2rem] p-6 sm:p-10 shadow-xl border border-slate-100 space-y-8 relative overflow-hidden">
+    <div className={`space-y-6 ${(step === 'login' || isInitialLoading) ? 'max-w-3xl mt-6 md:mt-8' : 'w-full'} mx-auto`}>
+      {isInitialLoading ? (
+        <div className="bg-white rounded-[2rem] p-10 shadow-xl border border-slate-100 flex flex-col items-center justify-center min-h-[400px]">
+          <Loader2 className="w-12 h-12 text-[#fa5e00] animate-spin mb-4" />
+          <h3 className="text-xl font-bold text-slate-800">Cargando tus cuponeras...</h3>
+          <p className="text-sm text-slate-500 mt-2">Estamos recuperando tu información</p>
+        </div>
+      ) : (
+        <>
+          {step === 'login' && (
+            <div className="bg-white rounded-[2rem] p-6 sm:p-10 shadow-xl border border-slate-100 space-y-8 relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-2 bg-[#023caf]" />
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left border-b border-slate-100 pb-6">
             <div className="w-16 h-16 rounded-2xl bg-blue-50 text-[#023caf] flex items-center justify-center shrink-0 shadow-sm border border-blue-100">
@@ -426,6 +436,8 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
             )}
           </div>
         </div>
+      )}
+      </>
       )}
     </div>
   );
