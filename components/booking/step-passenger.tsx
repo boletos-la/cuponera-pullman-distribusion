@@ -321,7 +321,7 @@ export function StepPassenger({
               </div>
 
               {/* Total */}
-              <div className="pt-4 border-t space-y-2">
+              <div className="pt-4 border-t space-y-2 px-1">
                 <div className="flex justify-between items-start">
                   <div>
                     <span className="font-semibold text-foreground block">Total a Pagar</span>
@@ -330,7 +330,7 @@ export function StepPassenger({
                       <span>Se usará tu cupón para pagar</span>
                     </Badge>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right pr-2">
                     {totalPrice > 0 && (
                       <span className="text-sm font-semibold text-muted-foreground line-through block">
                         ${totalPrice.toLocaleString("es-CL")}

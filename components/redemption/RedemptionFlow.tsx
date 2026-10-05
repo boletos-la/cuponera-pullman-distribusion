@@ -175,7 +175,7 @@ export function RedemptionFlow({ initialCuponCode = '', initialRut = '', onFinis
   }
 
   return (
-    <div className="w-full space-y-6">
+    <div className="w-full space-y-6 pt-6 sm:pt-8">
       {/* Header del flujo de canje */}
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 sm:p-5 sticky top-2 z-30 backdrop-blur-md bg-white/95">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">

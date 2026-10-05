@@ -701,7 +701,8 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                     placeholder="Nombre y Apellidos"
                     value={nombre}
                     onChange={(e) => setNombre(e.target.value)}
-                    className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
+                    disabled={!!getAuthUser()}
+                    className={`w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf] ${!!getAuthUser() ? 'opacity-60 cursor-not-allowed bg-slate-100' : ''}`}
                   />
                 </div>
 
@@ -715,8 +716,9 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                     placeholder="12.345.678-K"
                     value={rut}
                     onChange={handleRutChange}
+                    disabled={!!getAuthUser()}
                     className={`w-full text-sm bg-slate-50 border rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 ${rutError ? 'border-red-500 focus:ring-red-500' : 'border-slate-300 focus:ring-[#023caf]'
-                      }`}
+                      } ${!!getAuthUser() ? 'opacity-60 cursor-not-allowed bg-slate-100' : ''}`}
                   />
                   {rutError && <p className="text-xs text-red-600 font-medium mt-1">{rutError}</p>}
                 </div>
