@@ -6,6 +6,7 @@ import { Cuponera, Compra, Cupon } from '@/lib/dataStore';
 import { couponService } from '@/lib/services/couponService';
 import { paymentService } from '@/lib/services/paymentService';
 import { validateRut, formatRut, cleanRut } from '@/lib/rutValidator';
+import { formatChileanPhone, validateChileanPhone } from '@/lib/phoneValidator';
 import { ShoppingCart, Check, AlertCircle, ShieldCheck, Ticket, Sparkles, Filter, CreditCard, ArrowRight, X, CheckCircle, XCircle, KeyRound, Mail, LayoutGrid, List, Bus, RotateCcw, Star, MapPin, Target, Info } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { authService } from '@/lib/services/authService';
@@ -148,6 +149,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
   const [nombre, setNombre] = useState('');
   const [rut, setRut] = useState('');
   const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState('');
   const [telefono, setTelefono] = useState('');
   const [aceptaTerminos, setAceptaTerminos] = useState(true);
   const [rutError, setRutError] = useState('');
@@ -306,6 +308,17 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
     }
   };
 
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setEmail(val);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (val && !emailRegex.test(val)) {
+      setEmailError('Correo electrónico inválido');
+    } else {
+      setEmailError('');
+    }
+  };
+
   const handleCloseCheckout = () => {
     setSelectedCuponera(null);
   };
@@ -321,6 +334,22 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
 
     if (!validateRut(rut)) {
       setRutError('El RUT ingresado no es válido.');
+      return;
+    }
+
+    if (emailError) {
+      setSubmitError('Formato de correo electrónico inválido.');
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setSubmitError('Formato de correo electrónico inválido.');
+      return;
+    }
+
+    if (telefono && !validateChileanPhone(telefono)) {
+      setSubmitError('El teléfono debe tener formato válido chileno, ej: +56 9 1234 5678');
       return;
     }
 
@@ -667,7 +696,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                   <input
                     type="text"
                     required
-                    placeholder="ej. María González Tapia"
+                    placeholder="Nombre y Apellidos"
                     value={nombre}
                     onChange={(e) => setNombre(e.target.value)}
                     className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
@@ -698,19 +727,26 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                       required
                       placeholder="cliente@ejemplo.cl"
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={handleEmailChange}
                       className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
                     />
+                    {emailError && <p className="text-xs text-red-600 font-medium mt-1">{emailError}</p>}
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1">Teléfono Móvil</label>
-                    <input
-                      type="tel"
-                      placeholder="+56 9 1234 5678"
-                      value={telefono}
-                      onChange={(e) => setTelefono(e.target.value)}
-                      className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
-                    />
+                    <label className="block text-xs font-semibold text-slate-700 mb-1">Teléfono Móvil (Opcional)</label>
+                    <div className="flex items-center bg-slate-50 border border-slate-300 rounded-xl focus-within:ring-2 focus-within:ring-[#023caf] overflow-hidden">
+                      <div className="pl-3 pr-2 py-2.5 border-r border-slate-300 flex items-center bg-slate-100">
+                        <span className="text-sm font-semibold text-slate-700">+56</span>
+                      </div>
+                      <input
+                        type="tel"
+                        title="Ingresa un número de teléfono válido, por ejemplo: 9 1234 5678"
+                        placeholder="9 1234 5678"
+                        value={telefono}
+                        onChange={(e) => setTelefono(formatChileanPhone(e.target.value))}
+                        className="w-full text-sm bg-transparent px-3 py-2.5 focus:outline-none"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -837,70 +873,70 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
 
       {/* ---------------- MODAL DE COMPROBANTE EXITOSO (PASO 7) ---------------- */}
       {mounted && compraExitosa && createPortal(
-        <div className="fixed inset-0 z-[9999] w-screen h-screen min-h-screen flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-100 space-y-6 animate-fade-in relative">
-            <div className="text-center space-y-2">
-              <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto shadow-md">
-                <Check className="w-8 h-8 stroke-[3]" />
+          <div className="fixed inset-0 z-[9999] w-screen h-screen min-h-screen flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+            <div className="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 space-y-8 animate-fade-in relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-3 bg-gradient-to-r from-emerald-400 to-emerald-600" />
+              <div className="absolute -top-10 -right-10 w-40 h-40 bg-emerald-400/10 rounded-full blur-3xl" />
+              
+              <div className="text-center space-y-4 relative z-10">
+                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-emerald-100 to-emerald-50 text-emerald-600 flex items-center justify-center mx-auto shadow-inner border border-emerald-100">
+                  <Check className="w-10 h-10 stroke-[3]" />
+                </div>
+                <div className="space-y-1">
+                  <h3 className="text-3xl font-black text-slate-900 tracking-tight">¡Compra Exitosa!</h3>
+                  <p className="text-sm text-slate-500 font-medium">
+                    Se envió tu comprobante de compra al correo <br/>
+                    <span className="font-bold text-slate-800">{compraExitosa.compra.emailCliente}</span>
+                  </p>
+                </div>
               </div>
-              <span className="text-xs font-bold text-emerald-600 uppercase tracking-wider block">
-                Paso 6 y 7: Compra Registrada y Cupones Emitidos
-              </span>
-              <h3 className="text-2xl font-black text-slate-900">¡Pago Aprobado en Webpay!</h3>
-              <p className="text-xs text-slate-500">
-                Se envió el comprobante al correo <span className="font-semibold text-slate-700">{compraExitosa.compra.emailCliente}</span>.
-              </p>
-            </div>
-
-            {/* Resumen de la Orden */}
-            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-2 text-xs">
-              <div className="flex justify-between border-b border-slate-200 pb-2">
-                <span className="text-slate-500 font-medium">N° de Orden</span>
-                <span className="font-bold text-slate-900">{compraExitosa.compra.id}</span>
+  
+              {/* Resumen de la Orden */}
+              <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-3 text-sm relative z-10">
+                <div className="flex justify-between items-center border-b border-slate-200/80 pb-2">
+                  <span className="text-slate-500 font-semibold">N° de Orden</span>
+                  <span className="font-black text-slate-900">{compraExitosa.compra.id}</span>
+                </div>
+                <div className="flex justify-between items-center border-b border-slate-200/80 pb-2">
+                  <span className="text-slate-500 font-semibold">Titular</span>
+                  <span className="font-bold text-slate-900">{compraExitosa.compra.nombreCliente} ({compraExitosa.rutFormateado})</span>
+                </div>
+                <div className="flex justify-between items-center border-b border-slate-200/80 pb-2">
+                  <span className="text-slate-500 font-semibold">Paquete</span>
+                  <span className="font-bold text-[#023caf]">{compraExitosa.compra.nombreCuponera}</span>
+                </div>
+                <div className="flex justify-between items-center border-b border-slate-200/80 pb-2">
+                  <span className="text-slate-500 font-semibold">Saldo Inicial</span>
+                  <span className="font-bold text-[#FF6B00]">
+                    {compraExitosa.compra.cantidadCupones} viajes disponibles
+                  </span>
+                </div>
+                <div className="flex justify-between items-center pt-1">
+                  <span className="text-slate-500 font-semibold">Vencimiento</span>
+                  <span className="font-bold text-red-600">
+                    {new Date(compraExitosa.compra.fechaVencimiento).toLocaleDateString('es-CL')} (90 Días)
+                  </span>
+                </div>
               </div>
-              <div className="flex justify-between border-b border-slate-200 pb-2">
-                <span className="text-slate-500 font-medium">Titular / RUT</span>
-                <span className="font-bold text-slate-900">{compraExitosa.compra.nombreCliente} ({compraExitosa.rutFormateado})</span>
+  
+              {/* Código de Cuponera Adquirida */}
+              <div className="space-y-3 relative z-10">
+                <div className="p-5 bg-gradient-to-br from-emerald-50 to-green-50 rounded-2xl border border-emerald-200 shadow-sm text-center">
+                  <span className="text-xs font-bold text-emerald-800 uppercase tracking-widest block mb-3">
+                    Código de Cuponera Emitida
+                  </span>
+                  {compraExitosa.cupones.map((c) => (
+                    <div key={c.codigo}>
+                      <span className="bg-white text-[#023caf] text-2xl font-mono font-black px-6 py-2 rounded-xl border-2 border-emerald-200 inline-block shadow-sm tracking-widest">
+                        {c.codigo}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div className="flex justify-between border-b border-slate-200 pb-2">
-                <span className="text-slate-500 font-medium">Cuponera</span>
-                <span className="font-bold text-[#023caf]">{compraExitosa.compra.nombreCuponera}</span>
-              </div>
-              <div className="flex justify-between border-b border-slate-200 pb-2">
-                <span className="text-slate-500 font-medium">Saldo Inicial</span>
-                <span className="font-bold text-[#FF6B00]">
-                  {compraExitosa.compra.cantidadCupones}/{compraExitosa.compra.cantidadCupones} Cupones Disponibles
-                </span>
-              </div>
-              <div className="flex justify-between pt-1">
-                <span className="text-slate-500 font-medium">Vencimiento Exacto</span>
-                <span className="font-bold text-red-600">
-                  {new Date(compraExitosa.compra.fechaVencimiento).toLocaleDateString('es-CL')} (90 Días)
-                </span>
-              </div>
-            </div>
-
-            {/* Código de Cuponera Adquirida */}
-            <div className="space-y-1.5">
-              <span className="text-xs font-bold text-slate-700 uppercase tracking-wider block">
-                Código de Cuponera Emitida:
-              </span>
-              <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-center">
-                {compraExitosa.cupones.map((c) => (
-                  <div key={c.codigo} className="space-y-1">
-                    <span className="bg-white text-[#023caf] text-sm font-mono font-black px-3 py-1.5 rounded-lg border border-blue-200 inline-block shadow-xs">
-                      {c.codigo}
-                    </span>
-                    <p className="text-xs text-emerald-800 font-bold mt-1">
-                      Saldo: {c.saldoDisponible ?? c.totalCupones ?? compraExitosa.compra.cantidadCupones}/{c.totalCupones ?? compraExitosa.compra.cantidadCupones} viajes disponibles
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Acciones Siguientes */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+  
+              {/* Acciones Siguientes */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 relative z-10">
               <button
                 onClick={() => {
                   const rutLocal = compraExitosa.compra.rutCliente;

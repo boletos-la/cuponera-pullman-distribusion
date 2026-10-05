@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import { authService } from '@/lib/services/authService';
 import { setAuthToken } from '@/lib/apiClient';
 import { validateRut, formatRut, cleanRut } from '@/lib/rutValidator';
+import { formatChileanPhone, validateChileanPhone } from '@/lib/phoneValidator';
 
 interface LoginModalProps {
   onClose: () => void;
@@ -30,6 +31,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
   // Extra Register Fields
   const [nombre, setNombre] = useState('');
   const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState('');
   const [telefono, setTelefono] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
 
@@ -50,6 +52,17 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
       }
     } else {
       setRutError('');
+    }
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setEmail(val);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (val && !emailRegex.test(val)) {
+      setEmailError('Correo electrónico inválido');
+    } else {
+      setEmailError('');
     }
   };
 
@@ -110,8 +123,19 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
     e.preventDefault();
     setError('');
 
-    if (rutError || !rut || !nombre || !email || !password || !passwordConfirm) {
-      setError('Todos los campos obligatorios deben estar completos.');
+    if (rutError || emailError || !rut || !nombre || !email || !password || !passwordConfirm) {
+      setError('Todos los campos obligatorios deben estar completos y válidos.');
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError('Formato de correo electrónico inválido.');
+      return;
+    }
+
+    if (telefono && !validateChileanPhone(telefono)) {
+      setError('El teléfono debe tener formato válido chileno, ej: +56 9 1234 5678');
       return;
     }
 
@@ -388,22 +412,26 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
                       required
                       placeholder="correo@ejemplo.cl"
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={handleEmailChange}
                       className="w-full text-sm font-semibold bg-slate-50 border-2 border-slate-200 rounded-xl pl-9 pr-3 py-2.5 focus:outline-none focus:ring-4 focus:ring-[#023caf]/10 focus:border-[#023caf] transition-all"
                     />
                   </div>
+                  {emailError && <p className="text-xs text-red-600 font-medium ml-1">{emailError}</p>}
                   {guestHint && <p className="text-[10px] text-[#023caf] font-bold ml-1">{guestHint}</p>}
                 </div>
                 <div className="space-y-1.5">
                   <label className="block text-xs font-extrabold text-slate-700 ml-1">Teléfono Móvil</label>
-                  <div className="relative">
-                    <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                  <div className="flex items-center bg-slate-50 border-2 border-slate-200 rounded-xl focus-within:ring-4 focus-within:ring-[#023caf]/10 focus-within:border-[#023caf] transition-all overflow-hidden">
+                    <div className="pl-3 pr-2 py-2.5 border-r border-slate-200 flex items-center gap-1.5 bg-slate-100">
+                      <Phone className="w-4 h-4 text-slate-500" />
+                      <span className="text-sm font-bold text-slate-700">+56</span>
+                    </div>
                     <input
                       type="tel"
-                      placeholder="+56 9 1234 5678"
+                      placeholder="9 1234 5678"
                       value={telefono}
-                      onChange={(e) => setTelefono(e.target.value)}
-                      className="w-full text-sm font-semibold bg-slate-50 border-2 border-slate-200 rounded-xl pl-9 pr-3 py-2.5 focus:outline-none focus:ring-4 focus:ring-[#023caf]/10 focus:border-[#023caf] transition-all"
+                      onChange={(e) => setTelefono(formatChileanPhone(e.target.value))}
+                      className="w-full text-sm font-semibold bg-transparent px-3 py-2.5 focus:outline-none"
                     />
                   </div>
                 </div>

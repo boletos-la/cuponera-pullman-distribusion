@@ -124,7 +124,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
   };
 
   return (
-    <div className={`space-y-6 ${step === 'login' ? 'max-w-xl' : 'w-full'} mx-auto`}>
+    <div className={`space-y-6 ${step === 'login' ? 'max-w-3xl mt-6 md:mt-8' : 'w-full'} mx-auto`}>
       {step === 'login' && (
         <div className="bg-white rounded-[2rem] p-6 sm:p-10 shadow-xl border border-slate-100 space-y-8 relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-2 bg-[#023caf]" />
@@ -156,10 +156,22 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
                   placeholder="Ingresa tu RUT (ej: 12.345.678-K)"
                   value={rutInput}
                   onChange={(e) => {
-                    setRutInput(formatRut(e.target.value));
-                    setRutError('');
+                    const formatted = formatRut(e.target.value);
+                    setRutInput(formatted);
+                    const cleaned = cleanRut(e.target.value);
+                    if (cleaned.length >= 8) {
+                      if (!validateRut(cleaned)) {
+                        setRutError('RUT inválido. Verifique el dígito verificador.');
+                      } else {
+                        setRutError('');
+                      }
+                    } else {
+                      setRutError('');
+                    }
                   }}
-                  className="w-full text-sm font-semibold bg-white border border-slate-200 rounded-xl pl-10 pr-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-[#fa5e00] text-[#0F172A]"
+                  className={`w-full text-sm font-semibold bg-white border rounded-xl pl-10 pr-4 py-3.5 focus:outline-none focus:ring-2 text-[#0F172A] ${
+                    rutError ? 'border-red-400 focus:ring-red-400' : 'border-slate-200 focus:ring-[#fa5e00]'
+                  }`}
                 />
                 <Search className="w-5 h-5 text-slate-400 absolute left-3.5 top-4" />
               </div>

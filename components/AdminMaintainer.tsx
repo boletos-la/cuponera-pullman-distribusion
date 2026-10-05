@@ -43,6 +43,8 @@ export default function AdminMaintainer() {
   const [searchCanjes, setSearchCanjes] = useState('');
   const [searchCompras, setSearchCompras] = useState('');
   const [searchAuditoria, setSearchAuditoria] = useState('');
+  const [searchCuponera, setSearchCuponera] = useState('');
+  const [filterAccionAuditoria, setFilterAccionAuditoria] = useState('');
   const [expandedUserCompras, setExpandedUserCompras] = useState<string | null>(null);
 
   const [loading, setLoading] = useState(true);
@@ -90,11 +92,11 @@ export default function AdminMaintainer() {
   const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'asc' | 'desc' } | null>(null);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 20;
+  const itemsPerPage = 100;
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [activeTab, searchUsuario, searchTx, searchCanjes, searchCompras, searchAuditoria, sortConfig]);
+  }, [activeTab, searchUsuario, searchTx, searchCanjes, searchCompras, searchAuditoria, searchCuponera, sortConfig]);
 
   const paginate = (data: any[]) => {
     const startIndex = (currentPage - 1) * itemsPerPage;
@@ -442,7 +444,10 @@ export default function AdminMaintainer() {
     (c.nombre_usuario && c.nombre_usuario.toLowerCase().includes(searchCanjes.toLowerCase())) ||
     (c.pnr_kupos && c.pnr_kupos.includes(searchCanjes))
   ));
-  const sortedCuponeras = sortData(cuponeras);
+  const sortedCuponeras = sortData(cuponeras.filter(c =>
+    c.nombre.toLowerCase().includes(searchCuponera.toLowerCase()) ||
+    String(c.id).includes(searchCuponera)
+  ));
   const filteredCompras = sortData(compras.filter(c =>
     (c.rut_usuario && c.rut_usuario.includes(searchCompras)) ||
     (c.Cuponera?.nombre && c.Cuponera.nombre.toLowerCase().includes(searchCompras.toLowerCase())) ||
@@ -450,13 +455,16 @@ export default function AdminMaintainer() {
     (c.nombre_usuario && c.nombre_usuario.toLowerCase().includes(searchCompras.toLowerCase())) ||
     String(c.id_cuponera).includes(searchCompras)
   ));
-  const filteredAuditoria = sortData(auditoria.filter(a =>
-    (a.rutUsuario && a.rutUsuario.includes(searchAuditoria)) ||
-    (a.nombreUsuario && a.nombreUsuario.toLowerCase().includes(searchAuditoria.toLowerCase())) ||
-    (a.accion && a.accion.toLowerCase().includes(searchAuditoria.toLowerCase())) ||
-    (a.endpoint && a.endpoint.toLowerCase().includes(searchAuditoria.toLowerCase())) ||
-    (a.id && a.id.toLowerCase().includes(searchAuditoria.toLowerCase()))
-  ));
+  const uniqueActionsAuditoria = Array.from(new Set(auditoria.map(a => a.accion))).filter(Boolean).sort();
+  const filteredAuditoria = sortData(auditoria.filter(a => {
+    const matchSearch = (a.rutUsuario && a.rutUsuario.includes(searchAuditoria)) ||
+      (a.nombreUsuario && a.nombreUsuario.toLowerCase().includes(searchAuditoria.toLowerCase())) ||
+      (a.accion && a.accion.toLowerCase().includes(searchAuditoria.toLowerCase())) ||
+      (a.endpoint && a.endpoint.toLowerCase().includes(searchAuditoria.toLowerCase())) ||
+      (a.id && a.id.toLowerCase().includes(searchAuditoria.toLowerCase()));
+    const matchAction = filterAccionAuditoria === '' || a.accion === filterAccionAuditoria;
+    return matchSearch && matchAction;
+  }));
 
   return (
     <div className="space-y-6">
@@ -464,65 +472,74 @@ export default function AdminMaintainer() {
         <Toaster position="top-right" toastOptions={{ style: { zIndex: 999999 } }} />,
         document.body
       )}
-      <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
-        <h2 className="text-2xl font-black text-slate-900 flex items-center gap-2 mb-6">
-          <Settings className="w-6 h-6 text-[#fa5e00]" />
-          Mantenedor Administrativo
-        </h2>
+      <div className="flex flex-col lg:flex-row gap-6 w-full">
+        
+        {/* SIDEBAR TABS */}
+        <div className="w-full lg:w-72 shrink-0 flex flex-col gap-4">
+          <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200 sticky top-24">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center shrink-0">
+                <Settings className="w-5 h-5 text-[#fa5e00]" />
+              </div>
+              <div>
+                <h2 className="text-lg font-black text-slate-900 leading-tight">Mantenedor</h2>
+                <p className="text-xs text-slate-500 font-medium mt-0.5">Administración</p>
+              </div>
+            </div>
 
-        {/* TABS */}
-        <div className="sticky top-[64px] z-30 bg-white py-3 border-b border-slate-200 mb-6 flex flex-wrap gap-2 items-center -mx-6 px-6">
-          <button onClick={() => setActiveTab('catalogo')} className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${activeTab === 'catalogo' ? 'bg-[#fa5e00] text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
-            <ShoppingBag className="w-4 h-4" /> Catálogo
-          </button>
-          <button onClick={() => setActiveTab('usuarios')} className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${activeTab === 'usuarios' ? 'bg-[#023caf] text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
-            <Users className="w-4 h-4" /> Usuarios
-          </button>
-          <button onClick={() => setActiveTab('transacciones')} className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${activeTab === 'transacciones' ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
-            <CreditCard className="w-4 h-4" /> Pagos
-          </button>
-          <button onClick={() => setActiveTab('compras')} className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${activeTab === 'compras' ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
-            <Ticket className="w-4 h-4" /> Cuponeras (Usuarios)
-          </button>
-          <button onClick={() => setActiveTab('canjes')} className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${activeTab === 'canjes' ? 'bg-amber-500 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
-            <ArrowLeftRight className="w-4 h-4" /> Canjes
-          </button>
-          <button onClick={() => setActiveTab('auditoria')} className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${activeTab === 'auditoria' ? 'bg-slate-800 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
-            <History className="w-4 h-4" /> Auditoría
-          </button>
-          <button onClick={() => setActiveTab('configuracion')} className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${activeTab === 'configuracion' ? 'bg-rose-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
-            <Settings className="w-4 h-4" /> Banner
-          </button>
-          
-          <div className="flex-1 min-w-[1rem]"></div>
-          <button 
-            onClick={() => {
-              if (activeTab === 'configuracion') fetchConfig();
-              else { fetchAdminData(); fetchExtraData(); }
-            }} 
-            disabled={loading}
-            className="px-4 py-2 flex items-center gap-2 rounded-xl bg-blue-50 text-[#023caf] hover:bg-[#023caf] hover:text-white transition-all shadow-sm disabled:opacity-50 font-bold text-xs"
-            title="Actualizar datos"
-          >
-            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-            Actualizar
-          </button>
+            <nav className="flex flex-col gap-2">
+              <button onClick={() => setActiveTab('catalogo')} className={`w-full px-4 py-3 rounded-xl text-sm font-bold transition-all flex items-center gap-3 ${activeTab === 'catalogo' ? 'bg-[#fa5e00] text-white shadow-md shadow-orange-200' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}>
+                <ShoppingBag className={`w-5 h-5 ${activeTab === 'catalogo' ? 'text-white' : 'text-slate-400'}`} /> Catálogo
+              </button>
+              <button onClick={() => setActiveTab('usuarios')} className={`w-full px-4 py-3 rounded-xl text-sm font-bold transition-all flex items-center gap-3 ${activeTab === 'usuarios' ? 'bg-[#023caf] text-white shadow-md shadow-blue-200' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}>
+                <Users className={`w-5 h-5 ${activeTab === 'usuarios' ? 'text-white' : 'text-slate-400'}`} /> Usuarios
+              </button>
+              <button onClick={() => setActiveTab('transacciones')} className={`w-full px-4 py-3 rounded-xl text-sm font-bold transition-all flex items-center gap-3 ${activeTab === 'transacciones' ? 'bg-emerald-600 text-white shadow-md shadow-emerald-200' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}>
+                <CreditCard className={`w-5 h-5 ${activeTab === 'transacciones' ? 'text-white' : 'text-slate-400'}`} /> Pagos
+              </button>
+              <button onClick={() => setActiveTab('compras')} className={`w-full px-4 py-3 rounded-xl text-sm font-bold transition-all flex items-center gap-3 ${activeTab === 'compras' ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}>
+                <Ticket className={`w-5 h-5 ${activeTab === 'compras' ? 'text-white' : 'text-slate-400'}`} /> Cuponeras
+              </button>
+              <button onClick={() => setActiveTab('canjes')} className={`w-full px-4 py-3 rounded-xl text-sm font-bold transition-all flex items-center gap-3 ${activeTab === 'canjes' ? 'bg-amber-500 text-white shadow-md shadow-amber-200' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}>
+                <ArrowLeftRight className={`w-5 h-5 ${activeTab === 'canjes' ? 'text-white' : 'text-slate-400'}`} /> Canjes
+              </button>
+              <button onClick={() => setActiveTab('auditoria')} className={`w-full px-4 py-3 rounded-xl text-sm font-bold transition-all flex items-center gap-3 ${activeTab === 'auditoria' ? 'bg-slate-800 text-white shadow-md shadow-slate-300' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}>
+                <History className={`w-5 h-5 ${activeTab === 'auditoria' ? 'text-white' : 'text-slate-400'}`} /> Auditoría
+              </button>
+              <div className="h-px bg-slate-200 my-2"></div>
+              <button onClick={() => setActiveTab('configuracion')} className={`w-full px-4 py-3 rounded-xl text-sm font-bold transition-all flex items-center gap-3 ${activeTab === 'configuracion' ? 'bg-rose-600 text-white shadow-md shadow-rose-200' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}>
+                <Settings className={`w-5 h-5 ${activeTab === 'configuracion' ? 'text-white' : 'text-slate-400'}`} /> Banner UI
+              </button>
+            </nav>
+          </div>
         </div>
 
-        {/* CONTENT */}
+        {/* MAIN CONTENT AREA */}
+        <div className="flex-1 min-w-0">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200 min-h-[600px] h-full">
+            {/* CONTENT */}
         {activeTab === 'catalogo' && (
-          <div className="space-y-4 animate-fade-in">
-            <div className="flex justify-between items-center">
-              <p className="text-xs text-slate-500">Crea y edita paquetes de cuponeras.</p>
-              <button onClick={handleOpenNew} className="bg-[#fa5e00] text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-2">
+          <div className="flex flex-col gap-4 animate-fade-in lg:h-[calc(100vh-160px)]">
+            <div className="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-200">
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
+                  <Search className="w-4 h-4 text-slate-400" />
+                  Buscar:
+                </div>
+                <input type="text" placeholder="Nombre o ID..." value={searchCuponera} onChange={e => setSearchCuponera(e.target.value)} className="text-xs px-3 py-1.5 rounded-lg border border-slate-300 w-64 focus:outline-none" />
+                <button onClick={() => { fetchAdminData(); fetchExtraData(); }} disabled={loading} className="flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-200 text-slate-700 font-bold rounded-lg text-xs hover:bg-slate-100 transition-colors shadow-sm disabled:opacity-50">
+                  <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} /> Actualizar
+                </button>
+              </div>
+              <button onClick={handleOpenNew} className="bg-[#fa5e00] text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-2 shadow-sm">
                 <Plus className="w-4 h-4" /> Crear Nueva Cuponera
               </button>
             </div>
             
             {renderPagination(sortedCuponeras.length)}
-            <div className="border border-slate-200 rounded-2xl">
+            <div className="border border-slate-200 rounded-2xl flex-1 min-h-0 overflow-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-[120px] z-20">
+                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-20 shadow-sm">
                   <tr>
                     <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('id')}>
                       <div className="inline-flex items-center gap-1">ID {getSortIcon('id')}</div>
@@ -591,18 +608,23 @@ export default function AdminMaintainer() {
         )}
 
         {activeTab === 'usuarios' && (
-          <div className="space-y-4 animate-fade-in">
+          <div className="flex flex-col gap-4 animate-fade-in lg:h-[calc(100vh-160px)]">
             <div className="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-200">
-              <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
-                <Search className="w-4 h-4 text-slate-400" />
-                Buscar Usuario:
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
+                  <Search className="w-4 h-4 text-slate-400" />
+                  Buscar Usuario:
+                </div>
+                <input type="text" placeholder="RUT o Nombre..." value={searchUsuario} onChange={e => setSearchUsuario(e.target.value)} className="text-xs px-3 py-1.5 rounded-lg border border-slate-300 w-64 focus:outline-none" />
+                <button onClick={() => { fetchAdminData(); fetchExtraData(); }} disabled={loading} className="flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-200 text-slate-700 font-bold rounded-lg text-xs hover:bg-slate-100 transition-colors shadow-sm disabled:opacity-50">
+                  <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} /> Actualizar
+                </button>
               </div>
-              <input type="text" placeholder="RUT o Nombre..." value={searchUsuario} onChange={e => setSearchUsuario(e.target.value)} className="text-xs px-3 py-1.5 rounded-lg border border-slate-300 w-64 focus:outline-none" />
             </div>
             {renderPagination(filteredUsuarios.length)}
-            <div className="border border-slate-200 rounded-2xl">
+            <div className="border border-slate-200 rounded-2xl flex-1 min-h-0 overflow-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-[120px] z-20">
+                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-20 shadow-sm">
                   <tr>
                     <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('rut')}>
                       <div className="inline-flex items-center gap-1">RUT {getSortIcon('rut')}</div>
@@ -642,18 +664,23 @@ export default function AdminMaintainer() {
         )}
 
         {activeTab === 'transacciones' && (
-          <div className="space-y-4 animate-fade-in">
+          <div className="flex flex-col gap-4 animate-fade-in lg:h-[calc(100vh-160px)]">
             <div className="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-200">
-              <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
-                <Search className="w-4 h-4 text-slate-400" />
-                Buscar Transacción:
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
+                  <Search className="w-4 h-4 text-slate-400" />
+                  Buscar Transacción:
+                </div>
+                <input type="text" placeholder="Orden de compra o RUT..." value={searchTx} onChange={e => setSearchTx(e.target.value)} className="text-xs px-3 py-1.5 rounded-lg border border-slate-300 w-64 focus:outline-none" />
+                <button onClick={() => { fetchAdminData(); fetchExtraData(); }} disabled={loading} className="flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-200 text-slate-700 font-bold rounded-lg text-xs hover:bg-slate-100 transition-colors shadow-sm disabled:opacity-50">
+                  <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} /> Actualizar
+                </button>
               </div>
-              <input type="text" placeholder="Orden de compra o RUT..." value={searchTx} onChange={e => setSearchTx(e.target.value)} className="text-xs px-3 py-1.5 rounded-lg border border-slate-300 w-64 focus:outline-none" />
             </div>
             {renderPagination(filteredTx.length)}
-            <div className="border border-slate-200 rounded-2xl">
+            <div className="border border-slate-200 rounded-2xl flex-1 min-h-0 overflow-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-[120px] z-20">
+                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-20 shadow-sm">
                   <tr>
                     <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('orden_compra')}>
                       <div className="inline-flex items-center gap-1">Orden {getSortIcon('orden_compra')}</div>
@@ -706,7 +733,7 @@ export default function AdminMaintainer() {
         )}
 
         {activeTab === 'compras' && (
-          <div className="space-y-4 animate-fade-in">
+          <div className="flex flex-col gap-4 animate-fade-in lg:h-[calc(100vh-160px)]">
             {(() => {
               const userMap = new Map();
               filteredCompras.forEach(c => {
@@ -758,17 +785,22 @@ export default function AdminMaintainer() {
                   </div>
 
                   <div className="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-200">
-                    <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
-                      <Search className="w-4 h-4 text-slate-400" />
-                      Buscar Usuario o Cuponera:
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
+                        <Search className="w-4 h-4 text-slate-400" />
+                        Buscar Usuario o Cuponera:
+                      </div>
+                      <input type="text" placeholder="Nombre o RUT..." value={searchCompras} onChange={e => setSearchCompras(e.target.value)} className="text-xs px-3 py-1.5 rounded-lg border border-slate-300 w-64 focus:outline-none" />
+                      <button onClick={() => { fetchAdminData(); fetchExtraData(); }} disabled={loading} className="flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-200 text-slate-700 font-bold rounded-lg text-xs hover:bg-slate-100 transition-colors shadow-sm disabled:opacity-50">
+                        <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} /> Actualizar
+                      </button>
                     </div>
-                    <input type="text" placeholder="Nombre o RUT..." value={searchCompras} onChange={e => setSearchCompras(e.target.value)} className="text-xs px-3 py-1.5 rounded-lg border border-slate-300 w-64 focus:outline-none" />
                   </div>
 
                   {renderPagination(groupedUsers.length)}
-                  <div className="border border-slate-200 rounded-2xl overflow-hidden">
+                  <div className="border border-slate-200 rounded-2xl flex-1 min-h-0 overflow-auto">
                     <table className="w-full text-left text-xs">
-                      <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
+                      <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-20 shadow-sm">
                         <tr>
                           <th className="p-3">Usuario</th>
                           <th className="p-3 text-center">Total Cuponeras</th>
@@ -853,18 +885,23 @@ export default function AdminMaintainer() {
         )}
 
         {activeTab === 'canjes' && (
-          <div className="space-y-4 animate-fade-in">
+          <div className="flex flex-col gap-4 animate-fade-in lg:h-[calc(100vh-160px)]">
             <div className="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-200">
-              <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
-                <Search className="w-4 h-4 text-slate-400" />
-                Buscar Canje:
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
+                  <Search className="w-4 h-4 text-slate-400" />
+                  Buscar Canje:
+                </div>
+                <input type="text" placeholder="PNR, RUT o Nombre..." value={searchCanjes} onChange={e => setSearchCanjes(e.target.value)} className="text-xs px-3 py-1.5 rounded-lg border border-slate-300 w-64 focus:outline-none" />
+                <button onClick={() => { fetchAdminData(); fetchExtraData(); }} disabled={loading} className="flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-200 text-slate-700 font-bold rounded-lg text-xs hover:bg-slate-100 transition-colors shadow-sm disabled:opacity-50">
+                  <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} /> Actualizar
+                </button>
               </div>
-              <input type="text" placeholder="PNR, RUT o Nombre..." value={searchCanjes} onChange={e => setSearchCanjes(e.target.value)} className="text-xs px-3 py-1.5 rounded-lg border border-slate-300 w-64 focus:outline-none" />
             </div>
             {renderPagination(filteredCanjes.length)}
-            <div className="border border-slate-200 rounded-2xl">
+            <div className="border border-slate-200 rounded-2xl flex-1 min-h-0 overflow-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-[120px] z-20">
+                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-20 shadow-sm">
                   <tr>
                     <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('pnr_kupos')}>
                       <div className="inline-flex items-center gap-1">PNR Kupos {getSortIcon('pnr_kupos')}</div>
@@ -920,22 +957,41 @@ export default function AdminMaintainer() {
         )}
 
         {activeTab === 'auditoria' && (
-          <div className="space-y-4 animate-fade-in">
+          <div className="flex flex-col gap-4 animate-fade-in lg:h-[calc(100vh-160px)]">
             <div className="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-200">
-              <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
-                <Search className="w-4 h-4 text-slate-400" />
-                Registros de Trazabilidad y Auditoría
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 text-xs font-bold text-slate-700 shrink-0">
+                  <Search className="w-4 h-4 text-slate-400" />
+                  Auditoría
+                </div>
+                <div className="flex items-center gap-2">
+                  <input type="text" placeholder="ID, Acción, Usuario o Endpoint..." value={searchAuditoria} onChange={e => setSearchAuditoria(e.target.value)} className="text-xs px-3 py-1.5 rounded-lg border border-slate-300 w-48 focus:outline-none" />
+                  <select 
+                    value={filterAccionAuditoria} 
+                    onChange={e => setFilterAccionAuditoria(e.target.value)} 
+                    className="text-xs px-3 py-1.5 rounded-lg border border-slate-300 focus:outline-none bg-white cursor-pointer"
+                  >
+                    <option value="">Todas las acciones</option>
+                    {uniqueActionsAuditoria.map(accion => (
+                      <option key={accion} value={accion}>{accion}</option>
+                    ))}
+                  </select>
+                  <button onClick={() => { fetchAdminData(); fetchExtraData(); }} disabled={loading} className="flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-200 text-slate-700 font-bold rounded-lg text-xs hover:bg-slate-100 transition-colors shadow-sm disabled:opacity-50">
+                    <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} /> Actualizar
+                  </button>
+                </div>
               </div>
-              <input type="text" placeholder="ID, Acción, Usuario o Endpoint..." value={searchAuditoria} onChange={e => setSearchAuditoria(e.target.value)} className="text-xs px-3 py-1.5 rounded-lg border border-slate-300 w-64 focus:outline-none" />
             </div>
             {renderPagination(filteredAuditoria.length)}
-            <div className="border border-slate-200 rounded-2xl">
+            <div className="border border-slate-200 rounded-2xl flex-1 min-h-0 overflow-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-[120px] z-20">
+                <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-20 shadow-sm">
                   <tr>
                     <th className="p-3">Acción</th>
                     <th className="p-3">Usuario</th>
-                    <th className="p-3">Fecha</th>
+                    <th className="p-3 cursor-pointer select-none hover:bg-slate-100/80 transition-colors group" onClick={() => requestSort('fechaHora')}>
+                      <div className="inline-flex items-center gap-1">Fecha {getSortIcon('fechaHora')}</div>
+                    </th>
                     <th className="p-3">Endpoint</th>
                     <th className="p-3">Payload</th>
                     <th className="p-3">Response</th>
@@ -1051,12 +1107,9 @@ export default function AdminMaintainer() {
           </div>
         )}
 
-      </div>
-
-      {activeTab === 'configuracion' && (
-        <div className="space-y-4 animate-fade-in">
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-            <h2 className="text-lg font-black text-slate-800 mb-6 flex items-center gap-2">
+        {activeTab === 'configuracion' && (
+          <div className="space-y-4 animate-fade-in">
+            <h2 className="text-xl font-black text-slate-900 mb-6 flex items-center gap-2">
               <Settings className="w-5 h-5 text-[#fa5e00]" /> Configuración del Banner
             </h2>
             
@@ -1126,8 +1179,10 @@ export default function AdminMaintainer() {
               </div>
             </div>
           </div>
+        )}
+          </div>
         </div>
-      )}
+      </div>
 
       {/* Modal Formulario Edición/Creación */}
       {mounted && showModal && createPortal(

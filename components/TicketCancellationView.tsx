@@ -12,6 +12,7 @@ export default function TicketCancellationView() {
 
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [rutError, setRutError] = useState('');
   const [step, setStep] = useState<'form' | 'otp'>('form');
 
   const [resultadoExitosa, setResultadoExitosa] = useState<{
@@ -87,27 +88,24 @@ export default function TicketCancellationView() {
   };
 
   return (
-    <div className="relative max-w-3xl mx-auto space-y-6 pt-4 pb-12">
-      {/* Fondos y decoraciones ambientales */}
-      <div className="absolute top-0 inset-x-0 h-[400px] bg-gradient-to-b from-[#023caf]/5 via-[#fa5e00]/5 to-transparent rounded-[3rem] -z-10" />
-      <div className="absolute top-12 -left-20 w-64 h-64 bg-blue-400/10 blur-[80px] rounded-full pointer-events-none -z-10" />
-      <div className="absolute top-32 -right-20 w-72 h-72 bg-orange-400/10 blur-[100px] rounded-full pointer-events-none -z-10" />
-
+    <div className="relative max-w-3xl mx-auto space-y-6 mt-6 md:mt-8 pb-12">
       {/* Tarjeta Principal */}
-      <div className="relative bg-white/80 backdrop-blur-2xl rounded-[2rem] p-6 sm:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/60 space-y-8 animate-fade-in-up">
-
+      <div className="bg-white rounded-[2rem] p-6 sm:p-10 shadow-xl border border-slate-100 space-y-8 relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-2 bg-[#fa5e00]" />
+        
         {/* Cabecera */}
-        <div className="text-center space-y-3">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-orange-50 to-amber-50 border border-orange-100/50 text-orange-700 text-[10px] font-black uppercase tracking-widest shadow-sm">
-            <ShieldCheck className="w-3.5 h-3.5" />
-            <span>Proceso Protegido • Regla Legal de 4 Horas</span>
+        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left border-b border-slate-100 pb-6">
+          <div className="w-16 h-16 rounded-2xl bg-orange-50 text-[#fa5e00] flex items-center justify-center shrink-0 shadow-sm border border-orange-100">
+            <RotateCcw className="w-8 h-8 text-[#fa5e00]" />
           </div>
-          <h2 className="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#023caf] to-[#01256e] tracking-tight flex items-center justify-center gap-3">
-            Anulación de Viaje
-          </h2>
-          <p className="text-sm text-slate-500 font-medium max-w-lg mx-auto leading-relaxed">
-            Si tus planes cambiaron, puedes anular tu pasaje con al menos <strong className="text-slate-800">4 horas de anticipación</strong>. Tu cupón será devuelto a estado <span className="inline-flex items-center gap-1 font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md"><CheckCircle2 className="w-3.5 h-3.5" /> Activo</span> en tu saldo.
-          </p>
+          <div className="space-y-1.5">
+            <h2 className="text-2xl font-black text-[#fa5e00]">
+              Anulación de Viaje
+            </h2>
+            <p className="text-sm text-slate-500 font-medium">
+              Si tus planes cambiaron, puedes anular tu pasaje con al menos <strong className="text-slate-800">4 horas de anticipación</strong>. Tu cupón será devuelto a estado Activo.
+            </p>
+          </div>
         </div>
 
         {/* Banner Normativo Legal (Glassmorphism) */}
@@ -158,13 +156,27 @@ export default function TicketCancellationView() {
                     placeholder="ej: 12.345.678-K"
                     value={rutInput}
                     onChange={(e) => {
-                      setRutInput(formatRut(e.target.value));
+                      const formatted = formatRut(e.target.value);
+                      setRutInput(formatted);
+                      const cleaned = cleanRut(e.target.value);
+                      if (cleaned.length >= 8) {
+                        if (!validateRut(cleaned)) {
+                          setRutError('RUT inválido. Verifique el dígito verificador.');
+                        } else {
+                          setRutError('');
+                        }
+                      } else {
+                        setRutError('');
+                      }
                       setErrorMsg('');
                     }}
-                    className="w-full text-sm font-semibold bg-white border-2 border-slate-200/80 rounded-xl pl-11 pr-4 py-3.5 transition-all duration-300 focus:outline-none focus:border-[#023caf] focus:ring-4 focus:ring-[#023caf]/10 text-slate-800 placeholder:text-slate-400 group-hover:border-slate-300 shadow-sm"
+                    className={`w-full text-sm font-semibold bg-white border-2 rounded-xl pl-11 pr-4 py-3.5 transition-all duration-300 focus:outline-none focus:ring-4 text-slate-800 placeholder:text-slate-400 group-hover:border-slate-300 shadow-sm ${
+                      rutError ? 'border-red-400 focus:border-red-500 focus:ring-red-500/10' : 'border-slate-200/80 focus:border-[#023caf] focus:ring-[#023caf]/10'
+                    }`}
                   />
                   <Search className="w-5 h-5 text-slate-400 absolute left-4 top-3.5 transition-colors group-focus-within:text-[#023caf]" />
                 </div>
+                {rutError && <p className="text-xs text-red-600 font-medium ml-1">{rutError}</p>}
               </div>
 
               <div className="space-y-1.5">
@@ -198,7 +210,7 @@ export default function TicketCancellationView() {
             <div className="pt-2">
               <button
                 type="submit"
-                disabled={loading || !pasajeCodigo || !rutInput}
+                disabled={loading || !pasajeCodigo || !rutInput || !!rutError}
                 className="group relative w-full overflow-hidden bg-gradient-to-r from-[#fa5e00] to-orange-500 hover:from-orange-600 hover:to-orange-500 text-white font-black py-4 px-6 rounded-xl shadow-[0_4px_14px_0_rgba(250,94,0,0.39)] hover:shadow-[0_6px_20px_rgba(250,94,0,0.23)] transition-all duration-300 flex items-center justify-center gap-2 text-base cursor-pointer disabled:opacity-50 disabled:hover:shadow-none active:scale-[0.98]"
               >
                 {loading ? (

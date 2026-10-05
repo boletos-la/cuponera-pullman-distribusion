@@ -18,9 +18,27 @@ function HomeContent() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
-  const activeTab = searchParams.get('tab') || 'catalogo';
-  const selectedRut = searchParams.get('rut') || '';
-  const selectedCuponCode = searchParams.get('cupon') || '';
+  let activeTab = 'catalogo';
+  let selectedRut = '';
+  let selectedCuponCode = '';
+
+  const qParam = searchParams.get('q');
+  if (qParam) {
+    try {
+      const decoded = JSON.parse(atob(qParam));
+      if (decoded.tab) activeTab = decoded.tab;
+      if (decoded.rut) selectedRut = decoded.rut;
+      if (decoded.cupon) selectedCuponCode = decoded.cupon;
+    } catch (e) {
+      console.error("Invalid URL payload");
+    }
+  } else {
+    // Fallback por compatibilidad
+    activeTab = searchParams.get('tab') || 'catalogo';
+    selectedRut = searchParams.get('rut') || '';
+    selectedCuponCode = searchParams.get('cupon') || '';
+  }
+
   const [showExceptionModal, setShowExceptionModal] = useState<boolean>(false);
   const [showScroll, setShowScroll] = useState(false);
 
@@ -31,20 +49,21 @@ function HomeContent() {
   }, []);
 
   const updateUrl = (tab: string, rut?: string, cupon?: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('tab', tab);
+    const payload: any = { tab };
     
-    if (rut !== undefined) {
-      if (rut) params.set('rut', rut);
-      else params.delete('rut');
+    // Si rut es explícitamente definido y no es vacío, agregarlo
+    if (rut !== undefined && rut !== '') {
+      payload.rut = rut;
     }
     
-    if (cupon !== undefined) {
-      if (cupon) params.set('cupon', cupon);
-      else params.delete('cupon');
+    // Si cupon es explícitamente definido y no es vacío, agregarlo
+    if (cupon !== undefined && cupon !== '') {
+      payload.cupon = cupon;
     }
-
-    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    
+    // Encriptación simple con base64 para ocultar los datos en la URL
+    const encrypted = btoa(JSON.stringify(payload));
+    router.replace(`${pathname}?q=${encrypted}`, { scroll: false });
   };
 
   const handleGoToDashboardWithRut = (rut: string) => {
