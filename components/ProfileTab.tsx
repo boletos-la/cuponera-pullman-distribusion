@@ -1,16 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getAuthToken, getAuthUser, removeAuthToken, setAuthToken, apiClient } from '@/lib/apiClient';
 import { KeyRound, Mail, AlertCircle, CheckCircle2, Loader2 } from 'lucide-react';
 
 export default function ProfileTab() {
-  const user = getAuthUser();
-  const [email, setEmail] = useState(user?.correo || '');
+  const [user, setUser] = useState<any>(null);
+  const [email, setEmail] = useState('');
   const [actualPassword, setActualPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   
   const [loading, setLoading] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [message, setMessage] = useState({ type: '', text: '' });
+
+  useEffect(() => {
+    const authUser = getAuthUser();
+    setUser(authUser);
+    if (authUser?.correo) {
+      setEmail(authUser.correo);
+    }
+    
+    // Fake loading delay to avoid abrupt UI rendering
+    const timer = setTimeout(() => {
+      setIsInitialLoading(false);
+    }, 400);
+    
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleUpdateEmail = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,6 +72,16 @@ export default function ProfileTab() {
       setLoading(false);
     }
   };
+
+  if (isInitialLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-10">
+        <Loader2 className="w-10 h-10 text-[#fa5e00] animate-spin mb-4" />
+        <h3 className="text-lg font-bold text-slate-800">Cargando perfil...</h3>
+        <p className="text-sm text-slate-500 mt-1">Preparando tu configuración</p>
+      </div>
+    );
+  }
 
   if (!user) return <div className="text-center p-8">No estás logueado</div>;
 
