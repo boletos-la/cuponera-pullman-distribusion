@@ -253,8 +253,15 @@ export default function AdminMaintainer() {
         formData.append('bannerUrl', bannerUrl);
       }
       
-      const res = await fetch('/api/admin/config', {
+      const tokenRes = await fetch('/api/admin/token');
+      const tokenData = await tokenRes.json();
+      
+      const backendUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://cuponera.dev-wit.com/api');
+      const res = await fetch(`${backendUrl}/admin/config`, {
         method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${tokenData.token}`
+        },
         body: formData
       });
       const data = await res.json();
@@ -266,8 +273,8 @@ export default function AdminMaintainer() {
       } else {
         toast.error('Error al guardar configuración: ' + (data.error || ''));
       }
-    } catch (e) {
-      toast.error('Error al guardar configuración');
+    } catch (e: any) {
+      toast.error('Error al guardar configuración: ' + e.message);
     }
     setSavingConfig(false);
   };
@@ -278,8 +285,15 @@ export default function AdminMaintainer() {
       const formData = new FormData();
       formData.append('bannerUrl', '');
       
-      const res = await fetch('/api/admin/config', {
+      const tokenRes = await fetch('/api/admin/token');
+      const tokenData = await tokenRes.json();
+      
+      const backendUrl = (process.env.NEXT_PUBLIC_API_URL || 'https://cuponera.dev-wit.com/api');
+      const res = await fetch(`${backendUrl}/admin/config`, {
         method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${tokenData.token}`
+        },
         body: formData
       });
       const data = await res.json();
@@ -291,8 +305,8 @@ export default function AdminMaintainer() {
       } else {
         toast.error('Error al eliminar banner: ' + (data.error || ''));
       }
-    } catch (e) {
-      toast.error('Error al eliminar banner');
+    } catch (e: any) {
+      toast.error('Error al eliminar banner: ' + e.message);
     }
     setSavingConfig(false);
   };
