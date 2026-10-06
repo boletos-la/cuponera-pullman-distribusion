@@ -97,34 +97,39 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
             />
           </div>
 
-          {/* Enlaces de Navegación */}
-          <nav className="hidden lg:flex items-center gap-4">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = activeTab === item.id;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveTab(item.id)}
-                  className={`inline-flex items-center justify-center h-9 px-6 rounded-full text-sm font-medium transition-all hover:scale-105 cursor-pointer ${
-                    isActive
-                      ? 'bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-sm'
-                      : 'border border-secondary text-secondary hover:bg-secondary/10 hover:text-secondary'
-                  }`}
-                >
-                  <span>{item.label}</span>
-                </button>
-              );
-            })}
+          {/* Contenedor Derecho (Nav Desktop + Auth Mobile/Desktop) */}
+          <div className="flex items-center gap-2 lg:gap-4">
             
+            {/* Enlaces de Navegación (Solo Desktop) */}
+            <nav className="hidden lg:flex items-center gap-4">
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = activeTab === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => setActiveTab(item.id)}
+                    className={`inline-flex items-center justify-center h-9 px-6 rounded-full text-sm font-medium transition-all hover:scale-105 cursor-pointer ${
+                      isActive
+                        ? 'bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-sm'
+                        : 'border border-secondary text-secondary hover:bg-secondary/10 hover:text-secondary'
+                    }`}
+                  >
+                    <span>{item.label}</span>
+                  </button>
+                );
+              })}
+            </nav>
+            
+            {/* Autenticación (Mobile y Desktop) */}
             {user ? (
-              <div className="flex items-center gap-1 ml-2 bg-slate-50 border border-slate-200 rounded-full p-1 pl-3 shadow-sm">
+              <div className="flex items-center gap-1 bg-slate-50 border border-slate-200 rounded-full p-1 lg:pl-3 shadow-sm">
                 <button
                   onClick={() => setActiveTab('perfil')}
                   className="flex items-center gap-2 text-left hover:opacity-80 transition-opacity"
                   title="Ir a Mis Datos"
                 >
-                  <div className="flex flex-col items-end">
+                  <div className="hidden lg:flex flex-col items-end">
                     <span className="text-xs font-bold text-slate-800">{fixEncoding(user.nombre) || 'Usuario'}</span>
                     <span className="text-[10px] text-slate-500 font-medium">{user.rut}</span>
                   </div>
@@ -144,15 +149,16 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
             ) : (
               <button
                 onClick={() => setShowLoginModal(true)}
-                className="inline-flex items-center gap-2 h-9 px-6 rounded-full text-sm font-medium transition-transform hover:scale-105 cursor-pointer bg-[#fa5e00] text-white hover:bg-[#fa5e00]/90 shadow-sm ml-2"
+                className="inline-flex items-center gap-1.5 lg:gap-2 h-9 px-4 lg:px-6 rounded-full text-xs lg:text-sm font-medium transition-transform hover:scale-105 cursor-pointer bg-[#fa5e00] text-white hover:bg-[#fa5e00]/90 shadow-sm"
               >
                 <LogIn className="w-4 h-4" />
-                <span>Iniciar Sesión</span>
+                <span className="hidden lg:inline">Iniciar Sesión</span>
+                <span className="lg:hidden">Ingresar</span>
               </button>
             )}
 
-            {/* Separador y Logo WIT */}
-            <div className="border-l border-border pl-6 ml-2">
+            {/* Separador y Logo WIT (Solo Desktop) */}
+            <div className="hidden lg:block border-l border-border pl-6 ml-2">
               <img
                 src="/logo-wit-dark.png"
                 alt="WIT Logo"
@@ -161,7 +167,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
                 className="object-contain opacity-80 hover:opacity-100 transition-opacity duration-300"
               />
             </div>
-          </nav>
+          </div>
         </div>
       </div>
 

@@ -19,7 +19,21 @@ interface CatalogViewProps {
 
 const CuponeraCardGroup = ({ group, onOpenCheckout }: { group: any, onOpenCheckout: (c: Cuponera) => void }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [showTooltip, setShowTooltip] = useState(false);
   const selectedItem = group.options[selectedIndex];
+
+  // Close tooltip when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      setShowTooltip(false);
+    };
+    if (showTooltip) {
+      document.addEventListener('click', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [showTooltip]);
 
   return (
     <div className="relative bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow border border-slate-100 flex flex-col mt-4">
@@ -34,15 +48,24 @@ const CuponeraCardGroup = ({ group, onOpenCheckout }: { group: any, onOpenChecko
       <div className="p-4 pb-3 flex-1 flex flex-col">
         {/* Info Tooltip (Absolute Top Right) */}
         <div className="absolute top-4 right-4 z-20">
-          <div className="relative group flex items-center">
-            <div
-              className="flex items-center justify-center w-6 h-6 rounded-full border border-slate-200 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-all cursor-help focus:outline-none"
+          <div 
+            className="relative group flex items-center"
+            onMouseEnter={() => setShowTooltip(true)}
+            onMouseLeave={() => setShowTooltip(false)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowTooltip(!showTooltip);
+            }}
+          >
+            <button
+              type="button"
+              className="flex items-center justify-center w-6 h-6 rounded-full border border-slate-200 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-all cursor-pointer sm:cursor-help focus:outline-none"
               aria-label="Más información sobre los tramos"
             >
               <Info className="w-3.5 h-3.5" />
-            </div>
+            </button>
 
-            <div className="absolute right-0 top-full mt-2 w-56 bg-slate-100/90 backdrop-blur-md text-slate-800 text-[10px] p-3 rounded-xl shadow-xl z-50 border border-slate-200 transition-all duration-200 opacity-0 invisible -translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 pointer-events-none group-hover:pointer-events-auto">
+            <div className={`absolute right-0 top-full mt-2 w-56 bg-slate-100/90 backdrop-blur-md text-slate-800 text-[10px] p-3 rounded-xl shadow-xl z-50 border border-slate-200 transition-all duration-200 ${showTooltip ? 'opacity-100 visible translate-y-0 pointer-events-auto' : 'opacity-0 invisible -translate-y-1 pointer-events-none sm:group-hover:opacity-100 sm:group-hover:visible sm:group-hover:translate-y-0 sm:group-hover:pointer-events-auto'}`}>
               <div className="bg-emerald-50 text-emerald-600 text-xs font-semibold px-3 py-1.5 rounded-lg border border-emerald-100 flex items-center gap-2 mb-3 w-fit">
                 <CheckCircle className="w-3.5 h-3.5" />
                 Válido por 90 días
