@@ -937,7 +937,7 @@ export function ServiceDetailDialog({
                   <div className="flex items-center gap-2">
                     <Bus className="h-5 w-5 text-primary" />
                     <span className="font-bold text-lg">
-                      {serviceDetail.travels_name}
+                      Pullman Bus
                     </span>
                   </div>
                   <div className="flex flex-wrap gap-2">

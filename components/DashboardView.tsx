@@ -30,9 +30,22 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
   const [nowTimestamp, setNowTimestamp] = useState<number | null>(null);
 
   const [activeDashboardTab, setActiveDashboardTab] = useState<'cuponeras' | 'historial'>('cuponeras');
+  const [openTooltipId, setOpenTooltipId] = useState<string | null>(null);
 
   const authUser = getAuthUser();
   const [isInitialLoading, setIsInitialLoading] = useState(!!initialRut || !!authUser?.rut);
+
+  useEffect(() => {
+    const handleClickOutside = () => {
+      setOpenTooltipId(null);
+    };
+    if (openTooltipId) {
+      document.addEventListener('click', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [openTooltipId]);
 
   useEffect(() => {
     if (initialRut) {
@@ -328,11 +341,19 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
                           <div className="p-6 pb-5 flex-1 flex flex-col">
                             {/* Info Tooltip (Absolute Top Right) */}
                             <div className="absolute top-4 right-4 z-20">
-                              <div className="relative group flex items-center">
-                                <div className="flex items-center justify-center w-6 h-6 rounded-full border border-slate-200 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-all cursor-help focus:outline-none">
+                              <div 
+                                className="relative group flex items-center"
+                                onMouseEnter={() => setOpenTooltipId(c.codigo)}
+                                onMouseLeave={() => setOpenTooltipId(null)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setOpenTooltipId(openTooltipId === c.codigo ? null : c.codigo);
+                                }}
+                              >
+                                <button type="button" className="flex items-center justify-center w-6 h-6 rounded-full border border-slate-200 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-all cursor-pointer sm:cursor-help focus:outline-none">
                                   <Info className="w-3.5 h-3.5" />
-                                </div>
-                                <div className="absolute right-0 top-full mt-2 w-56 bg-slate-100/90 backdrop-blur-md text-slate-800 text-[10px] p-3 rounded-xl shadow-xl z-50 border border-slate-200 transition-all duration-200 opacity-0 invisible -translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 pointer-events-none group-hover:pointer-events-auto">
+                                </button>
+                                <div className={`absolute right-0 top-full mt-2 w-56 bg-slate-100/90 backdrop-blur-md text-slate-800 text-[10px] p-3 rounded-xl shadow-xl z-50 border border-slate-200 transition-all duration-200 ${openTooltipId === c.codigo ? 'opacity-100 visible translate-y-0 pointer-events-auto' : 'opacity-0 invisible -translate-y-1 pointer-events-none sm:group-hover:opacity-100 sm:group-hover:visible sm:group-hover:translate-y-0 sm:group-hover:pointer-events-auto'}`}>
                                   <div className="font-semibold mb-1 text-slate-700 uppercase tracking-wider">Tramos Habilitados:</div>
                                   <ul className="list-disc pl-3 space-y-0.5 font-medium text-slate-600">
                                     {c.tramosPermitidos?.map((t: string, i: number) => (

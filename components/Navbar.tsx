@@ -33,9 +33,14 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
     return () => window.removeEventListener('auth-change', handleAuthChange);
   }, []);
 
+  const handleTabChange = (tabId: string) => {
+    setActiveTab(tabId);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handleLogout = () => {
     removeAuthToken();
-    setActiveTab('catalogo');
+    handleTabChange('catalogo');
     setShowLogoutConfirm(false);
     toast.success('Sesión cerrada con éxito');
   };
@@ -46,7 +51,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
         <LoginModal
           onClose={() => setShowLoginModal(false)}
           onLoginSuccess={() => {
-            setActiveTab('catalogo');
+            handleTabChange('catalogo');
           }}
         />
       )}
@@ -85,7 +90,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
         <div className="flex items-center justify-between h-18">
           {/* Logo Oficial Pullmanbus Cuponeras */}
           <div
-            onClick={() => setActiveTab('catalogo')}
+            onClick={() => handleTabChange('catalogo')}
             className="flex items-center cursor-pointer group"
           >
             <img
@@ -108,7 +113,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
                 return (
                   <button
                     key={item.id}
-                    onClick={() => setActiveTab(item.id)}
+                    onClick={() => handleTabChange(item.id)}
                     className={`inline-flex items-center justify-center h-9 px-6 rounded-full text-sm font-medium transition-all hover:scale-105 cursor-pointer ${
                       isActive
                         ? 'bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-sm'
@@ -125,7 +130,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
             {user ? (
               <div className="flex items-center gap-1 bg-slate-50 border border-slate-200 rounded-full p-1 lg:pl-3 shadow-sm">
                 <button
-                  onClick={() => setActiveTab('perfil')}
+                  onClick={() => handleTabChange('perfil')}
                   className="flex items-center gap-2 text-left hover:opacity-80 transition-opacity"
                   title="Ir a Mis Datos"
                 >
@@ -179,7 +184,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
           return (
             <button
               key={item.id}
-              onClick={() => setActiveTab(item.id)}
+              onClick={() => handleTabChange(item.id)}
               className={`flex-1 min-w-[100px] flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-full text-sm transition-all hover:scale-105 cursor-pointer ${
                 isActive 
                   ? 'bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-sm' 

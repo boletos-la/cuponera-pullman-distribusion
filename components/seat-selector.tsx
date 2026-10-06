@@ -424,10 +424,10 @@ export function SeatSelector({
         </div>
       </div>
       {/* Mapa de asientos */}
-      <div className="bg-white border border-gray-200 rounded-lg p-3 sm:p-6 sm:mx-2 md:mx-4">
-        <div className="space-y-2 sm:space-y-3">
+      <div className="bg-white border border-gray-200 rounded-lg p-2 sm:p-6 sm:mx-2 md:mx-4 overflow-x-auto">
+        <div className="space-y-2 sm:space-y-3 min-w-max mx-auto px-1 pb-1">
           {currentRows.map((row, rowIndex) => (
-            <div key={rowIndex} className="flex justify-center gap-1 sm:gap-2">
+            <div key={rowIndex} className="flex justify-center gap-1.5 sm:gap-2">
               {row.map((seat, seatIndex) => (
                 <div key={seatIndex} className="flex items-center">
                   {seat ? (
@@ -435,7 +435,7 @@ export function SeatSelector({
                       onClick={() => handleSeatClick(seat)}
                       disabled={!isSeatAvailable(seat) || disabled}
                       className={cn(
-                        "h-10 w-10 sm:h-12 sm:w-12 rounded-lg border-2 flex items-center justify-center transition-all duration-200 font-bold text-xs sm:text-sm",
+                        "h-8 w-8 sm:h-12 sm:w-12 rounded-lg border-2 flex items-center justify-center transition-all duration-200 font-bold text-xs sm:text-sm",
                         selectedSeats.includes(seat)
                           ? "bg-accent border-orange-600 text-accent-foreground scale-105 shadow-md cursor-pointer"
                           : isSeatAvailable(seat)
@@ -453,8 +453,8 @@ export function SeatSelector({
                       {seat}
                     </button>
                   ) : (
-                    <div className="h-10 w-10 sm:h-12 sm:w-12 bg-gray-100 border border-gray-300 rounded flex items-center justify-center">
-                      <div className="w-1 h-6 sm:h-8 bg-gray-300 rounded"></div>
+                    <div className="h-8 w-8 sm:h-12 sm:w-12 bg-gray-100 border border-gray-300 rounded flex items-center justify-center">
+                      <div className="w-1 h-5 sm:h-8 bg-gray-300 rounded"></div>
                     </div>
                   )}
                   {seatIndex === 1 && (

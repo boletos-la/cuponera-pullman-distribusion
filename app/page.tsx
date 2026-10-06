@@ -64,6 +64,9 @@ function HomeContent() {
     // Encriptación simple con base64 para ocultar los datos en la URL
     const encrypted = btoa(JSON.stringify(payload));
     router.replace(`${pathname}?q=${encrypted}`, { scroll: false });
+    
+    // Al igual que en Navbar, forzar el scroll arriba de forma suave
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleGoToDashboardWithRut = (rut: string) => {

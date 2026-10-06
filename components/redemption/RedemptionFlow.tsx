@@ -95,7 +95,10 @@ export function RedemptionFlow({ initialCuponCode = '', initialRut = '', onFinis
   }, [initialCuponCode, initialRut]);
 
   const nextStep = () => {
-    if (currentStep < 4) setCurrentStep(currentStep + 1);
+    if (currentStep < 4) {
+      setCurrentStep(currentStep + 1);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   };
 
   const handleReleaseSeat = async () => {
@@ -134,9 +137,13 @@ export function RedemptionFlow({ initialCuponCode = '', initialRut = '', onFinis
 
   const prevStep = async () => {
     if (currentStep > 1) {
-      await handleReleaseSeat();
-      clearAllReservations();
+      // Solo liberamos el asiento si retrocedemos de Pasajero (2) a Búsqueda (1)
+      if (currentStep === 2) {
+        await handleReleaseSeat();
+        clearAllReservations();
+      }
       setCurrentStep(currentStep - 1);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
       await handleReleaseSeat();
       clearAllReservations();
