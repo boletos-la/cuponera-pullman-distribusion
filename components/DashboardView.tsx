@@ -223,18 +223,18 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
         <div className="space-y-6 animate-fade-in pt-4 sm:pt-6">
           {/* Tarjetas Consolidadas de Métricas */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="bg-white rounded-lg p-5 border-l-4 border-l-emerald-500 border-t border-r border-b border-slate-100 shadow-sm flex items-center gap-4">
-              <div className="w-12 h-12 rounded-md bg-emerald-50 flex items-center justify-center shrink-0">
-                <Ticket className="w-6 h-6 text-emerald-600" />
+            <div className="bg-white rounded-lg p-5 border border-slate-200 shadow-sm flex items-center gap-4">
+              <div className="w-12 h-12 rounded-md bg-cyan-50 flex items-center justify-center shrink-0">
+                <Ticket className="w-6 h-6 text-[#00c7cc]" />
               </div>
               <div>
                 <span className="text-[10px] text-slate-500 font-bold block uppercase tracking-wider">Disponibles</span>
-                <span className="text-2xl font-black text-emerald-700">{metricas.disponibles}</span>
+                <span className="text-2xl font-black text-[#00c7cc]">{metricas.disponibles}</span>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg p-5 border-l-4 border-l-[#ff6700] border-t border-r border-b border-slate-100 shadow-sm flex items-center gap-4">
-              <div className="w-12 h-12 rounded-md bg-blue-50 flex items-center justify-center shrink-0">
+            <div className="bg-white rounded-lg p-5 border border-slate-200 shadow-sm flex items-center gap-4">
+              <div className="w-12 h-12 rounded-md bg-orange-50 flex items-center justify-center shrink-0">
                 <CheckCircle className="w-6 h-6 text-[#ff6700]" />
               </div>
               <div>
@@ -243,20 +243,19 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
               </div>
             </div>
 
-            <div className="bg-white rounded-lg p-5 border-l-4 border-l-slate-800 border-t border-r border-b border-slate-100 shadow-sm flex items-center gap-4">
-              <div className="w-12 h-12 rounded-md bg-slate-100 flex items-center justify-center shrink-0">
+            <div className="bg-white rounded-lg p-5 border border-slate-200 shadow-sm flex items-center gap-4">
+              <div className="w-12 h-12 rounded-md bg-slate-50 flex items-center justify-center shrink-0">
                 <LayoutDashboard className="w-6 h-6 text-slate-700" />
               </div>
               <div>
                 <span className="text-[10px] text-slate-500 font-bold block uppercase tracking-wider">Total Adquiridos</span>
-                <span className="text-2xl font-black text-slate-900">{metricas.total}</span>
+                <span className="text-2xl font-black text-slate-800">{metricas.total}</span>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-[2rem] border border-slate-100 shadow-xl p-6 sm:p-8 space-y-6 relative">
-            <div className="absolute top-0 left-0 w-full h-2 bg-[#ff6700] rounded-t-[2rem]" />
-            <div className="sticky top-[72px] z-40 bg-white/95 backdrop-blur-md pb-4 pt-4 border-b border-slate-100 shadow-[0_8px_10px_-4px_rgba(255,255,255,0.9)] -mx-6 px-6 sm:-mx-8 sm:px-8 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mt-[-8px] rounded-t-[1.5rem]">
+          <div className="bg-slate-50 rounded-[2rem] border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6 relative">
+            <div className="sticky top-[72px] z-40 bg-slate-50/95 backdrop-blur-md pb-4 pt-4 border-b border-slate-200 shadow-[0_8px_10px_-4px_rgba(248,250,252,0.9)] -mx-6 px-6 sm:-mx-8 sm:px-8 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mt-[-8px] rounded-t-[1.5rem]">
               <div className="flex flex-wrap gap-2 bg-slate-50 p-1.5 rounded-md border border-slate-200">
                 <button
                   onClick={() => setActiveDashboardTab('cuponeras')}
@@ -291,7 +290,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
 
             {activeDashboardTab === 'cuponeras' && (
               <>
-                <div className="mb-4 sticky top-[154px] z-30 bg-white/95 backdrop-blur-sm py-3 -mx-6 px-6 sm:-mx-8 sm:px-8 shadow-[0_8px_10px_-4px_rgba(255,255,255,0.9)]">
+                <div className="mb-4 sticky top-[154px] z-30 bg-slate-50/95 backdrop-blur-sm py-3 -mx-6 px-6 sm:-mx-8 sm:px-8 shadow-[0_8px_10px_-4px_rgba(248,250,252,0.9)]">
                   <div className="relative w-full max-w-sm">
                     <input
                       type="text"
@@ -329,10 +328,10 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
                       return (
                         <div
                           key={c.codigo}
-                          className={`relative bg-white rounded-3xl shadow-lg hover:shadow-xl transition-shadow border border-slate-100 flex flex-col mt-4 ${!canCanjear ? 'opacity-80' : ''}`}
+                          className={`relative bg-white rounded-3xl shadow-sm hover:shadow-md transition-shadow border border-slate-200 flex flex-col mt-4 ${!canCanjear ? 'opacity-80' : ''}`}
                         >
                           {/* Badge Activa / Sin Saldo */}
-                          <div className={`absolute -top-3 right-4 font-bold text-xs px-3 py-1 rounded-md shadow-sm border border-white z-10 ${canCanjear ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-700'}`}>
+                          <div className={`absolute -top-3 right-4 font-bold text-xs px-3 py-1 rounded-md shadow-sm border border-slate-100 z-10 ${canCanjear ? 'bg-slate-100 text-slate-700' : 'bg-slate-200 text-slate-700'}`}>
                             {c.estado || 'Inactivo'}
                           </div>
 
@@ -387,9 +386,9 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
                               </div>
 
                               {/* Días Restantes */}
-                              <div className="flex items-center gap-3 mt-4 pt-4 border-t border-slate-50">
-                                <div className={`text-xs font-bold px-3 py-1.5 rounded-lg border inline-flex items-center gap-2 ${daysLeft <= 7 ? 'bg-red-50 text-red-600 border-red-100' : 'bg-emerald-50 text-emerald-600 border-emerald-100'}`}>
-                                  <CheckCircle className="w-3.5 h-3.5" />
+                              <div className="flex items-center gap-3 mt-4 pt-4 border-t border-slate-100">
+                                <div className={`text-xs font-bold px-3 py-1.5 rounded-lg border inline-flex items-center gap-2 ${daysLeft <= 7 ? 'bg-slate-100 text-slate-600 border-slate-200' : 'bg-slate-50 text-slate-600 border-slate-200'}`}>
+                                  <Clock className="w-3.5 h-3.5" />
                                   Quedan {daysLeft} días
                                 </div>
                               </div>
@@ -402,13 +401,13 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
                               <div className="flex justify-between items-end mb-1.5">
                                 <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Saldo</span>
                                 <div className="flex items-baseline gap-1">
-                                  <span className="text-xl font-black text-emerald-600">{saldoC}</span>
+                                  <span className="text-xl font-black text-[#00c7cc]">{saldoC}</span>
                                   <span className="text-xs font-bold text-slate-400">/ {totalC}</span>
                                 </div>
                               </div>
                               <div className="w-full bg-slate-100 rounded-md h-2 overflow-hidden mb-2">
                                 <div
-                                  className={`h-full transition-all duration-500 ${saldoC > 0 ? 'bg-emerald-500' : 'bg-slate-300'}`}
+                                  className={`h-full transition-all duration-500 ${saldoC > 0 ? 'bg-[#00c7cc]' : 'bg-slate-300'}`}
                                   style={{ width: `${porcentajeSaldo}%` }}
                                 />
                               </div>
