@@ -2,6 +2,10 @@ export const getApiUrl = () => {
   return process.env.NEXT_PUBLIC_API_URL || 'https://cuponera.dev-wit.com/api';
 };
 
+export const getDistribusionApiUrl = () => {
+  return process.env.NEXT_PUBLIC_DISTRIBUSION_API_URL || 'http://localhost:4001/api';
+};
+
 export const getAuthToken = () => {
   if (typeof window !== 'undefined') {
     const token = sessionStorage.getItem('admin_token') || localStorage.getItem('jwt_token') || sessionStorage.getItem('jwt_token');

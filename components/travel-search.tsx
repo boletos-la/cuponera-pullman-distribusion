@@ -26,12 +26,12 @@ import { BusServiceCard } from "@/components/bus-service-card";
 import { ModernDatePicker } from "@/components/ui/modern-date-picker";
 import { Badge } from "@/components/ui/badge";
 import { useCuponStore } from "@/lib/cupon-store";
-import { getApiUrl } from "@/lib/apiClient";
+import { getApiUrl, getDistribusionApiUrl } from "@/lib/apiClient";
 import { BusRouteLoader } from "@/components/ui/custom-loaders";
 import { useReservationStore } from "@/lib/reservation-store";
 
 interface City {
-  id: number;
+  id: number | string;
   name: string;
   origin_count: number;
   destination_count: number;
@@ -164,7 +164,11 @@ export function TravelSearch({ onNext, onBack }: TravelSearchProps) {
   useEffect(() => {
     const loadCities = async () => {
       try {
-        const res = await fetch(`${getApiUrl()}/gds/cities`);
+        const gdsProvider = process.env.NEXT_PUBLIC_GDS_PROVIDER || 'kupos';
+        const url = gdsProvider === 'distribusion' 
+          ? `${getDistribusionApiUrl()}/distribusion/stations` 
+          : `${getApiUrl()}/gds/cities`;
+        const res = await fetch(url);
         if (!res.ok) throw new Error("Error loading cities");
         const data = await res.json();
         const allCities = (data.cities || []) as City[];
@@ -371,23 +375,38 @@ export function TravelSearch({ onNext, onBack }: TravelSearchProps) {
     setHasSearched(true);
     setSearchError(null);
 
-    try {
-      const params = new URLSearchParams({
-        originId: returnOrigin.id.toString(),
-        destinationId: returnDestination.id.toString(),
-        date: returnDateString,
-      });
+      try {
+        const gdsProvider = process.env.NEXT_PUBLIC_GDS_PROVIDER || 'kupos';
+        let res;
 
-      const url = `${getApiUrl()}/gds/search?${params}`;
-      const res = await fetch(url);
+        if (gdsProvider === 'distribusion') {
+          const url = `${getDistribusionApiUrl()}/distribusion/connections/find`;
+          res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              originStationCode: returnOrigin.id.toString(),
+              destinationStationCode: returnDestination.id.toString(),
+              departureDate: returnDateString
+            })
+          });
+        } else {
+          const params = new URLSearchParams({
+            originId: returnOrigin.id.toString(),
+            destinationId: returnDestination.id.toString(),
+            date: returnDateString,
+          });
+          const url = `${getApiUrl()}/gds/search?${params}`;
+          res = await fetch(url);
+        }
 
-      if (!res.ok) {
+        if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.error || `Error: ${res.status}`);
+        throw new Error(errorData.error?.message || errorData.error || `Error: ${res.status}`);
       }
 
       const data = await res.json();
-      if (data.error) throw new Error(data.error);
+      if (data.error) throw new Error(data.error.message || data.error);
 
       const mapped =
         data.services?.map((s: any) => ({
@@ -472,32 +491,47 @@ export function TravelSearch({ onNext, onBack }: TravelSearchProps) {
     setHasSearched(true);
     setSearchError(null);
 
-    try {
-      const searchOrigin = origin;
-      const searchDestination = destination;
-      const searchDate =
-        searchMode === "departure" ? departureDateString : returnDateString;
+      try {
+        const searchOrigin = origin;
+        const searchDestination = destination;
+        const searchDate =
+          searchMode === "departure" ? departureDateString : returnDateString;
 
-      if (!searchOrigin || !searchDestination) {
-        throw new Error("Ciudades no definidas");
-      }
+        if (!searchOrigin || !searchDestination) {
+          throw new Error("Ciudades no definidas");
+        }
 
-      const params = new URLSearchParams({
-        originId: searchOrigin.id.toString(),
-        destinationId: searchDestination.id.toString(),
-        date: searchDate,
-      });
+        const gdsProvider = process.env.NEXT_PUBLIC_GDS_PROVIDER || 'kupos';
+        let res;
 
-      const url = `${getApiUrl()}/gds/search?${params}`;
-      const res = await fetch(url);
+        if (gdsProvider === 'distribusion') {
+          const url = `${getDistribusionApiUrl()}/distribusion/connections/find`;
+          res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              originStationCode: searchOrigin.id.toString(),
+              destinationStationCode: searchDestination.id.toString(),
+              departureDate: searchDate
+            })
+          });
+        } else {
+          const params = new URLSearchParams({
+            originId: searchOrigin.id.toString(),
+            destinationId: searchDestination.id.toString(),
+            date: searchDate,
+          });
+          const url = `${getApiUrl()}/gds/search?${params}`;
+          res = await fetch(url);
+        }
 
-      if (!res.ok) {
+        if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.error || `Error: ${res.status}`);
+        throw new Error(errorData.error?.message || errorData.error || `Error: ${res.status}`);
       }
 
       const data = await res.json();
-      if (data.error) throw new Error(data.error);
+      if (data.error) throw new Error(data.error.message || data.error);
 
       const mapped =
         data.services?.map((s: any) => ({
