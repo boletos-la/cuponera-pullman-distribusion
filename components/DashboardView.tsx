@@ -331,7 +331,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
                           className={`relative bg-white rounded-3xl shadow-sm hover:shadow-md transition-shadow border border-slate-200 flex flex-col mt-4 ${!canCanjear ? 'opacity-80' : ''}`}
                         >
                           {/* Badge Activa / Sin Saldo */}
-                          <div className={`absolute -top-3 right-4 font-bold text-xs px-3 py-1 rounded-md shadow-sm border border-slate-100 z-10 ${canCanjear ? 'bg-slate-100 text-slate-700' : 'bg-slate-200 text-slate-700'}`}>
+                          <div className={`absolute -top-3 right-4 font-bold text-xs px-3 py-1 rounded-md shadow-sm border border-slate-100 z-10 ${canCanjear ? 'bg-cyan-50 text-[#00c7cc]' : 'bg-slate-100 text-slate-500'}`}>
                             {c.estado || 'Inactivo'}
                           </div>
 
