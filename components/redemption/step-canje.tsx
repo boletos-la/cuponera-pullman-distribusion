@@ -358,7 +358,7 @@ export function StepCanje({
           <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-100 space-y-6 animate-fade-in relative">
             <div className="flex justify-between items-start border-b border-slate-100 pb-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-md bg-cyan-100 text-cyan-600 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-md bg-orange-100 text-orange-600 flex items-center justify-center">
                   <KeyRound className="w-5 h-5" />
                 </div>
                 <div>

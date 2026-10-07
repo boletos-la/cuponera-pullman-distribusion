@@ -88,7 +88,7 @@ export default function ProfileTab() {
   if (isInitialLoading) {
     return (
       <div className="flex flex-col items-center justify-center py-10">
-        <Loader2 className="w-10 h-10 text-[#00c7cc] animate-spin mb-4" />
+        <Loader2 className="w-10 h-10 text-[#ff6700] animate-spin mb-4" />
         <h3 className="text-lg font-bold text-slate-800">Cargando perfil...</h3>
         <p className="text-sm text-slate-500 mt-1">Preparando tu configuración</p>
       </div>
@@ -108,7 +108,7 @@ export default function ProfileTab() {
 
       <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 space-y-6">
         <h3 className="text-xl font-black text-slate-900 flex items-center gap-2">
-          <Mail className="w-5 h-5 text-[#00c7cc]" />
+          <Mail className="w-5 h-5 text-[#ff6700]" />
           Actualizar Correo
         </h3>
         <form onSubmit={handleUpdateEmail} className="space-y-4 max-w-md">
@@ -138,7 +138,7 @@ export default function ProfileTab() {
 
       <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 space-y-6">
         <h3 className="text-xl font-black text-slate-900 flex items-center gap-2">
-          <KeyRound className="w-5 h-5 text-[#00c7cc]" />
+          <KeyRound className="w-5 h-5 text-[#ff6700]" />
           Actualizar Contraseña
         </h3>
         <form onSubmit={handleUpdatePassword} className="space-y-4 max-w-md">
@@ -217,7 +217,7 @@ export default function ProfileTab() {
           <button
             type="submit"
             disabled={loading || !actualPassword || !newPassword || !isPasswordValid || !doPasswordsMatch}
-            className="flex items-center gap-2 justify-center bg-[#00c7cc] hover:bg-[#00b3b7] text-white font-bold py-2.5 px-6 rounded-md transition-all disabled:opacity-50"
+            className="flex items-center gap-2 justify-center bg-[#ff6700] hover:bg-[#e65c00] text-white font-bold py-2.5 px-6 rounded-md transition-all disabled:opacity-50"
           >
             {loading && <Loader2 className="w-4 h-4 animate-spin" />}
             Actualizar Contraseña

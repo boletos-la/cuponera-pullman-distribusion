@@ -253,7 +253,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
         {mode === 'login' && (
           <div className="animate-fade-in-up">
             <div className="text-center space-y-2 mb-6 mt-2">
-              <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-cyan-50 to-cyan-100 text-[#00c7cc] flex items-center justify-center mx-auto shadow-inner border border-cyan-200/50">
+              <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-orange-50 to-orange-100 text-[#ff6700] flex items-center justify-center mx-auto shadow-inner border border-orange-200/50">
                 <LogIn className="w-8 h-8 stroke-[2.5]" />
               </div>
               <h3 className="text-2xl font-black text-slate-900 tracking-tight pt-2">Iniciar Sesión</h3>
@@ -334,7 +334,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
                   className={`w-full font-black py-3.5 px-4 rounded-md transition-all flex items-center justify-center gap-2 text-sm disabled:opacity-75 ${
                     isSuccess
                       ? 'bg-emerald-600 text-white shadow-[0_4px_14px_0_rgba(16,185,129,0.39)]'
-                      : 'bg-gradient-to-r from-[#00c7cc] to-cyan-500 hover:from-cyan-600 hover:to-cyan-500 text-white shadow-[0_4px_14px_0_rgba(0,199,204,0.39)] hover:shadow-[0_6px_20px_rgba(0,199,204,0.23)] active:scale-[0.98]'
+                      : 'bg-gradient-to-r from-[#ff6700] to-orange-500 hover:from-orange-600 hover:to-orange-500 text-white shadow-[0_4px_14px_0_rgba(255,103,0,0.39)] hover:shadow-[0_6px_20px_rgba(255,103,0,0.23)] active:scale-[0.98]'
                   }`}
                 >
                   {isSuccess ? (
@@ -521,8 +521,8 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
         {mode === 'mfa' && (
           <div className="animate-fade-in-up">
             <div className="text-center space-y-2 mb-6 mt-2 relative">
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 bg-cyan-400/10 rounded-md blur-2xl pointer-events-none" />
-              <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-amber-50 to-cyan-100 text-[#00c7cc] flex items-center justify-center mx-auto shadow-inner border border-cyan-200/50 relative z-10">
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 bg-orange-400/10 rounded-md blur-2xl pointer-events-none" />
+              <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-amber-50 to-orange-100 text-[#ff6700] flex items-center justify-center mx-auto shadow-inner border border-orange-200/50 relative z-10">
                 <ShieldCheck className="w-8 h-8 stroke-[2.5]" />
               </div>
               <h3 className="text-2xl font-black text-slate-900 tracking-tight pt-2 relative z-10">Validación de Correo</h3>
@@ -543,7 +543,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
                   maxLength={6}
                   value={otpCode}
                   onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))}
-                  className="w-full text-center text-3xl tracking-[0.3em] font-black bg-white border-2 border-slate-200 rounded-lg py-3 focus:outline-none focus:border-[#00c7cc] focus:ring-4 focus:ring-[#00c7cc]/10 text-slate-800 placeholder:text-slate-200 shadow-sm transition-all"
+                  className="w-full text-center text-3xl tracking-[0.3em] font-black bg-white border-2 border-slate-200 rounded-lg py-3 focus:outline-none focus:border-[#ff6700] focus:ring-4 focus:ring-[#ff6700]/10 text-slate-800 placeholder:text-slate-200 shadow-sm transition-all"
                   placeholder="------"
                   autoFocus
                 />
@@ -560,7 +560,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
                 <button
                   type="submit"
                   disabled={loading || otpCode.length < 6}
-                  className="w-full bg-gradient-to-r from-[#00c7cc] to-cyan-500 hover:from-cyan-600 hover:to-cyan-500 text-white font-black py-3.5 px-4 rounded-md shadow-[0_4px_14px_0_rgba(0,199,204,0.39)] hover:shadow-[0_6px_20px_rgba(0,199,204,0.23)] transition-all flex items-center justify-center gap-2 text-sm disabled:opacity-50 active:scale-[0.98]"
+                  className="w-full bg-gradient-to-r from-[#ff6700] to-orange-500 hover:from-orange-600 hover:to-orange-500 text-white font-black py-3.5 px-4 rounded-md shadow-[0_4px_14px_0_rgba(255,103,0,0.39)] hover:shadow-[0_6px_20px_rgba(255,103,0,0.23)] transition-all flex items-center justify-center gap-2 text-sm disabled:opacity-50 active:scale-[0.98]"
                 >
                   {loading ? (
                     <Loader2 className="w-5 h-5 animate-spin" />

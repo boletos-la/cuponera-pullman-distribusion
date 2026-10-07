@@ -459,11 +459,11 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
       {/* Paso 9: Encabezado y Formulario de Validación de Cupón */}
       <div className="bg-white rounded-lg p-6 shadow-sm border border-slate-200 space-y-4">
         <div>
-          <span className="bg-[#FFF7ED] text-[#00c7cc] border border-[#FFEDD5] text-xs font-extrabold px-3 py-1 rounded-md uppercase tracking-wider">
+          <span className="bg-[#FFF7ED] text-[#ff6700] border border-[#FFEDD5] text-xs font-extrabold px-3 py-1 rounded-md uppercase tracking-wider">
             Flujo E2E • Integración Kupos GDS
           </span>
           <h2 className="text-xl font-black text-slate-900 flex items-center gap-2 mt-1">
-            <Bus className="w-5 h-5 text-[#00c7cc]" />
+            <Bus className="w-5 h-5 text-[#ff6700]" />
             Canje de Cupón por Pasaje (1-Clic)
           </h2>
           <p className="text-xs text-slate-500 font-medium">
@@ -479,7 +479,7 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
               placeholder="ej. 1 (ID de cuponera para dev)"
               value={cuponCodigo}
               onChange={(e) => setCuponCodigo(e.target.value.toUpperCase())}
-              className="w-full text-sm font-mono font-bold bg-slate-50 border border-slate-300 rounded-md px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#00c7cc]"
+              className="w-full text-sm font-mono font-bold bg-slate-50 border border-slate-300 rounded-md px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#ff6700]"
             />
           </div>
 
@@ -493,7 +493,7 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
                 setRut(formatRut(e.target.value));
                 setRutError('');
               }}
-              className="w-full text-sm bg-slate-50 border border-slate-300 rounded-md px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#00c7cc]"
+              className="w-full text-sm bg-slate-50 border border-slate-300 rounded-md px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#ff6700]"
             />
           </div>
 
@@ -501,7 +501,7 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
             <button
               onClick={() => handleValidateCupon(cuponCodigo, rut)}
               disabled={validatingCupon || !cuponCodigo || !rut}
-              className="w-full bg-[#00c7cc] hover:bg-[#00b3b7] text-white font-bold py-2.5 px-4 rounded-md shadow-sm transition-all text-sm flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              className="w-full bg-[#ff6700] hover:bg-[#e65c00] text-white font-bold py-2.5 px-4 rounded-md shadow-sm transition-all text-sm flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
             >
               {validatingCupon ? (
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-md animate-spin" />
@@ -544,10 +544,10 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
               )}
             </div>
             <div className="text-xs text-slate-700 bg-white/80 p-2.5 rounded-md border border-emerald-100 space-y-1">
-              <span className="font-bold text-[#00c7cc]">Filtro Estricto de Tramo Autorizado por Contrato:</span>
+              <span className="font-bold text-[#ff6700]">Filtro Estricto de Tramo Autorizado por Contrato:</span>
               <div className="flex flex-wrap gap-1.5 pt-0.5">
                 {cuponInfo.tramosPermitidos.map((t) => (
-                  <span key={t} className="bg-[#00c7cc] text-white text-[10px] font-bold px-2 py-0.5 rounded">
+                  <span key={t} className="bg-[#ff6700] text-white text-[10px] font-bold px-2 py-0.5 rounded">
                     {t}
                   </span>
                 ))}
@@ -566,7 +566,7 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
                 <select
                   value={selectedTramo}
                   onChange={(e) => setSelectedTramo(e.target.value)}
-                  className="text-xs bg-slate-50 border border-slate-300 rounded-md px-3 py-2 font-bold text-[#00c7cc] focus:outline-none"
+                  className="text-xs bg-slate-50 border border-slate-300 rounded-md px-3 py-2 font-bold text-[#ff6700] focus:outline-none"
                 >
                   {cuponInfo.tramosPermitidos.map((t) => (
                     <option key={t} value={t}>{t}</option>
@@ -577,7 +577,7 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
             <button
               onClick={handleSearchServicios}
               disabled={loadingServicios}
-              className="bg-[#00c7cc] hover:bg-[#00b3b7] disabled:opacity-50 text-white font-bold text-xs px-4 py-2.5 rounded-md transition-all cursor-pointer shadow-sm"
+              className="bg-[#ff6700] hover:bg-[#e65c00] disabled:opacity-50 text-white font-bold text-xs px-4 py-2.5 rounded-md transition-all cursor-pointer shadow-sm"
             >
               {loadingServicios ? "Buscando en Kupos..." : "Actualizar Horarios"}
             </button>
@@ -653,7 +653,7 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
                                 onClick={() => setSelectedAsiento(a.number)}
                                 className={`p-2 rounded-md font-mono text-xs font-bold transition-all cursor-pointer flex flex-col items-center justify-center border ${
                                   isSelected
-                                    ? 'bg-[#FF6B00] text-white border-cyan-600 shadow-md scale-105 ring-2 ring-cyan-400'
+                                    ? 'bg-[#FF6B00] text-white border-orange-600 shadow-md scale-105 ring-2 ring-orange-400'
                                     : 'bg-white text-slate-800 border-emerald-400 hover:bg-emerald-50 hover:border-emerald-600'
                                 }`}
                               >
@@ -676,7 +676,7 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
                       <button
                         onClick={handleReserveAndEmit}
                         disabled={isProcessing}
-                        className="w-full sm:w-auto bg-[#00c7cc] hover:bg-[#00b3b7] text-white font-extrabold text-xs px-6 py-3 rounded-md shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+                        className="w-full sm:w-auto bg-[#ff6700] hover:bg-[#e65c00] text-white font-extrabold text-xs px-6 py-3 rounded-md shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
                       >
                         {isProcessing ? (
                           <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-md animate-spin" />

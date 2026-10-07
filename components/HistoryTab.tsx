@@ -18,13 +18,13 @@ export default function HistoryTab({ compras, canjes, isGuest, onLoginRequest }:
       <div className="flex gap-4 border-b border-slate-200 sticky top-[154px] z-30 bg-white/95 backdrop-blur-sm py-4 -mx-6 px-6 sm:-mx-8 sm:px-8 shadow-[0_4px_6px_-1px_rgba(255,255,255,0.9)] mt-[-24px]">
         <button
           onClick={() => setView('compras')}
-          className={`pb-2 px-2 text-sm font-bold border-b-2 transition-all ${view === 'compras' ? 'border-[#00c7cc] text-[#00c7cc]' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
+          className={`pb-2 px-2 text-sm font-bold border-b-2 transition-all ${view === 'compras' ? 'border-[#ff6700] text-[#ff6700]' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
         >
           Historial de Compras
         </button>
         <button
           onClick={() => setView('canjes')}
-          className={`pb-2 px-2 text-sm font-bold border-b-2 transition-all ${view === 'canjes' ? 'border-[#00c7cc] text-[#00c7cc]' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
+          className={`pb-2 px-2 text-sm font-bold border-b-2 transition-all ${view === 'canjes' ? 'border-[#ff6700] text-[#ff6700]' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
         >
           Historial de Canjes
         </button>
@@ -43,7 +43,7 @@ export default function HistoryTab({ compras, canjes, isGuest, onLoginRequest }:
             {onLoginRequest && (
               <button 
                 onClick={onLoginRequest}
-                className="mt-4 bg-[#00c7cc] text-white px-8 py-3 rounded-md font-bold text-sm hover:bg-[#00b3b7] transition-colors shadow-md hover:shadow-lg"
+                className="mt-4 bg-[#ff6700] text-white px-8 py-3 rounded-md font-bold text-sm hover:bg-[#e65c00] transition-colors shadow-md hover:shadow-lg"
               >
                 Iniciar Sesión
               </button>
@@ -60,7 +60,7 @@ export default function HistoryTab({ compras, canjes, isGuest, onLoginRequest }:
                       placeholder="Buscar en compras (ej. orden, cuponera, nombre)..."
                       value={searchCompras}
                       onChange={(e) => setSearchCompras(e.target.value)}
-                      className="w-full text-sm font-medium bg-white border border-slate-200 rounded-md pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#00c7cc] text-[#0F172A]"
+                      className="w-full text-sm font-medium bg-white border border-slate-200 rounded-md pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#ff6700] text-[#0F172A]"
                     />
                     <Search className="w-4 h-4 text-slate-400 absolute left-4 top-2.5" />
                   </div>
@@ -129,7 +129,7 @@ export default function HistoryTab({ compras, canjes, isGuest, onLoginRequest }:
                       placeholder="Buscar en canjes (ej. origen, destino, cupón, PNR)..."
                       value={searchCanjes}
                       onChange={(e) => setSearchCanjes(e.target.value)}
-                      className="w-full text-sm font-medium bg-white border border-slate-200 rounded-md pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#00c7cc] text-[#0F172A]"
+                      className="w-full text-sm font-medium bg-white border border-slate-200 rounded-md pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#ff6700] text-[#0F172A]"
                     />
                     <Search className="w-4 h-4 text-slate-400 absolute left-4 top-2.5" />
                   </div>
@@ -167,7 +167,7 @@ export default function HistoryTab({ compras, canjes, isGuest, onLoginRequest }:
                       </div>
                       <div className="text-left md:text-right flex flex-col items-start md:items-end gap-1">
                         {canje.Cupon?.codigo && (
-                          <span className="text-[10px] font-mono font-extrabold text-[#00c7cc] bg-[#FFEDD5] px-2 py-1 rounded border border-[#FED7AA]" title="Código de Cupón">
+                          <span className="text-[10px] font-mono font-extrabold text-[#ff6700] bg-[#FFEDD5] px-2 py-1 rounded border border-[#FED7AA]" title="Código de Cupón">
                             Cupón: {canje.Cupon.codigo}
                           </span>
                         )}

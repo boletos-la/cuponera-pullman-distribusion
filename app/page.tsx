@@ -142,7 +142,7 @@ function HomeContent() {
           {activeTab === 'perfil' && (
             <div className="max-w-3xl mx-auto">
               <div className="bg-white rounded-[2rem] p-6 sm:p-10 shadow-xl border border-slate-100 relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-full h-2 bg-[#00c7cc]" />
+                <div className="absolute top-0 left-0 w-full h-2 bg-[#ff6700]" />
                 <h2 className="text-2xl font-black text-slate-900 mb-2">Mis Datos de Perfil</h2>
                 <p className="text-sm text-slate-500 font-medium mb-8">
                   Gestiona la seguridad y el correo asociado a tu cuenta.
@@ -163,121 +163,144 @@ function HomeContent() {
       )}
 
       {/* Pie de Página Footer */}
-      <footer className="border-t border-border bg-[#023caf] px-4 py-12 lg:px-8 mt-12">
-        <div className="mx-auto max-w-6xl">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
-            {/* Logo + tagline + social */}
-            <div className="flex flex-col gap-5 md:col-span-1">
-              <a href="/">
+      <footer id="contacto" className="bg-[#1a1a1a] text-white pt-16 relative overflow-hidden border-t border-neutral-800 mt-12">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl relative z-10 pb-16">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+            <div className="lg:col-span-4 space-y-6">
+              <a href="/" className="inline-block">
                 <img
-                  src="/logo-pullman-beneficios-blanco.png"
-                  alt="Pullman Cuponeras"
-                  width={200}
-                  height={60}
-                  className="h-10 w-auto object-contain hover:scale-105 transition-transform"
+                  src="/logo-boletos.png"
+                  alt="Boletos.la Logo"
+                  width={150}
+                  height={80}
+                  className="transition-transform duration-300 hover:scale-105 brightness-0 invert"
+                  loading="eager"
                 />
               </a>
-              <p className="text-white/50 text-sm leading-relaxed">
-                Accede a tus beneficios de cuponera y viaja con descuentos
-                exclusivos en todo Chile.
-              </p>
-              {/* Social inline bajo el logo */}
-              <div className="flex items-center gap-4">
-                <a href="https://instagram.com/pullmanbus" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 text-white/70 hover:bg-white/20 hover:text-white hover:scale-105 transition-all duration-200">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-                </a>
-                <a href="https://facebook.com/pullmanbus" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 text-white/70 hover:bg-white/20 hover:text-white hover:scale-105 transition-all duration-200">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
-                </a>
-                <a href="https://www.linkedin.com/company/pullman-bus/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 text-white/70 hover:bg-white/20 hover:text-white hover:scale-105 transition-all duration-200">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
-                </a>
-              </div>
             </div>
 
-            {/* Spacer vacío en md para empujar las 3 columnas a la derecha */}
-            <div className="hidden md:block" />
-
-            {/* Contacto */}
-            <div>
-              <h3 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">
-                Contacto
-              </h3>
-              <ul className="space-y-3">
-                <li className="flex items-start gap-2 text-white/70 text-sm">
-                  <Mail className="w-4 h-4 mt-0.5 shrink-0 text-white/40" />
-                  <span>
-                    <span className="block text-white/40 text-xs mb-0.5">
-                      Otras consultas
-                    </span>
-                    <a
-                      href="mailto:clientes@pullmanbus.cl"
-                      className="hover:text-white transition-colors"
-                    >
-                      clientes@pullmanbus.cl
+            {/* Quick Links Column */}
+            <div className="lg:col-span-4 space-y-4">
+              <h4 className="text-sm font-bold uppercase tracking-wider text-neutral-300">
+                DESCUBRE
+              </h4>
+              <ul className="space-y-3 text-sm text-neutral-400">
+                {["Hoteles", "Terminales", "Guías de viaje", "Blog"].map((link, idx) => (
+                  <li key={idx}>
+                    <a href="#" className="hover:text-white transition-colors no-underline">
+                      {link}
                     </a>
-                  </span>
-                </li>
-                <li className="flex items-start gap-2 text-white/70 text-sm">
-                  <MapPin className="w-4 h-4 mt-0.5 shrink-0 text-white/40" />
-                  <span>
-                    <span className="block text-white/40 text-xs mb-0.5">
-                      Casa matriz
-                    </span>
-                    San Borja 235, Estación Central, Santiago
-                  </span>
-                </li>
+                  </li>
+                ))}
               </ul>
             </div>
 
-            {/* Pullman Bus */}
-            <div>
-              <h3 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">
-                Pullman Bus
-              </h3>
-              <ul className="space-y-2">
-                {[
-                  { label: "Conoce tus derechos", href: "/conoce-tus-derechos" },
-                  { label: "Políticas de privacidad", href: "/politicas-de-privacidad" },
-                  { label: "Términos y condiciones", href: "/terminos-y-condiciones" },
-                ].map((item) => (
-                  <li key={item.label}>
-                    <a
-                      href={item.href}
-                      className="text-white/70 text-sm hover:text-white transition-colors"
-                    >
-                      {item.label}
+            {/* Help Links Column */}
+            <div className="lg:col-span-4 space-y-4">
+              <h4 className="text-sm font-bold uppercase tracking-wider text-neutral-300">
+                BOLETOS.LA
+              </h4>
+              <ul className="space-y-3 text-sm text-neutral-400">
+                {["Sobre nosotros", "Prensa", "Trabaja con nosotros", "Ayuda", "Contacto"].map((link, idx) => (
+                  <li key={idx}>
+                    <a href="#" className="hover:text-white transition-colors no-underline">
+                      {link}
                     </a>
                   </li>
                 ))}
               </ul>
             </div>
           </div>
+        </div>
 
-          {/* Bottom */}
-          <div className="border-t border-white/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-2">
-            <p className="text-sm text-white/40">
-              © {new Date().getFullYear()} Portal de cuponeras de Pullman Bus.
-              Todos los derechos reservados.
-            </p>
-            <p className="text-white/40 text-sm">
-              Desarrollado por{" "}
-              <a
-                href="https://wit.la"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-white/40 hover:text-secondary transition-colors hover:underline"
-              >
-                WIT.la
-              </a>
-            </p>
+        {/* Trust & Payment Badges Bar */}
+        <div className="py-6 border-t border-white/10 relative z-10 text-white">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+              {/* Left: Payment Logos */}
+              <div className="flex flex-wrap items-center justify-center md:justify-start gap-3">
+                {["Google Pay", "Apple Pay", "Webpay", "Transbank"].map((gateway, idx) => (
+                  <div key={idx} className="h-8 px-3 border border-white/20 rounded flex items-center bg-white/5 text-xs font-semibold whitespace-nowrap text-white">
+                    {gateway}
+                  </div>
+                ))}
+              </div>
+
+              {/* Right: Security & Trust Badges */}
+              <div className="flex flex-wrap items-center justify-center md:justify-end gap-8">
+                {/* Google Safe Browsing */}
+                <div className="flex items-center gap-2 select-none">
+                  <svg className="w-[37.8px] h-[37.8px]" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18 2C24.5 4.5 30 7.5 30 11.5C30 20.5 24.5 28.5 18 33C11.5 28.5 6 20.5 6 11.5C6 7.5 11.5 4.5 18 2Z" fill="#34A853" />
+                    <circle cx="18" cy="17" r="6.5" fill="white" />
+                    <circle cx="18" cy="15.5" r="3" fill="#34A853" />
+                    <path d="M15.5 15.5H20.5L19.5 21.5H16.5L15.5 15.5Z" fill="#34A853" />
+                    <circle cx="18" cy="15.5" r="1.5" fill="white" />
+                    <path d="M18 17V20.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
+                  </svg>
+                  <div className="flex flex-col leading-none">
+                    <div className="flex items-center text-[19.85px] font-bold tracking-tight">
+                      <span className="text-[#4285F4]">G</span>
+                      <span className="text-[#EA4335]">o</span>
+                      <span className="text-[#FBBC05]">o</span>
+                      <span className="text-[#4285F4]">g</span>
+                      <span className="text-[#34A853]">l</span>
+                      <span className="text-[#EA4335]">e</span>
+                    </div>
+                    <span className="text-[12.5px] font-medium text-white/60 whitespace-nowrap">
+                      Safe browsing
+                    </span>
+                  </div>
+                </div>
+
+                {/* SSL 100% Secure Purchase */}
+                <div className="flex items-center gap-2 select-none">
+                  <svg className="w-[37.8px] h-[37.8px]" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18 2C24.5 4.5 30 7.5 30 11.5C30 20.5 24.5 28.5 18 33C11.5 28.5 6 20.5 6 11.5C6 7.5 11.5 4.5 18 2Z" fill="#10B981" />
+                    <g transform="translate(0, 1)">
+                      <text x="18" y="14" fill="white" fontSize="6" fontWeight="bold" textAnchor="middle" fontFamily="sans-serif">SSL</text>
+                      <rect x="13.5" y="17" width="9" height="6.5" rx="1.2" fill="white" />
+                      <path d="M15.5 17V15.5C15.5 14.1 16.6 13 18 13C19.4 13 20.5 14.1 20.5 15.5V17" stroke="white" strokeWidth="1.3" strokeLinecap="round" />
+                    </g>
+                  </svg>
+                  <div className="flex flex-col leading-none">
+                    <span className="text-[19.85px] font-bold text-white tracking-tight">100%</span>
+                    <span className="text-[12.5px] font-medium text-white/60 whitespace-nowrap">Secure purchase</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        {/* Scroll to top */}
+
+        {/* Bottom Bar */}
+        <div className="border-t border-white/10">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl py-6">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-4 text-white/50 text-sm">
+                <img
+                  src="/logo-boletos.png"
+                  alt="Boletos.la"
+                  width={90}
+                  height={24}
+                  className="object-contain brightness-0 invert opacity-50"
+                />
+                <span className="hidden md:inline">|</span>
+                <span>Todos los derechos reservados.</span>
+              </div>
+              <div className="flex items-center gap-4 text-sm text-neutral-400">
+                <a href="#" className="hover:text-white transition-colors">Terminos y condiciones</a>
+                <span>|</span>
+                <a href="#" className="hover:text-white transition-colors">Política de privacidad</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {showScroll && (
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="fixed bottom-6 right-6 w-12 h-12 bg-cyan-500 text-white rounded-md flex items-center justify-center shadow-lg hover:scale-110 hover:shadow-xl transition-all duration-300 z-50"
+            className="fixed bottom-6 right-6 w-12 h-12 bg-[#ff6700] text-white rounded-md flex items-center justify-center shadow-lg hover:scale-110 hover:shadow-xl transition-all duration-300 z-50"
             aria-label="Scroll to top"
           >
             <ArrowUp className="w-5 h-5" />

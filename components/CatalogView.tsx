@@ -39,7 +39,7 @@ const CuponeraCardGroup = ({ group, onOpenCheckout }: { group: any, onOpenChecko
     <div className="relative bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow border border-slate-100 flex flex-col mt-4">
       {/* Badge "Mejor precio" u otro */}
       {selectedItem.badge && (
-        <div className="absolute -top-3 right-4 bg-[#FFE8E0] text-[#00c7cc] font-semibold text-xs px-2.5 py-1 rounded-md shadow-sm border border-white z-10">
+        <div className="absolute -top-3 right-4 bg-[#FFE8E0] text-[#ff6700] font-semibold text-xs px-2.5 py-1 rounded-md shadow-sm border border-white z-10">
           {selectedItem.badge}
         </div>
       )}
@@ -113,13 +113,13 @@ const CuponeraCardGroup = ({ group, onOpenCheckout }: { group: any, onOpenChecko
                 onClick={() => setSelectedIndex(idx)}
                 className={`flex-1 text-xs font-semibold py-1.5 rounded-md transition-all flex items-center justify-center gap-1.5
                   ${selectedIndex === idx
-                    ? 'bg-[#FFE8E0] text-[#00c7cc] shadow-sm ring-1 ring-[#00c7cc]/20'
+                    ? 'bg-[#FFE8E0] text-[#ff6700] shadow-sm ring-1 ring-[#ff6700]/20'
                     : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'}`}
               >
                 {/* Radio circle */}
                 <div className={`w-3 h-3 rounded-md border flex items-center justify-center
-                  ${selectedIndex === idx ? 'border-[#00c7cc]' : 'border-slate-300'}`}>
-                  {selectedIndex === idx && <div className="w-1.5 h-1.5 rounded-md bg-[#00c7cc]" />}
+                  ${selectedIndex === idx ? 'border-[#ff6700]' : 'border-slate-300'}`}>
+                  {selectedIndex === idx && <div className="w-1.5 h-1.5 rounded-md bg-[#ff6700]" />}
                 </div>
                 {opt.cantidadCupones} cupones
               </button>
@@ -141,14 +141,14 @@ const CuponeraCardGroup = ({ group, onOpenCheckout }: { group: any, onOpenChecko
       {/* Footer Button con Llamado a la Acción (CTA) */}
       <button
         onClick={() => onOpenCheckout(selectedItem)}
-        className="bg-[#00c7cc] text-white w-full rounded-b-2xl px-5 py-3 flex justify-between items-center font-semibold text-xs hover:bg-[#00b3b7] transition-all group cursor-pointer shadow-inner"
+        className="bg-[#ff6700] text-white w-full rounded-b-2xl px-5 py-3 flex justify-between items-center font-semibold text-xs hover:bg-[#e65c00] transition-all group cursor-pointer shadow-inner"
       >
         <div className="flex flex-col text-left">
           <span className="text-[10px] font-semibold text-white/80 capitalize tracking-wider">Total</span>
           <span className="text-base font-semibold leading-tight">CLP ${(selectedItem.precioTotal || 0).toLocaleString('es-CL')}</span>
         </div>
 
-        <div className="flex items-center gap-1.5 bg-white text-[#00c7cc] group-hover:bg-cyan-50 px-4 py-2 rounded-md text-xs font-semibold shadow-sm group-hover:scale-105 transition-all">
+        <div className="flex items-center gap-1.5 bg-white text-[#ff6700] group-hover:bg-orange-50 px-4 py-2 rounded-md text-xs font-semibold shadow-sm group-hover:scale-105 transition-all">
           <ShoppingCart className="w-3.5 h-3.5" />
           <span>Comprar</span>
           <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
@@ -596,7 +596,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
               key={cat}
               onClick={() => setSelectedCategory(cat)}
               className={`px-3.5 py-1.5 rounded-md text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${selectedCategory === cat
-                ? 'bg-[#00c7cc] text-white shadow-sm'
+                ? 'bg-[#ff6700] text-white shadow-sm'
                 : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                 }`}
             >
@@ -614,7 +614,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
         </div>
       ) : filteredCuponeras.length === 0 ? (
         <div className="bg-white rounded-lg p-12 text-center space-y-3 border border-slate-200">
-          <AlertCircle className="w-10 h-10 text-cyan-500 mx-auto" />
+          <AlertCircle className="w-10 h-10 text-orange-500 mx-auto" />
           <h3 className="text-lg font-bold text-slate-800">No se encontraron cuponeras</h3>
           <p className="text-xs text-slate-500">Prueba ajustando el filtro o la palabra clave de búsqueda.</p>
         </div>
@@ -636,9 +636,9 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                 <tr key={item.id} className="hover:bg-slate-50/80 transition-colors group">
                   <td className="px-4 py-4 min-w-[200px]">
                     <div className="flex flex-col gap-1">
-                      <span className="font-bold text-slate-900 group-hover:text-[#00c7cc] transition-colors capitalize">{item.nombre.toLowerCase()}</span>
+                      <span className="font-bold text-slate-900 group-hover:text-[#ff6700] transition-colors capitalize">{item.nombre.toLowerCase()}</span>
                       {item.badge && (
-                        <span className="w-max bg-[#00c7cc] text-white text-[9px] font-black px-2 py-0.5 rounded-md uppercase tracking-wider">
+                        <span className="w-max bg-[#ff6700] text-white text-[9px] font-black px-2 py-0.5 rounded-md uppercase tracking-wider">
                           {item.badge}
                         </span>
                       )}
@@ -654,20 +654,20 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                     </div>
                   </td>
                   <td className="px-4 py-4 text-center">
-                    <span className="bg-[#FFF7ED] text-[#00c7cc] font-bold text-xs px-2 py-1 rounded-lg border border-[#FFEDD5]">
+                    <span className="bg-[#FFF7ED] text-[#ff6700] font-bold text-xs px-2 py-1 rounded-lg border border-[#FFEDD5]">
                       {item.cantidadCupones}
                     </span>
                   </td>
                   <td className="px-4 py-4 text-right font-medium text-sm text-slate-700">
                     ${(item.valorUnitario || 0).toLocaleString('es-CL')}
                   </td>
-                  <td className="px-4 py-4 text-right font-black text-[#00c7cc] text-base">
+                  <td className="px-4 py-4 text-right font-black text-[#ff6700] text-base">
                     ${(item.precioTotal || 0).toLocaleString('es-CL')}
                   </td>
                   <td className="px-4 py-4 text-center">
                     <button
                       onClick={() => handleOpenCheckout(item)}
-                      className="bg-[#00c7cc] hover:bg-[#00b3b7] text-white font-bold py-2 px-3 rounded-md shadow-sm transition-all text-xs inline-flex items-center gap-1.5 cursor-pointer"
+                      className="bg-[#ff6700] hover:bg-[#e65c00] text-white font-bold py-2 px-3 rounded-md shadow-sm transition-all text-xs inline-flex items-center gap-1.5 cursor-pointer"
                     >
                       <ShoppingCart className="w-3.5 h-3.5" />
                       Comprar
@@ -787,7 +787,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                       checked={quiereRegistrarse}
                       onChange={(e) => setQuiereRegistrarse(e.target.checked)}
                       disabled={showOtpCheckout}
-                      className="mt-0.5 rounded text-[#00c7cc] focus:ring-[#00c7cc]"
+                      className="mt-0.5 rounded text-[#ff6700] focus:ring-[#ff6700]"
                     />
                     <label htmlFor="quiereRegistrarse" className="text-xs text-slate-700 font-bold leading-tight">
                       ¿No tienes una cuenta? Regístrate para gestionar tus cuponeras fácilmente
@@ -839,7 +839,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                   )}
                   {quiereRegistrarse && showOtpCheckout && (
                     <div className="pt-2 pl-6 space-y-3">
-                      <div className="p-3 bg-white border border-[#00c7cc] rounded-md shadow-sm">
+                      <div className="p-3 bg-white border border-[#ff6700] rounded-md shadow-sm">
                         <p className="text-xs text-slate-600 mb-2">
                           Te hemos enviado un código de 6 dígitos a <b>{email}</b>. Ingrésalo para verificar tu cuenta y continuar con el pago.
                         </p>
@@ -849,7 +849,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                           placeholder="000000"
                           value={otpCodeCheckout}
                           onChange={(e) => setOtpCodeCheckout(e.target.value.replace(/\D/g, ''))}
-                          className="w-full text-center tracking-[0.5em] font-mono text-lg bg-slate-50 border border-[#00c7cc] rounded-md px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#00c7cc]"
+                          className="w-full text-center tracking-[0.5em] font-mono text-lg bg-slate-50 border border-[#ff6700] rounded-md px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#ff6700]"
                         />
                         <button
                           type="button"
@@ -872,11 +872,11 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                     id="condiciones"
                     checked={aceptaTerminos}
                     onChange={(e) => setAceptaTerminos(e.target.checked)}
-                    className="mt-0.5 rounded text-[#00c7cc] focus:ring-[#00c7cc]"
+                    className="mt-0.5 rounded text-[#ff6700] focus:ring-[#ff6700]"
                   />
                   <label htmlFor="condiciones" className="text-xs text-slate-700 font-medium leading-tight">
                     Acepto las condiciones de compra: Los cupones emitidos tienen una{' '}
-                    <span className="font-bold text-[#00c7cc]">vigencia exacta de 90 días corridos</span> y sólo son válidos para los tramos contratados ({selectedCuponera.tramos.join(', ')}).
+                    <span className="font-bold text-[#ff6700]">vigencia exacta de 90 días corridos</span> y sólo son válidos para los tramos contratados ({selectedCuponera.tramos.join(', ')}).
                   </label>
                 </div>
               </div>
@@ -891,7 +891,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
               <button
                 type="submit"
                 disabled={submitting || !!rutError}
-                className="w-full bg-gradient-to-r from-[#FF6B00] to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 text-white font-extrabold py-3.5 px-4 rounded-md shadow-md transition-all flex items-center justify-center gap-2 text-base cursor-pointer disabled:opacity-50"
+                className="w-full bg-gradient-to-r from-[#FF6B00] to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-extrabold py-3.5 px-4 rounded-md shadow-md transition-all flex items-center justify-center gap-2 text-base cursor-pointer disabled:opacity-50"
               >
                 {submitting ? (
                   <>
@@ -988,7 +988,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                   setCompraExitosa(null);
                   onGoToDashboardWithRut(rutLocal);
                 }}
-                className="w-full bg-[#00c7cc] hover:bg-[#00b3b7] text-white font-bold py-3 px-3 rounded-md transition-all text-xs flex items-center justify-center gap-2 cursor-pointer shadow-md"
+                className="w-full bg-[#ff6700] hover:bg-[#e65c00] text-white font-bold py-3 px-3 rounded-md transition-all text-xs flex items-center justify-center gap-2 cursor-pointer shadow-md"
               >
                 <Ticket className="w-4 h-4 text-white" />
                 <span>Ver en Mis Cuponeras</span>
@@ -1002,7 +1002,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                     setCompraExitosa(null);
                     onGoToCanjeWithCupon(primerCupon, rutLocal);
                   }}
-                  className="w-full bg-[#FF6B00] hover:bg-cyan-600 text-white font-bold py-3 px-3 rounded-md transition-all text-xs flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full bg-[#FF6B00] hover:bg-orange-600 text-white font-bold py-3 px-3 rounded-md transition-all text-xs flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <span>Canjear Primer Pasaje</span>
                   <ArrowRight className="w-4 h-4" />
@@ -1032,8 +1032,8 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
 
             {/* Cabecera del Modal */}
             <div className="text-center space-y-2">
-              <div className="inline-flex items-center gap-1.5 bg-[#FFF7ED] text-[#00c7cc] border border-[#FFEDD5] px-3 py-1 rounded-md text-xs font-black uppercase tracking-wider shadow-xs mb-1">
-                <Bus className="w-3.5 h-3.5 text-[#00c7cc]" />
+              <div className="inline-flex items-center gap-1.5 bg-[#FFF7ED] text-[#ff6700] border border-[#FFEDD5] px-3 py-1 rounded-md text-xs font-black uppercase tracking-wider shadow-xs mb-1">
+                <Bus className="w-3.5 h-3.5 text-[#ff6700]" />
                 <span>Pullman Bus Cuponeras</span>
               </div>
 
@@ -1117,7 +1117,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                     onGoToDashboardWithRut(targetRut);
                   }
                 }}
-                className="w-full bg-[#00c7cc] hover:bg-[#00b3b7] text-white font-bold py-3.5 px-4 rounded-md transition-all text-xs flex items-center justify-center gap-2 cursor-pointer shadow-md hover:shadow-lg"
+                className="w-full bg-[#ff6700] hover:bg-[#e65c00] text-white font-bold py-3.5 px-4 rounded-md transition-all text-xs flex items-center justify-center gap-2 cursor-pointer shadow-md hover:shadow-lg"
               >
                 <Ticket className="w-4 h-4 text-white" />
                 <span>Ver en Mis Cuponeras</span>
@@ -1215,7 +1215,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                     }
                   }
                 }}
-                className="w-full bg-[#00c7cc] hover:bg-[#00b3b7] text-white font-bold py-3.5 px-4 rounded-md transition-all text-xs flex items-center justify-center gap-2 cursor-pointer shadow-md hover:shadow-lg"
+                className="w-full bg-[#ff6700] hover:bg-[#e65c00] text-white font-bold py-3.5 px-4 rounded-md transition-all text-xs flex items-center justify-center gap-2 cursor-pointer shadow-md hover:shadow-lg"
               >
                 <RotateCcw className="w-4 h-4 text-white" />
                 <span>Reintentar Compra</span>

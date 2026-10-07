@@ -142,7 +142,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
     <div className={`space-y-6 ${(step === 'login' || isInitialLoading) ? 'max-w-3xl mt-6 md:mt-8' : 'w-full'} mx-auto`}>
       {isInitialLoading ? (
         <div className="bg-white rounded-[2rem] p-10 shadow-xl border border-slate-100 flex flex-col items-center justify-center min-h-[400px]">
-          <Loader2 className="w-12 h-12 text-[#00c7cc] animate-spin mb-4" />
+          <Loader2 className="w-12 h-12 text-[#ff6700] animate-spin mb-4" />
           <h3 className="text-xl font-bold text-slate-800">Cargando tus cuponeras...</h3>
           <p className="text-sm text-slate-500 mt-2">Estamos recuperando tu información</p>
         </div>
@@ -193,7 +193,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
                     }
                   }}
                   className={`w-full text-sm font-semibold bg-white border rounded-md pl-10 pr-4 py-3.5 focus:outline-none focus:ring-2 text-[#0F172A] ${
-                    rutError ? 'border-red-400 focus:ring-red-400' : 'border-slate-200 focus:ring-[#00c7cc]'
+                    rutError ? 'border-red-400 focus:ring-red-400' : 'border-slate-200 focus:ring-[#ff6700]'
                   }`}
                 />
                 <Search className="w-5 h-5 text-slate-400 absolute left-3.5 top-4" />
@@ -205,7 +205,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
             <button
               type="submit"
               disabled={loading || !rutInput}
-              className="w-full bg-[#00c7cc] hover:bg-[#00b3b7] text-white font-extrabold py-4 px-6 rounded-md shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 text-sm cursor-pointer disabled:opacity-50 disabled:hover:translate-y-0"
+              className="w-full bg-[#ff6700] hover:bg-[#e65c00] text-white font-extrabold py-4 px-6 rounded-md shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 text-sm cursor-pointer disabled:opacity-50 disabled:hover:translate-y-0"
             >
               {loading ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
@@ -280,7 +280,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
                   <button
                     type="button"
                     onClick={handleResetSearch}
-                    className="text-xs font-bold text-[#00c7cc] hover:text-white bg-cyan-50 hover:bg-[#00c7cc] px-4 py-2 rounded-md border border-cyan-200 hover:border-[#00c7cc] transition-all cursor-pointer flex items-center gap-1.5 shadow-xs"
+                    className="text-xs font-bold text-[#ff6700] hover:text-white bg-orange-50 hover:bg-[#ff6700] px-4 py-2 rounded-md border border-orange-200 hover:border-[#ff6700] transition-all cursor-pointer flex items-center gap-1.5 shadow-xs"
                     title="Consultar otro RUT"
                   >
                     <Search className="w-3.5 h-3.5" />
@@ -299,7 +299,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
                       placeholder="Buscar por nombre o tramo..."
                       value={searchCuponeras}
                       onChange={(e) => setSearchCuponeras(e.target.value)}
-                      className="w-full text-sm font-medium bg-white border border-slate-200 rounded-md pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#00c7cc] text-[#0F172A]"
+                      className="w-full text-sm font-medium bg-white border border-slate-200 rounded-md pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#ff6700] text-[#0F172A]"
                     />
                     <Search className="w-4 h-4 text-slate-400 absolute left-4 top-3" />
                   </div>
@@ -423,7 +423,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
                           <button
                             disabled={!canCanjear}
                             onClick={() => onCanjearCupon(c.codigo, rutFormateado)}
-                            className={`w-full rounded-b-3xl px-6 py-4 flex justify-between items-center font-black text-sm transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${canCanjear ? 'bg-[#00c7cc] hover:bg-[#00b3b7] text-white' : 'bg-slate-200 text-slate-500'}`}
+                            className={`w-full rounded-b-3xl px-6 py-4 flex justify-between items-center font-black text-sm transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${canCanjear ? 'bg-[#ff6700] hover:bg-[#e65c00] text-white' : 'bg-slate-200 text-slate-500'}`}
                           >
                             <span className="mx-auto flex items-center gap-2">
                               {canCanjear ? (

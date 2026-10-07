@@ -139,7 +139,7 @@ export function StepConfirmation({ bookingData, onFinish }: StepConfirmationProp
           <Printer className="mr-2 h-4 w-4" />
           Imprimir Pasaje
         </Button>
-        <Button onClick={onFinish} className="w-full sm:w-auto font-bold bg-[#00c7cc] hover:bg-[#00c7cc]/90 text-white">
+        <Button onClick={onFinish} className="w-full sm:w-auto font-bold bg-[#ff6700] hover:bg-[#ff6700]/90 text-white">
           <LayoutDashboard className="mr-2 h-4 w-4" />
           Volver a Mis Cuponeras
         </Button>

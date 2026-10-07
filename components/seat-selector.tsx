@@ -437,7 +437,7 @@ export function SeatSelector({
                       className={cn(
                         "h-8 w-8 sm:h-12 sm:w-12 rounded-lg border-2 flex items-center justify-center transition-all duration-200 font-bold text-xs sm:text-sm",
                         selectedSeats.includes(seat)
-                          ? "bg-accent border-cyan-600 text-accent-foreground scale-105 shadow-md cursor-pointer"
+                          ? "bg-accent border-orange-600 text-accent-foreground scale-105 shadow-md cursor-pointer"
                           : isSeatAvailable(seat)
                             ? "bg-blue-100 border-blue-300 text-blue-800 hover:bg-blue-200 hover:border-blue-400 hover:scale-105 cursor-pointer shadow-sm"
                             : "bg-red-100 border-red-300 text-red-800 cursor-not-allowed opacity-80",
@@ -484,7 +484,7 @@ export function SeatSelector({
           <span className="text-xs">Ocupado</span>
         </div>
         <div className="flex items-center gap-1 sm:gap-2">
-          <div className="w-3 h-3 sm:w-4 sm:h-4 bg-accent border-2 border-cyan-600 rounded"></div>
+          <div className="w-3 h-3 sm:w-4 sm:h-4 bg-accent border-2 border-orange-600 rounded"></div>
           <span className="text-xs">Seleccionado</span>
         </div>
       </div>

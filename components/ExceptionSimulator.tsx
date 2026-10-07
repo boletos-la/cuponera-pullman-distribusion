@@ -59,7 +59,7 @@ export default function ExceptionSimulator({ onClose, onNavigateTab }: Exception
       <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-100 space-y-6 max-h-[85vh] overflow-y-auto">
         <div className="flex justify-between items-start border-b border-slate-100 pb-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-md bg-cyan-100 text-[#FF6B00] flex items-center justify-center font-bold">
+            <div className="w-10 h-10 rounded-md bg-orange-100 text-[#FF6B00] flex items-center justify-center font-bold">
               <ShieldAlert className="w-6 h-6" />
             </div>
             <div>
@@ -80,7 +80,7 @@ export default function ExceptionSimulator({ onClose, onNavigateTab }: Exception
 
         <div className="space-y-3">
           {exceptions.map((ex) => (
-            <div key={ex.id} className="p-4 bg-slate-50 border border-slate-200 rounded-lg flex items-start justify-between gap-4 hover:border-cyan-300 transition-all">
+            <div key={ex.id} className="p-4 bg-slate-50 border border-slate-200 rounded-lg flex items-start justify-between gap-4 hover:border-orange-300 transition-all">
               <div className="space-y-1">
                 <span className="font-extrabold text-sm text-[#023caf] block">{ex.titulo}</span>
                 <p className="text-xs text-slate-600">{ex.descripcion}</p>

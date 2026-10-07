@@ -141,7 +141,7 @@ export default function AdminMaintainer() {
                 onClick={() => setCurrentPage(p)}
                 className={`w-8 h-8 flex items-center justify-center font-bold text-xs rounded-lg transition-colors cursor-pointer shadow-xs ${
                   currentPage === p 
-                    ? 'bg-[#00c7cc] text-white border-transparent' 
+                    ? 'bg-[#ff6700] text-white border-transparent' 
                     : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100'
                 }`}
               >
@@ -554,8 +554,8 @@ export default function AdminMaintainer() {
         <div className="w-full lg:w-72 shrink-0 flex flex-col gap-4">
           <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200 sticky top-24">
             <div className="flex items-center gap-3 mb-8">
-              <div className="w-10 h-10 rounded-md bg-cyan-100 flex items-center justify-center shrink-0">
-                <Settings className="w-5 h-5 text-[#00c7cc]" />
+              <div className="w-10 h-10 rounded-md bg-orange-100 flex items-center justify-center shrink-0">
+                <Settings className="w-5 h-5 text-[#ff6700]" />
               </div>
               <div>
                 <h2 className="text-lg font-black text-slate-900 leading-tight">Mantenedor</h2>
@@ -564,7 +564,7 @@ export default function AdminMaintainer() {
             </div>
 
             <nav className="flex flex-col gap-2">
-              <button onClick={() => setActiveTab('catalogo')} className={`w-full px-4 py-3 rounded-md text-sm font-bold transition-all flex items-center gap-3 ${activeTab === 'catalogo' ? 'bg-[#00c7cc] text-white shadow-md shadow-cyan-200' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}>
+              <button onClick={() => setActiveTab('catalogo')} className={`w-full px-4 py-3 rounded-md text-sm font-bold transition-all flex items-center gap-3 ${activeTab === 'catalogo' ? 'bg-[#ff6700] text-white shadow-md shadow-orange-200' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}>
                 <ShoppingBag className={`w-5 h-5 ${activeTab === 'catalogo' ? 'text-white' : 'text-slate-400'}`} /> Catálogo
               </button>
               <button onClick={() => setActiveTab('usuarios')} className={`w-full px-4 py-3 rounded-md text-sm font-bold transition-all flex items-center gap-3 ${activeTab === 'usuarios' ? 'bg-[#023caf] text-white shadow-md shadow-blue-200' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}>
@@ -607,7 +607,7 @@ export default function AdminMaintainer() {
                   <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} /> Actualizar
                 </button>
               </div>
-              <button onClick={handleOpenNew} className="bg-[#00c7cc] text-white font-bold px-4 py-2 rounded-md text-xs flex items-center gap-2 shadow-sm">
+              <button onClick={handleOpenNew} className="bg-[#ff6700] text-white font-bold px-4 py-2 rounded-md text-xs flex items-center gap-2 shadow-sm">
                 <Plus className="w-4 h-4" /> Crear Nueva Cuponera
               </button>
             </div>
@@ -654,8 +654,8 @@ export default function AdminMaintainer() {
                         </div>
                       </td>
                       <td className="p-3 font-semibold">${c.valorUnitario.toLocaleString('es-CL')}</td>
-                      <td className="p-3 font-bold text-[#00c7cc]">{c.cantidadCupones}</td>
-                      <td className="p-3 font-black text-[#00c7cc]">${c.precioTotal.toLocaleString('es-CL')}</td>
+                      <td className="p-3 font-bold text-[#ff6700]">{c.cantidadCupones}</td>
+                      <td className="p-3 font-black text-[#ff6700]">${c.precioTotal.toLocaleString('es-CL')}</td>
                       <td className="p-3"><span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase ${c.activa ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-600'}`}>{c.activa ? 'Activa' : 'Inactiva'}</span></td>
                       <td className="p-3 text-right w-28">
                         <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all duration-200 transform translate-x-1 group-hover:translate-x-0">
@@ -924,7 +924,7 @@ export default function AdminMaintainer() {
                                             </div>
                                             <div className="text-center">
                                               <div className="text-[10px] text-slate-500 uppercase font-bold">Saldo</div>
-                                              <div className="font-black text-[#00c7cc]">{c.usos_restantes}</div>
+                                              <div className="font-black text-[#ff6700]">{c.usos_restantes}</div>
                                             </div>
                                             <div className="text-center">
                                               <div className="text-[10px] text-slate-500 uppercase font-bold">Estado</div>
@@ -1012,7 +1012,7 @@ export default function AdminMaintainer() {
                   {paginate(filteredCanjes).map(c => (
                     <tr key={c.id} className="hover:bg-slate-50">
                       <td className="p-3 font-mono font-bold text-slate-700">{c.pnr_kupos}</td>
-                      <td className="p-3 font-mono font-bold text-[#00c7cc] bg-[#FFEDD5] px-2 py-1 rounded inline-block m-2 border border-[#FED7AA]">{c.Cupon?.codigo || '-'}</td>
+                      <td className="p-3 font-mono font-bold text-[#ff6700] bg-[#FFEDD5] px-2 py-1 rounded inline-block m-2 border border-[#FED7AA]">{c.Cupon?.codigo || '-'}</td>
                       <td className="p-3 font-semibold text-slate-800">{c.Cupon?.UsuarioCuponera?.Cuponera?.nombre || 'Cuponera N/A'}</td>
                       <td className="p-3 font-mono">{c.rut_usuario}</td>
                       <td className="p-3 font-semibold text-slate-700">{c.nombre_usuario ? fixEncoding(c.nombre_usuario) : '-'}</td>
@@ -1086,7 +1086,7 @@ export default function AdminMaintainer() {
                       else if (log.accion === 'COMPRA_CUPONERA') badgeColor = 'bg-[#023caf]/10 text-[#023caf]';
                       else if (log.accion === 'OTP_VALIDADO') badgeColor = 'bg-teal-100 text-teal-800';
                       else if (log.accion === 'OTP_GENERADO') badgeColor = 'bg-amber-100 text-amber-800';
-                      else if (log.accion === 'CREACION_CUPONERA' || log.accion === 'EDICION_CUPONERA') badgeColor = 'bg-cyan-100 text-cyan-800';
+                      else if (log.accion === 'CREACION_CUPONERA' || log.accion === 'EDICION_CUPONERA') badgeColor = 'bg-orange-100 text-orange-800';
                       else if (log.accion?.startsWith('ERROR')) badgeColor = 'bg-red-100 text-red-800';
 
                       const hasPayload = log.payload !== undefined && log.payload !== null && log.payload !== '';
@@ -1186,7 +1186,7 @@ export default function AdminMaintainer() {
         {activeTab === 'configuracion' && (
           <div className="space-y-4 animate-fade-in">
             <h2 className="text-xl font-black text-slate-900 mb-6 flex items-center gap-2">
-              <Settings className="w-5 h-5 text-[#00c7cc]" /> Configuración del Banner
+              <Settings className="w-5 h-5 text-[#ff6700]" /> Configuración del Banner
             </h2>
             
             
@@ -1239,7 +1239,7 @@ export default function AdminMaintainer() {
                 <button 
                   onClick={saveConfig} 
                   disabled={savingConfig}
-                  className="bg-[#00c7cc] hover:bg-[#00b3b7] text-white font-bold py-3 px-8 rounded-md shadow-md transition-all text-sm disabled:opacity-50"
+                  className="bg-[#ff6700] hover:bg-[#e65c00] text-white font-bold py-3 px-8 rounded-md shadow-md transition-all text-sm disabled:opacity-50"
                 >
                   {savingConfig ? 'Guardando...' : 'Guardar Configuración'}
                 </button>
@@ -1349,11 +1349,11 @@ export default function AdminMaintainer() {
                     <label className="sm:text-right font-bold text-slate-700">Estado</label>
                     <div className="flex items-center gap-6">
                       <label className="flex items-center gap-2 cursor-pointer">
-                        <input type="radio" name="estado" checked={estadoActivo === 'Activo'} onChange={() => { setEstadoActivo('Activo'); setActiva(true); }} className="accent-[#00c7cc] w-4 h-4 cursor-pointer" />
+                        <input type="radio" name="estado" checked={estadoActivo === 'Activo'} onChange={() => { setEstadoActivo('Activo'); setActiva(true); }} className="accent-[#ff6700] w-4 h-4 cursor-pointer" />
                         <span className={estadoActivo === 'Activo' ? 'font-bold text-slate-900' : 'text-slate-500'}>Activo</span>
                       </label>
                       <label className="flex items-center gap-2 cursor-pointer">
-                        <input type="radio" name="estado" checked={estadoActivo === 'Inactivo'} onChange={() => { setEstadoActivo('Inactivo'); setActiva(false); }} className="accent-[#00c7cc] w-4 h-4 cursor-pointer" />
+                        <input type="radio" name="estado" checked={estadoActivo === 'Inactivo'} onChange={() => { setEstadoActivo('Inactivo'); setActiva(false); }} className="accent-[#ff6700] w-4 h-4 cursor-pointer" />
                         <span className={estadoActivo === 'Inactivo' ? 'font-bold text-slate-900' : 'text-slate-500'}>Inactivo</span>
                       </label>
                     </div>
@@ -1378,9 +1378,9 @@ export default function AdminMaintainer() {
                   <div className="flex items-center gap-4">
                     <label className="w-40 sm:w-36 sm:text-right font-bold text-slate-700">Boleto adicional</label>
                     <div className="flex items-center gap-4 bg-slate-50 border border-slate-200 rounded-md px-4 py-2 w-fit">
-                      <button type="button" onClick={() => setBoletoAdicional(Math.max(0, boletoAdicional - 1))} className="text-white bg-[#00c7cc] hover:bg-[#00b3b7] w-6 h-6 rounded-md flex items-center justify-center font-bold text-lg leading-none p-0 pb-[2px] focus:outline-none transition-transform hover:scale-110 cursor-pointer shadow-sm">-</button>
+                      <button type="button" onClick={() => setBoletoAdicional(Math.max(0, boletoAdicional - 1))} className="text-white bg-[#ff6700] hover:bg-[#e65c00] w-6 h-6 rounded-md flex items-center justify-center font-bold text-lg leading-none p-0 pb-[2px] focus:outline-none transition-transform hover:scale-110 cursor-pointer shadow-sm">-</button>
                       <span className="font-black text-lg w-4 text-center">{boletoAdicional}</span>
-                      <button type="button" onClick={() => setBoletoAdicional(boletoAdicional + 1)} className="text-white bg-[#00c7cc] hover:bg-[#00b3b7] w-6 h-6 rounded-md flex items-center justify-center font-bold text-lg leading-none p-0 pb-[1px] focus:outline-none transition-transform hover:scale-110 cursor-pointer shadow-sm">+</button>
+                      <button type="button" onClick={() => setBoletoAdicional(boletoAdicional + 1)} className="text-white bg-[#ff6700] hover:bg-[#e65c00] w-6 h-6 rounded-md flex items-center justify-center font-bold text-lg leading-none p-0 pb-[1px] focus:outline-none transition-transform hover:scale-110 cursor-pointer shadow-sm">+</button>
                     </div>
                   </div>
                 </div>
@@ -1388,7 +1388,7 @@ export default function AdminMaintainer() {
 
               {/* Botones */}
               <div className="flex justify-center items-center gap-6 pt-10 pb-4">
-                <button type="submit" disabled={saving} className="bg-[#00c7cc] hover:bg-[#00b3b7] text-white font-bold py-3 px-10 rounded-md shadow-md transition-all text-sm focus:outline-none cursor-pointer disabled:opacity-50">
+                <button type="submit" disabled={saving} className="bg-[#ff6700] hover:bg-[#e65c00] text-white font-bold py-3 px-10 rounded-md shadow-md transition-all text-sm focus:outline-none cursor-pointer disabled:opacity-50">
                   {saving ? 'Guardando...' : editingId ? 'Actualizar' : 'Crear'}
                 </button>
                 <button type="button" onClick={() => setShowModal(false)} className="text-red-500 hover:text-red-700 font-bold text-sm focus:outline-none transition-colors cursor-pointer">

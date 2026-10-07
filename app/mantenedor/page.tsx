@@ -70,7 +70,7 @@ export default function MantenedorPage() {
               href="/"
               className="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3 py-1.5 rounded-md border border-slate-200 transition-all"
             >
-              <ArrowLeft className="w-4 h-4 text-[#00c7cc]" />
+              <ArrowLeft className="w-4 h-4 text-[#ff6700]" />
               <span className="hidden sm:inline">Volver</span>
             </Link>
 
@@ -110,7 +110,7 @@ export default function MantenedorPage() {
           <div className="max-w-md mx-auto my-12 animate-fade-in">
             <div className="bg-white rounded-3xl p-8 shadow-xl border border-slate-200 space-y-6">
               <div className="text-center space-y-2">
-                <div className="w-16 h-16 rounded-lg bg-[#F05A24] text-white flex items-center justify-center mx-auto shadow-lg shadow-cyan-500/20">
+                <div className="w-16 h-16 rounded-lg bg-[#F05A24] text-white flex items-center justify-center mx-auto shadow-lg shadow-orange-500/20">
                   <Lock className="w-8 h-8 text-white" />
                 </div>
                 <span className="text-xs font-extrabold text-[#F05A24] uppercase tracking-wider block">

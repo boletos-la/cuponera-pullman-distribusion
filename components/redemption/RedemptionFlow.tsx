@@ -173,7 +173,7 @@ export function RedemptionFlow({ initialCuponCode = '', initialRut = '', onFinis
           <h2 className="text-lg font-bold mb-1.5 text-slate-900">Cupón Inválido</h2>
           <p className="text-xs text-slate-600 mb-5">No se pudo validar el cupón proporcionado. Por favor, vuelve al dashboard e intenta nuevamente.</p>
           <Button
-            className="bg-[#00c7cc] hover:bg-[#00b3b7] text-white font-semibold text-xs px-5 py-2 rounded-md"
+            className="bg-[#ff6700] hover:bg-[#e65c00] text-white font-semibold text-xs px-5 py-2 rounded-md"
             onClick={() => onBack ? onBack() : router.push('/')}
           >
             Volver a Mis Cuponeras
@@ -203,7 +203,7 @@ export function RedemptionFlow({ initialCuponCode = '', initialRut = '', onFinis
               </button>
             )}
 
-            <div className="w-10 h-10 rounded-md bg-cyan-50 border border-cyan-100 flex items-center justify-center text-[#00c7cc] shrink-0">
+            <div className="w-10 h-10 rounded-md bg-orange-50 border border-orange-100 flex items-center justify-center text-[#ff6700] shrink-0">
               <Ticket className="w-5 h-5" />
             </div>
 
@@ -212,7 +212,7 @@ export function RedemptionFlow({ initialCuponCode = '', initialRut = '', onFinis
                 <h2 className="text-base sm:text-lg font-bold text-slate-900 leading-tight">
                   Canje de Pasaje
                 </h2>
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-mono font-bold bg-cyan-50 text-[#00b3b7] border border-cyan-200/80">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-mono font-bold bg-orange-50 text-[#e65c00] border border-orange-200/80">
                   {cuponInfo.codigo}
                 </span>
               </div>
@@ -233,9 +233,9 @@ export function RedemptionFlow({ initialCuponCode = '', initialRut = '', onFinis
                   <React.Fragment key={step.id}>
                     <div
                       className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-semibold transition-all ${isActive
-                          ? "bg-[#00c7cc] text-white shadow-md shadow-cyan-500/20"
+                          ? "bg-[#ff6700] text-white shadow-md shadow-orange-500/20"
                           : isCompleted
-                            ? "bg-cyan-50 text-[#00c7cc] border border-cyan-100"
+                            ? "bg-orange-50 text-[#ff6700] border border-orange-100"
                             : "text-slate-400 bg-slate-50 border border-slate-100"
                         }`}
                     >
@@ -243,7 +243,7 @@ export function RedemptionFlow({ initialCuponCode = '', initialRut = '', onFinis
                         className={`flex items-center justify-center w-5 h-5 rounded-md ${isActive
                             ? "bg-white/25 text-white"
                             : isCompleted
-                              ? "bg-[#00c7cc]/10 text-[#00c7cc]"
+                              ? "bg-[#ff6700]/10 text-[#ff6700]"
                               : "bg-slate-200/70 text-slate-400"
                           }`}
                       >
