@@ -98,7 +98,7 @@ export default function TicketCancellationView() {
             <RotateCcw className="w-8 h-8 text-[#ff6700]" />
           </div>
           <div className="space-y-1.5">
-            <h2 className="text-2xl font-black text-[#ff6700]">
+            <h2 className="text-2xl font-black text-[#00c7cc]">
               Anulación de Viaje
             </h2>
             <p className="text-sm text-slate-500 font-medium">

@@ -155,7 +155,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
               <LayoutDashboard className="w-8 h-8 text-[#ff6700]" />
             </div>
             <div className="space-y-1.5">
-              <h2 className="text-2xl font-black text-[#ff6700]">
+              <h2 className="text-2xl font-black text-[#00c7cc]">
                 Mis Cuponeras
               </h2>
               <p className="text-sm text-slate-500 font-medium">
