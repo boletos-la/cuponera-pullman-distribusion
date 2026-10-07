@@ -184,7 +184,7 @@ function HomeContent() {
               <h4 className="text-sm font-bold uppercase tracking-wider text-neutral-300">
                 DESCUBRE
               </h4>
-              <ul className="space-y-3 text-sm text-neutral-400">
+              <ul className="space-y-3 text-sm text-[#00c7cc]">
                 {["Hoteles", "Terminales", "Guías de viaje", "Blog"].map((link, idx) => (
                   <li key={idx}>
                     <a href="#" className="hover:text-white transition-colors no-underline">
@@ -200,7 +200,7 @@ function HomeContent() {
               <h4 className="text-sm font-bold uppercase tracking-wider text-neutral-300">
                 BOLETOS.LA
               </h4>
-              <ul className="space-y-3 text-sm text-neutral-400">
+              <ul className="space-y-3 text-sm text-[#00c7cc]">
                 {["Sobre nosotros", "Prensa", "Trabaja con nosotros", "Ayuda", "Contacto"].map((link, idx) => (
                   <li key={idx}>
                     <a href="#" className="hover:text-white transition-colors no-underline">
@@ -288,9 +288,9 @@ function HomeContent() {
                 <span className="hidden md:inline">|</span>
                 <span>Todos los derechos reservados.</span>
               </div>
-              <div className="flex items-center gap-4 text-sm text-neutral-400">
+              <div className="flex items-center gap-4 text-sm text-[#00c7cc]">
                 <a href="#" className="hover:text-white transition-colors">Terminos y condiciones</a>
-                <span>|</span>
+                <span className="text-white/50">|</span>
                 <a href="#" className="hover:text-white transition-colors">Política de privacidad</a>
               </div>
             </div>

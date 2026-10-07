@@ -90,20 +90,20 @@ export default function TicketCancellationView() {
   return (
     <div className="relative max-w-3xl mx-auto space-y-6 mt-6 md:mt-8 pb-12">
       {/* Tarjeta Principal */}
-      <div className="bg-white rounded-[2rem] p-6 sm:p-10 shadow-xl border border-slate-100 space-y-8 relative overflow-hidden">
+      <div className="bg-[#1a1a1a] rounded-3xl p-6 sm:p-10 shadow-2xl border border-neutral-800 space-y-8 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-2 bg-[#ff6700]" />
         
         {/* Cabecera */}
-        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left border-b border-slate-100 pb-6">
-          <div className="w-16 h-16 rounded-lg bg-orange-50 text-[#ff6700] flex items-center justify-center shrink-0 shadow-sm border border-orange-100">
+        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left border-b border-neutral-800 pb-6">
+          <div className="w-16 h-16 rounded-2xl bg-neutral-800 text-[#ff6700] flex items-center justify-center shrink-0 shadow-sm border border-neutral-700">
             <RotateCcw className="w-8 h-8 text-[#ff6700]" />
           </div>
           <div className="space-y-1.5">
-            <h2 className="text-2xl font-black text-[#ff6700]">
+            <h2 className="text-2xl font-black text-white">
               Anulación de Viaje
             </h2>
-            <p className="text-sm text-slate-500 font-medium">
-              Si tus planes cambiaron, puedes anular tu pasaje con al menos <strong className="text-slate-800">4 horas de anticipación</strong>. Tu cupón será devuelto a estado Activo.
+            <p className="text-sm text-neutral-400 font-medium">
+              Si tus planes cambiaron, puedes anular tu pasaje con al menos <strong className="text-white">4 horas de anticipación</strong>. Tu cupón será devuelto a estado Activo.
             </p>
           </div>
         </div>
@@ -136,7 +136,7 @@ export default function TicketCancellationView() {
 
             <div className="inline-block bg-white border border-emerald-100 px-5 py-3 rounded-md shadow-sm relative z-10 mt-2">
               <span className="block text-[10px] font-bold text-emerald-600/70 uppercase tracking-widest mb-1">Comprobante de Reintegro</span>
-              <span className="text-sm font-mono font-black text-[#023caf]">
+              <span className="text-sm font-mono font-black text-[#ff6700]">
                 1 uso reintegrado (Cupón: {resultadoExitosa.cuponCodigoReintegrado})
               </span>
             </div>
@@ -146,9 +146,9 @@ export default function TicketCancellationView() {
         {/* Formulario Principal */}
         {step === 'form' && (
           <form onSubmit={handleRequestOtp} className="space-y-5 relative z-10">
-            <div className="bg-slate-50/50 rounded-lg p-5 sm:p-6 border border-slate-100 space-y-5">
+            <div className="bg-neutral-900/50 rounded-2xl p-5 sm:p-6 border border-neutral-800 space-y-5">
               <div className="space-y-1.5">
-                <label className="block text-xs font-bold text-slate-600 ml-1">RUT del Comprador <span className="text-orange-500">*</span></label>
+                <label className="block text-xs font-bold text-neutral-300 ml-1">RUT del Comprador <span className="text-orange-500">*</span></label>
                 <div className="relative group">
                   <input
                     type="text"
@@ -171,16 +171,16 @@ export default function TicketCancellationView() {
                       setErrorMsg('');
                     }}
                     className={`w-full text-sm font-semibold bg-white border-2 rounded-md pl-11 pr-4 py-3.5 transition-all duration-300 focus:outline-none focus:ring-4 text-slate-800 placeholder:text-slate-400 group-hover:border-slate-300 shadow-sm ${
-                      rutError ? 'border-red-400 focus:border-red-500 focus:ring-red-500/10' : 'border-slate-200/80 focus:border-[#023caf] focus:ring-[#023caf]/10'
+                      rutError ? 'border-red-400 focus:border-red-500 focus:ring-red-500/10' : 'border-slate-200/80 focus:border-[#ff6700] focus:ring-[#ff6700]/10'
                     }`}
                   />
-                  <Search className="w-5 h-5 text-slate-400 absolute left-4 top-3.5 transition-colors group-focus-within:text-[#023caf]" />
+                  <Search className="w-5 h-5 text-neutral-500 absolute left-4 top-3.5 transition-colors group-focus-within:text-[#ff6700]" />
                 </div>
                 {rutError && <p className="text-xs text-red-600 font-medium ml-1">{rutError}</p>}
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-xs font-bold text-slate-600 ml-1">Código del Pasaje (PNR) a Anular <span className="text-orange-500">*</span></label>
+                <label className="block text-xs font-bold text-neutral-300 ml-1">Código del Pasaje (PNR) a Anular <span className="text-orange-500">*</span></label>
                 <div className="relative group">
                   <input
                     type="text"
@@ -188,9 +188,9 @@ export default function TicketCancellationView() {
                     placeholder="ej. ASD1234 o Boleto"
                     value={pasajeCodigo}
                     onChange={(e) => setPasajeCodigo(e.target.value.toUpperCase())}
-                    className="w-full text-sm font-mono font-bold bg-white border-2 border-slate-200/80 rounded-md pl-4 pr-11 py-3.5 transition-all duration-300 focus:outline-none focus:border-[#ff6700] focus:ring-4 focus:ring-[#ff6700]/10 text-slate-800 placeholder:text-slate-400 group-hover:border-slate-300 shadow-sm uppercase tracking-wider"
+                    className="w-full text-sm font-mono font-bold bg-neutral-900 border border-neutral-700 rounded-xl pl-4 pr-11 py-3.5 transition-all duration-300 focus:outline-none focus:border-[#ff6700] focus:ring-4 focus:ring-[#ff6700]/20 text-white placeholder-neutral-500 group-hover:border-neutral-600 shadow-sm uppercase tracking-wider"
                   />
-                  <div className="absolute right-4 top-3.5 p-1 bg-slate-100 rounded-md">
+                  <div className="absolute right-4 top-3.5 p-1 bg-neutral-800 rounded-md border border-neutral-700">
                     <RotateCcw className="w-3 h-3 text-slate-400" />
                   </div>
                 </div>
@@ -211,7 +211,7 @@ export default function TicketCancellationView() {
               <button
                 type="submit"
                 disabled={loading || !pasajeCodigo || !rutInput || !!rutError}
-                className="group relative w-full overflow-hidden bg-gradient-to-r from-[#ff6700] to-orange-500 hover:from-orange-600 hover:to-orange-500 text-white font-black py-4 px-6 rounded-md shadow-[0_4px_14px_0_rgba(255,103,0,0.39)] hover:shadow-[0_6px_20px_rgba(255,103,0,0.23)] transition-all duration-300 flex items-center justify-center gap-2 text-base cursor-pointer disabled:opacity-50 disabled:hover:shadow-none active:scale-[0.98]"
+                className="group relative w-full overflow-hidden bg-[#ff6700] hover:bg-[#e65c00] text-white font-black py-4 px-6 rounded-xl shadow-lg hover:shadow-orange-500/20 hover:scale-[1.02] transition-all duration-300 flex items-center justify-center gap-2 text-base cursor-pointer disabled:opacity-50 disabled:hover:scale-100"
               >
                 {loading ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
@@ -230,16 +230,16 @@ export default function TicketCancellationView() {
 
         {/* Paso OTP */}
         {step === 'otp' && (
-          <div className="bg-gradient-to-b from-white to-slate-50/50 rounded-3xl p-8 shadow-sm border border-slate-200/60 space-y-8 animate-in slide-in-from-right-8 duration-500">
+          <div className="bg-gradient-to-b from-[#1a1a1a] to-neutral-900 rounded-3xl p-8 shadow-sm border border-slate-200/60 space-y-8 animate-in slide-in-from-right-8 duration-500">
             <div className="text-center space-y-3 relative">
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-orange-400/10 rounded-md blur-2xl pointer-events-none" />
               <div className="w-20 h-20 rounded-lg bg-gradient-to-br from-orange-50 to-orange-100 text-[#ff6700] flex items-center justify-center mx-auto shadow-inner border border-orange-200/50 relative z-10 rotate-3 hover:rotate-0 transition-transform duration-300">
                 <KeyRound className="w-10 h-10 stroke-[2]" />
               </div>
               <div className="space-y-1 relative z-10">
-                <h3 className="text-2xl font-black text-slate-900 tracking-tight">Validación 2FA</h3>
-                <p className="text-sm text-slate-500 font-medium">
-                  Ingresa el código de 6 dígitos enviado a tu <span className="font-bold text-slate-700">correo registrado</span>.
+                <h3 className="text-2xl font-black text-white tracking-tight">Validación 2FA</h3>
+                <p className="text-sm text-neutral-400 font-medium">
+                  Ingresa el código de 6 dígitos enviado a tu <span className="font-bold text-neutral-300">correo registrado</span>.
                 </p>
               </div>
             </div>
@@ -255,7 +255,7 @@ export default function TicketCancellationView() {
                   maxLength={6}
                   value={otpCode}
                   onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))}
-                  className="w-full text-center text-4xl tracking-[0.2em] font-black bg-white border-2 border-slate-200 rounded-lg py-4 transition-all duration-300 focus:outline-none focus:border-[#ff6700] focus:ring-4 focus:ring-[#ff6700]/10 text-slate-800 placeholder:text-slate-200 shadow-sm"
+                  className="w-full text-center text-4xl tracking-[0.2em] font-black bg-neutral-900 border-2 border-neutral-700 text-white placeholder-neutral-500 rounded-lg py-4 transition-all duration-300 focus:outline-none focus:border-[#ff6700] focus:ring-4 focus:ring-[#ff6700]/10 text-slate-800 placeholder:text-slate-200 shadow-sm"
                   placeholder="------"
                 />
               </div>
@@ -274,7 +274,7 @@ export default function TicketCancellationView() {
                 <button
                   type="submit"
                   disabled={loading || otpCode.length < 6}
-                  className="w-full bg-gradient-to-r from-[#023caf] to-[#01256e] hover:from-[#01256e] hover:to-[#011a4d] text-white font-black py-4 px-6 rounded-md shadow-[0_4px_14px_0_rgba(2,60,175,0.39)] hover:shadow-[0_6px_20px_rgba(2,60,175,0.23)] transition-all duration-300 flex items-center justify-center gap-2 text-base cursor-pointer disabled:opacity-50 active:scale-[0.98]"
+                  className="w-full bg-gradient-to-r from-[#ff6700] to-[#e65c00] hover:from-[#e65c00] hover:to-[#cc5200] text-white font-black py-4 px-6 rounded-md shadow-[0_4px_14px_0_rgba(255,103,0,0.39)] hover:shadow-[0_6px_20px_rgba(255,103,0,0.23)] transition-all duration-300 flex items-center justify-center gap-2 text-base cursor-pointer disabled:opacity-50 active:scale-[0.98]"
                 >
                   {loading ? (
                     <Loader2 className="w-5 h-5 animate-spin" />
@@ -292,7 +292,7 @@ export default function TicketCancellationView() {
                     setOtpCode('');
                     setErrorMsg('');
                   }}
-                  className="w-full text-slate-500 hover:text-slate-800 font-bold text-sm py-3 cursor-pointer transition-colors hover:bg-slate-100 rounded-md"
+                  className="w-full text-neutral-400 hover:text-slate-800 font-bold text-sm py-3 cursor-pointer transition-colors hover:bg-slate-100 rounded-md"
                 >
                   Cancelar y Volver
                 </button>

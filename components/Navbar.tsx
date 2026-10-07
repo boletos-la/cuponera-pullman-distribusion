@@ -169,7 +169,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
                 alt="WIT Logo"
                 width={45}
                 height={45}
-                className="object-contain opacity-60 hover:opacity-100 transition-opacity duration-300 invert"
+                className="object-contain hover:opacity-100 transition-opacity duration-300"
               />
             </div>
           </div>

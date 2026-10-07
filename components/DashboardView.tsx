@@ -149,17 +149,17 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
       ) : (
         <>
           {step === 'login' && (
-            <div className="bg-white rounded-[2rem] p-6 sm:p-10 shadow-xl border border-slate-100 space-y-8 relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-2 bg-[#023caf]" />
-          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left border-b border-slate-100 pb-6">
-            <div className="w-16 h-16 rounded-lg bg-blue-50 text-[#023caf] flex items-center justify-center shrink-0 shadow-sm border border-blue-100">
-              <LayoutDashboard className="w-8 h-8 text-[#023caf]" />
+            <div className="bg-[#1a1a1a] rounded-3xl p-6 sm:p-10 shadow-2xl border border-neutral-800 space-y-8 relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-2 bg-[#ff6700]" />
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left border-b border-neutral-800 pb-6">
+            <div className="w-16 h-16 rounded-2xl bg-neutral-800 text-[#ff6700] flex items-center justify-center shrink-0 shadow-sm border border-neutral-700">
+              <LayoutDashboard className="w-8 h-8 text-[#ff6700]" />
             </div>
             <div className="space-y-1.5">
-              <h2 className="text-2xl font-black text-[#023caf]">
+              <h2 className="text-2xl font-black text-white">
                 Mis Cuponeras
               </h2>
-              <p className="text-sm text-slate-500 font-medium">
+              <p className="text-sm text-neutral-400 font-medium">
                 Ingresa tu RUT para consultar tus cuponeras y saldo disponible.
               </p>
             </div>
@@ -169,7 +169,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
 
           <form onSubmit={handleRequestDashboard} className="space-y-4">
             <div className="space-y-1.5">
-              <label className="block text-xs font-extrabold text-[#0F172A] uppercase tracking-wider">
+              <label className="block text-xs font-extrabold text-neutral-300 uppercase tracking-wider">
                 RUT del Titular
               </label>
               <div className="relative">
@@ -196,7 +196,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
                     rutError ? 'border-red-400 focus:ring-red-400' : 'border-slate-200 focus:ring-[#ff6700]'
                   }`}
                 />
-                <Search className="w-5 h-5 text-slate-400 absolute left-3.5 top-4" />
+                <Search className="w-5 h-5 text-neutral-500 absolute left-3.5 top-4" />
               </div>
             </div>
 
@@ -205,7 +205,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
             <button
               type="submit"
               disabled={loading || !rutInput}
-              className="w-full bg-[#ff6700] hover:bg-[#e65c00] text-white font-extrabold py-4 px-6 rounded-md shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 text-sm cursor-pointer disabled:opacity-50 disabled:hover:translate-y-0"
+              className="w-full bg-[#ff6700] hover:bg-[#e65c00] text-white font-black py-4 px-6 rounded-xl shadow-lg hover:shadow-orange-500/20 hover:scale-[1.02] transition-all flex items-center justify-center gap-2 text-base cursor-pointer disabled:opacity-50 disabled:hover:scale-100"
             >
               {loading ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
@@ -234,13 +234,13 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
               </div>
             </div>
 
-            <div className="bg-white rounded-lg p-5 border-l-4 border-l-[#023caf] border-t border-r border-b border-slate-100 shadow-sm flex items-center gap-4">
+            <div className="bg-white rounded-lg p-5 border-l-4 border-l-[#ff6700] border-t border-r border-b border-slate-100 shadow-sm flex items-center gap-4">
               <div className="w-12 h-12 rounded-md bg-blue-50 flex items-center justify-center shrink-0">
-                <CheckCircle className="w-6 h-6 text-[#023caf]" />
+                <CheckCircle className="w-6 h-6 text-[#ff6700]" />
               </div>
               <div>
                 <span className="text-[10px] text-slate-500 font-bold block uppercase tracking-wider">Usados</span>
-                <span className="text-2xl font-black text-[#023caf]">{metricas.utilizados}</span>
+                <span className="text-2xl font-black text-white">{metricas.utilizados}</span>
               </div>
             </div>
 
@@ -256,24 +256,24 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
           </div>
 
           <div className="bg-white rounded-[2rem] border border-slate-100 shadow-xl p-6 sm:p-8 space-y-6 relative">
-            <div className="absolute top-0 left-0 w-full h-2 bg-[#023caf] rounded-t-[2rem]" />
+            <div className="absolute top-0 left-0 w-full h-2 bg-[#ff6700] rounded-t-[2rem]" />
             <div className="sticky top-[72px] z-40 bg-white/95 backdrop-blur-md pb-4 pt-4 border-b border-slate-100 shadow-[0_8px_10px_-4px_rgba(255,255,255,0.9)] -mx-6 px-6 sm:-mx-8 sm:px-8 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mt-[-8px] rounded-t-[1.5rem]">
               <div className="flex flex-wrap gap-2 bg-slate-50 p-1.5 rounded-md border border-slate-200">
                 <button
                   onClick={() => setActiveDashboardTab('cuponeras')}
-                  className={`px-5 py-2.5 text-sm font-bold rounded-md transition-all ${activeDashboardTab === 'cuponeras' ? 'bg-[#023caf] text-white shadow-md' : 'text-slate-600 hover:text-[#023caf] hover:bg-white'}`}
+                  className={`px-5 py-2.5 text-sm font-bold rounded-md transition-all ${activeDashboardTab === 'cuponeras' ? 'bg-[#ff6700] text-white shadow-md' : 'text-slate-600 hover:text-[#ff6700] hover:bg-white'}`}
                 >
                   Mis Cuponeras
                 </button>
                 <button
                   onClick={() => setActiveDashboardTab('historial')}
-                  className={`px-5 py-2.5 text-sm font-bold rounded-md transition-all ${activeDashboardTab === 'historial' ? 'bg-[#023caf] text-white shadow-md' : 'text-slate-600 hover:text-[#023caf] hover:bg-white'}`}
+                  className={`px-5 py-2.5 text-sm font-bold rounded-md transition-all ${activeDashboardTab === 'historial' ? 'bg-[#ff6700] text-white shadow-md' : 'text-slate-600 hover:text-[#ff6700] hover:bg-white'}`}
                 >
                   Historial
                 </button>
               </div>
               <div className="flex items-center gap-3">
-                <span className="text-xs font-mono font-bold bg-blue-50 text-[#023caf] px-4 py-2 rounded-md border border-blue-200 shadow-xs">
+                <span className="text-xs font-mono font-bold bg-blue-50 text-[#ff6700] px-4 py-2 rounded-md border border-blue-200 shadow-xs">
                   Titular: {rutFormateado}
                 </span>
                 {!authUser && (

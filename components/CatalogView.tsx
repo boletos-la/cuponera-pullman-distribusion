@@ -17,10 +17,8 @@ interface CatalogViewProps {
   onGoToCanjeWithCupon?: (cupon: string, rut: string) => void;
 }
 
-const CuponeraCardGroup = ({ group, onOpenCheckout }: { group: any, onOpenCheckout: (c: Cuponera) => void }) => {
-  const [selectedIndex, setSelectedIndex] = useState(0);
+const CuponeraCard = ({ item, onOpenCheckout }: { item: Cuponera, onOpenCheckout: (c: Cuponera) => void }) => {
   const [showTooltip, setShowTooltip] = useState(false);
-  const selectedItem = group.options[selectedIndex];
 
   // Close tooltip when clicking outside
   useEffect(() => {
@@ -37,16 +35,16 @@ const CuponeraCardGroup = ({ group, onOpenCheckout }: { group: any, onOpenChecko
 
   return (
     <div className="relative bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow border border-slate-100 flex flex-col mt-4">
-      {/* Badge "Mejor precio" u otro */}
-      {selectedItem.badge && (
+      {/* Badge */}
+      {item.badge && (
         <div className="absolute -top-3 right-4 bg-[#FFE8E0] text-[#ff6700] font-semibold text-xs px-2.5 py-1 rounded-md shadow-sm border border-white z-10">
-          {selectedItem.badge}
+          {item.badge}
         </div>
       )}
 
       {/* Card Content */}
       <div className="p-4 pb-3 flex-1 flex flex-col">
-        {/* Info Tooltip (Absolute Top Right) */}
+        {/* Info Tooltip */}
         <div className="absolute top-4 right-4 z-20">
           <div 
             className="relative group flex items-center"
@@ -72,7 +70,7 @@ const CuponeraCardGroup = ({ group, onOpenCheckout }: { group: any, onOpenChecko
               </div>
               <div className="font-semibold mb-1 text-slate-700 uppercase tracking-wider">Tramos Habilitados:</div>
               <ul className="list-disc pl-3 space-y-0.5 font-medium text-slate-600">
-                {selectedItem.tramos.map((t: string, i: number) => (
+                {item.tramos.map((t: string, i: number) => (
                   <li key={i}>{t}</li>
                 ))}
               </ul>
@@ -80,72 +78,42 @@ const CuponeraCardGroup = ({ group, onOpenCheckout }: { group: any, onOpenChecko
           </div>
         </div>
 
-        {/* Header con Logo */}
         <div className="mb-2">
           <img src="/logo-boletos.png" alt="boletos.la" className="h-5 object-contain" />
         </div>
 
-        {/* Nombre de la Cuponera */}
         <h3 className="text-base font-semibold text-slate-900 leading-snug mb-1.5 capitalize min-h-[44px] line-clamp-2">
-          {selectedItem.nombre.toLowerCase()}
+          {item.nombre.toLowerCase()}
         </h3>
 
-        {/* Route details */}
         <div className="space-y-1.5 mb-3">
           <div className="flex items-center gap-3 text-slate-600">
             <Target className="w-4 h-4 text-slate-400 shrink-0" />
-            <span className="text-xs font-medium">{selectedItem.tramos && selectedItem.tramos.length > 0 ? selectedItem.tramos[0].split('-')[0].trim() : 'Origen'}</span>
+            <span className="text-xs font-medium">{item.tramos && item.tramos.length > 0 ? item.tramos[0].split('-')[0].trim() : 'Origen'}</span>
           </div>
           <div className="flex items-center justify-between text-slate-600">
             <div className="flex items-center gap-3">
               <MapPin className="w-4 h-4 text-slate-400 shrink-0" />
-              <span className="text-xs font-medium">{selectedItem.tramos && selectedItem.tramos.length > 0 ? selectedItem.tramos[0].split('-')[1]?.trim() || 'Destino' : 'Destino'}</span>
+              <span className="text-xs font-medium">{item.tramos && item.tramos.length > 0 ? item.tramos[0].split('-')[1]?.trim() || 'Destino' : 'Destino'}</span>
             </div>
           </div>
         </div>
 
-        {/* Toggle options (Pill shaped selector) */}
-        {group.options.length > 1 ? (
-          <div className="flex bg-white border border-slate-200 rounded-md p-1 mb-3">
-            {group.options.map((opt: any, idx: number) => (
-              <button
-                key={opt.id}
-                onClick={() => setSelectedIndex(idx)}
-                className={`flex-1 text-xs font-semibold py-1.5 rounded-md transition-all flex items-center justify-center gap-1.5
-                  ${selectedIndex === idx
-                    ? 'bg-[#FFE8E0] text-[#ff6700] shadow-sm ring-1 ring-[#ff6700]/20'
-                    : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'}`}
-              >
-                {/* Radio circle */}
-                <div className={`w-3 h-3 rounded-md border flex items-center justify-center
-                  ${selectedIndex === idx ? 'border-[#ff6700]' : 'border-slate-300'}`}>
-                  {selectedIndex === idx && <div className="w-1.5 h-1.5 rounded-md bg-[#ff6700]" />}
-                </div>
-                {opt.cantidadCupones} cupones
-              </button>
-            ))}
+        <div className="mt-auto pt-3 border-t border-slate-100">
+          <div className="flex justify-between items-end text-slate-800">
+            <span className="font-semibold text-sm">{item.cantidadCupones} x pasajes</span>
+            <span className="font-semibold text-base">${(item.valorUnitario || 0).toLocaleString('es-CL')}</span>
           </div>
-        ) : (
-          <div className="mb-3"></div>
-        )}
-
-        <div className="mt-auto"></div>
-
-        {/* Quantity and Unit Price */}
-        <div className="flex justify-between items-end text-slate-800">
-          <span className="font-semibold text-sm">{selectedItem.cantidadCupones} x pasajes</span>
-          <span className="font-semibold text-base">${(selectedItem.valorUnitario || 0).toLocaleString('es-CL')}</span>
         </div>
       </div>
 
-      {/* Footer Button con Llamado a la Acción (CTA) */}
       <button
-        onClick={() => onOpenCheckout(selectedItem)}
+        onClick={() => onOpenCheckout(item)}
         className="bg-[#ff6700] text-white w-full rounded-b-2xl px-5 py-3 flex justify-between items-center font-semibold text-xs hover:bg-[#e65c00] transition-all group cursor-pointer shadow-inner"
       >
         <div className="flex flex-col text-left">
           <span className="text-[10px] font-semibold text-white/80 capitalize tracking-wider">Total</span>
-          <span className="text-base font-semibold leading-tight">CLP ${(selectedItem.precioTotal || 0).toLocaleString('es-CL')}</span>
+          <span className="text-base font-semibold leading-tight">CLP ${(item.precioTotal || 0).toLocaleString('es-CL')}</span>
         </div>
 
         <div className="flex items-center gap-1.5 bg-white text-[#ff6700] group-hover:bg-orange-50 px-4 py-2 rounded-md text-xs font-semibold shadow-sm group-hover:scale-105 transition-all">
@@ -166,6 +134,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
   const [sortBy, setSortBy] = useState<string>('default');
   const [infoOpen, setInfoOpen] = useState<number | null>(null);
+  const [selectedQuantity, setSelectedQuantity] = useState<number>(10);
 
   // Modal de Compra y Checkout
   const [selectedCuponera, setSelectedCuponera] = useState<Cuponera | null>(null);
@@ -512,31 +481,26 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
     displayCuponeras.sort((a, b) => (b.precioTotal || 0) - (a.precioTotal || 0));
   }
 
-  // Agrupar cuponeras por nombre base
-  const groupedCuponeras = (() => {
-    const groups = new Map<string, Cuponera[]>();
-    displayCuponeras.forEach(c => {
-      // Remover "(X CUPONES)" para obtener el nombre base
-      const baseName = c.nombre.replace(/\(\d+\s*CUPONES\)/i, '').trim();
-      if (!groups.has(baseName)) {
-        groups.set(baseName, []);
-      }
-      groups.get(baseName)!.push(c);
-    });
-
-    return Array.from(groups.values()).map(options => {
-      // Ordenar opciones por cantidad de cupones ascendente (10 primero, luego 20)
-      options.sort((a, b) => a.cantidadCupones - b.cantidadCupones);
-      return {
-        baseName: options[0].nombre.replace(/\(\d+\s*CUPONES\)/i, '').trim(),
-        options
-      };
-    });
-  })();
+  // Filtrar por cantidad seleccionada
+  const filteredByQuantity = displayCuponeras.filter(c => c.cantidadCupones === selectedQuantity);
 
   return (
     <div className="space-y-6">
       {/* Barra de Búsqueda y Filtros */}
+      <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-6">
+        <button
+          onClick={() => setSelectedQuantity(10)}
+          className={`w-full sm:w-auto px-8 py-3 rounded-xl font-black text-lg transition-all ${selectedQuantity === 10 ? 'bg-[#ff6700] text-white shadow-lg shadow-orange-500/20 scale-105' : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50'}`}
+        >
+          Cuponeras 10 Pasajes
+        </button>
+        <button
+          onClick={() => setSelectedQuantity(20)}
+          className={`w-full sm:w-auto px-8 py-3 rounded-xl font-black text-lg transition-all ${selectedQuantity === 20 ? 'bg-[#ff6700] text-white shadow-lg shadow-orange-500/20 scale-105' : 'bg-white text-slate-500 border border-slate-200 hover:bg-slate-50'}`}
+        >
+          Cuponeras 20 Pasajes
+        </button>
+      </div>
       <div className="bg-white rounded-lg p-4 sm:p-6 shadow-sm border border-slate-200 space-y-4">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
@@ -632,7 +596,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {displayCuponeras.map((item) => (
+              {filteredByQuantity.map((item) => (
                 <tr key={item.id} className="hover:bg-slate-50/80 transition-colors group">
                   <td className="px-4 py-4 min-w-[200px]">
                     <div className="flex flex-col gap-1">
@@ -680,10 +644,10 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
         </div>
       ) : viewMode === 'grid' ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 pt-4">
-          {groupedCuponeras.map((group, idx) => (
-            <CuponeraCardGroup
-              key={`${group.baseName}-${idx}`}
-              group={group}
+          {filteredByQuantity.map((item, idx) => (
+            <CuponeraCard
+              key={`${item.id}-${idx}`}
+              item={item}
               onOpenCheckout={handleOpenCheckout}
             />
           ))}
