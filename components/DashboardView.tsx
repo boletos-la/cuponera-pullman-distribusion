@@ -149,17 +149,16 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
       ) : (
         <>
           {step === 'login' && (
-            <div className="bg-[#1a1a1a] rounded-3xl p-6 sm:p-10 shadow-2xl border border-neutral-800 space-y-8 relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-2 bg-[#ff6700]" />
-          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left border-b border-neutral-800 pb-6">
-            <div className="w-16 h-16 rounded-2xl bg-neutral-800 text-[#ff6700] flex items-center justify-center shrink-0 shadow-sm border border-neutral-700">
+            <div className="bg-slate-50 rounded-3xl p-6 sm:p-10 shadow-xl border border-slate-200 space-y-8 relative overflow-hidden">
+                    <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left border-b border-slate-200 pb-6">
+            <div className="w-16 h-16 rounded-2xl bg-white text-[#ff6700] flex items-center justify-center shrink-0 shadow-sm border border-slate-200">
               <LayoutDashboard className="w-8 h-8 text-[#ff6700]" />
             </div>
             <div className="space-y-1.5">
-              <h2 className="text-2xl font-black text-white">
+              <h2 className="text-2xl font-black text-[#ff6700]">
                 Mis Cuponeras
               </h2>
-              <p className="text-sm text-neutral-400 font-medium">
+              <p className="text-sm text-slate-500 font-medium">
                 Ingresa tu RUT para consultar tus cuponeras y saldo disponible.
               </p>
             </div>
@@ -169,7 +168,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
 
           <form onSubmit={handleRequestDashboard} className="space-y-4">
             <div className="space-y-1.5">
-              <label className="block text-xs font-extrabold text-neutral-300 uppercase tracking-wider">
+              <label className="block text-xs font-extrabold text-slate-700 uppercase tracking-wider">
                 RUT del Titular
               </label>
               <div className="relative">
@@ -196,7 +195,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
                     rutError ? 'border-red-400 focus:ring-red-400' : 'border-slate-200 focus:ring-[#ff6700]'
                   }`}
                 />
-                <Search className="w-5 h-5 text-neutral-500 absolute left-3.5 top-4" />
+                <Search className="w-5 h-5 text-slate-400 absolute left-3.5 top-4" />
               </div>
             </div>
 
@@ -240,7 +239,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
               </div>
               <div>
                 <span className="text-[10px] text-slate-500 font-bold block uppercase tracking-wider">Usados</span>
-                <span className="text-2xl font-black text-white">{metricas.utilizados}</span>
+                <span className="text-2xl font-black text-[#ff6700]">{metricas.utilizados}</span>
               </div>
             </div>
 

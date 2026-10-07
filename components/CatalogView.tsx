@@ -505,7 +505,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
             <h2 className="text-xl font-black text-slate-900 flex items-center gap-2">
-              <ShoppingCart className="w-5 h-5 text-[#023caf]" />
+              <ShoppingCart className="w-5 h-5 text-[#ff6700]" />
               Catálogo Oficial de Cuponeras
             </h2>
           </div>
@@ -516,13 +516,13 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
               placeholder="Buscar por ciudad o tramo (ej. Viña, Concón)..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full sm:w-64 text-sm bg-slate-50 border border-slate-300 rounded-md px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
+              className="w-full sm:w-64 text-sm bg-slate-50 border border-slate-300 rounded-md px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#ff6700]"
             />
 
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="w-full sm:w-auto text-sm bg-slate-50 border border-slate-300 rounded-md px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf] text-slate-700 font-medium"
+              className="w-full sm:w-auto text-sm bg-slate-50 border border-slate-300 rounded-md px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#ff6700] text-slate-700 font-medium"
             >
               <option value="default">Recomendados</option>
               {availableBadges.map((b) => (
@@ -537,14 +537,14 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
             <div className="flex bg-slate-100 rounded-md p-1 border border-slate-200">
               <button
                 onClick={() => setViewMode('grid')}
-                className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${viewMode === 'grid' ? 'bg-white text-[#023caf] shadow-sm' : 'text-slate-500 hover:text-slate-700'
+                className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${viewMode === 'grid' ? 'bg-white text-[#ff6700] shadow-sm' : 'text-slate-500 hover:text-slate-700'
                   }`}
               >
                 <LayoutGrid className="w-4 h-4" /> Tarjetas
               </button>
               <button
                 onClick={() => setViewMode('table')}
-                className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${viewMode === 'table' ? 'bg-white text-[#023caf] shadow-sm' : 'text-slate-500 hover:text-slate-700'
+                className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${viewMode === 'table' ? 'bg-white text-[#ff6700] shadow-sm' : 'text-slate-500 hover:text-slate-700'
                   }`}
               >
                 <List className="w-4 h-4" /> Tabla
@@ -573,7 +573,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
       {/* Listado de Cuponeras (Grid o Tabla) */}
       {loading ? (
         <div className="py-20 text-center space-y-3">
-          <div className="inline-block w-8 h-8 border-4 border-[#023caf] border-t-transparent rounded-md animate-spin" />
+          <div className="inline-block w-8 h-8 border-4 border-[#ff6700] border-t-transparent rounded-full animate-spin" />
           <p className="text-sm font-medium text-slate-500">Cargando catálogo oficial de cuponeras...</p>
         </div>
       ) : filteredCuponeras.length === 0 ? (
@@ -689,7 +689,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                     value={nombre}
                     onChange={(e) => setNombre(e.target.value)}
                     disabled={!!getAuthUser()}
-                    className={`w-full text-sm bg-slate-50 border border-slate-300 rounded-md px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf] ${!!getAuthUser() ? 'opacity-60 cursor-not-allowed bg-slate-100' : ''}`}
+                    className={`w-full text-sm bg-slate-50 border border-slate-300 rounded-md px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#ff6700] ${!!getAuthUser() ? 'opacity-60 cursor-not-allowed bg-slate-100' : ''}`}
                   />
                 </div>
 
@@ -704,7 +704,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                     value={rut}
                     onChange={handleRutChange}
                     disabled={!!getAuthUser()}
-                    className={`w-full text-sm bg-slate-50 border rounded-md px-3.5 py-2.5 focus:outline-none focus:ring-2 ${rutError ? 'border-red-500 focus:ring-red-500' : 'border-slate-300 focus:ring-[#023caf]'
+                    className={`w-full text-sm bg-slate-50 border rounded-md px-3.5 py-2.5 focus:outline-none focus:ring-2 ${rutError ? 'border-red-500 focus:ring-red-500' : 'border-slate-300 focus:ring-[#ff6700]'
                       } ${!!getAuthUser() ? 'opacity-60 cursor-not-allowed bg-slate-100' : ''}`}
                   />
                   {rutError && <p className="text-xs text-red-600 font-medium mt-1">{rutError}</p>}
@@ -719,13 +719,13 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                       placeholder="cliente@ejemplo.cl"
                       value={email}
                       onChange={handleEmailChange}
-                      className="w-full text-sm bg-slate-50 border border-slate-300 rounded-md px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
+                      className="w-full text-sm bg-slate-50 border border-slate-300 rounded-md px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#ff6700]"
                     />
                     {emailError && <p className="text-xs text-red-600 font-medium mt-1">{emailError}</p>}
                   </div>
                   <div>
                     <label className="block text-xs font-semibold text-slate-700 mb-1">Teléfono Móvil (Opcional)</label>
-                    <div className="flex items-center bg-slate-50 border border-slate-300 rounded-md focus-within:ring-2 focus-within:ring-[#023caf] overflow-hidden">
+                    <div className="flex items-center bg-slate-50 border border-slate-300 rounded-md focus-within:ring-2 focus-within:ring-[#ff6700] overflow-hidden">
                       <div className="pl-3 pr-2 py-2.5 border-r border-slate-300 flex items-center bg-slate-100">
                         <span className="text-sm font-semibold text-slate-700">+56</span>
                       </div>
@@ -768,7 +768,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                             placeholder="Mínimo 8 caracteres, 1 mayúscula y 1 número"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full text-sm bg-white border border-slate-300 rounded-md pl-3.5 pr-10 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
+                            className="w-full text-sm bg-white border border-slate-300 rounded-md pl-3.5 pr-10 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#ff6700]"
                           />
                           <button
                             type="button"
@@ -788,7 +788,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                             placeholder="Repite tu contraseña"
                             value={passwordConfirm}
                             onChange={(e) => setPasswordConfirm(e.target.value)}
-                            className="w-full text-sm bg-white border border-slate-300 rounded-md pl-3.5 pr-10 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
+                            className="w-full text-sm bg-white border border-slate-300 rounded-md pl-3.5 pr-10 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#ff6700]"
                           />
                           <button
                             type="button"
@@ -859,7 +859,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
               >
                 {submitting ? (
                   <>
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-md animate-spin" />
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                     <span>Validando y conectando...</span>
                   </>
                 ) : showOtpCheckout ? (
@@ -912,7 +912,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
               </div>
               <div className="flex justify-between items-center border-b border-slate-200/80 pb-2">
                 <span className="text-slate-500 font-semibold">Paquete</span>
-                <span className="font-bold text-[#023caf]">{compraExitosa.compra.nombreCuponera}</span>
+                <span className="font-bold text-[#ff6700]">{compraExitosa.compra.nombreCuponera}</span>
               </div>
               <div className="flex justify-between items-center border-b border-slate-200/80 pb-2">
                 <span className="text-slate-500 font-semibold">Saldo Inicial</span>
@@ -936,7 +936,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                 </span>
                 {compraExitosa.cupones.map((c) => (
                   <div key={c.codigo}>
-                    <span className="bg-white text-[#023caf] text-2xl font-mono font-black px-6 py-2 rounded-md border-2 border-emerald-200 inline-block shadow-sm tracking-widest">
+                    <span className="bg-white text-[#ff6700] text-2xl font-mono font-black px-6 py-2 rounded-md border-2 border-emerald-200 inline-block shadow-sm tracking-widest">
                       {c.codigo}
                     </span>
                   </div>
@@ -1029,7 +1029,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                 <>
                   <div className="flex justify-between items-center border-b border-slate-200 pb-2">
                     <span className="text-slate-500 font-medium">Cuponera</span>
-                    <span className="font-bold text-[#023caf] text-right">{pendingPurchaseData.nombreCuponera}</span>
+                    <span className="font-bold text-[#ff6700] text-right">{pendingPurchaseData.nombreCuponera}</span>
                   </div>
                   <div className="flex justify-between items-center border-b border-slate-200 pb-2">
                     <span className="text-slate-500 font-medium">Titular / RUT</span>
@@ -1056,7 +1056,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                 <>
                   <div className="flex justify-between items-center border-b border-slate-200 pb-2">
                     <span className="text-slate-500 font-medium">Medio de Pago</span>
-                    <span className="font-bold text-[#023caf]">Webpay Plus (Transbank)</span>
+                    <span className="font-bold text-[#ff6700]">Webpay Plus (Transbank)</span>
                   </div>
                   <div className="flex justify-between items-center border-b border-slate-200 pb-2">
                     <span className="text-slate-500 font-medium">Disponibilidad</span>
@@ -1155,12 +1155,12 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
               {pendingPurchaseData && (
                 <div className="flex justify-between items-center border-b border-slate-200 pb-2.5">
                   <span className="text-slate-500 font-medium">Cuponera Intentada</span>
-                  <span className="font-bold text-[#023caf] text-right">{pendingPurchaseData.nombreCuponera}</span>
+                  <span className="font-bold text-[#ff6700] text-right">{pendingPurchaseData.nombreCuponera}</span>
                 </div>
               )}
 
               <div className="p-3 bg-blue-50/70 border border-blue-100 rounded-md text-xs text-slate-600 flex items-start gap-2.5">
-                <ShieldCheck className="w-4 h-4 text-[#023caf] shrink-0 mt-0.5" />
+                <ShieldCheck className="w-4 h-4 text-[#ff6700] shrink-0 mt-0.5" />
                 <p className="leading-snug">
                   Puedes intentar nuevamente seleccionando otro medio de pago o verificar que tu banco tenga habilitadas las compras en línea.
                 </p>

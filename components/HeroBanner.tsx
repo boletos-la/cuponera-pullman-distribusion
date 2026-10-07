@@ -38,7 +38,7 @@ export default function HeroBanner({ onGoToCatalog, onGoToDashboard }: HeroBanne
   if (loading) {
     return (
       <div className="w-full flex justify-center items-center py-24 bg-slate-50 min-h-[300px]">
-        <div className="animate-spin rounded-md h-12 w-12 border-b-2 border-[#ff6700]"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#ff6700]"></div>
       </div>
     );
   }

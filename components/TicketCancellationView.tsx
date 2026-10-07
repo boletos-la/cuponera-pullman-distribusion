@@ -90,20 +90,19 @@ export default function TicketCancellationView() {
   return (
     <div className="relative max-w-3xl mx-auto space-y-6 mt-6 md:mt-8 pb-12">
       {/* Tarjeta Principal */}
-      <div className="bg-[#1a1a1a] rounded-3xl p-6 sm:p-10 shadow-2xl border border-neutral-800 space-y-8 relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-2 bg-[#ff6700]" />
-        
+      <div className="bg-slate-50 rounded-3xl p-6 sm:p-10 shadow-xl border border-slate-200 space-y-8 relative overflow-hidden">
+                
         {/* Cabecera */}
-        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left border-b border-neutral-800 pb-6">
-          <div className="w-16 h-16 rounded-2xl bg-neutral-800 text-[#ff6700] flex items-center justify-center shrink-0 shadow-sm border border-neutral-700">
+        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left border-b border-slate-200 pb-6">
+          <div className="w-16 h-16 rounded-2xl bg-white text-[#ff6700] flex items-center justify-center shrink-0 shadow-sm border border-slate-200">
             <RotateCcw className="w-8 h-8 text-[#ff6700]" />
           </div>
           <div className="space-y-1.5">
-            <h2 className="text-2xl font-black text-white">
+            <h2 className="text-2xl font-black text-[#ff6700]">
               Anulación de Viaje
             </h2>
-            <p className="text-sm text-neutral-400 font-medium">
-              Si tus planes cambiaron, puedes anular tu pasaje con al menos <strong className="text-white">4 horas de anticipación</strong>. Tu cupón será devuelto a estado Activo.
+            <p className="text-sm text-slate-500 font-medium">
+              Si tus planes cambiaron, puedes anular tu pasaje con al menos <strong className="text-slate-800">4 horas de anticipación</strong>. Tu cupón será devuelto a estado Activo.
             </p>
           </div>
         </div>
@@ -146,9 +145,9 @@ export default function TicketCancellationView() {
         {/* Formulario Principal */}
         {step === 'form' && (
           <form onSubmit={handleRequestOtp} className="space-y-5 relative z-10">
-            <div className="bg-neutral-900/50 rounded-2xl p-5 sm:p-6 border border-neutral-800 space-y-5">
+            <div className="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200 space-y-5 shadow-sm">
               <div className="space-y-1.5">
-                <label className="block text-xs font-bold text-neutral-300 ml-1">RUT del Comprador <span className="text-orange-500">*</span></label>
+                <label className="block text-xs font-bold text-slate-600 ml-1">RUT del Comprador <span className="text-orange-500">*</span></label>
                 <div className="relative group">
                   <input
                     type="text"
@@ -174,13 +173,13 @@ export default function TicketCancellationView() {
                       rutError ? 'border-red-400 focus:border-red-500 focus:ring-red-500/10' : 'border-slate-200/80 focus:border-[#ff6700] focus:ring-[#ff6700]/10'
                     }`}
                   />
-                  <Search className="w-5 h-5 text-neutral-500 absolute left-4 top-3.5 transition-colors group-focus-within:text-[#ff6700]" />
+                  <Search className="w-5 h-5 text-slate-400 absolute left-4 top-3.5 transition-colors group-focus-within:text-[#ff6700]" />
                 </div>
                 {rutError && <p className="text-xs text-red-600 font-medium ml-1">{rutError}</p>}
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-xs font-bold text-neutral-300 ml-1">Código del Pasaje (PNR) a Anular <span className="text-orange-500">*</span></label>
+                <label className="block text-xs font-bold text-slate-600 ml-1">Código del Pasaje (PNR) a Anular <span className="text-orange-500">*</span></label>
                 <div className="relative group">
                   <input
                     type="text"
@@ -188,9 +187,9 @@ export default function TicketCancellationView() {
                     placeholder="ej. ASD1234 o Boleto"
                     value={pasajeCodigo}
                     onChange={(e) => setPasajeCodigo(e.target.value.toUpperCase())}
-                    className="w-full text-sm font-mono font-bold bg-neutral-900 border border-neutral-700 rounded-xl pl-4 pr-11 py-3.5 transition-all duration-300 focus:outline-none focus:border-[#ff6700] focus:ring-4 focus:ring-[#ff6700]/20 text-white placeholder-neutral-500 group-hover:border-neutral-600 shadow-sm uppercase tracking-wider"
+                    className="w-full text-sm font-mono font-bold bg-slate-50 border border-slate-200 rounded-xl pl-4 pr-11 py-3.5 transition-all duration-300 focus:outline-none focus:border-[#ff6700] focus:ring-4 focus:ring-[#ff6700]/20 text-slate-800 placeholder-slate-400 group-hover:border-slate-300 shadow-inner uppercase tracking-wider"
                   />
-                  <div className="absolute right-4 top-3.5 p-1 bg-neutral-800 rounded-md border border-neutral-700">
+                  <div className="absolute right-4 top-3.5 p-1 bg-white rounded-md border border-slate-200 shadow-sm">
                     <RotateCcw className="w-3 h-3 text-slate-400" />
                   </div>
                 </div>
@@ -238,7 +237,7 @@ export default function TicketCancellationView() {
               </div>
               <div className="space-y-1 relative z-10">
                 <h3 className="text-2xl font-black text-white tracking-tight">Validación 2FA</h3>
-                <p className="text-sm text-neutral-400 font-medium">
+                <p className="text-sm text-slate-500 font-medium">
                   Ingresa el código de 6 dígitos enviado a tu <span className="font-bold text-neutral-300">correo registrado</span>.
                 </p>
               </div>
