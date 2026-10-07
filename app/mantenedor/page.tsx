@@ -68,16 +68,16 @@ export default function MantenedorPage() {
           <div className="flex items-center gap-4">
             <Link
               href="/"
-              className="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3 py-1.5 rounded-xl border border-slate-200 transition-all"
+              className="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3 py-1.5 rounded-md border border-slate-200 transition-all"
             >
-              <ArrowLeft className="w-4 h-4 text-[#fa5e00]" />
+              <ArrowLeft className="w-4 h-4 text-[#00c7cc]" />
               <span className="hidden sm:inline">Volver</span>
             </Link>
 
             <div className="h-6 w-px bg-slate-200 hidden sm:block" />
 
             <div className="flex items-center gap-3">
-              <img src="/logo-pullman-beneficios.png" alt="Pullman Cuponeras" className="h-8 object-contain" />
+              <img src="/logo-boletos.png" alt="Pullman Cuponeras" className="h-8 object-contain" />
               <div className="h-6 w-px bg-slate-200 hidden sm:block mx-1" />
               <img src="/logo-wit-dark.png" alt="WIT" className="h-7 object-contain" />
               <span className="text-xs text-slate-400 font-bold hidden sm:inline border-l border-slate-200 pl-3 ml-1">Mantenedor</span>
@@ -86,14 +86,14 @@ export default function MantenedorPage() {
 
           {isAuthenticated && (
             <div className="flex items-center gap-3">
-              <div className="hidden sm:flex items-center gap-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs px-3 py-1.5 rounded-full font-bold">
+              <div className="hidden sm:flex items-center gap-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs px-3 py-1.5 rounded-md font-bold">
                 <ShieldCheck className="w-4 h-4" />
                 <span>Administrador</span>
               </div>
 
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-1.5 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 text-xs font-bold px-3 py-1.5 rounded-xl shadow-sm transition-all cursor-pointer"
+                className="flex items-center gap-1.5 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 text-xs font-bold px-3 py-1.5 rounded-md shadow-sm transition-all cursor-pointer"
               >
                 <LogOut className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">Cerrar Sesión</span>
@@ -110,7 +110,7 @@ export default function MantenedorPage() {
           <div className="max-w-md mx-auto my-12 animate-fade-in">
             <div className="bg-white rounded-3xl p-8 shadow-xl border border-slate-200 space-y-6">
               <div className="text-center space-y-2">
-                <div className="w-16 h-16 rounded-2xl bg-[#F05A24] text-white flex items-center justify-center mx-auto shadow-lg shadow-orange-500/20">
+                <div className="w-16 h-16 rounded-lg bg-[#F05A24] text-white flex items-center justify-center mx-auto shadow-lg shadow-cyan-500/20">
                   <Lock className="w-8 h-8 text-white" />
                 </div>
                 <span className="text-xs font-extrabold text-[#F05A24] uppercase tracking-wider block">
@@ -131,7 +131,7 @@ export default function MantenedorPage() {
                     placeholder="admin"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="w-full text-sm font-semibold bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-3 focus:outline-none focus:ring-2 focus:ring-[#F05A24]"
+                    className="w-full text-sm font-semibold bg-slate-50 border border-slate-300 rounded-md px-3.5 py-3 focus:outline-none focus:ring-2 focus:ring-[#F05A24]"
                   />
                 </div>
 
@@ -143,12 +143,12 @@ export default function MantenedorPage() {
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-3 focus:outline-none focus:ring-2 focus:ring-[#F05A24]"
+                    className="w-full text-sm bg-slate-50 border border-slate-300 rounded-md px-3.5 py-3 focus:outline-none focus:ring-2 focus:ring-[#F05A24]"
                   />
                 </div>
 
                 {errorMsg && (
-                  <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 font-medium flex items-center gap-2">
+                  <div className="p-3 bg-red-50 border border-red-200 rounded-md text-xs text-red-700 font-medium flex items-center gap-2">
                     <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
                     <span>{errorMsg}</span>
                   </div>
@@ -157,10 +157,10 @@ export default function MantenedorPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-[#F05A24] hover:bg-[#D94B18] text-white font-extrabold py-3.5 px-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-base cursor-pointer disabled:opacity-50"
+                  className="w-full bg-[#F05A24] hover:bg-[#D94B18] text-white font-extrabold py-3.5 px-4 rounded-md shadow-md transition-all flex items-center justify-center gap-2 text-base cursor-pointer disabled:opacity-50"
                 >
                   {loading ? (
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-md animate-spin" />
                   ) : (
                     <>
                       <KeyRound className="w-5 h-5 text-white" />
@@ -171,7 +171,7 @@ export default function MantenedorPage() {
               </form>
 
               {/* Asistente con credenciales de prueba */}
-              <div className="bg-[#FFF7ED] border border-[#FFEDD5] rounded-2xl p-4 text-center space-y-1">
+              <div className="bg-[#FFF7ED] border border-[#FFEDD5] rounded-lg p-4 text-center space-y-1">
                 <span className="text-[11px] font-bold text-slate-600 block">💡 Credenciales de Acceso de Prueba:</span>
                 <p className="text-xs font-mono font-bold text-[#F05A24]">
                   Usuario: <span className="text-slate-900">admin</span> • Clave: <span className="text-slate-900">pullman2026</span>

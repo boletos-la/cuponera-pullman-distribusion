@@ -121,7 +121,7 @@ export default function AdminMaintainer() {
     }
 
     return (
-      <div className="flex justify-between items-center bg-slate-50 border border-slate-200 p-3 rounded-xl mb-4 shadow-sm animate-fade-in">
+      <div className="flex justify-between items-center bg-slate-50 border border-slate-200 p-3 rounded-md mb-4 shadow-sm animate-fade-in">
         <span className="text-xs font-bold text-slate-500 ml-2">
           Mostrando {Math.min((currentPage - 1) * itemsPerPage + 1, totalItems)} - {Math.min(currentPage * itemsPerPage, totalItems)} de {totalItems}
         </span>
@@ -141,7 +141,7 @@ export default function AdminMaintainer() {
                 onClick={() => setCurrentPage(p)}
                 className={`w-8 h-8 flex items-center justify-center font-bold text-xs rounded-lg transition-colors cursor-pointer shadow-xs ${
                   currentPage === p 
-                    ? 'bg-[#fa5e00] text-white border-transparent' 
+                    ? 'bg-[#00c7cc] text-white border-transparent' 
                     : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100'
                 }`}
               >
@@ -554,8 +554,8 @@ export default function AdminMaintainer() {
         <div className="w-full lg:w-72 shrink-0 flex flex-col gap-4">
           <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200 sticky top-24">
             <div className="flex items-center gap-3 mb-8">
-              <div className="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center shrink-0">
-                <Settings className="w-5 h-5 text-[#fa5e00]" />
+              <div className="w-10 h-10 rounded-md bg-cyan-100 flex items-center justify-center shrink-0">
+                <Settings className="w-5 h-5 text-[#00c7cc]" />
               </div>
               <div>
                 <h2 className="text-lg font-black text-slate-900 leading-tight">Mantenedor</h2>
@@ -564,26 +564,26 @@ export default function AdminMaintainer() {
             </div>
 
             <nav className="flex flex-col gap-2">
-              <button onClick={() => setActiveTab('catalogo')} className={`w-full px-4 py-3 rounded-xl text-sm font-bold transition-all flex items-center gap-3 ${activeTab === 'catalogo' ? 'bg-[#fa5e00] text-white shadow-md shadow-orange-200' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}>
+              <button onClick={() => setActiveTab('catalogo')} className={`w-full px-4 py-3 rounded-md text-sm font-bold transition-all flex items-center gap-3 ${activeTab === 'catalogo' ? 'bg-[#00c7cc] text-white shadow-md shadow-cyan-200' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}>
                 <ShoppingBag className={`w-5 h-5 ${activeTab === 'catalogo' ? 'text-white' : 'text-slate-400'}`} /> Catálogo
               </button>
-              <button onClick={() => setActiveTab('usuarios')} className={`w-full px-4 py-3 rounded-xl text-sm font-bold transition-all flex items-center gap-3 ${activeTab === 'usuarios' ? 'bg-[#023caf] text-white shadow-md shadow-blue-200' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}>
+              <button onClick={() => setActiveTab('usuarios')} className={`w-full px-4 py-3 rounded-md text-sm font-bold transition-all flex items-center gap-3 ${activeTab === 'usuarios' ? 'bg-[#023caf] text-white shadow-md shadow-blue-200' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}>
                 <Users className={`w-5 h-5 ${activeTab === 'usuarios' ? 'text-white' : 'text-slate-400'}`} /> Usuarios
               </button>
-              <button onClick={() => setActiveTab('transacciones')} className={`w-full px-4 py-3 rounded-xl text-sm font-bold transition-all flex items-center gap-3 ${activeTab === 'transacciones' ? 'bg-emerald-600 text-white shadow-md shadow-emerald-200' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}>
+              <button onClick={() => setActiveTab('transacciones')} className={`w-full px-4 py-3 rounded-md text-sm font-bold transition-all flex items-center gap-3 ${activeTab === 'transacciones' ? 'bg-emerald-600 text-white shadow-md shadow-emerald-200' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}>
                 <CreditCard className={`w-5 h-5 ${activeTab === 'transacciones' ? 'text-white' : 'text-slate-400'}`} /> Pagos
               </button>
-              <button onClick={() => setActiveTab('compras')} className={`w-full px-4 py-3 rounded-xl text-sm font-bold transition-all flex items-center gap-3 ${activeTab === 'compras' ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}>
+              <button onClick={() => setActiveTab('compras')} className={`w-full px-4 py-3 rounded-md text-sm font-bold transition-all flex items-center gap-3 ${activeTab === 'compras' ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}>
                 <Ticket className={`w-5 h-5 ${activeTab === 'compras' ? 'text-white' : 'text-slate-400'}`} /> Cuponeras
               </button>
-              <button onClick={() => setActiveTab('canjes')} className={`w-full px-4 py-3 rounded-xl text-sm font-bold transition-all flex items-center gap-3 ${activeTab === 'canjes' ? 'bg-amber-500 text-white shadow-md shadow-amber-200' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}>
+              <button onClick={() => setActiveTab('canjes')} className={`w-full px-4 py-3 rounded-md text-sm font-bold transition-all flex items-center gap-3 ${activeTab === 'canjes' ? 'bg-amber-500 text-white shadow-md shadow-amber-200' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}>
                 <ArrowLeftRight className={`w-5 h-5 ${activeTab === 'canjes' ? 'text-white' : 'text-slate-400'}`} /> Canjes
               </button>
-              <button onClick={() => setActiveTab('auditoria')} className={`w-full px-4 py-3 rounded-xl text-sm font-bold transition-all flex items-center gap-3 ${activeTab === 'auditoria' ? 'bg-slate-800 text-white shadow-md shadow-slate-300' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}>
+              <button onClick={() => setActiveTab('auditoria')} className={`w-full px-4 py-3 rounded-md text-sm font-bold transition-all flex items-center gap-3 ${activeTab === 'auditoria' ? 'bg-slate-800 text-white shadow-md shadow-slate-300' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}>
                 <History className={`w-5 h-5 ${activeTab === 'auditoria' ? 'text-white' : 'text-slate-400'}`} /> Auditoría
               </button>
               <div className="h-px bg-slate-200 my-2"></div>
-              <button onClick={() => setActiveTab('configuracion')} className={`w-full px-4 py-3 rounded-xl text-sm font-bold transition-all flex items-center gap-3 ${activeTab === 'configuracion' ? 'bg-rose-600 text-white shadow-md shadow-rose-200' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}>
+              <button onClick={() => setActiveTab('configuracion')} className={`w-full px-4 py-3 rounded-md text-sm font-bold transition-all flex items-center gap-3 ${activeTab === 'configuracion' ? 'bg-rose-600 text-white shadow-md shadow-rose-200' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}>
                 <Settings className={`w-5 h-5 ${activeTab === 'configuracion' ? 'text-white' : 'text-slate-400'}`} /> Banner UI
               </button>
             </nav>
@@ -596,7 +596,7 @@ export default function AdminMaintainer() {
             {/* CONTENT */}
         {activeTab === 'catalogo' && (
           <div className="flex flex-col gap-4 animate-fade-in lg:h-[calc(100vh-160px)]">
-            <div className="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-200">
+            <div className="flex justify-between items-center bg-slate-50 p-3 rounded-md border border-slate-200">
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
                   <Search className="w-4 h-4 text-slate-400" />
@@ -607,13 +607,13 @@ export default function AdminMaintainer() {
                   <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} /> Actualizar
                 </button>
               </div>
-              <button onClick={handleOpenNew} className="bg-[#fa5e00] text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-2 shadow-sm">
+              <button onClick={handleOpenNew} className="bg-[#00c7cc] text-white font-bold px-4 py-2 rounded-md text-xs flex items-center gap-2 shadow-sm">
                 <Plus className="w-4 h-4" /> Crear Nueva Cuponera
               </button>
             </div>
             
             {renderPagination(sortedCuponeras.length)}
-            <div className="border border-slate-200 rounded-2xl flex-1 min-h-0 overflow-auto">
+            <div className="border border-slate-200 rounded-lg flex-1 min-h-0 overflow-auto">
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-20 shadow-sm">
                   <tr>
@@ -654,9 +654,9 @@ export default function AdminMaintainer() {
                         </div>
                       </td>
                       <td className="p-3 font-semibold">${c.valorUnitario.toLocaleString('es-CL')}</td>
-                      <td className="p-3 font-bold text-[#fa5e00]">{c.cantidadCupones}</td>
-                      <td className="p-3 font-black text-[#fa5e00]">${c.precioTotal.toLocaleString('es-CL')}</td>
-                      <td className="p-3"><span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${c.activa ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-600'}`}>{c.activa ? 'Activa' : 'Inactiva'}</span></td>
+                      <td className="p-3 font-bold text-[#00c7cc]">{c.cantidadCupones}</td>
+                      <td className="p-3 font-black text-[#00c7cc]">${c.precioTotal.toLocaleString('es-CL')}</td>
+                      <td className="p-3"><span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase ${c.activa ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-600'}`}>{c.activa ? 'Activa' : 'Inactiva'}</span></td>
                       <td className="p-3 text-right w-28">
                         <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all duration-200 transform translate-x-1 group-hover:translate-x-0">
                           <button
@@ -685,7 +685,7 @@ export default function AdminMaintainer() {
 
         {activeTab === 'usuarios' && (
           <div className="flex flex-col gap-4 animate-fade-in lg:h-[calc(100vh-160px)]">
-            <div className="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-200">
+            <div className="flex justify-between items-center bg-slate-50 p-3 rounded-md border border-slate-200">
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
                   <Search className="w-4 h-4 text-slate-400" />
@@ -698,7 +698,7 @@ export default function AdminMaintainer() {
               </div>
             </div>
             {renderPagination(filteredUsuarios.length)}
-            <div className="border border-slate-200 rounded-2xl flex-1 min-h-0 overflow-auto">
+            <div className="border border-slate-200 rounded-lg flex-1 min-h-0 overflow-auto">
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-20 shadow-sm">
                   <tr>
@@ -741,7 +741,7 @@ export default function AdminMaintainer() {
 
         {activeTab === 'transacciones' && (
           <div className="flex flex-col gap-4 animate-fade-in lg:h-[calc(100vh-160px)]">
-            <div className="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-200">
+            <div className="flex justify-between items-center bg-slate-50 p-3 rounded-md border border-slate-200">
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
                   <Search className="w-4 h-4 text-slate-400" />
@@ -754,7 +754,7 @@ export default function AdminMaintainer() {
               </div>
             </div>
             {renderPagination(filteredTx.length)}
-            <div className="border border-slate-200 rounded-2xl flex-1 min-h-0 overflow-auto">
+            <div className="border border-slate-200 rounded-lg flex-1 min-h-0 overflow-auto">
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-20 shadow-sm">
                   <tr>
@@ -794,7 +794,7 @@ export default function AdminMaintainer() {
                       </td>
                       <td className="p-3 font-bold">${Number(t.monto).toLocaleString('es-CL')}</td>
                       <td className="p-3">
-                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${t.estado === 'APROBADO' ? 'bg-emerald-100 text-emerald-800' : t.estado === 'RECHAZADO' || t.estado === 'FALLIDO' ? 'bg-rose-100 text-rose-800' : 'bg-amber-100 text-amber-800'}`}>
+                        <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${t.estado === 'APROBADO' ? 'bg-emerald-100 text-emerald-800' : t.estado === 'RECHAZADO' || t.estado === 'FALLIDO' ? 'bg-rose-100 text-rose-800' : 'bg-amber-100 text-amber-800'}`}>
                           {t.estado}
                         </span>
                       </td>
@@ -846,21 +846,21 @@ export default function AdminMaintainer() {
               return (
                 <>
                   <div className="grid grid-cols-3 gap-4">
-                    <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col items-center justify-center">
+                    <div className="bg-slate-50 border border-slate-200 rounded-md p-4 flex flex-col items-center justify-center">
                       <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Total Cuponeras</span>
                       <span className="text-2xl font-black text-slate-800">{totalCuponeras}</span>
                     </div>
-                    <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-4 flex flex-col items-center justify-center">
+                    <div className="bg-emerald-50 border border-emerald-100 rounded-md p-4 flex flex-col items-center justify-center">
                       <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider mb-1">Activas</span>
                       <span className="text-2xl font-black text-emerald-700">{totalActivas}</span>
                     </div>
-                    <div className="bg-rose-50 border border-rose-100 rounded-xl p-4 flex flex-col items-center justify-center">
+                    <div className="bg-rose-50 border border-rose-100 rounded-md p-4 flex flex-col items-center justify-center">
                       <span className="text-[10px] font-bold text-rose-600 uppercase tracking-wider mb-1">Inactivas / Vencidas</span>
                       <span className="text-2xl font-black text-rose-700">{totalInactivas}</span>
                     </div>
                   </div>
 
-                  <div className="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-200">
+                  <div className="flex justify-between items-center bg-slate-50 p-3 rounded-md border border-slate-200">
                     <div className="flex items-center gap-4">
                       <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
                         <Search className="w-4 h-4 text-slate-400" />
@@ -874,7 +874,7 @@ export default function AdminMaintainer() {
                   </div>
 
                   {renderPagination(groupedUsers.length)}
-                  <div className="border border-slate-200 rounded-2xl flex-1 min-h-0 overflow-auto">
+                  <div className="border border-slate-200 rounded-lg flex-1 min-h-0 overflow-auto">
                     <table className="w-full text-left text-xs">
                       <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-20 shadow-sm">
                         <tr>
@@ -924,11 +924,11 @@ export default function AdminMaintainer() {
                                             </div>
                                             <div className="text-center">
                                               <div className="text-[10px] text-slate-500 uppercase font-bold">Saldo</div>
-                                              <div className="font-black text-[#fa5e00]">{c.usos_restantes}</div>
+                                              <div className="font-black text-[#00c7cc]">{c.usos_restantes}</div>
                                             </div>
                                             <div className="text-center">
                                               <div className="text-[10px] text-slate-500 uppercase font-bold">Estado</div>
-                                              <span className={`px-2 py-0.5 mt-0.5 inline-block rounded-full text-[10px] font-bold ${c.activa && !cVencida ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}`}>
+                                              <span className={`px-2 py-0.5 mt-0.5 inline-block rounded-md text-[10px] font-bold ${c.activa && !cVencida ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}`}>
                                                 {c.activa && !cVencida ? 'Activa' : 'Inactiva / Vencida'}
                                               </span>
                                             </div>
@@ -962,7 +962,7 @@ export default function AdminMaintainer() {
 
         {activeTab === 'canjes' && (
           <div className="flex flex-col gap-4 animate-fade-in lg:h-[calc(100vh-160px)]">
-            <div className="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-200">
+            <div className="flex justify-between items-center bg-slate-50 p-3 rounded-md border border-slate-200">
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
                   <Search className="w-4 h-4 text-slate-400" />
@@ -975,7 +975,7 @@ export default function AdminMaintainer() {
               </div>
             </div>
             {renderPagination(filteredCanjes.length)}
-            <div className="border border-slate-200 rounded-2xl flex-1 min-h-0 overflow-auto">
+            <div className="border border-slate-200 rounded-lg flex-1 min-h-0 overflow-auto">
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-20 shadow-sm">
                   <tr>
@@ -1012,14 +1012,14 @@ export default function AdminMaintainer() {
                   {paginate(filteredCanjes).map(c => (
                     <tr key={c.id} className="hover:bg-slate-50">
                       <td className="p-3 font-mono font-bold text-slate-700">{c.pnr_kupos}</td>
-                      <td className="p-3 font-mono font-bold text-[#fa5e00] bg-[#FFEDD5] px-2 py-1 rounded inline-block m-2 border border-[#FED7AA]">{c.Cupon?.codigo || '-'}</td>
+                      <td className="p-3 font-mono font-bold text-[#00c7cc] bg-[#FFEDD5] px-2 py-1 rounded inline-block m-2 border border-[#FED7AA]">{c.Cupon?.codigo || '-'}</td>
                       <td className="p-3 font-semibold text-slate-800">{c.Cupon?.UsuarioCuponera?.Cuponera?.nombre || 'Cuponera N/A'}</td>
                       <td className="p-3 font-mono">{c.rut_usuario}</td>
                       <td className="p-3 font-semibold text-slate-700">{c.nombre_usuario ? fixEncoding(c.nombre_usuario) : '-'}</td>
                       <td className="p-3 font-semibold">{c.origen} - {c.destino}</td>
                       <td className="p-3 font-mono">{c.asiento}</td>
                       <td className="p-3">
-                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${c.estado === 'CONFIRMADO' ? 'bg-emerald-100 text-emerald-800' : c.estado === 'ANULADO' ? 'bg-purple-100 text-purple-800' : 'bg-rose-100 text-rose-800'}`}>
+                        <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${c.estado === 'CONFIRMADO' ? 'bg-emerald-100 text-emerald-800' : c.estado === 'ANULADO' ? 'bg-purple-100 text-purple-800' : 'bg-rose-100 text-rose-800'}`}>
                           {c.estado}
                         </span>
                       </td>
@@ -1034,7 +1034,7 @@ export default function AdminMaintainer() {
 
         {activeTab === 'auditoria' && (
           <div className="flex flex-col gap-4 animate-fade-in lg:h-[calc(100vh-160px)]">
-            <div className="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-200">
+            <div className="flex justify-between items-center bg-slate-50 p-3 rounded-md border border-slate-200">
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2 text-xs font-bold text-slate-700 shrink-0">
                   <Search className="w-4 h-4 text-slate-400" />
@@ -1059,7 +1059,7 @@ export default function AdminMaintainer() {
               </div>
             </div>
             {renderPagination(filteredAuditoria.length)}
-            <div className="border border-slate-200 rounded-2xl flex-1 min-h-0 overflow-auto">
+            <div className="border border-slate-200 rounded-lg flex-1 min-h-0 overflow-auto">
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-20 shadow-sm">
                   <tr>
@@ -1086,7 +1086,7 @@ export default function AdminMaintainer() {
                       else if (log.accion === 'COMPRA_CUPONERA') badgeColor = 'bg-[#023caf]/10 text-[#023caf]';
                       else if (log.accion === 'OTP_VALIDADO') badgeColor = 'bg-teal-100 text-teal-800';
                       else if (log.accion === 'OTP_GENERADO') badgeColor = 'bg-amber-100 text-amber-800';
-                      else if (log.accion === 'CREACION_CUPONERA' || log.accion === 'EDICION_CUPONERA') badgeColor = 'bg-orange-100 text-orange-800';
+                      else if (log.accion === 'CREACION_CUPONERA' || log.accion === 'EDICION_CUPONERA') badgeColor = 'bg-cyan-100 text-cyan-800';
                       else if (log.accion?.startsWith('ERROR')) badgeColor = 'bg-red-100 text-red-800';
 
                       const hasPayload = log.payload !== undefined && log.payload !== null && log.payload !== '';
@@ -1186,7 +1186,7 @@ export default function AdminMaintainer() {
         {activeTab === 'configuracion' && (
           <div className="space-y-4 animate-fade-in">
             <h2 className="text-xl font-black text-slate-900 mb-6 flex items-center gap-2">
-              <Settings className="w-5 h-5 text-[#fa5e00]" /> Configuración del Banner
+              <Settings className="w-5 h-5 text-[#00c7cc]" /> Configuración del Banner
             </h2>
             
             
@@ -1197,7 +1197,7 @@ export default function AdminMaintainer() {
                 <div className="flex flex-col gap-4">
                   <div className="flex-1">
                     <span className="text-xs font-bold text-slate-600 block mb-1">Subir Imagen:</span>
-                    <label className="flex items-center justify-center w-full bg-slate-50 border-2 border-slate-300 border-dashed rounded-xl px-4 py-4 cursor-pointer hover:bg-slate-100 transition-colors text-center">
+                    <label className="flex items-center justify-center w-full bg-slate-50 border-2 border-slate-300 border-dashed rounded-md px-4 py-4 cursor-pointer hover:bg-slate-100 transition-colors text-center">
                       <span className="text-sm font-medium text-slate-500">
                         {bannerFile ? `Archivo seleccionado: ${bannerFile.name}` : 'Haz clic para seleccionar una imagen'}
                       </span>
@@ -1217,14 +1217,14 @@ export default function AdminMaintainer() {
                       value={bannerUrl} 
                       onChange={e => setBannerUrl(e.target.value)} 
                       placeholder="https://ejemplo.com/banner.jpg"
-                      className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
                     />
                   </div>
                 </div>
               </div>
               
               {(bannerUrl || bannerFile) && (
-                <div className="mt-4 border border-slate-200 rounded-xl overflow-hidden bg-slate-100">
+                <div className="mt-4 border border-slate-200 rounded-md overflow-hidden bg-slate-100">
                   <p className="text-xs font-bold text-slate-500 p-2 text-center border-b border-slate-200 bg-white">Vista Previa</p>
                   <img 
                     src={bannerFile ? URL.createObjectURL(bannerFile) : getFullImageUrl(bannerUrl)} 
@@ -1239,7 +1239,7 @@ export default function AdminMaintainer() {
                 <button 
                   onClick={saveConfig} 
                   disabled={savingConfig}
-                  className="bg-[#fa5e00] hover:bg-[#e55400] text-white font-bold py-3 px-8 rounded-xl shadow-md transition-all text-sm disabled:opacity-50"
+                  className="bg-[#00c7cc] hover:bg-[#00b3b7] text-white font-bold py-3 px-8 rounded-md shadow-md transition-all text-sm disabled:opacity-50"
                 >
                   {savingConfig ? 'Guardando...' : 'Guardar Configuración'}
                 </button>
@@ -1247,7 +1247,7 @@ export default function AdminMaintainer() {
                   <button 
                     onClick={removeBanner} 
                     disabled={savingConfig}
-                    className="bg-white hover:bg-slate-50 text-red-600 border border-red-200 font-bold py-3 px-8 rounded-xl shadow-sm transition-all text-sm disabled:opacity-50"
+                    className="bg-white hover:bg-slate-50 text-red-600 border border-red-200 font-bold py-3 px-8 rounded-md shadow-sm transition-all text-sm disabled:opacity-50"
                   >
                     Eliminar Banner
                   </button>
@@ -1264,7 +1264,7 @@ export default function AdminMaintainer() {
       {mounted && showModal && createPortal(
         <div className="fixed inset-0 w-screen h-screen z-[9999] flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
           <div className="bg-white rounded-3xl max-w-5xl w-full max-h-full overflow-y-auto p-6 sm:p-8 shadow-2xl border border-slate-100 relative">
-            <button onClick={() => setShowModal(false)} className="absolute top-6 right-6 text-slate-400 hover:text-slate-600 cursor-pointer bg-slate-100 hover:bg-slate-200 p-1.5 rounded-full transition-colors">
+            <button onClick={() => setShowModal(false)} className="absolute top-6 right-6 text-slate-400 hover:text-slate-600 cursor-pointer bg-slate-100 hover:bg-slate-200 p-1.5 rounded-md transition-colors">
               <X className="w-5 h-5 stroke-[2.5]" />
             </button>
             <h3 className="text-xl font-black text-slate-900 mb-6 border-b border-slate-100 pb-4 pr-12">
@@ -1277,14 +1277,14 @@ export default function AdminMaintainer() {
                 <div className="space-y-5">
                   <div className="grid grid-cols-1 sm:grid-cols-[200px_1fr] items-center gap-2 sm:gap-4">
                     <label className="sm:text-right font-bold text-slate-700">Nombre de la zona <span className="text-red-500">*</span></label>
-                    <input type="text" required value={nombre} onChange={(e) => setNombre(e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]" placeholder="ej. CUPONERA LOS ANDES (10)" />
+                    <input type="text" required value={nombre} onChange={(e) => setNombre(e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-md px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]" placeholder="ej. CUPONERA LOS ANDES (10)" />
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-[200px_1fr] items-start gap-2 sm:gap-4">
                     <label className="sm:text-right font-bold text-slate-700 sm:mt-3">Combinación de ciudades</label>
                     <div className="space-y-3">
                       {tramosItems.map((tramo, index) => (
-                        <div key={index} className="bg-slate-50 border border-slate-200 p-2.5 sm:p-3 rounded-2xl space-y-2.5">
+                        <div key={index} className="bg-slate-50 border border-slate-200 p-2.5 sm:p-3 rounded-lg space-y-2.5">
                           {/* Fila Origen */}
                           <div className="flex items-center gap-2 sm:gap-3">
                             <span className="text-slate-600 text-xs font-bold w-14 shrink-0 pl-1">Origen</span>
@@ -1317,7 +1317,7 @@ export default function AdminMaintainer() {
                                 className="focus:outline-none transition-transform hover:scale-110 active:scale-95 cursor-pointer"
                                 title="Agregar combinación"
                               >
-                                <Plus className="w-6 h-6 bg-green-600 hover:bg-green-700 text-white rounded-full p-1 stroke-[3] shadow-sm transition-colors" />
+                                <Plus className="w-6 h-6 bg-green-600 hover:bg-green-700 text-white rounded-md p-1 stroke-[3] shadow-sm transition-colors" />
                               </button>
                               <button
                                 type="button"
@@ -1326,7 +1326,7 @@ export default function AdminMaintainer() {
                                 disabled={tramosItems.length <= 1}
                                 title="Eliminar combinación"
                               >
-                                <Minus className="w-6 h-6 bg-red-600 hover:bg-red-700 text-white rounded-full p-1 stroke-[3] shadow-sm transition-colors" />
+                                <Minus className="w-6 h-6 bg-red-600 hover:bg-red-700 text-white rounded-md p-1 stroke-[3] shadow-sm transition-colors" />
                               </button>
                             </div>
                           </div>
@@ -1337,23 +1337,23 @@ export default function AdminMaintainer() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-[200px_1fr] items-center gap-2 sm:gap-4">
                     <label className="sm:text-right font-bold text-slate-700">Monto del cupón</label>
-                    <input type="number" required min="1" value={valorUnitario} onChange={(e) => setValorUnitario(e.target.value === '' ? '' : Number(e.target.value))} className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]" />
+                    <input type="number" required min="1" value={valorUnitario} onChange={(e) => setValorUnitario(e.target.value === '' ? '' : Number(e.target.value))} className="w-full bg-slate-50 border border-slate-300 rounded-md px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]" />
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-[200px_1fr] items-center gap-2 sm:gap-4">
                     <label className="sm:text-right font-bold text-slate-700 uppercase">NÚMERO DE CUPONES</label>
-                    <input type="number" required min="1" value={cantidadCupones} onChange={(e) => setCantidadCupones(e.target.value === '' ? '' : Number(e.target.value))} className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]" />
+                    <input type="number" required min="1" value={cantidadCupones} onChange={(e) => setCantidadCupones(e.target.value === '' ? '' : Number(e.target.value))} className="w-full bg-slate-50 border border-slate-300 rounded-md px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]" />
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-[200px_1fr] items-center gap-2 sm:gap-4">
                     <label className="sm:text-right font-bold text-slate-700">Estado</label>
                     <div className="flex items-center gap-6">
                       <label className="flex items-center gap-2 cursor-pointer">
-                        <input type="radio" name="estado" checked={estadoActivo === 'Activo'} onChange={() => { setEstadoActivo('Activo'); setActiva(true); }} className="accent-[#fa5e00] w-4 h-4 cursor-pointer" />
+                        <input type="radio" name="estado" checked={estadoActivo === 'Activo'} onChange={() => { setEstadoActivo('Activo'); setActiva(true); }} className="accent-[#00c7cc] w-4 h-4 cursor-pointer" />
                         <span className={estadoActivo === 'Activo' ? 'font-bold text-slate-900' : 'text-slate-500'}>Activo</span>
                       </label>
                       <label className="flex items-center gap-2 cursor-pointer">
-                        <input type="radio" name="estado" checked={estadoActivo === 'Inactivo'} onChange={() => { setEstadoActivo('Inactivo'); setActiva(false); }} className="accent-[#fa5e00] w-4 h-4 cursor-pointer" />
+                        <input type="radio" name="estado" checked={estadoActivo === 'Inactivo'} onChange={() => { setEstadoActivo('Inactivo'); setActiva(false); }} className="accent-[#00c7cc] w-4 h-4 cursor-pointer" />
                         <span className={estadoActivo === 'Inactivo' ? 'font-bold text-slate-900' : 'text-slate-500'}>Inactivo</span>
                       </label>
                     </div>
@@ -1364,7 +1364,7 @@ export default function AdminMaintainer() {
                 <div className="space-y-6 lg:pt-[76px] lg:pl-4">
                   <div className="flex items-center gap-4">
                     <label className="w-40 sm:w-36 sm:text-right font-bold text-slate-700">Tipo de asiento</label>
-                    <select value={tipoAsiento} onChange={(e) => setTipoAsiento(e.target.value)} className="flex-1 bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf] cursor-pointer appearance-none">
+                    <select value={tipoAsiento} onChange={(e) => setTipoAsiento(e.target.value)} className="flex-1 bg-slate-50 border border-slate-300 rounded-md px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf] cursor-pointer appearance-none">
                       <option value="Todos">Todos</option>
                       <option value="Semi Cama">Semi Cama</option>
                       <option value="Salon Cama">Salón Cama</option>
@@ -1377,10 +1377,10 @@ export default function AdminMaintainer() {
 
                   <div className="flex items-center gap-4">
                     <label className="w-40 sm:w-36 sm:text-right font-bold text-slate-700">Boleto adicional</label>
-                    <div className="flex items-center gap-4 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 w-fit">
-                      <button type="button" onClick={() => setBoletoAdicional(Math.max(0, boletoAdicional - 1))} className="text-white bg-[#fa5e00] hover:bg-[#e55400] w-6 h-6 rounded-full flex items-center justify-center font-bold text-lg leading-none p-0 pb-[2px] focus:outline-none transition-transform hover:scale-110 cursor-pointer shadow-sm">-</button>
+                    <div className="flex items-center gap-4 bg-slate-50 border border-slate-200 rounded-md px-4 py-2 w-fit">
+                      <button type="button" onClick={() => setBoletoAdicional(Math.max(0, boletoAdicional - 1))} className="text-white bg-[#00c7cc] hover:bg-[#00b3b7] w-6 h-6 rounded-md flex items-center justify-center font-bold text-lg leading-none p-0 pb-[2px] focus:outline-none transition-transform hover:scale-110 cursor-pointer shadow-sm">-</button>
                       <span className="font-black text-lg w-4 text-center">{boletoAdicional}</span>
-                      <button type="button" onClick={() => setBoletoAdicional(boletoAdicional + 1)} className="text-white bg-[#fa5e00] hover:bg-[#e55400] w-6 h-6 rounded-full flex items-center justify-center font-bold text-lg leading-none p-0 pb-[1px] focus:outline-none transition-transform hover:scale-110 cursor-pointer shadow-sm">+</button>
+                      <button type="button" onClick={() => setBoletoAdicional(boletoAdicional + 1)} className="text-white bg-[#00c7cc] hover:bg-[#00b3b7] w-6 h-6 rounded-md flex items-center justify-center font-bold text-lg leading-none p-0 pb-[1px] focus:outline-none transition-transform hover:scale-110 cursor-pointer shadow-sm">+</button>
                     </div>
                   </div>
                 </div>
@@ -1388,7 +1388,7 @@ export default function AdminMaintainer() {
 
               {/* Botones */}
               <div className="flex justify-center items-center gap-6 pt-10 pb-4">
-                <button type="submit" disabled={saving} className="bg-[#fa5e00] hover:bg-[#e55400] text-white font-bold py-3 px-10 rounded-xl shadow-md transition-all text-sm focus:outline-none cursor-pointer disabled:opacity-50">
+                <button type="submit" disabled={saving} className="bg-[#00c7cc] hover:bg-[#00b3b7] text-white font-bold py-3 px-10 rounded-md shadow-md transition-all text-sm focus:outline-none cursor-pointer disabled:opacity-50">
                   {saving ? 'Guardando...' : editingId ? 'Actualizar' : 'Crear'}
                 </button>
                 <button type="button" onClick={() => setShowModal(false)} className="text-red-500 hover:text-red-700 font-bold text-sm focus:outline-none transition-colors cursor-pointer">
@@ -1405,7 +1405,7 @@ export default function AdminMaintainer() {
       {mounted && deleteConfirmId && typeof document !== 'undefined' && createPortal(
         <div className="fixed inset-0 w-screen h-screen z-[99999] flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
           <div className="bg-white rounded-3xl p-6 sm:p-8 w-full max-w-md shadow-2xl relative overflow-hidden flex flex-col items-center text-center">
-            <div className="w-16 h-16 bg-rose-100 rounded-full flex items-center justify-center mb-4">
+            <div className="w-16 h-16 bg-rose-100 rounded-md flex items-center justify-center mb-4">
               <Trash2 className="w-8 h-8 text-rose-600" />
             </div>
             <h3 className="text-xl font-black text-slate-800 mb-2">¿Eliminar Cuponera?</h3>
@@ -1413,13 +1413,13 @@ export default function AdminMaintainer() {
             <div className="flex gap-3 w-full">
               <button
                 onClick={() => setDeleteConfirmId(null)}
-                className="flex-1 py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition-colors cursor-pointer"
+                className="flex-1 py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-md transition-colors cursor-pointer"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleDeleteCuponera}
-                className="flex-1 py-3 px-4 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl shadow-lg shadow-rose-200 transition-colors cursor-pointer"
+                className="flex-1 py-3 px-4 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-md shadow-lg shadow-rose-200 transition-colors cursor-pointer"
               >
                 Sí, eliminar
               </button>
@@ -1454,7 +1454,7 @@ export default function AdminMaintainer() {
                 <button
                   type="button"
                   onClick={() => setAuditDrawer(prev => ({ ...prev, isOpen: false }))}
-                  className="text-slate-400 hover:text-slate-600 p-2 rounded-xl hover:bg-slate-200/60 transition-colors cursor-pointer"
+                  className="text-slate-400 hover:text-slate-600 p-2 rounded-md hover:bg-slate-200/60 transition-colors cursor-pointer"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -1530,7 +1530,7 @@ export default function AdminMaintainer() {
                   </button>
                 </div>
 
-                <div className="bg-slate-900 text-emerald-400 p-4 rounded-2xl text-xs font-mono overflow-auto max-h-[60vh] shadow-inner">
+                <div className="bg-slate-900 text-emerald-400 p-4 rounded-lg text-xs font-mono overflow-auto max-h-[60vh] shadow-inner">
                   <pre className="whitespace-pre-wrap break-all">
                     {(() => {
                       try {

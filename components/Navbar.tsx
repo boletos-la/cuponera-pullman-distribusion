@@ -59,7 +59,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
       {showLogoutConfirm && (
         <div className="fixed inset-0 z-[9999] w-screen h-screen min-h-screen flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
           <div className="bg-white rounded-[2rem] w-full max-w-sm p-6 sm:p-8 shadow-2xl border border-slate-100 text-center relative overflow-hidden">
-            <div className="w-16 h-16 rounded-2xl bg-red-50 text-red-500 flex items-center justify-center mx-auto shadow-inner border border-red-100 mb-6">
+            <div className="w-16 h-16 rounded-lg bg-red-50 text-red-500 flex items-center justify-center mx-auto shadow-inner border border-red-100 mb-6">
               <LogOut className="w-8 h-8 ml-1" />
             </div>
             <h3 className="text-2xl font-black text-slate-900 mb-2">¿Cerrar Sesión?</h3>
@@ -69,13 +69,13 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
             <div className="flex flex-col gap-3">
               <button
                 onClick={handleLogout}
-                className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3.5 px-4 rounded-xl transition-all shadow-[0_4px_14px_0_rgba(239,68,68,0.39)] active:scale-[0.98]"
+                className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3.5 px-4 rounded-md transition-all shadow-[0_4px_14px_0_rgba(239,68,68,0.39)] active:scale-[0.98]"
               >
                 Sí, cerrar sesión
               </button>
               <button
                 onClick={() => setShowLogoutConfirm(false)}
-                className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3.5 px-4 rounded-xl transition-all active:scale-[0.98]"
+                className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3.5 px-4 rounded-md transition-all active:scale-[0.98]"
               >
                 Cancelar
               </button>
@@ -94,8 +94,8 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
             className="flex items-center cursor-pointer group"
           >
             <img
-              src="/logo-pullman-beneficios.png"
-              alt="Pullman Cuponeras"
+              src="/logo-boletos.png"
+              alt="boletos.la"
               width={180}
               height={60}
               className="object-contain hover:scale-105 transition-transform"
@@ -114,7 +114,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
                   <button
                     key={item.id}
                     onClick={() => handleTabChange(item.id)}
-                    className={`inline-flex items-center justify-center h-9 px-6 rounded-full text-sm font-medium transition-all hover:scale-105 cursor-pointer ${
+                    className={`inline-flex items-center justify-center h-9 px-6 rounded-md text-sm font-medium transition-all hover:scale-105 cursor-pointer ${
                       isActive
                         ? 'bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-sm'
                         : 'border border-secondary text-secondary hover:bg-secondary/10 hover:text-secondary'
@@ -128,7 +128,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
             
             {/* Autenticación (Mobile y Desktop) */}
             {user ? (
-              <div className="flex items-center gap-1 bg-slate-50 border border-slate-200 rounded-full p-1 lg:pl-3 shadow-sm">
+              <div className="flex items-center gap-1 bg-slate-50 border border-slate-200 rounded-md p-1 lg:pl-3 shadow-sm">
                 <button
                   onClick={() => handleTabChange('perfil')}
                   className="flex items-center gap-2 text-left hover:opacity-80 transition-opacity"
@@ -138,14 +138,14 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
                     <span className="text-xs font-bold text-slate-800">{fixEncoding(user.nombre) || 'Usuario'}</span>
                     <span className="text-[10px] text-slate-500 font-medium">{user.rut}</span>
                   </div>
-                  <div className="w-8 h-8 rounded-full bg-[#023caf] text-white flex items-center justify-center shrink-0 shadow-inner">
+                  <div className="w-8 h-8 rounded-md bg-[#023caf] text-white flex items-center justify-center shrink-0 shadow-inner">
                     <User className="w-4 h-4" />
                   </div>
                 </button>
                 <div className="w-px h-6 bg-slate-200 mx-1"></div>
                 <button
                   onClick={() => setShowLogoutConfirm(true)}
-                  className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors"
+                  className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
                   title="Cerrar Sesión"
                 >
                   <LogOut className="w-4 h-4" />
@@ -154,7 +154,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
             ) : (
               <button
                 onClick={() => setShowLoginModal(true)}
-                className="inline-flex items-center gap-1.5 lg:gap-2 h-9 px-4 lg:px-6 rounded-full text-xs lg:text-sm font-medium transition-transform hover:scale-105 cursor-pointer bg-[#fa5e00] text-white hover:bg-[#fa5e00]/90 shadow-sm"
+                className="inline-flex items-center gap-1.5 lg:gap-2 h-9 px-4 lg:px-6 rounded-md text-xs lg:text-sm font-medium transition-transform hover:scale-105 cursor-pointer bg-[#00c7cc] text-white hover:bg-[#00c7cc]/90 shadow-sm"
               >
                 <LogIn className="w-4 h-4" />
                 <span className="hidden lg:inline">Iniciar Sesión</span>
@@ -185,7 +185,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
             <button
               key={item.id}
               onClick={() => handleTabChange(item.id)}
-              className={`flex-1 min-w-[100px] flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-full text-sm transition-all hover:scale-105 cursor-pointer ${
+              className={`flex-1 min-w-[100px] flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-md text-sm transition-all hover:scale-105 cursor-pointer ${
                 isActive 
                   ? 'bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-sm' 
                   : 'border border-secondary text-secondary hover:bg-secondary/10 hover:text-secondary'

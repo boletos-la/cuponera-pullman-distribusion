@@ -88,7 +88,7 @@ export default function ProfileTab() {
   if (isInitialLoading) {
     return (
       <div className="flex flex-col items-center justify-center py-10">
-        <Loader2 className="w-10 h-10 text-[#fa5e00] animate-spin mb-4" />
+        <Loader2 className="w-10 h-10 text-[#00c7cc] animate-spin mb-4" />
         <h3 className="text-lg font-bold text-slate-800">Cargando perfil...</h3>
         <p className="text-sm text-slate-500 mt-1">Preparando tu configuración</p>
       </div>
@@ -100,7 +100,7 @@ export default function ProfileTab() {
   return (
     <div className="space-y-6">
       {message.text && (
-        <div className={`p-4 rounded-xl text-sm font-medium flex items-center gap-2 ${message.type === 'success' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>
+        <div className={`p-4 rounded-md text-sm font-medium flex items-center gap-2 ${message.type === 'success' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>
           {message.type === 'success' ? <CheckCircle2 className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
           <span>{message.text}</span>
         </div>
@@ -108,7 +108,7 @@ export default function ProfileTab() {
 
       <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 space-y-6">
         <h3 className="text-xl font-black text-slate-900 flex items-center gap-2">
-          <Mail className="w-5 h-5 text-[#fa5e00]" />
+          <Mail className="w-5 h-5 text-[#00c7cc]" />
           Actualizar Correo
         </h3>
         <form onSubmit={handleUpdateEmail} className="space-y-4 max-w-md">
@@ -119,7 +119,7 @@ export default function ProfileTab() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className={`w-full text-sm bg-slate-50 border rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf] ${email && !isEmailValid ? 'border-red-400' : 'border-slate-300'}`}
+              className={`w-full text-sm bg-slate-50 border rounded-md px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf] ${email && !isEmailValid ? 'border-red-400' : 'border-slate-300'}`}
             />
             {email && !isEmailValid && (
               <p className="text-xs text-red-500 mt-1.5 font-medium">Formato de correo inválido.</p>
@@ -128,7 +128,7 @@ export default function ProfileTab() {
           <button
             type="submit"
             disabled={loading || email === user.correo || !isEmailValid}
-            className="flex items-center gap-2 justify-center bg-[#023caf] hover:bg-[#083b82] text-white font-bold py-2.5 px-6 rounded-xl transition-all disabled:opacity-50"
+            className="flex items-center gap-2 justify-center bg-[#023caf] hover:bg-[#083b82] text-white font-bold py-2.5 px-6 rounded-md transition-all disabled:opacity-50"
           >
             {loading && <Loader2 className="w-4 h-4 animate-spin" />}
             Guardar Correo
@@ -138,7 +138,7 @@ export default function ProfileTab() {
 
       <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 space-y-6">
         <h3 className="text-xl font-black text-slate-900 flex items-center gap-2">
-          <KeyRound className="w-5 h-5 text-[#fa5e00]" />
+          <KeyRound className="w-5 h-5 text-[#00c7cc]" />
           Actualizar Contraseña
         </h3>
         <form onSubmit={handleUpdatePassword} className="space-y-4 max-w-md">
@@ -150,7 +150,7 @@ export default function ProfileTab() {
                 required
                 value={actualPassword}
                 onChange={(e) => setActualPassword(e.target.value)}
-                className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl pl-3.5 pr-10 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
+                className="w-full text-sm bg-slate-50 border border-slate-300 rounded-md pl-3.5 pr-10 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
               />
               <button
                 type="button"
@@ -170,7 +170,7 @@ export default function ProfileTab() {
                 minLength={8}
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                className={`w-full text-sm bg-slate-50 border rounded-xl pl-3.5 pr-10 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf] ${newPassword && !isPasswordValid ? 'border-red-400' : 'border-slate-300'}`}
+                className={`w-full text-sm bg-slate-50 border rounded-md pl-3.5 pr-10 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf] ${newPassword && !isPasswordValid ? 'border-red-400' : 'border-slate-300'}`}
               />
               <button
                 type="button"
@@ -200,7 +200,7 @@ export default function ProfileTab() {
                 minLength={8}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className={`w-full text-sm bg-slate-50 border rounded-xl pl-3.5 pr-10 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf] ${confirmPassword && !doPasswordsMatch ? 'border-red-400' : 'border-slate-300'}`}
+                className={`w-full text-sm bg-slate-50 border rounded-md pl-3.5 pr-10 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf] ${confirmPassword && !doPasswordsMatch ? 'border-red-400' : 'border-slate-300'}`}
               />
               <button
                 type="button"
@@ -217,7 +217,7 @@ export default function ProfileTab() {
           <button
             type="submit"
             disabled={loading || !actualPassword || !newPassword || !isPasswordValid || !doPasswordsMatch}
-            className="flex items-center gap-2 justify-center bg-[#fa5e00] hover:bg-[#e55400] text-white font-bold py-2.5 px-6 rounded-xl transition-all disabled:opacity-50"
+            className="flex items-center gap-2 justify-center bg-[#00c7cc] hover:bg-[#00b3b7] text-white font-bold py-2.5 px-6 rounded-md transition-all disabled:opacity-50"
           >
             {loading && <Loader2 className="w-4 h-4 animate-spin" />}
             Actualizar Contraseña

@@ -586,7 +586,7 @@ export function TravelSearch({ onNext, onBack }: TravelSearchProps) {
     return (
       <div className="container min-h-screen mx-auto px-4 py-20 h-full">
         <div className="flex flex-col items-center justify-center">
-          <div className="h-8 w-8 rounded-full border-4 border-primary/20 border-t-primary animate-spin mb-4" />
+          <div className="h-8 w-8 rounded-md border-4 border-primary/20 border-t-primary animate-spin mb-4" />
         </div>
       </div>
     );
@@ -620,7 +620,7 @@ export function TravelSearch({ onNext, onBack }: TravelSearchProps) {
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
                   <div
-                    className={`h-8 w-8 rounded-full flex items-center justify-center ${
+                    className={`h-8 w-8 rounded-md flex items-center justify-center ${
                       searchMode === "departure"
                         ? "bg-blue-600 text-white"
                         : departureBooked
@@ -639,7 +639,7 @@ export function TravelSearch({ onNext, onBack }: TravelSearchProps) {
                 <div className="h-1 w-8 bg-gray-300"></div>
                 <div className="flex items-center gap-2">
                   <div
-                    className={`h-8 w-8 rounded-full flex items-center justify-center ${
+                    className={`h-8 w-8 rounded-md flex items-center justify-center ${
                       searchMode === "return"
                         ? "bg-blue-600 text-white"
                         : departureBooked
@@ -720,7 +720,7 @@ export function TravelSearch({ onNext, onBack }: TravelSearchProps) {
                     isSwapDisabled ||
                     (searchMode === "return" && !departureBooked)
                   }
-                  className="h-8 w-8 rounded-full border border-muted-foreground/30 hover:border-primary/50 hover:bg-accent/10 transition-all duration-200"
+                  className="h-8 w-8 rounded-md border border-muted-foreground/30 hover:border-primary/50 hover:bg-accent/10 transition-all duration-200"
                   title="Intercambiar origen y destino"
                 >
                   <ArrowLeftRight className="h-3 w-3 text-muted-foreground hover:text-primary" />
@@ -803,7 +803,7 @@ export function TravelSearch({ onNext, onBack }: TravelSearchProps) {
                       <button
                         type="button"
                         onClick={() => handleReturnDateChange(null)}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 z-10 rounded-full bg-white p-1 text-gray-500 hover:text-red-600 hover:bg-red-50 transition"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 z-10 rounded-md bg-white p-1 text-gray-500 hover:text-red-600 hover:bg-red-50 transition"
                         aria-label="Borrar fecha de vuelta"
                       >
                         <X className="h-4 w-4" />
@@ -899,7 +899,7 @@ export function TravelSearch({ onNext, onBack }: TravelSearchProps) {
               </div>
 
               {currentLoading && (
-                <div className="py-12 bg-white rounded-xl border border-slate-100 shadow-sm">
+                <div className="py-12 bg-white rounded-md border border-slate-100 shadow-sm">
                   <BusRouteLoader message="Buscando los mejores recorridos para ti..." />
                 </div>
               )}

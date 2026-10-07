@@ -383,7 +383,7 @@ export function SeatSelector({
   if (loading) {
     return (
       <div className="flex items-center justify-center py-8 sm:py-12">
-        <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-b-2 border-primary"></div>
+        <div className="animate-spin rounded-md h-6 w-6 sm:h-8 sm:w-8 border-b-2 border-primary"></div>
         <span className="ml-2 text-sm sm:text-base">
           Cargando distribución del bus...
         </span>
@@ -419,7 +419,7 @@ export function SeatSelector({
           <div className="text-xs sm:text-sm text-gray-500 font-medium">
             Frente del Bus
           </div>
-          <div className="w-8 sm:w-12 h-0.5 bg-gray-300 rounded-full"></div>
+          <div className="w-8 sm:w-12 h-0.5 bg-gray-300 rounded-md"></div>
           <ArrowUp className="h-3 w-3 text-gray-400" />
         </div>
       </div>
@@ -437,7 +437,7 @@ export function SeatSelector({
                       className={cn(
                         "h-8 w-8 sm:h-12 sm:w-12 rounded-lg border-2 flex items-center justify-center transition-all duration-200 font-bold text-xs sm:text-sm",
                         selectedSeats.includes(seat)
-                          ? "bg-accent border-orange-600 text-accent-foreground scale-105 shadow-md cursor-pointer"
+                          ? "bg-accent border-cyan-600 text-accent-foreground scale-105 shadow-md cursor-pointer"
                           : isSeatAvailable(seat)
                             ? "bg-blue-100 border-blue-300 text-blue-800 hover:bg-blue-200 hover:border-blue-400 hover:scale-105 cursor-pointer shadow-sm"
                             : "bg-red-100 border-red-300 text-red-800 cursor-not-allowed opacity-80",
@@ -468,7 +468,7 @@ export function SeatSelector({
       </div>
       {/* Indicador de la parte trasera */}
       <div className="flex flex-col items-center gap-1 sm:gap-2">
-        <div className="w-12 sm:w-16 h-1 bg-gray-400 rounded-full"></div>
+        <div className="w-12 sm:w-16 h-1 bg-gray-400 rounded-md"></div>
         <div className="text-xs sm:text-sm text-gray-600 font-medium">
           Parte Trasera
         </div>
@@ -484,7 +484,7 @@ export function SeatSelector({
           <span className="text-xs">Ocupado</span>
         </div>
         <div className="flex items-center gap-1 sm:gap-2">
-          <div className="w-3 h-3 sm:w-4 sm:h-4 bg-accent border-2 border-orange-600 rounded"></div>
+          <div className="w-3 h-3 sm:w-4 sm:h-4 bg-accent border-2 border-cyan-600 rounded"></div>
           <span className="text-xs">Seleccionado</span>
         </div>
       </div>

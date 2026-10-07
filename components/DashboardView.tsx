@@ -142,7 +142,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
     <div className={`space-y-6 ${(step === 'login' || isInitialLoading) ? 'max-w-3xl mt-6 md:mt-8' : 'w-full'} mx-auto`}>
       {isInitialLoading ? (
         <div className="bg-white rounded-[2rem] p-10 shadow-xl border border-slate-100 flex flex-col items-center justify-center min-h-[400px]">
-          <Loader2 className="w-12 h-12 text-[#fa5e00] animate-spin mb-4" />
+          <Loader2 className="w-12 h-12 text-[#00c7cc] animate-spin mb-4" />
           <h3 className="text-xl font-bold text-slate-800">Cargando tus cuponeras...</h3>
           <p className="text-sm text-slate-500 mt-2">Estamos recuperando tu información</p>
         </div>
@@ -152,7 +152,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
             <div className="bg-white rounded-[2rem] p-6 sm:p-10 shadow-xl border border-slate-100 space-y-8 relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-2 bg-[#023caf]" />
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left border-b border-slate-100 pb-6">
-            <div className="w-16 h-16 rounded-2xl bg-blue-50 text-[#023caf] flex items-center justify-center shrink-0 shadow-sm border border-blue-100">
+            <div className="w-16 h-16 rounded-lg bg-blue-50 text-[#023caf] flex items-center justify-center shrink-0 shadow-sm border border-blue-100">
               <LayoutDashboard className="w-8 h-8 text-[#023caf]" />
             </div>
             <div className="space-y-1.5">
@@ -192,8 +192,8 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
                       setRutError('');
                     }
                   }}
-                  className={`w-full text-sm font-semibold bg-white border rounded-xl pl-10 pr-4 py-3.5 focus:outline-none focus:ring-2 text-[#0F172A] ${
-                    rutError ? 'border-red-400 focus:ring-red-400' : 'border-slate-200 focus:ring-[#fa5e00]'
+                  className={`w-full text-sm font-semibold bg-white border rounded-md pl-10 pr-4 py-3.5 focus:outline-none focus:ring-2 text-[#0F172A] ${
+                    rutError ? 'border-red-400 focus:ring-red-400' : 'border-slate-200 focus:ring-[#00c7cc]'
                   }`}
                 />
                 <Search className="w-5 h-5 text-slate-400 absolute left-3.5 top-4" />
@@ -205,7 +205,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
             <button
               type="submit"
               disabled={loading || !rutInput}
-              className="w-full bg-[#fa5e00] hover:bg-[#e55400] text-white font-extrabold py-4 px-6 rounded-full shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 text-sm cursor-pointer disabled:opacity-50 disabled:hover:translate-y-0"
+              className="w-full bg-[#00c7cc] hover:bg-[#00b3b7] text-white font-extrabold py-4 px-6 rounded-md shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 text-sm cursor-pointer disabled:opacity-50 disabled:hover:translate-y-0"
             >
               {loading ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
@@ -224,8 +224,8 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
         <div className="space-y-6 animate-fade-in pt-4 sm:pt-6">
           {/* Tarjetas Consolidadas de Métricas */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="bg-white rounded-2xl p-5 border-l-4 border-l-emerald-500 border-t border-r border-b border-slate-100 shadow-sm flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0">
+            <div className="bg-white rounded-lg p-5 border-l-4 border-l-emerald-500 border-t border-r border-b border-slate-100 shadow-sm flex items-center gap-4">
+              <div className="w-12 h-12 rounded-md bg-emerald-50 flex items-center justify-center shrink-0">
                 <Ticket className="w-6 h-6 text-emerald-600" />
               </div>
               <div>
@@ -234,8 +234,8 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
               </div>
             </div>
 
-            <div className="bg-white rounded-2xl p-5 border-l-4 border-l-[#023caf] border-t border-r border-b border-slate-100 shadow-sm flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center shrink-0">
+            <div className="bg-white rounded-lg p-5 border-l-4 border-l-[#023caf] border-t border-r border-b border-slate-100 shadow-sm flex items-center gap-4">
+              <div className="w-12 h-12 rounded-md bg-blue-50 flex items-center justify-center shrink-0">
                 <CheckCircle className="w-6 h-6 text-[#023caf]" />
               </div>
               <div>
@@ -244,8 +244,8 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
               </div>
             </div>
 
-            <div className="bg-white rounded-2xl p-5 border-l-4 border-l-slate-800 border-t border-r border-b border-slate-100 shadow-sm flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center shrink-0">
+            <div className="bg-white rounded-lg p-5 border-l-4 border-l-slate-800 border-t border-r border-b border-slate-100 shadow-sm flex items-center gap-4">
+              <div className="w-12 h-12 rounded-md bg-slate-100 flex items-center justify-center shrink-0">
                 <LayoutDashboard className="w-6 h-6 text-slate-700" />
               </div>
               <div>
@@ -258,29 +258,29 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
           <div className="bg-white rounded-[2rem] border border-slate-100 shadow-xl p-6 sm:p-8 space-y-6 relative">
             <div className="absolute top-0 left-0 w-full h-2 bg-[#023caf] rounded-t-[2rem]" />
             <div className="sticky top-[72px] z-40 bg-white/95 backdrop-blur-md pb-4 pt-4 border-b border-slate-100 shadow-[0_8px_10px_-4px_rgba(255,255,255,0.9)] -mx-6 px-6 sm:-mx-8 sm:px-8 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mt-[-8px] rounded-t-[1.5rem]">
-              <div className="flex flex-wrap gap-2 bg-slate-50 p-1.5 rounded-full border border-slate-200">
+              <div className="flex flex-wrap gap-2 bg-slate-50 p-1.5 rounded-md border border-slate-200">
                 <button
                   onClick={() => setActiveDashboardTab('cuponeras')}
-                  className={`px-5 py-2.5 text-sm font-bold rounded-full transition-all ${activeDashboardTab === 'cuponeras' ? 'bg-[#023caf] text-white shadow-md' : 'text-slate-600 hover:text-[#023caf] hover:bg-white'}`}
+                  className={`px-5 py-2.5 text-sm font-bold rounded-md transition-all ${activeDashboardTab === 'cuponeras' ? 'bg-[#023caf] text-white shadow-md' : 'text-slate-600 hover:text-[#023caf] hover:bg-white'}`}
                 >
                   Mis Cuponeras
                 </button>
                 <button
                   onClick={() => setActiveDashboardTab('historial')}
-                  className={`px-5 py-2.5 text-sm font-bold rounded-full transition-all ${activeDashboardTab === 'historial' ? 'bg-[#023caf] text-white shadow-md' : 'text-slate-600 hover:text-[#023caf] hover:bg-white'}`}
+                  className={`px-5 py-2.5 text-sm font-bold rounded-md transition-all ${activeDashboardTab === 'historial' ? 'bg-[#023caf] text-white shadow-md' : 'text-slate-600 hover:text-[#023caf] hover:bg-white'}`}
                 >
                   Historial
                 </button>
               </div>
               <div className="flex items-center gap-3">
-                <span className="text-xs font-mono font-bold bg-blue-50 text-[#023caf] px-4 py-2 rounded-full border border-blue-200 shadow-xs">
+                <span className="text-xs font-mono font-bold bg-blue-50 text-[#023caf] px-4 py-2 rounded-md border border-blue-200 shadow-xs">
                   Titular: {rutFormateado}
                 </span>
                 {!authUser && (
                   <button
                     type="button"
                     onClick={handleResetSearch}
-                    className="text-xs font-bold text-[#fa5e00] hover:text-white bg-orange-50 hover:bg-[#fa5e00] px-4 py-2 rounded-full border border-orange-200 hover:border-[#fa5e00] transition-all cursor-pointer flex items-center gap-1.5 shadow-xs"
+                    className="text-xs font-bold text-[#00c7cc] hover:text-white bg-cyan-50 hover:bg-[#00c7cc] px-4 py-2 rounded-md border border-cyan-200 hover:border-[#00c7cc] transition-all cursor-pointer flex items-center gap-1.5 shadow-xs"
                     title="Consultar otro RUT"
                   >
                     <Search className="w-3.5 h-3.5" />
@@ -299,7 +299,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
                       placeholder="Buscar por nombre o tramo..."
                       value={searchCuponeras}
                       onChange={(e) => setSearchCuponeras(e.target.value)}
-                      className="w-full text-sm font-medium bg-white border border-slate-200 rounded-full pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#fa5e00] text-[#0F172A]"
+                      className="w-full text-sm font-medium bg-white border border-slate-200 rounded-md pl-10 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#00c7cc] text-[#0F172A]"
                     />
                     <Search className="w-4 h-4 text-slate-400 absolute left-4 top-3" />
                   </div>
@@ -333,7 +333,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
                           className={`relative bg-white rounded-3xl shadow-lg hover:shadow-xl transition-shadow border border-slate-100 flex flex-col mt-4 ${!canCanjear ? 'opacity-80' : ''}`}
                         >
                           {/* Badge Activa / Sin Saldo */}
-                          <div className={`absolute -top-3 right-4 font-bold text-xs px-3 py-1 rounded-full shadow-sm border border-white z-10 ${canCanjear ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-700'}`}>
+                          <div className={`absolute -top-3 right-4 font-bold text-xs px-3 py-1 rounded-md shadow-sm border border-white z-10 ${canCanjear ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-700'}`}>
                             {c.estado || 'Inactivo'}
                           </div>
 
@@ -350,10 +350,10 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
                                   setOpenTooltipId(openTooltipId === c.codigo ? null : c.codigo);
                                 }}
                               >
-                                <button type="button" className="flex items-center justify-center w-6 h-6 rounded-full border border-slate-200 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-all cursor-pointer sm:cursor-help focus:outline-none">
+                                <button type="button" className="flex items-center justify-center w-6 h-6 rounded-md border border-slate-200 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-all cursor-pointer sm:cursor-help focus:outline-none">
                                   <Info className="w-3.5 h-3.5" />
                                 </button>
-                                <div className={`absolute right-0 top-full mt-2 w-56 bg-slate-100/90 backdrop-blur-md text-slate-800 text-[10px] p-3 rounded-xl shadow-xl z-50 border border-slate-200 transition-all duration-200 ${openTooltipId === c.codigo ? 'opacity-100 visible translate-y-0 pointer-events-auto' : 'opacity-0 invisible -translate-y-1 pointer-events-none sm:group-hover:opacity-100 sm:group-hover:visible sm:group-hover:translate-y-0 sm:group-hover:pointer-events-auto'}`}>
+                                <div className={`absolute right-0 top-full mt-2 w-56 bg-slate-100/90 backdrop-blur-md text-slate-800 text-[10px] p-3 rounded-md shadow-xl z-50 border border-slate-200 transition-all duration-200 ${openTooltipId === c.codigo ? 'opacity-100 visible translate-y-0 pointer-events-auto' : 'opacity-0 invisible -translate-y-1 pointer-events-none sm:group-hover:opacity-100 sm:group-hover:visible sm:group-hover:translate-y-0 sm:group-hover:pointer-events-auto'}`}>
                                   <div className="font-semibold mb-1 text-slate-700 uppercase tracking-wider">Tramos Habilitados:</div>
                                   <ul className="list-disc pl-3 space-y-0.5 font-medium text-slate-600">
                                     {c.tramosPermitidos?.map((t: string, i: number) => (
@@ -366,7 +366,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
 
                             {/* Header con Logo */}
                             <div className="mb-2">
-                              <img src="/logo-pullman-beneficios-tarjeta.png" alt="Pullmanbus" className="h-5 object-contain" />
+                              <img src="/logo-boletos.png" alt="boletos.la" className="h-5 object-contain" />
                             </div>
 
                             {/* Nombre de la Cuponera */}
@@ -407,7 +407,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
                                   <span className="text-xs font-bold text-slate-400">/ {totalC}</span>
                                 </div>
                               </div>
-                              <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden mb-2">
+                              <div className="w-full bg-slate-100 rounded-md h-2 overflow-hidden mb-2">
                                 <div
                                   className={`h-full transition-all duration-500 ${saldoC > 0 ? 'bg-emerald-500' : 'bg-slate-300'}`}
                                   style={{ width: `${porcentajeSaldo}%` }}
@@ -423,7 +423,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
                           <button
                             disabled={!canCanjear}
                             onClick={() => onCanjearCupon(c.codigo, rutFormateado)}
-                            className={`w-full rounded-b-3xl px-6 py-4 flex justify-between items-center font-black text-sm transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${canCanjear ? 'bg-[#fa5e00] hover:bg-[#e55400] text-white' : 'bg-slate-200 text-slate-500'}`}
+                            className={`w-full rounded-b-3xl px-6 py-4 flex justify-between items-center font-black text-sm transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${canCanjear ? 'bg-[#00c7cc] hover:bg-[#00b3b7] text-white' : 'bg-slate-200 text-slate-500'}`}
                           >
                             <span className="mx-auto flex items-center gap-2">
                               {canCanjear ? (

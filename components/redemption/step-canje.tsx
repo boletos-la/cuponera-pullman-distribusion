@@ -190,7 +190,7 @@ export function StepCanje({
   return (
     <div className="max-w-4xl mx-auto animate-fade-in">
       <div className="text-center mb-10">
-        <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
+        <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-md mb-4">
           <Ticket className="w-8 h-8 text-primary" />
         </div>
         <h2 className="text-3xl font-extrabold text-slate-900 mb-2">
@@ -214,7 +214,7 @@ export function StepCanje({
             </div>
           </div>
           <div className="hidden sm:block text-right">
-            <span className="bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full uppercase">
+            <span className="bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-md uppercase">
               Costo: $0
             </span>
           </div>
@@ -222,7 +222,7 @@ export function StepCanje({
 
         <div className="p-8 grid md:grid-cols-2 gap-8">
           {/* Tarjeta Detalle de Viaje */}
-          <div className="bg-slate-50 rounded-2xl p-6 border border-slate-100 shadow-sm relative overflow-hidden">
+          <div className="bg-slate-50 rounded-lg p-6 border border-slate-100 shadow-sm relative overflow-hidden">
             <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
               <Bus className="w-32 h-32" />
             </div>
@@ -251,7 +251,7 @@ export function StepCanje({
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-100 mb-4">
+              <div className="grid grid-cols-2 gap-4 bg-white p-4 rounded-md shadow-sm border border-slate-100 mb-4">
                 <div className="flex items-start gap-3">
                   <Calendar className="w-5 h-5 text-primary mt-0.5" />
                   <div>
@@ -277,7 +277,7 @@ export function StepCanje({
                 </div>
               </div>
 
-              <div className="bg-primary/5 p-4 rounded-xl flex items-center justify-between border border-primary/10">
+              <div className="bg-primary/5 p-4 rounded-md flex items-center justify-between border border-primary/10">
                 <span className="text-slate-600 font-medium">Asiento(s) Seleccionado(s)</span>
                 <div className="flex gap-2">
                   {displaySelectedSeats.map((s: string) => (
@@ -291,7 +291,7 @@ export function StepCanje({
           </div>
 
           {/* Tarjeta Pasajero */}
-          <div className="bg-slate-50 rounded-2xl p-6 border border-slate-100 shadow-sm relative overflow-hidden">
+          <div className="bg-slate-50 rounded-lg p-6 border border-slate-100 shadow-sm relative overflow-hidden">
             <h4 className="font-bold text-slate-800 flex items-center gap-2 mb-6 text-lg border-b border-slate-200 pb-3">
               <div className="bg-emerald-100 p-1.5 rounded-md">
                 <User className="w-5 h-5 text-emerald-600" />
@@ -300,17 +300,17 @@ export function StepCanje({
             </h4>
 
             <div className="space-y-4">
-              <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex flex-col gap-1">
+              <div className="bg-white p-4 rounded-md border border-slate-100 shadow-sm flex flex-col gap-1">
                 <span className="text-slate-400 font-semibold text-xs uppercase tracking-wider">Nombre Completo</span>
                 <span className="font-bold text-slate-800 text-base">{bookingData.passengerName}</span>
               </div>
 
-              <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex flex-col gap-1">
+              <div className="bg-white p-4 rounded-md border border-slate-100 shadow-sm flex flex-col gap-1">
                 <span className="text-slate-400 font-semibold text-xs uppercase tracking-wider">RUT Titular</span>
                 <span className="font-mono font-bold text-slate-800 text-base">{userRut}</span>
               </div>
 
-              <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm flex flex-col gap-1">
+              <div className="bg-white p-4 rounded-md border border-slate-100 shadow-sm flex flex-col gap-1">
                 <span className="text-slate-400 font-semibold text-xs uppercase tracking-wider">Email para E-Ticket</span>
                 <span className="font-medium text-slate-800 text-base">{bookingData.passengerEmail}</span>
               </div>
@@ -334,14 +334,14 @@ export function StepCanje({
           variant="outline"
           onClick={onBack}
           disabled={isProcessing}
-          className="w-full sm:w-auto px-8 py-6 text-base font-semibold text-slate-600 hover:text-slate-900 border-2 rounded-xl transition-all"
+          className="w-full sm:w-auto px-8 py-6 text-base font-semibold text-slate-600 hover:text-slate-900 border-2 rounded-md transition-all"
         >
           Regresar
         </Button>
         <Button
           onClick={handleInitiateCanje}
           disabled={isProcessing || !displaySelectedSeats.length}
-          className="w-full sm:w-auto px-10 py-6 text-base font-bold text-white bg-primary hover:bg-primary/90 shadow-lg hover:shadow-xl rounded-xl transition-all min-w-[240px]"
+          className="w-full sm:w-auto px-10 py-6 text-base font-bold text-white bg-primary hover:bg-primary/90 shadow-lg hover:shadow-xl rounded-md transition-all min-w-[240px]"
         >
           {isProcessing ? (
             <><Loader2 className="mr-3 h-5 w-5 animate-spin" /> Enviando código 2FA...</>
@@ -358,7 +358,7 @@ export function StepCanje({
           <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-100 space-y-6 animate-fade-in relative">
             <div className="flex justify-between items-start border-b border-slate-100 pb-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-md bg-cyan-100 text-cyan-600 flex items-center justify-center">
                   <KeyRound className="w-5 h-5" />
                 </div>
                 <div>
@@ -381,14 +381,14 @@ export function StepCanje({
               </p>
 
               {otpSuccessMsg && (
-                <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-800 font-medium flex items-center gap-2">
+                <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-md text-xs text-emerald-800 font-medium flex items-center gap-2">
                   <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
                   <span>{otpSuccessMsg}</span>
                 </div>
               )}
 
               {otpError && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 font-medium flex items-center gap-2">
+                <div className="p-3 bg-red-50 border border-red-200 rounded-md text-xs text-red-700 font-medium flex items-center gap-2">
                   <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
                   <span>{otpError}</span>
                 </div>
@@ -407,14 +407,14 @@ export function StepCanje({
                     placeholder="123456"
                     value={otpCode}
                     onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ""))}
-                    className="w-full text-center tracking-[0.4em] font-mono text-2xl font-black bg-slate-50 border-2 border-slate-300 rounded-2xl py-3 focus:outline-none focus:border-primary focus:bg-white transition-all"
+                    className="w-full text-center tracking-[0.4em] font-mono text-2xl font-black bg-slate-50 border-2 border-slate-300 rounded-lg py-3 focus:outline-none focus:border-primary focus:bg-white transition-all"
                   />
                 </div>
 
                 <Button
                   type="submit"
                   disabled={isSubmittingOtp || otpCode.length < 6}
-                  className="w-full py-6 text-base font-bold text-white bg-primary hover:bg-primary/90 rounded-xl shadow-lg hover:shadow-xl transition-all"
+                  className="w-full py-6 text-base font-bold text-white bg-primary hover:bg-primary/90 rounded-md shadow-lg hover:shadow-xl transition-all"
                 >
                   {isSubmittingOtp ? (
                     <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Verificando y emitiendo...</>

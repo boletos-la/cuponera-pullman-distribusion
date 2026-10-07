@@ -325,9 +325,9 @@ export function BusServiceCard({
               <span>Disponibilidad</span>
               <span>{Math.round(availabilityPercentage)}%</span>
             </div>
-            <div className="w-full bg-muted rounded-full h-1.5 sm:h-2 overflow-hidden">
+            <div className="w-full bg-muted rounded-md h-1.5 sm:h-2 overflow-hidden">
               <div
-                className={`h-full transition-all duration-500 rounded-full ${
+                className={`h-full transition-all duration-500 rounded-md ${
                   availabilityPercentage > 50
                     ? "bg-green-600/50"
                     : availabilityPercentage > 20

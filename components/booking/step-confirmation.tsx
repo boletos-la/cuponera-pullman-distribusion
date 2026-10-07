@@ -65,7 +65,7 @@ export function StepConfirmation({ bookingData, onFinish }: StepConfirmationProp
             </div>
           </div>
           <div className="w-48 text-right">
-             <img src="/logo-pullman-beneficios-tarjeta.png" alt="Pullman Bus Logo" className="w-full h-auto opacity-90 object-contain" />
+             <img src="/logo-boletos.png" alt="boletos.la Logo" className="w-full h-auto opacity-90 object-contain" />
           </div>
         </div>
 
@@ -139,7 +139,7 @@ export function StepConfirmation({ bookingData, onFinish }: StepConfirmationProp
           <Printer className="mr-2 h-4 w-4" />
           Imprimir Pasaje
         </Button>
-        <Button onClick={onFinish} className="w-full sm:w-auto font-bold bg-[#fa5e00] hover:bg-[#fa5e00]/90 text-white">
+        <Button onClick={onFinish} className="w-full sm:w-auto font-bold bg-[#00c7cc] hover:bg-[#00c7cc]/90 text-white">
           <LayoutDashboard className="mr-2 h-4 w-4" />
           Volver a Mis Cuponeras
         </Button>

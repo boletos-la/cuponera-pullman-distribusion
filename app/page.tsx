@@ -142,7 +142,7 @@ function HomeContent() {
           {activeTab === 'perfil' && (
             <div className="max-w-3xl mx-auto">
               <div className="bg-white rounded-[2rem] p-6 sm:p-10 shadow-xl border border-slate-100 relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-full h-2 bg-[#fa5e00]" />
+                <div className="absolute top-0 left-0 w-full h-2 bg-[#00c7cc]" />
                 <h2 className="text-2xl font-black text-slate-900 mb-2">Mis Datos de Perfil</h2>
                 <p className="text-sm text-slate-500 font-medium mb-8">
                   Gestiona la seguridad y el correo asociado a tu cuenta.
@@ -277,7 +277,7 @@ function HomeContent() {
         {showScroll && (
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="fixed bottom-6 right-6 w-12 h-12 bg-orange-500 text-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 hover:shadow-xl transition-all duration-300 z-50"
+            className="fixed bottom-6 right-6 w-12 h-12 bg-cyan-500 text-white rounded-md flex items-center justify-center shadow-lg hover:scale-110 hover:shadow-xl transition-all duration-300 z-50"
             aria-label="Scroll to top"
           >
             <ArrowUp className="w-5 h-5" />
@@ -290,7 +290,7 @@ function HomeContent() {
 
 export default function Home() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-background"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div>}>
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-background"><div className="animate-spin rounded-md h-8 w-8 border-b-2 border-primary"></div></div>}>
       <HomeContent />
     </Suspense>
   );

@@ -36,10 +36,10 @@ const CuponeraCardGroup = ({ group, onOpenCheckout }: { group: any, onOpenChecko
   }, [showTooltip]);
 
   return (
-    <div className="relative bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow border border-slate-100 flex flex-col mt-4">
+    <div className="relative bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow border border-slate-100 flex flex-col mt-4">
       {/* Badge "Mejor precio" u otro */}
       {selectedItem.badge && (
-        <div className="absolute -top-3 right-4 bg-[#FFE8E0] text-[#fa5e00] font-semibold text-xs px-2.5 py-1 rounded-full shadow-sm border border-white z-10">
+        <div className="absolute -top-3 right-4 bg-[#FFE8E0] text-[#00c7cc] font-semibold text-xs px-2.5 py-1 rounded-md shadow-sm border border-white z-10">
           {selectedItem.badge}
         </div>
       )}
@@ -59,13 +59,13 @@ const CuponeraCardGroup = ({ group, onOpenCheckout }: { group: any, onOpenChecko
           >
             <button
               type="button"
-              className="flex items-center justify-center w-6 h-6 rounded-full border border-slate-200 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-all cursor-pointer sm:cursor-help focus:outline-none"
+              className="flex items-center justify-center w-6 h-6 rounded-md border border-slate-200 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-all cursor-pointer sm:cursor-help focus:outline-none"
               aria-label="Más información sobre los tramos"
             >
               <Info className="w-3.5 h-3.5" />
             </button>
 
-            <div className={`absolute right-0 top-full mt-2 w-56 bg-slate-100/90 backdrop-blur-md text-slate-800 text-[10px] p-3 rounded-xl shadow-xl z-50 border border-slate-200 transition-all duration-200 ${showTooltip ? 'opacity-100 visible translate-y-0 pointer-events-auto' : 'opacity-0 invisible -translate-y-1 pointer-events-none sm:group-hover:opacity-100 sm:group-hover:visible sm:group-hover:translate-y-0 sm:group-hover:pointer-events-auto'}`}>
+            <div className={`absolute right-0 top-full mt-2 w-56 bg-slate-100/90 backdrop-blur-md text-slate-800 text-[10px] p-3 rounded-md shadow-xl z-50 border border-slate-200 transition-all duration-200 ${showTooltip ? 'opacity-100 visible translate-y-0 pointer-events-auto' : 'opacity-0 invisible -translate-y-1 pointer-events-none sm:group-hover:opacity-100 sm:group-hover:visible sm:group-hover:translate-y-0 sm:group-hover:pointer-events-auto'}`}>
               <div className="bg-emerald-50 text-emerald-600 text-xs font-semibold px-3 py-1.5 rounded-lg border border-emerald-100 flex items-center gap-2 mb-3 w-fit">
                 <CheckCircle className="w-3.5 h-3.5" />
                 Válido por 90 días
@@ -82,7 +82,7 @@ const CuponeraCardGroup = ({ group, onOpenCheckout }: { group: any, onOpenChecko
 
         {/* Header con Logo */}
         <div className="mb-2">
-          <img src="/logo-pullman-beneficios-tarjeta.png" alt="Pullmanbus" className="h-5 object-contain" />
+          <img src="/logo-boletos.png" alt="boletos.la" className="h-5 object-contain" />
         </div>
 
         {/* Nombre de la Cuponera */}
@@ -106,20 +106,20 @@ const CuponeraCardGroup = ({ group, onOpenCheckout }: { group: any, onOpenChecko
 
         {/* Toggle options (Pill shaped selector) */}
         {group.options.length > 1 ? (
-          <div className="flex bg-white border border-slate-200 rounded-full p-1 mb-3">
+          <div className="flex bg-white border border-slate-200 rounded-md p-1 mb-3">
             {group.options.map((opt: any, idx: number) => (
               <button
                 key={opt.id}
                 onClick={() => setSelectedIndex(idx)}
-                className={`flex-1 text-xs font-semibold py-1.5 rounded-full transition-all flex items-center justify-center gap-1.5
+                className={`flex-1 text-xs font-semibold py-1.5 rounded-md transition-all flex items-center justify-center gap-1.5
                   ${selectedIndex === idx
-                    ? 'bg-[#FFE8E0] text-[#fa5e00] shadow-sm ring-1 ring-[#fa5e00]/20'
+                    ? 'bg-[#FFE8E0] text-[#00c7cc] shadow-sm ring-1 ring-[#00c7cc]/20'
                     : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'}`}
               >
                 {/* Radio circle */}
-                <div className={`w-3 h-3 rounded-full border flex items-center justify-center
-                  ${selectedIndex === idx ? 'border-[#fa5e00]' : 'border-slate-300'}`}>
-                  {selectedIndex === idx && <div className="w-1.5 h-1.5 rounded-full bg-[#fa5e00]" />}
+                <div className={`w-3 h-3 rounded-md border flex items-center justify-center
+                  ${selectedIndex === idx ? 'border-[#00c7cc]' : 'border-slate-300'}`}>
+                  {selectedIndex === idx && <div className="w-1.5 h-1.5 rounded-md bg-[#00c7cc]" />}
                 </div>
                 {opt.cantidadCupones} cupones
               </button>
@@ -141,14 +141,14 @@ const CuponeraCardGroup = ({ group, onOpenCheckout }: { group: any, onOpenChecko
       {/* Footer Button con Llamado a la Acción (CTA) */}
       <button
         onClick={() => onOpenCheckout(selectedItem)}
-        className="bg-[#fa5e00] text-white w-full rounded-b-2xl px-5 py-3 flex justify-between items-center font-semibold text-xs hover:bg-[#e55400] transition-all group cursor-pointer shadow-inner"
+        className="bg-[#00c7cc] text-white w-full rounded-b-2xl px-5 py-3 flex justify-between items-center font-semibold text-xs hover:bg-[#00b3b7] transition-all group cursor-pointer shadow-inner"
       >
         <div className="flex flex-col text-left">
           <span className="text-[10px] font-semibold text-white/80 capitalize tracking-wider">Total</span>
           <span className="text-base font-semibold leading-tight">CLP ${(selectedItem.precioTotal || 0).toLocaleString('es-CL')}</span>
         </div>
 
-        <div className="flex items-center gap-1.5 bg-white text-[#fa5e00] group-hover:bg-orange-50 px-4 py-2 rounded-full text-xs font-semibold shadow-sm group-hover:scale-105 transition-all">
+        <div className="flex items-center gap-1.5 bg-white text-[#00c7cc] group-hover:bg-cyan-50 px-4 py-2 rounded-md text-xs font-semibold shadow-sm group-hover:scale-105 transition-all">
           <ShoppingCart className="w-3.5 h-3.5" />
           <span>Comprar</span>
           <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
@@ -537,7 +537,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
   return (
     <div className="space-y-6">
       {/* Barra de Búsqueda y Filtros */}
-      <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-200 space-y-4">
+      <div className="bg-white rounded-lg p-4 sm:p-6 shadow-sm border border-slate-200 space-y-4">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
             <h2 className="text-xl font-black text-slate-900 flex items-center gap-2">
@@ -552,13 +552,13 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
               placeholder="Buscar por ciudad o tramo (ej. Viña, Concón)..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full sm:w-64 text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
+              className="w-full sm:w-64 text-sm bg-slate-50 border border-slate-300 rounded-md px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
             />
 
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="w-full sm:w-auto text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf] text-slate-700 font-medium"
+              className="w-full sm:w-auto text-sm bg-slate-50 border border-slate-300 rounded-md px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf] text-slate-700 font-medium"
             >
               <option value="default">Recomendados</option>
               {availableBadges.map((b) => (
@@ -570,7 +570,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
               <option value="price_desc">Mayor Precio</option>
             </select>
 
-            <div className="flex bg-slate-100 rounded-xl p-1 border border-slate-200">
+            <div className="flex bg-slate-100 rounded-md p-1 border border-slate-200">
               <button
                 onClick={() => setViewMode('grid')}
                 className={`flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${viewMode === 'grid' ? 'bg-white text-[#023caf] shadow-sm' : 'text-slate-500 hover:text-slate-700'
@@ -595,8 +595,8 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${selectedCategory === cat
-                ? 'bg-[#fa5e00] text-white shadow-sm'
+              className={`px-3.5 py-1.5 rounded-md text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${selectedCategory === cat
+                ? 'bg-[#00c7cc] text-white shadow-sm'
                 : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                 }`}
             >
@@ -609,17 +609,17 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
       {/* Listado de Cuponeras (Grid o Tabla) */}
       {loading ? (
         <div className="py-20 text-center space-y-3">
-          <div className="inline-block w-8 h-8 border-4 border-[#023caf] border-t-transparent rounded-full animate-spin" />
+          <div className="inline-block w-8 h-8 border-4 border-[#023caf] border-t-transparent rounded-md animate-spin" />
           <p className="text-sm font-medium text-slate-500">Cargando catálogo oficial de cuponeras...</p>
         </div>
       ) : filteredCuponeras.length === 0 ? (
-        <div className="bg-white rounded-2xl p-12 text-center space-y-3 border border-slate-200">
-          <AlertCircle className="w-10 h-10 text-orange-500 mx-auto" />
+        <div className="bg-white rounded-lg p-12 text-center space-y-3 border border-slate-200">
+          <AlertCircle className="w-10 h-10 text-cyan-500 mx-auto" />
           <h3 className="text-lg font-bold text-slate-800">No se encontraron cuponeras</h3>
           <p className="text-xs text-slate-500">Prueba ajustando el filtro o la palabra clave de búsqueda.</p>
         </div>
       ) : viewMode === 'table' ? (
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden overflow-x-auto">
+        <div className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-200 text-xs uppercase tracking-wider text-slate-500 font-bold">
@@ -636,9 +636,9 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                 <tr key={item.id} className="hover:bg-slate-50/80 transition-colors group">
                   <td className="px-4 py-4 min-w-[200px]">
                     <div className="flex flex-col gap-1">
-                      <span className="font-bold text-slate-900 group-hover:text-[#fa5e00] transition-colors capitalize">{item.nombre.toLowerCase()}</span>
+                      <span className="font-bold text-slate-900 group-hover:text-[#00c7cc] transition-colors capitalize">{item.nombre.toLowerCase()}</span>
                       {item.badge && (
-                        <span className="w-max bg-[#fa5e00] text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">
+                        <span className="w-max bg-[#00c7cc] text-white text-[9px] font-black px-2 py-0.5 rounded-md uppercase tracking-wider">
                           {item.badge}
                         </span>
                       )}
@@ -654,20 +654,20 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                     </div>
                   </td>
                   <td className="px-4 py-4 text-center">
-                    <span className="bg-[#FFF7ED] text-[#fa5e00] font-bold text-xs px-2 py-1 rounded-lg border border-[#FFEDD5]">
+                    <span className="bg-[#FFF7ED] text-[#00c7cc] font-bold text-xs px-2 py-1 rounded-lg border border-[#FFEDD5]">
                       {item.cantidadCupones}
                     </span>
                   </td>
                   <td className="px-4 py-4 text-right font-medium text-sm text-slate-700">
                     ${(item.valorUnitario || 0).toLocaleString('es-CL')}
                   </td>
-                  <td className="px-4 py-4 text-right font-black text-[#fa5e00] text-base">
+                  <td className="px-4 py-4 text-right font-black text-[#00c7cc] text-base">
                     ${(item.precioTotal || 0).toLocaleString('es-CL')}
                   </td>
                   <td className="px-4 py-4 text-center">
                     <button
                       onClick={() => handleOpenCheckout(item)}
-                      className="bg-[#fa5e00] hover:bg-[#e55400] text-white font-bold py-2 px-3 rounded-xl shadow-sm transition-all text-xs inline-flex items-center gap-1.5 cursor-pointer"
+                      className="bg-[#00c7cc] hover:bg-[#00b3b7] text-white font-bold py-2 px-3 rounded-md shadow-sm transition-all text-xs inline-flex items-center gap-1.5 cursor-pointer"
                     >
                       <ShoppingCart className="w-3.5 h-3.5" />
                       Comprar
@@ -725,7 +725,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                     value={nombre}
                     onChange={(e) => setNombre(e.target.value)}
                     disabled={!!getAuthUser()}
-                    className={`w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf] ${!!getAuthUser() ? 'opacity-60 cursor-not-allowed bg-slate-100' : ''}`}
+                    className={`w-full text-sm bg-slate-50 border border-slate-300 rounded-md px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf] ${!!getAuthUser() ? 'opacity-60 cursor-not-allowed bg-slate-100' : ''}`}
                   />
                 </div>
 
@@ -740,7 +740,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                     value={rut}
                     onChange={handleRutChange}
                     disabled={!!getAuthUser()}
-                    className={`w-full text-sm bg-slate-50 border rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 ${rutError ? 'border-red-500 focus:ring-red-500' : 'border-slate-300 focus:ring-[#023caf]'
+                    className={`w-full text-sm bg-slate-50 border rounded-md px-3.5 py-2.5 focus:outline-none focus:ring-2 ${rutError ? 'border-red-500 focus:ring-red-500' : 'border-slate-300 focus:ring-[#023caf]'
                       } ${!!getAuthUser() ? 'opacity-60 cursor-not-allowed bg-slate-100' : ''}`}
                   />
                   {rutError && <p className="text-xs text-red-600 font-medium mt-1">{rutError}</p>}
@@ -755,13 +755,13 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                       placeholder="cliente@ejemplo.cl"
                       value={email}
                       onChange={handleEmailChange}
-                      className="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
+                      className="w-full text-sm bg-slate-50 border border-slate-300 rounded-md px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
                     />
                     {emailError && <p className="text-xs text-red-600 font-medium mt-1">{emailError}</p>}
                   </div>
                   <div>
                     <label className="block text-xs font-semibold text-slate-700 mb-1">Teléfono Móvil (Opcional)</label>
-                    <div className="flex items-center bg-slate-50 border border-slate-300 rounded-xl focus-within:ring-2 focus-within:ring-[#023caf] overflow-hidden">
+                    <div className="flex items-center bg-slate-50 border border-slate-300 rounded-md focus-within:ring-2 focus-within:ring-[#023caf] overflow-hidden">
                       <div className="pl-3 pr-2 py-2.5 border-r border-slate-300 flex items-center bg-slate-100">
                         <span className="text-sm font-semibold text-slate-700">+56</span>
                       </div>
@@ -779,7 +779,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
               </div>
 
               {!getAuthUser() && (
-                <div className="bg-[#FFF7ED] border border-[#FFEDD5] rounded-2xl p-4 space-y-2">
+                <div className="bg-[#FFF7ED] border border-[#FFEDD5] rounded-lg p-4 space-y-2">
                   <div className="flex items-start gap-2">
                     <input
                       type="checkbox"
@@ -787,7 +787,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                       checked={quiereRegistrarse}
                       onChange={(e) => setQuiereRegistrarse(e.target.checked)}
                       disabled={showOtpCheckout}
-                      className="mt-0.5 rounded text-[#fa5e00] focus:ring-[#fa5e00]"
+                      className="mt-0.5 rounded text-[#00c7cc] focus:ring-[#00c7cc]"
                     />
                     <label htmlFor="quiereRegistrarse" className="text-xs text-slate-700 font-bold leading-tight">
                       ¿No tienes una cuenta? Regístrate para gestionar tus cuponeras fácilmente
@@ -804,7 +804,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                             placeholder="Mínimo 8 caracteres, 1 mayúscula y 1 número"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full text-sm bg-white border border-slate-300 rounded-xl pl-3.5 pr-10 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
+                            className="w-full text-sm bg-white border border-slate-300 rounded-md pl-3.5 pr-10 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
                           />
                           <button
                             type="button"
@@ -824,7 +824,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                             placeholder="Repite tu contraseña"
                             value={passwordConfirm}
                             onChange={(e) => setPasswordConfirm(e.target.value)}
-                            className="w-full text-sm bg-white border border-slate-300 rounded-xl pl-3.5 pr-10 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
+                            className="w-full text-sm bg-white border border-slate-300 rounded-md pl-3.5 pr-10 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
                           />
                           <button
                             type="button"
@@ -839,7 +839,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                   )}
                   {quiereRegistrarse && showOtpCheckout && (
                     <div className="pt-2 pl-6 space-y-3">
-                      <div className="p-3 bg-white border border-[#fa5e00] rounded-xl shadow-sm">
+                      <div className="p-3 bg-white border border-[#00c7cc] rounded-md shadow-sm">
                         <p className="text-xs text-slate-600 mb-2">
                           Te hemos enviado un código de 6 dígitos a <b>{email}</b>. Ingrésalo para verificar tu cuenta y continuar con el pago.
                         </p>
@@ -849,7 +849,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                           placeholder="000000"
                           value={otpCodeCheckout}
                           onChange={(e) => setOtpCodeCheckout(e.target.value.replace(/\D/g, ''))}
-                          className="w-full text-center tracking-[0.5em] font-mono text-lg bg-slate-50 border border-[#fa5e00] rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#fa5e00]"
+                          className="w-full text-center tracking-[0.5em] font-mono text-lg bg-slate-50 border border-[#00c7cc] rounded-md px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#00c7cc]"
                         />
                         <button
                           type="button"
@@ -865,23 +865,23 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
               )}
 
               {/* Paso 4: Condiciones de Compra */}
-              <div className="bg-[#FFF7ED] border border-[#FFEDD5] rounded-2xl p-4 space-y-2">
+              <div className="bg-[#FFF7ED] border border-[#FFEDD5] rounded-lg p-4 space-y-2">
                 <div className="flex items-start gap-2">
                   <input
                     type="checkbox"
                     id="condiciones"
                     checked={aceptaTerminos}
                     onChange={(e) => setAceptaTerminos(e.target.checked)}
-                    className="mt-0.5 rounded text-[#fa5e00] focus:ring-[#fa5e00]"
+                    className="mt-0.5 rounded text-[#00c7cc] focus:ring-[#00c7cc]"
                   />
                   <label htmlFor="condiciones" className="text-xs text-slate-700 font-medium leading-tight">
                     Acepto las condiciones de compra: Los cupones emitidos tienen una{' '}
-                    <span className="font-bold text-[#fa5e00]">vigencia exacta de 90 días corridos</span> y sólo son válidos para los tramos contratados ({selectedCuponera.tramos.join(', ')}).
+                    <span className="font-bold text-[#00c7cc]">vigencia exacta de 90 días corridos</span> y sólo son válidos para los tramos contratados ({selectedCuponera.tramos.join(', ')}).
                   </label>
                 </div>
               </div>
               {submitError && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 font-medium flex items-center gap-2">
+                <div className="p-3 bg-red-50 border border-red-200 rounded-md text-xs text-red-700 font-medium flex items-center gap-2">
                   <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
                   <span>{submitError}</span>
                 </div>
@@ -891,11 +891,11 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
               <button
                 type="submit"
                 disabled={submitting || !!rutError}
-                className="w-full bg-gradient-to-r from-[#FF6B00] to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-extrabold py-3.5 px-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-base cursor-pointer disabled:opacity-50"
+                className="w-full bg-gradient-to-r from-[#FF6B00] to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 text-white font-extrabold py-3.5 px-4 rounded-md shadow-md transition-all flex items-center justify-center gap-2 text-base cursor-pointer disabled:opacity-50"
               >
                 {submitting ? (
                   <>
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-md animate-spin" />
                     <span>Validando y conectando...</span>
                   </>
                 ) : showOtpCheckout ? (
@@ -921,10 +921,10 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
         <div className="fixed inset-0 z-[9999] w-screen h-screen min-h-screen flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
           <div className="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 space-y-8 animate-fade-in relative overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-3 bg-gradient-to-r from-emerald-400 to-emerald-600" />
-            <div className="absolute -top-10 -right-10 w-40 h-40 bg-emerald-400/10 rounded-full blur-3xl" />
+            <div className="absolute -top-10 -right-10 w-40 h-40 bg-emerald-400/10 rounded-md blur-3xl" />
 
             <div className="text-center space-y-4 relative z-10">
-              <div className="w-20 h-20 rounded-full bg-gradient-to-br from-emerald-100 to-emerald-50 text-emerald-600 flex items-center justify-center mx-auto shadow-inner border border-emerald-100">
+              <div className="w-20 h-20 rounded-md bg-gradient-to-br from-emerald-100 to-emerald-50 text-emerald-600 flex items-center justify-center mx-auto shadow-inner border border-emerald-100">
                 <Check className="w-10 h-10 stroke-[3]" />
               </div>
               <div className="space-y-1">
@@ -937,7 +937,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
             </div>
 
             {/* Resumen de la Orden */}
-            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-3 text-sm relative z-10">
+            <div className="bg-slate-50 border border-slate-200 rounded-lg p-5 space-y-3 text-sm relative z-10">
               <div className="flex justify-between items-center border-b border-slate-200/80 pb-2">
                 <span className="text-slate-500 font-semibold">N° de Orden</span>
                 <span className="font-black text-slate-900">{compraExitosa.compra.id}</span>
@@ -966,13 +966,13 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
 
             {/* Código de Cuponera Adquirida */}
             <div className="space-y-3 relative z-10">
-              <div className="p-5 bg-gradient-to-br from-emerald-50 to-green-50 rounded-2xl border border-emerald-200 shadow-sm text-center">
+              <div className="p-5 bg-gradient-to-br from-emerald-50 to-green-50 rounded-lg border border-emerald-200 shadow-sm text-center">
                 <span className="text-xs font-bold text-emerald-800 uppercase tracking-widest block mb-3">
                   Código de Cuponera Emitida
                 </span>
                 {compraExitosa.cupones.map((c) => (
                   <div key={c.codigo}>
-                    <span className="bg-white text-[#023caf] text-2xl font-mono font-black px-6 py-2 rounded-xl border-2 border-emerald-200 inline-block shadow-sm tracking-widest">
+                    <span className="bg-white text-[#023caf] text-2xl font-mono font-black px-6 py-2 rounded-md border-2 border-emerald-200 inline-block shadow-sm tracking-widest">
                       {c.codigo}
                     </span>
                   </div>
@@ -988,7 +988,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                   setCompraExitosa(null);
                   onGoToDashboardWithRut(rutLocal);
                 }}
-                className="w-full bg-[#fa5e00] hover:bg-[#e55400] text-white font-bold py-3 px-3 rounded-xl transition-all text-xs flex items-center justify-center gap-2 cursor-pointer shadow-md"
+                className="w-full bg-[#00c7cc] hover:bg-[#00b3b7] text-white font-bold py-3 px-3 rounded-md transition-all text-xs flex items-center justify-center gap-2 cursor-pointer shadow-md"
               >
                 <Ticket className="w-4 h-4 text-white" />
                 <span>Ver en Mis Cuponeras</span>
@@ -1002,7 +1002,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                     setCompraExitosa(null);
                     onGoToCanjeWithCupon(primerCupon, rutLocal);
                   }}
-                  className="w-full bg-[#FF6B00] hover:bg-orange-600 text-white font-bold py-3 px-3 rounded-xl transition-all text-xs flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full bg-[#FF6B00] hover:bg-cyan-600 text-white font-bold py-3 px-3 rounded-md transition-all text-xs flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <span>Canjear Primer Pasaje</span>
                   <ArrowRight className="w-4 h-4" />
@@ -1024,7 +1024,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                 setShowTransbankSuccess(false);
                 setPendingPurchaseData(null);
               }}
-              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-2 rounded-xl hover:bg-slate-100 transition-colors cursor-pointer"
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-2 rounded-md hover:bg-slate-100 transition-colors cursor-pointer"
               aria-label="Cerrar modal"
             >
               <X className="w-5 h-5" />
@@ -1032,12 +1032,12 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
 
             {/* Cabecera del Modal */}
             <div className="text-center space-y-2">
-              <div className="inline-flex items-center gap-1.5 bg-[#FFF7ED] text-[#fa5e00] border border-[#FFEDD5] px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider shadow-xs mb-1">
-                <Bus className="w-3.5 h-3.5 text-[#fa5e00]" />
+              <div className="inline-flex items-center gap-1.5 bg-[#FFF7ED] text-[#00c7cc] border border-[#FFEDD5] px-3 py-1 rounded-md text-xs font-black uppercase tracking-wider shadow-xs mb-1">
+                <Bus className="w-3.5 h-3.5 text-[#00c7cc]" />
                 <span>Pullman Bus Cuponeras</span>
               </div>
 
-              <div className="w-16 h-16 rounded-full bg-emerald-50 border-4 border-emerald-100 text-emerald-600 flex items-center justify-center mx-auto shadow-sm">
+              <div className="w-16 h-16 rounded-md bg-emerald-50 border-4 border-emerald-100 text-emerald-600 flex items-center justify-center mx-auto shadow-sm">
                 <Check className="w-8 h-8 stroke-[3]" />
               </div>
 
@@ -1052,10 +1052,10 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
             </div>
 
             {/* Resumen de la Orden */}
-            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 sm:p-5 space-y-2.5 text-xs text-left">
+            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 sm:p-5 space-y-2.5 text-xs text-left">
               <div className="flex items-center justify-between border-b border-slate-200 pb-2.5">
                 <span className="text-slate-500 font-medium">Estado de Transacción</span>
-                <span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded-full text-[11px]">
+                <span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded-md text-[11px]">
                   <CheckCircle className="w-3 h-3 text-emerald-600" />
                   Aprobada por Transbank
                 </span>
@@ -1117,7 +1117,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                     onGoToDashboardWithRut(targetRut);
                   }
                 }}
-                className="w-full bg-[#fa5e00] hover:bg-[#e55400] text-white font-bold py-3.5 px-4 rounded-xl transition-all text-xs flex items-center justify-center gap-2 cursor-pointer shadow-md hover:shadow-lg"
+                className="w-full bg-[#00c7cc] hover:bg-[#00b3b7] text-white font-bold py-3.5 px-4 rounded-md transition-all text-xs flex items-center justify-center gap-2 cursor-pointer shadow-md hover:shadow-lg"
               >
                 <Ticket className="w-4 h-4 text-white" />
                 <span>Ver en Mis Cuponeras</span>
@@ -1128,7 +1128,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                   setShowTransbankSuccess(false);
                   setPendingPurchaseData(null);
                 }}
-                className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3.5 px-4 rounded-xl border border-slate-200 transition-all text-xs flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3.5 px-4 rounded-md border border-slate-200 transition-all text-xs flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span>Volver al Catálogo</span>
               </button>
@@ -1147,7 +1147,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
               onClick={() => {
                 setShowTransbankError(false);
               }}
-              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-2 rounded-xl hover:bg-slate-100 transition-colors cursor-pointer"
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-2 rounded-md hover:bg-slate-100 transition-colors cursor-pointer"
               aria-label="Cerrar modal"
             >
               <X className="w-5 h-5" />
@@ -1155,12 +1155,12 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
 
             {/* Cabecera del Modal */}
             <div className="text-center space-y-2">
-              <div className="inline-flex items-center gap-1.5 bg-red-50 text-red-600 border border-red-200 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider shadow-xs mb-1">
+              <div className="inline-flex items-center gap-1.5 bg-red-50 text-red-600 border border-red-200 px-3 py-1 rounded-md text-xs font-black uppercase tracking-wider shadow-xs mb-1">
                 <AlertCircle className="w-3.5 h-3.5 text-red-600" />
                 <span>Transacción No Procesada</span>
               </div>
 
-              <div className="w-16 h-16 rounded-full bg-red-50 border-4 border-red-100 text-red-500 flex items-center justify-center mx-auto shadow-sm">
+              <div className="w-16 h-16 rounded-md bg-red-50 border-4 border-red-100 text-red-500 flex items-center justify-center mx-auto shadow-sm">
                 <XCircle className="w-8 h-8 stroke-[2.5]" />
               </div>
 
@@ -1174,10 +1174,10 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
             </div>
 
             {/* Resumen del Error */}
-            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 sm:p-5 space-y-3 text-xs text-left">
+            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 sm:p-5 space-y-3 text-xs text-left">
               <div className="flex items-center justify-between border-b border-slate-200 pb-2.5">
                 <span className="text-slate-500 font-medium">Estado del Pago</span>
-                <span className="inline-flex items-center gap-1 bg-red-100 text-red-800 font-bold px-2.5 py-0.5 rounded-full text-[11px]">
+                <span className="inline-flex items-center gap-1 bg-red-100 text-red-800 font-bold px-2.5 py-0.5 rounded-md text-[11px]">
                   <XCircle className="w-3 h-3 text-red-600" />
                   Rechazado o Cancelado
                 </span>
@@ -1195,7 +1195,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                 </div>
               )}
 
-              <div className="p-3 bg-blue-50/70 border border-blue-100 rounded-xl text-xs text-slate-600 flex items-start gap-2.5">
+              <div className="p-3 bg-blue-50/70 border border-blue-100 rounded-md text-xs text-slate-600 flex items-start gap-2.5">
                 <ShieldCheck className="w-4 h-4 text-[#023caf] shrink-0 mt-0.5" />
                 <p className="leading-snug">
                   Puedes intentar nuevamente seleccionando otro medio de pago o verificar que tu banco tenga habilitadas las compras en línea.
@@ -1215,7 +1215,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                     }
                   }
                 }}
-                className="w-full bg-[#fa5e00] hover:bg-[#e55400] text-white font-bold py-3.5 px-4 rounded-xl transition-all text-xs flex items-center justify-center gap-2 cursor-pointer shadow-md hover:shadow-lg"
+                className="w-full bg-[#00c7cc] hover:bg-[#00b3b7] text-white font-bold py-3.5 px-4 rounded-md transition-all text-xs flex items-center justify-center gap-2 cursor-pointer shadow-md hover:shadow-lg"
               >
                 <RotateCcw className="w-4 h-4 text-white" />
                 <span>Reintentar Compra</span>
@@ -1225,7 +1225,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                 onClick={() => {
                   setShowTransbankError(false);
                 }}
-                className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3.5 px-4 rounded-xl border border-slate-200 transition-all text-xs flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3.5 px-4 rounded-md border border-slate-200 transition-all text-xs flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span>Cerrar</span>
               </button>

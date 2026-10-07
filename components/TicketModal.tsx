@@ -40,18 +40,18 @@ export default function TicketModal({ pasaje, onClose }: TicketModalProps) {
 
         {/* Encabezado Boleto */}
         <div className="text-center space-y-2 border-b border-dashed border-slate-200 pb-4">
-          <div className="inline-flex items-center gap-1.5 bg-[#fa5e00] text-white px-3 py-1 rounded-full text-xs font-black uppercase shadow-xs">
+          <div className="inline-flex items-center gap-1.5 bg-[#00c7cc] text-white px-3 py-1 rounded-md text-xs font-black uppercase shadow-xs">
             <Bus className="w-3.5 h-3.5 text-white" />
             <span>Pullmanbus Cuponeras</span>
           </div>
 
           <h3 className="text-xl font-black text-slate-900">Boleto Electrónico de Viaje</h3>
-          <p className="text-xs font-mono font-bold text-[#fa5e00]">Código: {pasaje.codigo}</p>
+          <p className="text-xs font-mono font-bold text-[#00c7cc]">Código: {pasaje.codigo}</p>
         </div>
 
         {/* Cuerpo del Pasaje */}
         <div className="space-y-4 text-xs">
-          <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2">
+          <div className="bg-slate-50 p-4 rounded-lg border border-slate-200 space-y-2">
             <div className="flex justify-between items-center border-b border-slate-200 pb-2">
               <span className="text-slate-500 font-medium">Pasajero</span>
               <span className="font-bold text-slate-900">{pasaje.nombreCliente}</span>
@@ -67,7 +67,7 @@ export default function TicketModal({ pasaje, onClose }: TicketModalProps) {
           </div>
 
           {/* Detalles del Itinerario */}
-          <div className="bg-blue-50/60 p-4 rounded-2xl border border-blue-100 space-y-3">
+          <div className="bg-blue-50/60 p-4 rounded-lg border border-blue-100 space-y-3">
             <div className="flex justify-between items-center">
               <div>
                 <span className="text-[10px] text-slate-400 font-bold uppercase block">Origen</span>
@@ -101,7 +101,7 @@ export default function TicketModal({ pasaje, onClose }: TicketModalProps) {
 
           {/* Código QR y Código de Barras */}
           <div className="text-center pt-2 space-y-2">
-            <div className="inline-block p-2 bg-white rounded-xl border border-slate-200 shadow-sm">
+            <div className="inline-block p-2 bg-white rounded-md border border-slate-200 shadow-sm">
               {/* Image element embedding QR code */}
               <img
                 src={
@@ -123,7 +123,7 @@ export default function TicketModal({ pasaje, onClose }: TicketModalProps) {
         <div className="grid grid-cols-2 gap-3 pt-2 border-t border-slate-100 print:hidden">
           <button
             onClick={handlePrint}
-            className="w-full bg-[#fa5e00] hover:bg-[#e55400] text-white font-bold py-3 px-3 rounded-xl transition-all text-xs flex items-center justify-center gap-2 cursor-pointer shadow-md"
+            className="w-full bg-[#00c7cc] hover:bg-[#00b3b7] text-white font-bold py-3 px-3 rounded-md transition-all text-xs flex items-center justify-center gap-2 cursor-pointer shadow-md"
           >
             <Printer className="w-4 h-4 text-white" />
             <span>Imprimir / PDF</span>
@@ -131,9 +131,9 @@ export default function TicketModal({ pasaje, onClose }: TicketModalProps) {
 
           <button
             onClick={onClose}
-            className="w-full bg-primary hover:bg-primary/90 text-white font-extrabold py-3 px-3 rounded-xl transition-all text-xs flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+            className="w-full bg-primary hover:bg-primary/90 text-white font-extrabold py-3 px-3 rounded-md transition-all text-xs flex items-center justify-center gap-2 cursor-pointer shadow-sm"
           >
-            <LayoutDashboard className="w-4 h-4 text-[#fa5e00]" />
+            <LayoutDashboard className="w-4 h-4 text-[#00c7cc]" />
             <span>Volver a Mis Cuponeras</span>
           </button>
         </div>
