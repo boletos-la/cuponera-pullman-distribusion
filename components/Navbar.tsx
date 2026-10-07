@@ -46,7 +46,7 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
+    <header className="sticky top-0 z-40 bg-[#1a1a1a]/95 backdrop-blur-md border-b border-neutral-800 shadow-xs">
       {showLoginModal && (
         <LoginModal
           onClose={() => setShowLoginModal(false)}
@@ -114,10 +114,10 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
                   <button
                     key={item.id}
                     onClick={() => handleTabChange(item.id)}
-                    className={`inline-flex items-center justify-center h-9 px-6 rounded-md text-sm font-medium transition-all hover:scale-105 cursor-pointer ${
+                    className={`px-4 py-2 rounded-full text-base lg:text-lg font-bold transition-all duration-300 hover:bg-neutral-800/50 no-underline cursor-pointer ${
                       isActive
-                        ? 'bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-sm'
-                        : 'border border-secondary text-secondary hover:bg-secondary/10 hover:text-secondary'
+                        ? 'text-[#00c7cc]'
+                        : 'text-neutral-300 hover:text-[#00c7cc]'
                     }`}
                   >
                     <span>{item.label}</span>
@@ -128,24 +128,24 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
             
             {/* Autenticación (Mobile y Desktop) */}
             {user ? (
-              <div className="flex items-center gap-1 bg-slate-50 border border-slate-200 rounded-md p-1 lg:pl-3 shadow-sm">
+              <div className="flex items-center gap-1 bg-neutral-900 border border-neutral-800 rounded-md p-1 lg:pl-3 shadow-sm">
                 <button
                   onClick={() => handleTabChange('perfil')}
                   className="flex items-center gap-2 text-left hover:opacity-80 transition-opacity"
                   title="Ir a Mis Datos"
                 >
                   <div className="hidden lg:flex flex-col items-end">
-                    <span className="text-xs font-bold text-slate-800">{fixEncoding(user.nombre) || 'Usuario'}</span>
-                    <span className="text-[10px] text-slate-500 font-medium">{user.rut}</span>
+                    <span className="text-xs font-bold text-neutral-200">{fixEncoding(user.nombre) || 'Usuario'}</span>
+                    <span className="text-[10px] text-neutral-400 font-medium">{user.rut}</span>
                   </div>
-                  <div className="w-8 h-8 rounded-md bg-[#023caf] text-white flex items-center justify-center shrink-0 shadow-inner">
+                  <div className="w-8 h-8 rounded-md bg-neutral-800 text-neutral-300 flex items-center justify-center shrink-0 shadow-inner">
                     <User className="w-4 h-4" />
                   </div>
                 </button>
-                <div className="w-px h-6 bg-slate-200 mx-1"></div>
+                <div className="w-px h-6 bg-neutral-800 mx-1"></div>
                 <button
                   onClick={() => setShowLogoutConfirm(true)}
-                  className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
+                  className="p-2 text-neutral-500 hover:text-red-500 hover:bg-red-950/30 rounded-md transition-colors"
                   title="Cerrar Sesión"
                 >
                   <LogOut className="w-4 h-4" />
@@ -154,30 +154,29 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
             ) : (
               <button
                 onClick={() => setShowLoginModal(true)}
-                className="inline-flex items-center gap-1.5 lg:gap-2 h-9 px-4 lg:px-6 rounded-md text-xs lg:text-sm font-medium transition-transform hover:scale-105 cursor-pointer bg-[#00c7cc] text-white hover:bg-[#00c7cc]/90 shadow-sm"
+                className="px-4 py-2 rounded-full text-base lg:text-lg font-bold transition-all duration-300 hover:bg-neutral-800/50 text-neutral-300 hover:text-[#00c7cc] inline-flex items-center gap-1.5"
               >
-                <LogIn className="w-4 h-4" />
+                <LogIn className="w-5 h-5" />
                 <span className="hidden lg:inline">Iniciar Sesión</span>
                 <span className="lg:hidden">Ingresar</span>
               </button>
             )}
 
             {/* Separador y Logo WIT (Solo Desktop) */}
-            <div className="hidden lg:block border-l border-border pl-6 ml-2">
+            <div className="hidden lg:block border-l border-neutral-800 pl-6 ml-2">
               <img
                 src="/logo-wit-dark.png"
                 alt="WIT Logo"
                 width={45}
                 height={45}
-                className="object-contain opacity-80 hover:opacity-100 transition-opacity duration-300"
+                className="object-contain opacity-60 hover:opacity-100 transition-opacity duration-300 invert"
               />
             </div>
           </div>
         </div>
       </div>
 
-      {/* Mobile Navigation Bar */}
-      <div className="lg:hidden flex overflow-x-auto border-t border-border bg-muted/30 p-2 gap-2 text-xs">
+      <div className="lg:hidden flex overflow-x-auto border-t border-neutral-800 bg-[#1a1a1a] p-2 gap-2 text-xs">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;
@@ -185,13 +184,13 @@ export default function Navbar({ activeTab, setActiveTab, onOpenExceptionModal }
             <button
               key={item.id}
               onClick={() => handleTabChange(item.id)}
-              className={`flex-1 min-w-[100px] flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-md text-sm transition-all hover:scale-105 cursor-pointer ${
+              className={`flex-1 min-w-[100px] flex flex-col items-center justify-center gap-1 py-2 px-1 rounded-md text-xs font-bold transition-all cursor-pointer ${
                 isActive 
-                  ? 'bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-sm' 
-                  : 'border border-secondary text-secondary hover:bg-secondary/10 hover:text-secondary'
+                  ? 'text-[#00c7cc] bg-neutral-800/50' 
+                  : 'text-neutral-400 hover:text-[#00c7cc] hover:bg-neutral-800/30'
               }`}
             >
-              <Icon className={`w-4 h-4 ${isActive ? 'text-secondary-foreground' : 'text-secondary'}`} />
+              <Icon className="w-5 h-5 mb-0.5" />
               <span>{item.label}</span>
             </button>
           );

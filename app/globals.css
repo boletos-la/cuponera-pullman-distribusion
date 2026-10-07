@@ -1,5 +1,11 @@
 @import 'tailwindcss';
 
+@layer base {
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+}
+
 
 @custom-variant dark (&:is(.dark *));
 
