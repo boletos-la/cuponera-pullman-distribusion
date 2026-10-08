@@ -24,8 +24,12 @@ export default function HeroBanner({ onGoToCatalog, onGoToDashboard }: HeroBanne
       try {
         const res = await fetch(`/api/admin/config?t=${Date.now()}`, { cache: 'no-store' });
         const data = await res.json();
-        if (data.success && data.data.bannerUrl) {
-          setBannerUrl(data.data.bannerUrl);
+        if (data.success) {
+          const gds = process.env.NEXT_PUBLIC_GDS_PROVIDER || 'kupos';
+          const currentBanner = gds === 'distribusion' ? data.data.bannerUrlDistribusion : data.data.bannerUrl;
+          if (currentBanner) {
+            setBannerUrl(currentBanner);
+          }
         }
       } catch (e) {
       } finally {

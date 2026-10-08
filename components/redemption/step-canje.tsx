@@ -158,7 +158,8 @@ export function StepCanje({
         travelDate: departureBooking.date ? format(new Date(departureBooking.date), "yyyy-MM-dd") : "",
         fare: departureBooking.realPrice || departureBooking.totalPrice || bookingData.tripPrice || 0,
         busType: departureBooking?.bus_type || bookingData.busType || "Clásico",
-      });
+        gdsProvider: process.env.NEXT_PUBLIC_GDS_PROVIDER || "kupos"
+      } as any);
 
       if (reservaData.success) {
         updateBookingData({

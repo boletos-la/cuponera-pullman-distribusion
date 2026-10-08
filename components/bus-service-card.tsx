@@ -361,6 +361,7 @@ export function BusServiceCard({
 
       <ServiceDetailDialog
         serviceId={service.id}
+        service={service}
         open={showServiceDetail}
         onOpenChange={setShowServiceDetail}
         terminalOrigen={service.boardingFirst}

@@ -32,7 +32,7 @@ import { useCuponStore } from "@/lib/cupon-store";
 import { SeatSelector } from "@/components/seat-selector";
 import type { ServiceDetail, Seat } from "@/types/service-detail";
 import { useTravel } from "@/components/context/travel-context";
-import { getApiUrl } from "@/lib/apiClient";
+import { getApiUrl, getDistribusionApiUrl } from "@/lib/apiClient";
 import { couponService } from "@/lib/services/couponService";
 import { SeatMapLoader, EmissionLoader } from "@/components/ui/custom-loaders";
 import {
@@ -52,6 +52,7 @@ interface ServiceDetailDialogProps {
   isRoundTrip?: boolean;
   originName: string;
   destinationName: string;
+  service?: any; // The full service object from the parent
 }
 
 interface PassengerData {
@@ -72,6 +73,7 @@ export function ServiceDetailDialog({
   isRoundTrip = false,
   originName,
   destinationName,
+  service,
 }: ServiceDetailDialogProps) {
   const { addCompletedBooking, clearOldBookings, getDepartureBooking } =
     useReservationStore();
@@ -166,8 +168,9 @@ export function ServiceDetailDialog({
     return Math.round(price);
   };
 
-  const extractPrice = (costString: string): number => {
+  const extractPrice = (costString: string | number): number => {
     if (!costString) return 0;
+    if (typeof costString === 'number') return costString;
     const priceMatch = costString.match(/(\d+\.?\d*)/);
     if (!priceMatch) return 0;
     return parseFloat(priceMatch[1]);
@@ -339,7 +342,12 @@ export function ServiceDetailDialog({
   }, [selectedSeats, tripType, savedPassengers]);
 
   const fetchServiceDetailSilent = async () => {
-    const res = await fetch(`${getApiUrl()}/gds/service-detail/${serviceId}`);
+    const gdsProvider = process.env.NEXT_PUBLIC_GDS_PROVIDER || 'kupos';
+    const url = gdsProvider === 'distribusion' 
+      ? `${getDistribusionApiUrl()}/distribusion/seat_maps/${serviceId}`
+      : `${getApiUrl()}/gds/service-detail/${serviceId}`;
+
+    const res = await fetch(url);
 
     if (!res.ok) {
       throw new Error(`Error: ${res.status}`);
@@ -349,6 +357,14 @@ export function ServiceDetailDialog({
 
     if (data.error) {
       throw new Error(data.error);
+    }
+
+    // Merge layout with original service data for Distribusion
+    if (gdsProvider === 'distribusion' && service) {
+      return {
+        ...service,
+        bus_layout: data.service?.bus_layout || { available: "", total_seats: 40 }
+      };
     }
 
     return data.service;
@@ -595,7 +611,12 @@ export function ServiceDetailDialog({
         const seatBasePrice = seatObj?.basePrice || 0;
         const seatFinalPrice = getDiscountedPrice(seatBasePrice);
 
-        const bookResponse = await fetch(`${getApiUrl()}/gds/reserve`, {
+        const gdsProvider = process.env.NEXT_PUBLIC_GDS_PROVIDER || 'kupos';
+        const reserveUrl = gdsProvider === 'distribusion'
+          ? `${getDistribusionApiUrl()}/distribusion/reservations`
+          : `${getApiUrl()}/gds/reserve`;
+
+        const bookResponse = await fetch(reserveUrl, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -607,6 +628,7 @@ export function ServiceDetailDialog({
             travelDate: freshService.travel_date,
             busType: freshService.bus_type,
             routeId: freshService.route_id,
+            offerId: freshService.route_id, // mapped to route_id in findConnections
             availableSeats: freshService.available_seats,
             cost: freshService.cost,
             boardingAt: boardingPoint,
@@ -614,6 +636,14 @@ export function ServiceDetailDialog({
             passengerName: passengerData.passenger?.name || cuponInfo?.nombreCliente || cuponInfo?.nombreUsuario || "Titular de Cuponera",
             passengerEmail: passengerData.passenger?.email || cuponInfo?.emailCliente || cuponInfo?.emailUsuario || "correo@reservas.cl",
             passengerRut: passengerData.passenger?.rut || cuponInfo?.rutUsuario || "11111111-1",
+            paxData: {
+              firstName: (passengerData.passenger?.name || cuponInfo?.nombreCliente || cuponInfo?.nombreUsuario || "Titular").split(" ")[0],
+              lastName: (passengerData.passenger?.name || cuponInfo?.nombreCliente || cuponInfo?.nombreUsuario || "Cuponera").split(" ").slice(1).join(" ") || "App",
+              documentNumber: passengerData.passenger?.rut || cuponInfo?.rutUsuario || "11111111-1",
+              email: passengerData.passenger?.email || cuponInfo?.emailCliente || cuponInfo?.emailUsuario || "correo@reservas.cl",
+              phone: passengerData.passenger?.phone || cuponInfo?.telefonoCliente || cuponInfo?.telefonoUsuario || "+56999999999"
+            },
+            seatDeck: 1
           }),
         });
 
@@ -863,7 +893,8 @@ export function ServiceDetailDialog({
   const availableSeats = parseSeats();
   const occupiedSeats = getOccupiedSeats();
 
-  const formatTravelDate = (date: string) => {
+  const formatTravelDate = (date?: string) => {
+    if (!date) return "";
     try {
       const [year, month, day] = date.split("-").map(Number);
 

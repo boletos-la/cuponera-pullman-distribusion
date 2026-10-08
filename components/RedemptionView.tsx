@@ -298,7 +298,12 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
     setLoadingSeats(true);
     
     try {
-      const res = await fetch(`${getApiUrl()}/gds/service-detail/${srv.id}`);
+      const gdsProvider = process.env.NEXT_PUBLIC_GDS_PROVIDER || 'kupos';
+      const url = gdsProvider === 'distribusion' 
+        ? `${getDistribusionApiUrl()}/distribusion/seat_maps/${srv.id}`
+        : `${getApiUrl()}/gds/service-detail/${srv.id}`;
+
+      const res = await fetch(url);
       const data = await res.json();
       
       if (data.service && data.service.bus_layout && data.service.bus_layout.available) {
@@ -329,7 +334,13 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
       const boardingPoint = selectedServicio.boarding_stages?.split('|')[0] || '';
       const dropoffPoint = selectedServicio.dropoff_stages?.split('|')[0] || '';
 
-      const bookRes = await fetch(`${getApiUrl()}/gds/reserve`, {
+      const gdsProvider = process.env.NEXT_PUBLIC_GDS_PROVIDER || 'kupos';
+      const reserveUrl = gdsProvider === 'distribusion'
+        ? `${getDistribusionApiUrl()}/distribusion/reservations`
+        : `${getApiUrl()}/gds/reserve`;
+
+      // We send offerId in route_id if distribusion for MVP simplicity (or we can just send it as offerId in the backend)
+      const bookRes = await fetch(reserveUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -341,6 +352,7 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
           travelDate: selectedServicio.travel_date,
           busType: selectedServicio.bus_type,
           routeId: selectedServicio.route_id,
+          offerId: selectedServicio.route_id, // we'll map offer_id to route_id in findConnections
           availableSeats: selectedServicio.available_seats,
           cost: selectedServicio.cost,
           boardingAt: boardingPoint,
@@ -348,6 +360,13 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
           passengerName: cuponInfo.nombreCliente || 'Titular de Cuponera',
           passengerEmail: cuponInfo.emailCliente || 'correo@reservas.cl',
           passengerRut: rut,
+          paxData: {
+            firstName: (cuponInfo.nombreCliente || '').split(' ')[0] || 'Titular',
+            lastName: (cuponInfo.nombreCliente || '').split(' ').slice(1).join(' ') || 'Cuponera',
+            documentNumber: rut,
+            email: cuponInfo.emailCliente || 'correo@reservas.cl'
+          },
+          seatDeck: 1
         })
       });
 
@@ -386,14 +405,17 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
   const releaseGdsSeat = async () => {
     if (pnrNumber && selectedAsiento) {
       try {
-        await fetch(`${getApiUrl()}/gds/cancel`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            ticket_number: pnrNumber,
-            seat_numbers: selectedAsiento
-          })
-        });
+        const gdsProvider = process.env.NEXT_PUBLIC_GDS_PROVIDER || 'kupos';
+        if (gdsProvider !== 'distribusion') {
+          await fetch(`${getApiUrl()}/gds/cancel`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              ticket_number: pnrNumber,
+              seat_numbers: selectedAsiento
+            })
+          });
+        }
       } catch (err) {
         console.error('Error liberando el asiento en GDS:', err);
       } finally {
@@ -443,7 +465,8 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
         travelDate: selectedServicio?.travel_date || selectedFecha,
         fare: seatObj?.price || 0,
         busType: selectedServicio?.bus_type || 'Bus',
-        boardingAt: selectedServicio?.boarding_stages?.split('|')[0] || ''
+        boardingAt: selectedServicio?.boarding_stages?.split('|')[0] || '',
+        gdsProvider: process.env.NEXT_PUBLIC_GDS_PROVIDER || 'kupos'
       } as any);
 
       if (reservaData.success) {

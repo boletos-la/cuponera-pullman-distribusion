@@ -15,6 +15,7 @@ export interface RedeemPayload {
   fare: number;
   kuposEnv?: string;
   busType?: string;
+  gdsProvider?: string;
 }
 
 export const couponService = {

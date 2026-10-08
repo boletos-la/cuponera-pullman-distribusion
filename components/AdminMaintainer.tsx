@@ -276,8 +276,12 @@ export default function AdminMaintainer() {
     try {
       const res = await fetch('/api/admin/config');
       const data = await res.json();
-      if (data.success && data.data.bannerUrl) {
-        setBannerUrl(data.data.bannerUrl);
+      if (data.success) {
+        const gds = process.env.NEXT_PUBLIC_GDS_PROVIDER || 'kupos';
+        const currentBanner = gds === 'distribusion' ? data.data.bannerUrlDistribusion : data.data.bannerUrl;
+        if (currentBanner) {
+          setBannerUrl(currentBanner);
+        }
       }
     } catch (e) {}
   };
@@ -293,6 +297,7 @@ export default function AdminMaintainer() {
       } else {
         formData.append('bannerUrl', bannerUrl);
       }
+      formData.append('gdsProvider', process.env.NEXT_PUBLIC_GDS_PROVIDER || 'kupos');
       
       const tokenRes = await fetch('/api/admin/token');
       const tokenData = await tokenRes.json();
@@ -316,7 +321,9 @@ export default function AdminMaintainer() {
       
       if (data.success) {
         toast.success('Configuración guardada exitosamente');
-        if (data.data.bannerUrl) setBannerUrl(data.data.bannerUrl);
+        const gds = process.env.NEXT_PUBLIC_GDS_PROVIDER || 'kupos';
+        const currentBanner = gds === 'distribusion' ? data.data.bannerUrlDistribusion : data.data.bannerUrl;
+        if (currentBanner) setBannerUrl(currentBanner);
         setBannerFile(null); // Clear file input
       } else {
         toast.error('Error al guardar configuración: ' + (data.error || ''));
@@ -332,6 +339,7 @@ export default function AdminMaintainer() {
     try {
       const formData = new FormData();
       formData.append('bannerUrl', '');
+      formData.append('gdsProvider', process.env.NEXT_PUBLIC_GDS_PROVIDER || 'kupos');
       
       const tokenRes = await fetch('/api/admin/token');
       const tokenData = await tokenRes.json();

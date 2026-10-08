@@ -10,6 +10,8 @@ export interface CuponInfo {
   nombreUsuario?: string;
   nombreCliente?: string;
   emailCliente?: string;
+  telefonoCliente?: string;
+  telefonoUsuario?: string;
 }
 
 interface CuponStore {
