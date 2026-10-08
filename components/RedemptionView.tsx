@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { validateRut, formatRut, cleanRut } from '@/lib/rutValidator';
 import { couponService } from '@/lib/services/couponService';
-import { getApiUrl, getAuthUser } from '@/lib/apiClient';
+import { getApiUrl, getAuthUser, getDistribusionApiUrl } from '@/lib/apiClient';
 import { Bus, ShieldCheck, Calendar, Clock, MapPin, CheckCircle2, AlertCircle, KeyRound, Ticket, Lock, ArrowRight, UserCheck, X } from 'lucide-react';
 import TicketModal from './TicketModal';
 
@@ -111,7 +111,12 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
   }, [showOtpModal]);
 
   useEffect(() => {
-    fetch(`${getApiUrl()}/gds/cities`)
+    const gdsProvider = process.env.NEXT_PUBLIC_GDS_PROVIDER || 'kupos';
+    const url = gdsProvider === 'distribusion' 
+      ? `${getDistribusionApiUrl()}/distribusion/stations` 
+      : `${getApiUrl()}/gds/cities`;
+
+    fetch(url)
       .then(res => res.json())
       .then(data => {
         if (data.cities) setCities(data.cities);
@@ -217,6 +222,8 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
         return;
       }
 
+      const gdsProvider = process.env.NEXT_PUBLIC_GDS_PROVIDER || 'kupos';
+
       const promises = [];
       const baseDate = new Date(); // Start from today
       for (let i = 0; i < 14; i++) {
@@ -224,17 +231,34 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
         d.setDate(d.getDate() + i);
         const dateStr = d.toISOString().split('T')[0];
 
-        const params = new URLSearchParams({
-          originId: originCity.id.toString(),
-          destinationId: destCity.id.toString(),
-          date: dateStr,
-        });
+        if (gdsProvider === 'distribusion') {
+          const url = `${getDistribusionApiUrl()}/distribusion/connections/find`;
+          promises.push(
+            fetch(url, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                originStationCode: originCity.id.toString(),
+                destinationStationCode: destCity.id.toString(),
+                departureDate: dateStr
+              })
+            })
+              .then(res => res.json())
+              .catch(() => ({ error: true }))
+          );
+        } else {
+          const params = new URLSearchParams({
+            originId: originCity.id.toString(),
+            destinationId: destCity.id.toString(),
+            date: dateStr,
+          });
 
-        promises.push(
-          fetch(`${getApiUrl()}/gds/search?${params}`)
-            .then(res => res.json())
-            .catch(() => ({ error: true }))
-        );
+          promises.push(
+            fetch(`${getApiUrl()}/gds/search?${params}`)
+              .then(res => res.json())
+              .catch(() => ({ error: true }))
+          );
+        }
       }
 
       const results = await Promise.all(promises);
