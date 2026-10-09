@@ -1079,18 +1079,18 @@ export function ServiceDetailDialog({
                 />
 
                 {selectedSeats.length > 0 && (
-                  <div className="mt-4 p-3 bg-orange-50 border border-orange-200 rounded-lg">
+                  <div className="mt-4 p-3 bg-cyan-50 border border-cyan-200 rounded-lg">
                     <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
                           <Badge variant="outline" className="bg-white text-xs">
                             {selectedSeats.length} seleccionados
                           </Badge>
-                          <span className="text-sm font-medium text-orange-800">
+                          <span className="text-sm font-medium text-cyan-800">
                             $ {getTotalPrice().toLocaleString("es-CL")}
                           </span>
                         </div>
-                        <p className="text-xs sm:text-sm text-orange-600 truncate">
+                        <p className="text-xs sm:text-sm text-cyan-600 truncate">
                           Asientos: {selectedSeats.join(", ")}
                         </p>
                       </div>

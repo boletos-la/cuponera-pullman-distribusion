@@ -63,8 +63,8 @@ export default function HeroBanner({ onGoToCatalog, onGoToDashboard }: HeroBanne
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8">
-      <div className="relative bg-[#ff6700] rounded-3xl p-8 sm:p-10 shadow-2xl overflow-hidden border-0 bg-cover bg-center">
-        <div className="absolute inset-0 overflow-hidden bg-[#ff6700] rounded-3xl">
+      <div className="relative bg-[#00c7cc] rounded-3xl p-8 sm:p-10 shadow-2xl overflow-hidden border-0 bg-cover bg-center">
+        <div className="absolute inset-0 overflow-hidden bg-[#00c7cc] rounded-3xl">
           <span className="wave-span wave-1" />
           <span className="wave-span wave-2" />
           <span className="wave-span wave-3" />

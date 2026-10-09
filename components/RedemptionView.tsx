@@ -633,7 +633,7 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             <div className="lg:col-span-5 space-y-3">
               <h3 className="text-sm font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-                <Clock className="w-4 h-4 text-[#ff6700]" />
+                <Clock className="w-4 h-4 text-[#00c7cc]" />
                 Salidas Disponibles ({servicios.length})
               </h3>
               {servicios.length === 0 ? (
@@ -649,13 +649,13 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
                         key={srv.id}
                         onClick={() => handleSelectService(srv)}
                         className={`p-4 rounded-lg border transition-all cursor-pointer ${
-                          isSelected ? 'border-[#ff6700] bg-orange-50/50 shadow-md ring-2 ring-[#ff6700]/20' : 'border-slate-200 bg-white hover:border-slate-300'
+                          isSelected ? 'border-[#00c7cc] bg-cyan-50/50 shadow-md ring-2 ring-[#00c7cc]/20' : 'border-slate-200 bg-white hover:border-slate-300'
                         }`}
                       >
                         <div className="flex justify-between items-start mb-2">
                           <div>
                             <span className="font-extrabold text-lg text-slate-900 block">{srv.dep_time} - {srv.arr_time}</span>
-                            <span className="text-[10px] font-bold text-[#ff6700] uppercase">{new Date(srv.travel_date + 'T00:00:00').toLocaleDateString('es-CL', { weekday: 'short', day: 'numeric', month: 'short' })}</span>
+                            <span className="text-[10px] font-bold text-[#00c7cc] uppercase">{new Date(srv.travel_date + 'T00:00:00').toLocaleDateString('es-CL', { weekday: 'short', day: 'numeric', month: 'short' })}</span>
                           </div>
                           <span className="text-[10px] font-bold bg-[#FF6B00] text-white px-2 py-0.5 rounded-md">{srv.bus_type}</span>
                         </div>
@@ -663,7 +663,7 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
                           <p className="font-semibold text-slate-800">{srv.operator_service_name}</p>
                           <div className="flex justify-between items-center pt-2">
                             <span className="text-emerald-700 font-bold">{srv.available_seats} Asientos Libres</span>
-                            <span className="text-[#ff6700] font-bold text-xs">
+                            <span className="text-[#00c7cc] font-bold text-xs">
                               {isSelected ? '✓ Seleccionado' : 'Seleccionar Asiento ➔'}
                             </span>
                           </div>
@@ -686,7 +686,7 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
                   </div>
 
                   {loadingSeats ? (
-                    <div className="py-12 flex justify-center"><div className="w-8 h-8 border-4 border-[#ff6700] border-t-transparent rounded-md animate-spin"></div></div>
+                    <div className="py-12 flex justify-center"><div className="w-8 h-8 border-4 border-[#00c7cc] border-t-transparent rounded-md animate-spin"></div></div>
                   ) : (
                     <div className="space-y-4">
                       <div className="bg-slate-50 p-4 rounded-md border border-slate-200">
@@ -776,8 +776,8 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
               <X className="w-5 h-5" />
             </button>
             <div className="text-center space-y-4 pt-4">
-              <div className="w-16 h-16 bg-orange-50 rounded-md flex items-center justify-center mx-auto">
-                <ShieldCheck className="w-8 h-8 text-[#ff6700]" />
+              <div className="w-16 h-16 bg-cyan-50 rounded-md flex items-center justify-center mx-auto">
+                <ShieldCheck className="w-8 h-8 text-[#00c7cc]" />
               </div>
               <div>
                 <h3 className="text-lg font-black text-slate-900">Autenticación Multifactor (MFA)</h3>
@@ -789,13 +789,13 @@ export default function RedemptionView({ initialCuponCode = '', initialRut = '',
                 placeholder="000000"
                 value={otpCode}
                 onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))}
-                className="w-full text-center text-3xl font-mono tracking-widest font-black bg-slate-50 border border-slate-300 rounded-lg p-4 focus:outline-none focus:ring-4 focus:ring-[#ff6700]/20 focus:border-[#ff6700] transition-all"
+                className="w-full text-center text-3xl font-mono tracking-widest font-black bg-slate-50 border border-slate-300 rounded-lg p-4 focus:outline-none focus:ring-4 focus:ring-[#00c7cc]/20 focus:border-[#00c7cc] transition-all"
               />
               {otpError && <p className="text-xs text-red-600 font-bold">{otpError}</p>}
               <button
                 onClick={handleConfirmWithOtp}
                 disabled={isSendingOtp || otpCode.length < 6}
-                className="w-full bg-[#ff6700] hover:bg-[#e65c00] text-white font-bold py-3.5 px-4 rounded-md shadow-lg shadow-orange-500/30 transition-all disabled:opacity-50 flex justify-center items-center gap-2"
+                className="w-full bg-[#00c7cc] hover:bg-[#009fa3] text-white font-bold py-3.5 px-4 rounded-md shadow-lg shadow-cyan-500/30 transition-all disabled:opacity-50 flex justify-center items-center gap-2"
               >
                 {isSendingOtp ? (
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-md animate-spin" />

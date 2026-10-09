@@ -279,7 +279,7 @@ export default function TicketCancellationView() {
                     <Loader2 className="w-5 h-5 animate-spin" />
                   ) : (
                     <>
-                      <RotateCcw className="w-5 h-5 text-orange-200" />
+                      <RotateCcw className="w-5 h-5 text-cyan-200" />
                       <span>Confirmar y Anular Pasaje</span>
                     </>
                   )}

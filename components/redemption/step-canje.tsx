@@ -229,8 +229,8 @@ export function StepCanje({
             </div>
 
             <h4 className="font-bold text-slate-800 flex items-center gap-2 mb-6 text-lg border-b border-slate-200 pb-3">
-              <div className="bg-orange-100 p-1.5 rounded-md">
-                <Bus className="w-5 h-5 text-orange-600" />
+              <div className="bg-cyan-100 p-1.5 rounded-md">
+                <Bus className="w-5 h-5 text-cyan-600" />
               </div>
               Detalle del Viaje
             </h4>

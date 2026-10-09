@@ -271,7 +271,7 @@ export default function DashboardView({ initialRut = '', onCanjearCupon, onReset
                 </button>
               </div>
               <div className="flex items-center gap-3">
-                <span className="text-xs font-mono font-bold bg-orange-50 text-[#ff6700] px-4 py-2 rounded-md border border-orange-200 shadow-xs">
+                <span className="text-xs font-mono font-bold bg-cyan-50 text-[#ff6700] px-4 py-2 rounded-md border border-cyan-200 shadow-xs">
                   Titular: {rutFormateado}
                 </span>
                 {!authUser && (

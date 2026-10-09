@@ -439,7 +439,7 @@ export function SeatSelector({
                         selectedSeats.includes(seat)
                           ? "bg-accent border-orange-600 text-accent-foreground scale-105 shadow-md cursor-pointer"
                           : isSeatAvailable(seat)
-                            ? "bg-orange-100 border-orange-300 text-orange-800 hover:bg-orange-200 hover:border-orange-400 hover:scale-105 cursor-pointer shadow-sm"
+                            ? "bg-cyan-100 border-cyan-300 text-cyan-800 hover:bg-cyan-200 hover:border-cyan-400 hover:scale-105 cursor-pointer shadow-sm"
                             : "bg-red-100 border-red-300 text-red-800 cursor-not-allowed opacity-80",
                       )}
                       title={
@@ -476,7 +476,7 @@ export function SeatSelector({
       {/* Leyenda */}
       <div className="flex justify-center gap-4 sm:gap-6 text-xs sm:px-4 md:px-6">
         <div className="flex items-center gap-1 sm:gap-2">
-          <div className="w-3 h-3 sm:w-4 sm:h-4 bg-orange-100 border-2 border-orange-300 rounded"></div>
+          <div className="w-3 h-3 sm:w-4 sm:h-4 bg-cyan-100 border-2 border-cyan-300 rounded"></div>
           <span className="text-xs">Disponible</span>
         </div>
         <div className="flex items-center gap-1 sm:gap-2">

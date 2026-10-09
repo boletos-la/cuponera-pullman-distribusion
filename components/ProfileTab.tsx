@@ -119,7 +119,7 @@ export default function ProfileTab() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className={`w-full text-sm bg-slate-50 border rounded-md px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#ff6700] ${email && !isEmailValid ? 'border-red-400' : 'border-slate-300'}`}
+              className={`w-full text-sm bg-slate-50 border rounded-md px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#00c7cc] ${email && !isEmailValid ? 'border-red-400' : 'border-slate-300'}`}
             />
             {email && !isEmailValid && (
               <p className="text-xs text-red-500 mt-1.5 font-medium">Formato de correo inválido.</p>
@@ -128,7 +128,7 @@ export default function ProfileTab() {
           <button
             type="submit"
             disabled={loading || email === user.correo || !isEmailValid}
-            className="flex items-center gap-2 justify-center bg-[#ff6700] hover:bg-[#e65c00] text-white font-bold py-2.5 px-6 rounded-md transition-all disabled:opacity-50"
+            className="flex items-center gap-2 justify-center bg-[#00c7cc] hover:bg-[#009fa3] text-white font-bold py-2.5 px-6 rounded-md transition-all disabled:opacity-50"
           >
             {loading && <Loader2 className="w-4 h-4 animate-spin" />}
             Guardar Correo
@@ -150,7 +150,7 @@ export default function ProfileTab() {
                 required
                 value={actualPassword}
                 onChange={(e) => setActualPassword(e.target.value)}
-                className="w-full text-sm bg-slate-50 border border-slate-300 rounded-md pl-3.5 pr-10 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#ff6700]"
+                className="w-full text-sm bg-slate-50 border border-slate-300 rounded-md pl-3.5 pr-10 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#00c7cc]"
               />
               <button
                 type="button"
@@ -170,7 +170,7 @@ export default function ProfileTab() {
                 minLength={8}
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                className={`w-full text-sm bg-slate-50 border rounded-md pl-3.5 pr-10 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#ff6700] ${newPassword && !isPasswordValid ? 'border-red-400' : 'border-slate-300'}`}
+                className={`w-full text-sm bg-slate-50 border rounded-md pl-3.5 pr-10 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#00c7cc] ${newPassword && !isPasswordValid ? 'border-red-400' : 'border-slate-300'}`}
               />
               <button
                 type="button"
@@ -200,7 +200,7 @@ export default function ProfileTab() {
                 minLength={8}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className={`w-full text-sm bg-slate-50 border rounded-md pl-3.5 pr-10 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#ff6700] ${confirmPassword && !doPasswordsMatch ? 'border-red-400' : 'border-slate-300'}`}
+                className={`w-full text-sm bg-slate-50 border rounded-md pl-3.5 pr-10 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#00c7cc] ${confirmPassword && !doPasswordsMatch ? 'border-red-400' : 'border-slate-300'}`}
               />
               <button
                 type="button"

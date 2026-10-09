@@ -279,7 +279,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
                   value={rut}
                   onChange={handleRutChange}
                   className={`w-full text-sm font-semibold bg-slate-50 border-2 rounded-md px-4 py-3 focus:outline-none focus:ring-4 transition-all ${
-                    rutError ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20' : 'border-slate-200 hover:border-slate-300 focus:border-[#ff6700] focus:ring-[#ff6700]/10'
+                    rutError ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20' : 'border-slate-200 hover:border-slate-300 focus:border-[#00c7cc] focus:ring-[#00c7cc]/10'
                   }`}
                 />
                 {rutError && <p className="text-xs text-red-600 font-bold ml-1">{rutError}</p>}
@@ -295,7 +295,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full text-sm font-semibold bg-slate-50 border-2 border-slate-200 rounded-md pl-10 pr-10 py-3 focus:outline-none focus:ring-4 focus:ring-[#ff6700]/10 focus:border-[#ff6700] hover:border-slate-300 transition-all"
+                    className="w-full text-sm font-semibold bg-slate-50 border-2 border-slate-200 rounded-md pl-10 pr-10 py-3 focus:outline-none focus:ring-4 focus:ring-[#00c7cc]/10 focus:border-[#00c7cc] hover:border-slate-300 transition-all"
                   />
                   <button
                     type="button"
@@ -313,7 +313,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
                   id="rememberMe"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="w-4 h-4 rounded border-slate-300 text-[#ff6700] focus:ring-[#ff6700] cursor-pointer"
+                  className="w-4 h-4 rounded border-slate-300 text-[#00c7cc] focus:ring-[#00c7cc] cursor-pointer"
                 />
                 <label htmlFor="rememberMe" className="text-xs font-semibold text-slate-600 cursor-pointer">
                   Mantener sesión iniciada
@@ -357,7 +357,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
                 <button
                   type="button"
                   onClick={() => { setMode('register'); setError(''); setIsSuccess(false); setSuccessMessage(''); }}
-                  className="text-[#ff6700] font-bold hover:underline"
+                  className="text-[#00c7cc] font-bold hover:underline"
                 >
                   Regístrate aquí
                 </button>
@@ -370,7 +370,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
         {mode === 'register' && (
           <div className="animate-fade-in-up">
             <div className="text-center space-y-2 mb-6 mt-2">
-              <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-orange-50 to-orange-100 text-[#ff6700] flex items-center justify-center mx-auto shadow-inner border border-orange-200/50">
+              <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-cyan-50 to-cyan-100 text-[#00c7cc] flex items-center justify-center mx-auto shadow-inner border border-cyan-200/50">
                 <UserPlus className="w-8 h-8 stroke-[2.5]" />
               </div>
               <h3 className="text-2xl font-black text-slate-900 tracking-tight pt-2">Crear Cuenta</h3>
@@ -391,7 +391,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
                     onChange={handleRutChange}
                     onBlur={handleRutBlur}
                     className={`w-full text-sm font-semibold bg-slate-50 border-2 rounded-md px-4 py-2.5 focus:outline-none focus:ring-4 transition-all ${
-                      rutError ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20' : 'border-slate-200 focus:border-[#ff6700] focus:ring-[#ff6700]/10'
+                      rutError ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20' : 'border-slate-200 focus:border-[#00c7cc] focus:ring-[#00c7cc]/10'
                     }`}
                   />
                   {rutError && <p className="text-[10px] text-red-600 font-bold ml-1">{rutError}</p>}
@@ -406,7 +406,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
                       placeholder="Nombre y Apellidos"
                       value={nombre}
                       onChange={(e) => setNombre(e.target.value)}
-                      className="w-full text-sm font-semibold bg-slate-50 border-2 border-slate-200 rounded-md pl-9 pr-3 py-2.5 focus:outline-none focus:ring-4 focus:ring-[#ff6700]/10 focus:border-[#ff6700] transition-all"
+                      className="w-full text-sm font-semibold bg-slate-50 border-2 border-slate-200 rounded-md pl-9 pr-3 py-2.5 focus:outline-none focus:ring-4 focus:ring-[#00c7cc]/10 focus:border-[#00c7cc] transition-all"
                     />
                   </div>
                 </div>
@@ -423,15 +423,15 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
                       placeholder="correo@ejemplo.cl"
                       value={email}
                       onChange={handleEmailChange}
-                      className="w-full text-sm font-semibold bg-slate-50 border-2 border-slate-200 rounded-md pl-9 pr-3 py-2.5 focus:outline-none focus:ring-4 focus:ring-[#ff6700]/10 focus:border-[#ff6700] transition-all"
+                      className="w-full text-sm font-semibold bg-slate-50 border-2 border-slate-200 rounded-md pl-9 pr-3 py-2.5 focus:outline-none focus:ring-4 focus:ring-[#00c7cc]/10 focus:border-[#00c7cc] transition-all"
                     />
                   </div>
                   {emailError && <p className="text-xs text-red-600 font-medium ml-1">{emailError}</p>}
-                  {guestHint && <p className="text-[10px] text-[#ff6700] font-bold ml-1">{guestHint}</p>}
+                  {guestHint && <p className="text-[10px] text-[#00c7cc] font-bold ml-1">{guestHint}</p>}
                 </div>
                 <div className="space-y-1.5">
                   <label className="block text-xs font-extrabold text-slate-700 ml-1">Teléfono Móvil</label>
-                  <div className="flex items-center bg-slate-50 border-2 border-slate-200 rounded-md focus-within:ring-4 focus-within:ring-[#ff6700]/10 focus-within:border-[#ff6700] transition-all overflow-hidden">
+                  <div className="flex items-center bg-slate-50 border-2 border-slate-200 rounded-md focus-within:ring-4 focus-within:ring-[#00c7cc]/10 focus-within:border-[#00c7cc] transition-all overflow-hidden">
                     <div className="pl-3 pr-2 py-2.5 border-r border-slate-200 flex items-center gap-1.5 bg-slate-100">
                       <Phone className="w-4 h-4 text-slate-500" />
                       <span className="text-sm font-bold text-slate-700">+56</span>
@@ -457,7 +457,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
                       placeholder="Mín 8, 1 mayúscula, 1 número"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="w-full text-sm font-semibold bg-slate-50 border-2 border-slate-200 rounded-md pl-4 pr-10 py-2.5 focus:outline-none focus:ring-4 focus:ring-[#ff6700]/10 focus:border-[#ff6700] transition-all"
+                      className="w-full text-sm font-semibold bg-slate-50 border-2 border-slate-200 rounded-md pl-4 pr-10 py-2.5 focus:outline-none focus:ring-4 focus:ring-[#00c7cc]/10 focus:border-[#00c7cc] transition-all"
                     />
                     <button
                       type="button"
@@ -477,7 +477,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
                       placeholder="Confirma tu contraseña"
                       value={passwordConfirm}
                       onChange={(e) => setPasswordConfirm(e.target.value)}
-                      className="w-full text-sm font-semibold bg-slate-50 border-2 border-slate-200 rounded-md pl-4 pr-10 py-2.5 focus:outline-none focus:ring-4 focus:ring-[#ff6700]/10 focus:border-[#ff6700] transition-all"
+                      className="w-full text-sm font-semibold bg-slate-50 border-2 border-slate-200 rounded-md pl-4 pr-10 py-2.5 focus:outline-none focus:ring-4 focus:ring-[#00c7cc]/10 focus:border-[#00c7cc] transition-all"
                     />
                     <button
                       type="button"
@@ -501,7 +501,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
                 <button
                   type="submit"
                   disabled={loading || !!rutError}
-                  className="w-full bg-gradient-to-r from-[#ff6700] to-[#e65c00] hover:from-[#e65c00] hover:to-[#cc5200] text-white font-black py-3.5 px-4 rounded-md shadow-[0_4px_14px_0_rgba(2,60,175,0.39)] hover:shadow-[0_6px_20px_rgba(2,60,175,0.23)] transition-all flex items-center justify-center gap-2 text-sm disabled:opacity-50 active:scale-[0.98]"
+                  className="w-full bg-gradient-to-r from-[#00c7cc] to-[#009fa3] hover:from-[#009fa3] hover:to-[#008185] text-white font-black py-3.5 px-4 rounded-md shadow-[0_4px_14px_0_rgba(2,60,175,0.39)] hover:shadow-[0_6px_20px_rgba(2,60,175,0.23)] transition-all flex items-center justify-center gap-2 text-sm disabled:opacity-50 active:scale-[0.98]"
                 >
                   {loading ? (
                     <Loader2 className="w-5 h-5 animate-spin" />
@@ -578,7 +578,7 @@ export default function LoginModal({ onClose, onLoginSuccess }: LoginModalProps)
                   type="button"
                   onClick={handleResendOTP}
                   disabled={loading}
-                  className="text-xs font-bold text-[#ff6700] hover:text-[#e65c00] transition-colors"
+                  className="text-xs font-bold text-[#00c7cc] hover:text-[#009fa3] transition-colors"
                 >
                   ¿No recibiste el código? Reenviar
                 </button>

@@ -48,7 +48,7 @@ export function BusRouteLoader({ message }: LoaderProps) {
         <motion.div
           animate={{ x: [0, 160, 0] }}
           transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute z-20 left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-orange-100 border border-orange-200 rounded-full flex items-center justify-center text-orange-600 shadow-md"
+          className="absolute z-20 left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-cyan-100 border border-cyan-200 rounded-full flex items-center justify-center text-cyan-600 shadow-md"
         >
           <Bus className="w-4 h-4" />
         </motion.div>
@@ -78,7 +78,7 @@ export function SeatMapLoader({ message }: LoaderProps) {
               delay: i * 0.2,
               ease: "easeInOut"
             }}
-            className="w-10 h-10 bg-orange-100 rounded-full border border-orange-200 flex items-center justify-center text-orange-500"
+            className="w-10 h-10 bg-cyan-100 rounded-full border border-cyan-200 flex items-center justify-center text-cyan-500"
           >
             <Grid className="w-5 h-5" />
           </motion.div>
@@ -95,7 +95,7 @@ export function EmissionLoader({ message }: LoaderProps) {
       <div className="bg-white p-8 rounded-3xl shadow-2xl border border-slate-100 flex flex-col items-center gap-6 max-w-sm w-[90%] text-center relative overflow-hidden">
         {/* Background glow effect */}
         <div className="absolute -top-10 -right-10 w-32 h-32 bg-green-500/10 blur-3xl rounded-full" />
-        <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-orange-500/10 blur-3xl rounded-full" />
+        <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-cyan-500/10 blur-3xl rounded-full" />
 
         <div className="relative z-10">
           <motion.div

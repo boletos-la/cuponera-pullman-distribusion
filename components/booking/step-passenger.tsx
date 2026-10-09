@@ -261,7 +261,7 @@ export function StepPassenger({
               {/* Route */}
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
-                  <MapPin className="h-5 w-5 text-orange-600 mt-0.5" />
+                  <MapPin className="h-5 w-5 text-cyan-600 mt-0.5" />
                   <div>
                     <p className="font-medium">{displayOrigin}</p>
                     <p className="text-sm text-muted-foreground">

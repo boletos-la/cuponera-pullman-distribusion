@@ -80,7 +80,7 @@ export default function HistoryTab({ compras, canjes, isGuest, onLoginRequest }:
                     ).map((compra: any) => (
                       <div key={compra.id} className="p-4 border border-slate-100 rounded-md bg-slate-50 flex flex-col md:flex-row justify-between gap-4">
                         <div className="flex gap-4">
-                          <div className="w-10 h-10 rounded-md bg-orange-100 text-[#ff6700] flex items-center justify-center shrink-0">
+                          <div className="w-10 h-10 rounded-md bg-cyan-100 text-[#00c7cc] flex items-center justify-center shrink-0">
                             <ShoppingCart className="w-5 h-5" />
                           </div>
                           <div>
@@ -101,7 +101,7 @@ export default function HistoryTab({ compras, canjes, isGuest, onLoginRequest }:
                             <span className="text-[10px] uppercase font-bold text-slate-500 bg-slate-200/60 px-1.5 py-0.5 rounded">{compra.pasarela}</span>
                           </div>
                           {(compra.id_usuario_cuponera || compra.UsuarioCuponera?.id) && (
-                            <span className="text-[10px] font-mono font-extrabold text-[#ff6700] bg-orange-50 px-2 py-1 rounded border border-orange-200" title="Código de Cuponera Asociada">
+                            <span className="text-[10px] font-mono font-extrabold text-[#00c7cc] bg-cyan-50 px-2 py-1 rounded border border-cyan-200" title="Código de Cuponera Asociada">
                               Cuponera: CUP-WP{compra.id_usuario_cuponera || compra.UsuarioCuponera?.id}
                             </span>
                           )}
@@ -172,7 +172,7 @@ export default function HistoryTab({ compras, canjes, isGuest, onLoginRequest }:
                           </span>
                         )}
                         {canje.Cupon?.id_usuario_cuponera && (
-                          <span className="text-[10px] font-mono font-extrabold text-[#ff6700] bg-orange-50 px-2 py-1 rounded border border-orange-200" title="Código de Cuponera Asociada">
+                          <span className="text-[10px] font-mono font-extrabold text-[#00c7cc] bg-cyan-50 px-2 py-1 rounded border border-cyan-200" title="Código de Cuponera Asociada">
                             Cuponera: CUP-WP{canje.Cupon.id_usuario_cuponera}
                           </span>
                         )}

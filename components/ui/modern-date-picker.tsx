@@ -83,7 +83,7 @@ export function ModernDatePicker({
             return "!text-gray-400 !cursor-not-allowed hover:!bg-transparent";
           }
           if (isSelected) {
-            return "!bg-orange-600 !text-white hover:!bg-orange-700";
+            return "!bg-cyan-600 !text-white hover:!bg-cyan-700";
           }
           return "!text-gray-900 hover:!bg-gray-100";
         }}
