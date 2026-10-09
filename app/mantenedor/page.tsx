@@ -63,37 +63,37 @@ export default function MantenedorPage() {
   return (
     <div className="min-h-screen bg-slate-100 text-slate-800 font-sans antialiased flex flex-col">
       {/* Header Superior del Mantenedor */}
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+      <header className="sticky top-0 z-40 bg-neutral-900 border-b border-neutral-800 shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between py-3">
           <div className="flex items-center gap-4">
             <Link
               href="/"
-              className="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3 py-1.5 rounded-md border border-slate-200 transition-all"
+              className="flex items-center gap-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 text-xs font-semibold px-3 py-1.5 rounded-md border border-neutral-700 transition-all"
             >
               <ArrowLeft className="w-4 h-4 text-[#ff6700]" />
               <span className="hidden sm:inline">Volver</span>
             </Link>
 
-            <div className="h-6 w-px bg-slate-200 hidden sm:block" />
+            <div className="h-6 w-px bg-neutral-700 hidden sm:block" />
 
             <div className="flex items-center gap-3">
               <img src="/logo-boletos.png" alt="Pullman Cuponeras" className="h-8 object-contain" />
-              <div className="h-6 w-px bg-slate-200 hidden sm:block mx-1" />
+              <div className="h-6 w-px bg-neutral-700 hidden sm:block mx-1" />
               <img src="/logo-wit-dark.png" alt="WIT" className="h-7 object-contain" />
-              <span className="text-xs text-slate-400 font-bold hidden sm:inline border-l border-slate-200 pl-3 ml-1">Mantenedor</span>
+              <span className="text-xs text-neutral-400 font-bold hidden sm:inline border-l border-neutral-700 pl-3 ml-1">Mantenedor</span>
             </div>
           </div>
 
           {isAuthenticated && (
             <div className="flex items-center gap-3">
-              <div className="hidden sm:flex items-center gap-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs px-3 py-1.5 rounded-md font-bold">
+              <div className="hidden sm:flex items-center gap-1.5 bg-emerald-900/40 text-emerald-400 border border-emerald-800/50 text-xs px-3 py-1.5 rounded-md font-bold">
                 <ShieldCheck className="w-4 h-4" />
                 <span>Administrador</span>
               </div>
 
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-1.5 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 text-xs font-bold px-3 py-1.5 rounded-md shadow-sm transition-all cursor-pointer"
+                className="flex items-center gap-1.5 bg-neutral-800 hover:bg-red-900/40 text-neutral-300 hover:text-red-400 border border-neutral-700 hover:border-red-800/50 text-xs font-bold px-3 py-1.5 rounded-md shadow-sm transition-all cursor-pointer"
               >
                 <LogOut className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">Cerrar Sesión</span>
