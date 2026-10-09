@@ -322,21 +322,21 @@ export function StepPassenger({
 
               {/* Total */}
               <div className="pt-4 border-t space-y-2 px-1">
-                <div className="flex justify-between items-start">
-                  <div>
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                  <div className="flex-1 min-w-0 w-full">
                     <span className="font-semibold text-foreground block">Total a Pagar</span>
-                    <Badge variant="outline" className="mt-1.5 bg-emerald-50 text-emerald-700 border-emerald-200 text-xs font-semibold py-1 px-2.5 flex items-center gap-1.5 shadow-none">
-                      <Ticket className="w-3.5 h-3.5 text-emerald-600" />
+                    <Badge variant="outline" className="mt-1.5 bg-emerald-50 text-emerald-700 border-emerald-200 text-xs font-semibold py-1.5 px-2.5 flex items-center gap-1.5 shadow-none whitespace-normal text-left h-auto leading-tight">
+                      <Ticket className="w-4 h-4 shrink-0 text-emerald-600" />
                       <span>Se usará tu cupón para pagar</span>
                     </Badge>
                   </div>
-                  <div className="text-right pr-2">
+                  <div className="text-left sm:text-right shrink-0">
                     {totalPrice > 0 && (
                       <span className="text-sm font-semibold text-muted-foreground line-through block">
                         ${totalPrice.toLocaleString("es-CL")}
                       </span>
                     )}
-                    <span className="text-2xl font-black text-emerald-600">
+                    <span className="text-3xl font-black text-emerald-600">
                       $0
                     </span>
                   </div>

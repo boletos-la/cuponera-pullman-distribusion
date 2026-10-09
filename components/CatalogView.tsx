@@ -166,6 +166,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
   const [sortBy, setSortBy] = useState<string>('default');
   const [infoOpen, setInfoOpen] = useState<number | null>(null);
+  const [selectedQuantity, setSelectedQuantity] = useState<number>(10);
 
   // Modal de Compra y Checkout
   const [selectedCuponera, setSelectedCuponera] = useState<Cuponera | null>(null);
@@ -512,10 +513,13 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
     displayCuponeras.sort((a, b) => (b.precioTotal || 0) - (a.precioTotal || 0));
   }
 
+  // Filtrar por cantidad
+  const filteredByQuantity = displayCuponeras.filter(c => c.cantidadCupones === selectedQuantity);
+
   // Agrupar cuponeras por nombre base
   const groupedCuponeras = (() => {
     const groups = new Map<string, Cuponera[]>();
-    displayCuponeras.forEach(c => {
+    filteredByQuantity.forEach(c => {
       // Remover "(X CUPONES)" para obtener el nombre base
       const baseName = c.nombre.replace(/\(\d+\s*CUPONES\)/i, '').trim();
       if (!groups.has(baseName)) {
@@ -536,6 +540,36 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
 
   return (
     <div className="space-y-6">
+      <div className="flex justify-center mb-6 px-4">
+        <div className="flex bg-white border border-slate-200 rounded-lg p-1.5 w-full max-w-sm shadow-sm relative">
+          <button
+            onClick={() => setSelectedQuantity(10)}
+            className={`flex-1 text-sm font-bold py-2.5 rounded-md transition-all flex items-center justify-center gap-2 relative z-10
+              ${selectedQuantity === 10
+                ? 'bg-[#FFE8E0] text-[#ff6700] shadow-sm ring-1 ring-[#ff6700]/20'
+                : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'}`}
+          >
+            <div className={`w-3.5 h-3.5 rounded-md border flex items-center justify-center transition-colors
+              ${selectedQuantity === 10 ? 'border-[#ff6700]' : 'border-slate-300'}`}>
+              {selectedQuantity === 10 && <div className="w-1.5 h-1.5 rounded-md bg-[#ff6700]" />}
+            </div>
+            10 Pasajes
+          </button>
+          <button
+            onClick={() => setSelectedQuantity(20)}
+            className={`flex-1 text-sm font-bold py-2.5 rounded-md transition-all flex items-center justify-center gap-2 relative z-10
+              ${selectedQuantity === 20
+                ? 'bg-[#FFE8E0] text-[#ff6700] shadow-sm ring-1 ring-[#ff6700]/20'
+                : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'}`}
+          >
+            <div className={`w-3.5 h-3.5 rounded-md border flex items-center justify-center transition-colors
+              ${selectedQuantity === 20 ? 'border-[#ff6700]' : 'border-slate-300'}`}>
+              {selectedQuantity === 20 && <div className="w-1.5 h-1.5 rounded-md bg-[#ff6700]" />}
+            </div>
+            20 Pasajes
+          </button>
+        </div>
+      </div>
       {/* Barra de Búsqueda y Filtros */}
       <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-200 space-y-4">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
