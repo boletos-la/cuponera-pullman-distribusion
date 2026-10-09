@@ -62,12 +62,12 @@ export default function TicketModal({ pasaje, onClose }: TicketModalProps) {
             </div>
             <div className="flex justify-between items-center border-b border-slate-200 pb-2">
               <span className="text-slate-500 font-medium">Cupón Canjeado</span>
-              <span className="font-mono font-bold text-[#023caf]">{pasaje.cuponCodigo}</span>
+              <span className="font-mono font-bold text-[#ff6700]">{pasaje.cuponCodigo}</span>
             </div>
           </div>
 
           {/* Detalles del Itinerario */}
-          <div className="bg-blue-50/60 p-4 rounded-lg border border-blue-100 space-y-3">
+          <div className="bg-orange-50/60 p-4 rounded-lg border border-orange-100 space-y-3">
             <div className="flex justify-between items-center">
               <div>
                 <span className="text-[10px] text-slate-400 font-bold uppercase block">Origen</span>
@@ -82,7 +82,7 @@ export default function TicketModal({ pasaje, onClose }: TicketModalProps) {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-2 pt-2 border-t border-blue-200/60 text-slate-700">
+            <div className="grid grid-cols-2 gap-2 pt-2 border-t border-orange-200/60 text-slate-700">
               <div>
                 <span className="text-[10px] text-slate-500 block">Fecha y Hora</span>
                 <span className="font-bold">{pasaje.fechaSalida} a las {pasaje.horaSalida} hrs</span>

@@ -638,14 +638,14 @@ export function TravelSearch({ onNext, onBack }: TravelSearchProps) {
 
         {/* Banner de progreso si es ida y vuelta */}
         {isRoundTrip && (
-          <div className="bg-linear-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4">
+          <div className="bg-linear-to-r from-orange-50 to-indigo-50 border border-orange-200 rounded-lg p-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="font-bold text-blue-800 flex items-center gap-2">
+                <h3 className="font-bold text-orange-800 flex items-center gap-2">
                   <ArrowRightLeft className="h-5 w-5" />
                   Viaje de Ida y Vuelta
                 </h3>
-                <p className="text-sm text-blue-600">
+                <p className="text-sm text-orange-600">
                   {searchMode === "departure"
                     ? "Paso 1: Busca y reserva tu viaje de ida"
                     : "Paso 2: Busca y reserva tu viaje de vuelta"}
@@ -656,7 +656,7 @@ export function TravelSearch({ onNext, onBack }: TravelSearchProps) {
                   <div
                     className={`h-8 w-8 rounded-md flex items-center justify-center ${
                       searchMode === "departure"
-                        ? "bg-blue-600 text-white"
+                        ? "bg-orange-600 text-white"
                         : departureBooked
                           ? "bg-green-600 text-white"
                           : "bg-gray-300 text-gray-700"
@@ -675,9 +675,9 @@ export function TravelSearch({ onNext, onBack }: TravelSearchProps) {
                   <div
                     className={`h-8 w-8 rounded-md flex items-center justify-center ${
                       searchMode === "return"
-                        ? "bg-blue-600 text-white"
+                        ? "bg-orange-600 text-white"
                         : departureBooked
-                          ? "bg-blue-100 text-blue-800 border border-blue-300"
+                          ? "bg-orange-100 text-orange-800 border border-orange-300"
                           : "bg-gray-300 text-gray-700"
                     }`}
                   >

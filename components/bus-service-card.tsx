@@ -171,7 +171,7 @@ export function BusServiceCard({
                 {isRoundTrip && tripType === "departure" && (
                   <Badge
                     variant="outline"
-                    className="text-xs bg-blue-50 text-blue-700 border-blue-200 flex-shrink-0"
+                    className="text-xs bg-orange-50 text-orange-700 border-orange-200 flex-shrink-0"
                   >
                     Ida y Vuelta
                   </Badge>

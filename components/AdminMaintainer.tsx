@@ -174,11 +174,11 @@ export default function AdminMaintainer() {
     const isSorted = sortConfig && sortConfig.key === key;
     if (isSorted) {
       return sortConfig.direction === 'asc' ? (
-        <span className="inline-flex items-center justify-center w-4 h-4 ml-1 rounded bg-blue-100 text-[#023caf] shadow-xs" title="Orden ascendente (clic para alternar)">
+        <span className="inline-flex items-center justify-center w-4 h-4 ml-1 rounded bg-orange-100 text-[#ff6700] shadow-xs" title="Orden ascendente (clic para alternar)">
           <ArrowUp className="w-3 h-3 stroke-[2.5]" />
         </span>
       ) : (
-        <span className="inline-flex items-center justify-center w-4 h-4 ml-1 rounded bg-blue-100 text-[#023caf] shadow-xs" title="Orden descendente (clic para alternar)">
+        <span className="inline-flex items-center justify-center w-4 h-4 ml-1 rounded bg-orange-100 text-[#ff6700] shadow-xs" title="Orden descendente (clic para alternar)">
           <ArrowDown className="w-3 h-3 stroke-[2.5]" />
         </span>
       );
@@ -575,7 +575,7 @@ export default function AdminMaintainer() {
               <button onClick={() => setActiveTab('catalogo')} className={`w-full px-4 py-3 rounded-md text-sm font-bold transition-all flex items-center gap-3 ${activeTab === 'catalogo' ? 'bg-[#ff6700] text-white shadow-md shadow-orange-200' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}>
                 <ShoppingBag className={`w-5 h-5 ${activeTab === 'catalogo' ? 'text-white' : 'text-slate-400'}`} /> Catálogo
               </button>
-              <button onClick={() => setActiveTab('usuarios')} className={`w-full px-4 py-3 rounded-md text-sm font-bold transition-all flex items-center gap-3 ${activeTab === 'usuarios' ? 'bg-[#023caf] text-white shadow-md shadow-blue-200' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}>
+              <button onClick={() => setActiveTab('usuarios')} className={`w-full px-4 py-3 rounded-md text-sm font-bold transition-all flex items-center gap-3 ${activeTab === 'usuarios' ? 'bg-[#ff6700] text-white shadow-md shadow-orange-200' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}>
                 <Users className={`w-5 h-5 ${activeTab === 'usuarios' ? 'text-white' : 'text-slate-400'}`} /> Usuarios
               </button>
               <button onClick={() => setActiveTab('transacciones')} className={`w-full px-4 py-3 rounded-md text-sm font-bold transition-all flex items-center gap-3 ${activeTab === 'transacciones' ? 'bg-emerald-600 text-white shadow-md shadow-emerald-200' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}>
@@ -649,7 +649,7 @@ export default function AdminMaintainer() {
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {paginate(sortedCuponeras).map(c => (
-                    <tr key={c.id} className="hover:bg-blue-50/40 transition-colors group">
+                    <tr key={c.id} className="hover:bg-orange-50/40 transition-colors group">
                       <td className="p-3 font-mono font-bold text-slate-400">#{c.id}</td>
                       <td className="p-3 font-bold text-slate-900">{c.nombre}</td>
                       <td className="p-3 min-w-[200px]">
@@ -670,7 +670,7 @@ export default function AdminMaintainer() {
                           <button
                             onClick={() => handleOpenEdit(c)}
                             title="Editar"
-                            className="p-1.5 bg-blue-50 text-[#023caf] hover:bg-[#023caf] hover:text-white rounded-lg font-bold inline-flex items-center shadow-xs cursor-pointer"
+                            className="p-1.5 bg-orange-50 text-[#ff6700] hover:bg-[#ff6700] hover:text-white rounded-lg font-bold inline-flex items-center shadow-xs cursor-pointer"
                           >
                             <Edit2 className="w-3.5 h-3.5" />
                           </button>
@@ -733,7 +733,7 @@ export default function AdminMaintainer() {
                 <tbody className="divide-y divide-slate-100">
                   {paginate(filteredUsuarios).map(u => (
                     <tr key={u.rut} className="hover:bg-slate-50">
-                      <td className="p-3 font-mono font-bold text-[#023caf]">{u.rut}</td>
+                      <td className="p-3 font-mono font-bold text-[#ff6700]">{u.rut}</td>
                       <td className="p-3 font-semibold">{u.nombre}</td>
                       <td className="p-3 text-slate-600">{u.correo}</td>
                       <td className="p-3 text-slate-600">{u.telefono || '-'}</td>
@@ -798,7 +798,7 @@ export default function AdminMaintainer() {
                       <td className="p-3 font-bold text-slate-900">{t.CuponeraCatalogo?.nombre || t.UsuarioCuponera?.Cuponera?.nombre || '-'}</td>
                       <td className="p-3">
                         <div className="font-semibold text-slate-900">{t.nombre_usuario ? fixEncoding(t.nombre_usuario) : '-'}</div>
-                        <div className="font-mono text-[10px] text-[#023caf]">{t.rut_usuario}</div>
+                        <div className="font-mono text-[10px] text-[#ff6700]">{t.rut_usuario}</div>
                       </td>
                       <td className="p-3 font-bold">${Number(t.monto).toLocaleString('es-CL')}</td>
                       <td className="p-3">
@@ -902,7 +902,7 @@ export default function AdminMaintainer() {
                             <tr className="hover:bg-slate-50 cursor-pointer transition-colors" onClick={() => setExpandedUserCompras(prev => prev === user.rut ? null : user.rut)}>
                               <td className="p-3">
                                 <div className="font-bold text-slate-800">{fixEncoding(user.nombre)}</div>
-                                <div className="text-[10px] font-mono text-[#023caf]">{user.rut}</div>
+                                <div className="text-[10px] font-mono text-[#ff6700]">{user.rut}</div>
                               </td>
                               <td className="p-3 text-center font-bold text-slate-700">{user.total}</td>
                               <td className="p-3 text-center font-bold text-emerald-600">{user.activas}</td>
@@ -1088,10 +1088,10 @@ export default function AdminMaintainer() {
                     </tr>
                   ) : (
                     paginate(filteredAuditoria).map(log => {
-                      let badgeColor = 'bg-blue-100 text-blue-800';
+                      let badgeColor = 'bg-orange-100 text-orange-800';
                       if (log.accion === 'CANJE_CUPON') badgeColor = 'bg-emerald-100 text-emerald-800';
                       else if (log.accion === 'ANULACION_PASAJE' || (log.accion?.includes('ANULACION') && !log.accion?.startsWith('ERROR'))) badgeColor = 'bg-purple-100 text-purple-800';
-                      else if (log.accion === 'COMPRA_CUPONERA') badgeColor = 'bg-[#023caf]/10 text-[#023caf]';
+                      else if (log.accion === 'COMPRA_CUPONERA') badgeColor = 'bg-[#ff6700]/10 text-[#ff6700]';
                       else if (log.accion === 'OTP_VALIDADO') badgeColor = 'bg-teal-100 text-teal-800';
                       else if (log.accion === 'OTP_GENERADO') badgeColor = 'bg-amber-100 text-amber-800';
                       else if (log.accion === 'CREACION_CUPONERA' || log.accion === 'EDICION_CUPONERA') badgeColor = 'bg-orange-100 text-orange-800';
@@ -1149,7 +1149,7 @@ export default function AdminMaintainer() {
                                     });
                                     setCopiedJson(false);
                                   }}
-                                  className="text-[10px] font-bold text-[#023caf] hover:text-[#023caf]/80 bg-blue-50 hover:bg-blue-100 px-2.5 py-1 rounded-md transition-colors shrink-0 cursor-pointer shadow-xs border border-blue-200"
+                                  className="text-[10px] font-bold text-[#ff6700] hover:text-[#ff6700]/80 bg-orange-50 hover:bg-orange-100 px-2.5 py-1 rounded-md transition-colors shrink-0 cursor-pointer shadow-xs border border-orange-200"
                                 >
                                   Ver más
                                 </button>
@@ -1225,7 +1225,7 @@ export default function AdminMaintainer() {
                       value={bannerUrl} 
                       onChange={e => setBannerUrl(e.target.value)} 
                       placeholder="https://ejemplo.com/banner.jpg"
-                      className="w-full bg-slate-50 border border-slate-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#023caf]"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#ff6700]"
                     />
                   </div>
                 </div>
@@ -1285,7 +1285,7 @@ export default function AdminMaintainer() {
                 <div className="space-y-5">
                   <div className="grid grid-cols-1 sm:grid-cols-[200px_1fr] items-center gap-2 sm:gap-4">
                     <label className="sm:text-right font-bold text-slate-700">Nombre de la zona <span className="text-red-500">*</span></label>
-                    <input type="text" required value={nombre} onChange={(e) => setNombre(e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-md px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]" placeholder="ej. CUPONERA LOS ANDES (10)" />
+                    <input type="text" required value={nombre} onChange={(e) => setNombre(e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-md px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#ff6700]" placeholder="ej. CUPONERA LOS ANDES (10)" />
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-[200px_1fr] items-start gap-2 sm:gap-4">
@@ -1345,12 +1345,12 @@ export default function AdminMaintainer() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-[200px_1fr] items-center gap-2 sm:gap-4">
                     <label className="sm:text-right font-bold text-slate-700">Monto del cupón</label>
-                    <input type="number" required min="1" value={valorUnitario} onChange={(e) => setValorUnitario(e.target.value === '' ? '' : Number(e.target.value))} className="w-full bg-slate-50 border border-slate-300 rounded-md px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]" />
+                    <input type="number" required min="1" value={valorUnitario} onChange={(e) => setValorUnitario(e.target.value === '' ? '' : Number(e.target.value))} className="w-full bg-slate-50 border border-slate-300 rounded-md px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#ff6700]" />
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-[200px_1fr] items-center gap-2 sm:gap-4">
                     <label className="sm:text-right font-bold text-slate-700 uppercase">NÚMERO DE CUPONES</label>
-                    <input type="number" required min="1" value={cantidadCupones} onChange={(e) => setCantidadCupones(e.target.value === '' ? '' : Number(e.target.value))} className="w-full bg-slate-50 border border-slate-300 rounded-md px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf]" />
+                    <input type="number" required min="1" value={cantidadCupones} onChange={(e) => setCantidadCupones(e.target.value === '' ? '' : Number(e.target.value))} className="w-full bg-slate-50 border border-slate-300 rounded-md px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#ff6700]" />
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-[200px_1fr] items-center gap-2 sm:gap-4">
@@ -1372,7 +1372,7 @@ export default function AdminMaintainer() {
                 <div className="space-y-6 lg:pt-[76px] lg:pl-4">
                   <div className="flex items-center gap-4">
                     <label className="w-40 sm:w-36 sm:text-right font-bold text-slate-700">Tipo de asiento</label>
-                    <select value={tipoAsiento} onChange={(e) => setTipoAsiento(e.target.value)} className="flex-1 bg-slate-50 border border-slate-300 rounded-md px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#023caf] cursor-pointer appearance-none">
+                    <select value={tipoAsiento} onChange={(e) => setTipoAsiento(e.target.value)} className="flex-1 bg-slate-50 border border-slate-300 rounded-md px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#ff6700] cursor-pointer appearance-none">
                       <option value="Todos">Todos</option>
                       <option value="Semi Cama">Semi Cama</option>
                       <option value="Salon Cama">Salón Cama</option>
@@ -1448,7 +1448,7 @@ export default function AdminMaintainer() {
               <div className="bg-slate-50 border-b border-slate-200 px-6 py-4 flex items-center justify-between">
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800">
+                    <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-orange-100 text-orange-800">
                       {auditDrawer.log.accion}
                     </span>
                     <span className="text-xs text-slate-400">
@@ -1488,7 +1488,7 @@ export default function AdminMaintainer() {
                         }));
                         setCopiedJson(false);
                       }}
-                      className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-colors cursor-pointer ${auditDrawer.type === 'payload' ? 'bg-[#023caf] text-white' : 'bg-slate-200 text-slate-600 hover:bg-slate-300'}`}
+                      className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-colors cursor-pointer ${auditDrawer.type === 'payload' ? 'bg-[#ff6700] text-white' : 'bg-slate-200 text-slate-600 hover:bg-slate-300'}`}
                     >
                       Payload
                     </button>

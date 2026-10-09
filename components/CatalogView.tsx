@@ -1177,7 +1177,7 @@ export default function CatalogView({ onGoToDashboardWithRut, onGoToCanjeWithCup
                 </div>
               )}
 
-              <div className="p-3 bg-blue-50/70 border border-blue-100 rounded-md text-xs text-slate-600 flex items-start gap-2.5">
+              <div className="p-3 bg-orange-50/70 border border-orange-100 rounded-md text-xs text-slate-600 flex items-start gap-2.5">
                 <ShieldCheck className="w-4 h-4 text-[#ff6700] shrink-0 mt-0.5" />
                 <p className="leading-snug">
                   Puedes intentar nuevamente seleccionando otro medio de pago o verificar que tu banco tenga habilitadas las compras en línea.
